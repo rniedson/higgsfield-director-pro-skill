@@ -15,7 +15,7 @@
 ![License](https://img.shields.io/badge/code-MIT-blue)
 ![Repository](https://img.shields.io/badge/repository-private-orange)
 
-[Illustrated manual](#illustrated-manual) · [Quick start](#quick-start) · [Examples](#examples) · [Architecture](#architecture) · [Português](#português) · [License](#licensing)
+[Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Quick start](#quick-start) · [Examples](#examples) · [Português](#português) · [License](#licensing)
 
 </div>
 
@@ -90,9 +90,75 @@ Geometric studies of one object across lenses, distances and palettes; the full 
 
 </details>
 
+## Architecture
+
+How the pieces talk to each other. The agent reads only `SKILL.md` up front; everything else is loaded when a step
+needs it. `hfd.py` works offline, and the only path to spending credits goes through the Higgsfield connector,
+after the quoted total and the operator's "ok".
+
+```mermaid
+flowchart LR
+    U([Request]) --> A[Claude Code<br/>or Codex]
+    A -->|reads first| S[SKILL.md<br/>scope · flow · rules]
+    S -.->|only the guide a step needs| R[references/<br/>6 guides]
+    S -->|studio mode| H[scripts/hfd.py<br/>validate · compile · budget]
+    H --> D[(data/<br/>122-model snapshot)]
+    H --> T[templates/<br/>ready projects]
+    A -->|quote| M{{Higgsfield MCP}}
+    M -->|cost| O{Operator<br/>ok?}
+    O -->|yes| G([Video · image])
+    O -->|no| S
+    classDef core fill:#101217,stroke:#bca271,color:#f5f5f5,stroke-width:1.5px
+    classDef gold fill:#bca271,stroke:#8a7448,color:#101217
+    classDef soft fill:#eef1f5,stroke:#6d8b9c,color:#101217
+    class A,S,H core
+    class M,O gold
+    class R,D,T soft
+```
+
+| | Part | What it holds | When it comes in |
+|:---:|---|---|---|
+| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | scope, the 6-step flow, hard rules, who handles what (91 lines) | every request: the agent reads it first |
+| **2** | [`references/`](higgsfield-director/references) | 6 guides: flow · prompt · vocabulary · models · connector · quality | only the guide the current step asks for |
+| **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
+| **4** | [`data/`](higgsfield-director/data) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
+| **5** | [`templates/`](higgsfield-director/templates) | 3-shot commercial, image-to-video, evaluation | starting a new project |
+| **6** | [`tests/`](higgsfield-director/tests) | 41 cases, no dependencies | before publishing a change |
+| **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
+| **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
+
+<details>
+<summary><b>Full file tree</b></summary>
+<br>
+
+```text
+higgsfield-director/            the skill: install THIS folder
+  SKILL.md                      entry point: scope, flow, hard rules, routing (91 lines)
+  agents/openai.yaml            display name and default prompt for the Codex UI
+  references/
+    fluxo.md                    brief, studio mode, bibles, project fields, delivery
+    prompt.md                   golden order, per-model notes, recipes, examples
+    vocabulario.md              camera, framing, lens, light, color, physics, acting, audio
+    modelos.md                  choosing a model, snapshot table, refreshing the snapshot
+    conector.md                 Higgsfield MCP in Claude and Codex, bundled workflows, call order
+    qualidade.md                pre-spend checklist, diagnostics, frames, scoring
+  scripts/hfd.py                validate, compile, budget, export, optics, score, models
+  data/modelos.json             dated snapshot of the connector catalog (122 models)
+  data/pesos.json               scoring weights
+  templates/                    3-shot commercial, image-to-video, evaluation
+  tests/test_hfd.py             41 unittest cases
+docs/
+  AVALIACAO-RC3.md              evaluation of the previous package and what v5 kept
+  assets/emblema.svg            emblem
+  manual/                       illustrated direction manual: README (11 parts), visual/ (185 images + catalog)
+```
+
+</details>
+
 ## Contents
 
 - [Illustrated manual](#illustrated-manual)
+- [Architecture](#architecture)
 - [Overview](#overview)
 - [What changed in v5](#what-changed-in-v5)
 - [Capabilities](#capabilities)
@@ -101,7 +167,6 @@ Geometric studies of one object across lenses, distances and palettes; the full 
 - [`hfd.py` reference](#hfdpy-reference)
 - [Choosing a model](#choosing-a-model)
 - [Scope and coexistence](#scope-and-coexistence)
-- [Architecture](#architecture)
 - [Quality and security](#quality-and-security)
 - [Editions and history](#editions-and-history)
 - [Roadmap](#roadmap)
@@ -346,30 +411,6 @@ The skill is built to live next to other video skills without stealing their req
 
 When another video skill needs **one** AI-generated shot, this skill writes and generates that shot; the rest of the
 video stays with its owner.
-
-## Architecture
-
-```text
-higgsfield-director/            the skill: install THIS folder
-  SKILL.md                      entry point: scope, flow, hard rules, routing (91 lines)
-  agents/openai.yaml            display name and default prompt for the Codex UI
-  references/
-    fluxo.md                    brief, studio mode, bibles, project fields, delivery
-    prompt.md                   golden order, per-model notes, recipes, examples
-    vocabulario.md              camera, framing, lens, light, color, physics, acting, audio
-    modelos.md                  choosing a model, snapshot table, refreshing the snapshot
-    conector.md                 Higgsfield MCP in Claude and Codex, bundled workflows, call order
-    qualidade.md                pre-spend checklist, diagnostics, frames, scoring
-  scripts/hfd.py                validate, compile, budget, export, optics, score, models
-  data/modelos.json             dated snapshot of the connector catalog (122 models)
-  data/pesos.json               scoring weights
-  templates/                    3-shot commercial, image-to-video, evaluation
-  tests/test_hfd.py             41 unittest cases
-docs/
-  AVALIACAO-RC3.md              evaluation of the previous package and what v5 kept
-  assets/emblema.svg            emblem
-  manual/                       illustrated direction manual: README (11 parts), visual/ (185 images + catalog)
-```
 
 ## Quality and security
 
