@@ -11,15 +11,21 @@ Subcomandos:
   otica     <mm> <distancia_m> [abertura]
   exportar  <projeto.json> <pasta>    roteiro.md, tomadas.csv e legendas.srt
   pontuar   <avaliacao.json>          nota 0-100 com evidência obrigatória
-  modelos   [--tipo video|image] [--buscar termo] [--id ID] [--importar arquivo.json]
+  modelos   [--tipo video|image] [--buscar termo] [--id ID]
+  modelos   --importar lista.json [mais.json ...] --saida retrato.json
 
-Saída: JSON em stdout. Código de saída: 0 ok, 1 erro de conteúdo, 2 erro de uso/arquivo.
+--retrato arquivo.json (em validar, compilar, exportar e modelos) usa outro retrato dos modelos no lugar de
+data/modelos.json. Nenhum comando grava dentro da pasta da skill sem que o caminho seja dado.
+
+Saída: JSON em stdout. Código de saída: 0 ok; 1 o projeto tem erros (listados em "erros"); 2 uso, arquivo ou
+entrada fora do formato (mensagem em "erro", no stderr). Nunca um traceback: HFD_DEBUG=1 mostra o traceback.
 """
 import argparse
 import csv
 import datetime as _dt
 import json
 import math
+import os
 import re
 import sys
 from pathlib import Path
@@ -45,6 +51,8 @@ def ler_json(caminho):
         raise Erro(f"arquivo não encontrado: {caminho}")
     except json.JSONDecodeError as e:
         raise Erro(f"JSON inválido em {caminho}: {e}")
+    except (OSError, UnicodeDecodeError) as e:
+        raise Erro(f"não consegui ler {caminho}: {e}")
 
 
 def numero(v):
@@ -122,10 +130,17 @@ def avaliar_camera(txt):
 
 # --------------------------------------------------------------------------- modelos
 
-def carregar_modelos():
-    if not MODELOS.exists():
+def carregar_modelos(caminho=None):
+    """O retrato indicado (tem de existir) ou o que vem com a skill (se faltar, catálogo vazio)."""
+    if caminho:
+        cat = ler_json(caminho)
+    elif MODELOS.exists():
+        cat = ler_json(MODELOS)
+    else:
         return {"gerado_em": None, "modelos": {}}
-    return ler_json(MODELOS)
+    if not isinstance(cat, dict) or not isinstance(cat.get("modelos"), dict):
+        raise Erro(f"{caminho or MODELOS} não é um retrato dos modelos (falta o objeto 'modelos')")
+    return cat
 
 
 def _normalizar_modelo(m):
@@ -144,7 +159,8 @@ def _normalizar_modelo(m):
             audio = {"parametro": nome, "padrao": ps[nome].get("default"), "opcoes": ps[nome].get("options")}
             break
     res = ps.get("resolution") or ps.get("quality") or {}
-    papeis = sorted({r for md in m.get("medias") or [] for r in (md.get("roles") or [])})
+    papeis = sorted({r for md in m.get("medias") or [] if isinstance(md, dict)
+                     for r in (md.get("roles") or []) if isinstance(r, str)})
     return {
         "id": m.get("id"),
         "nome": m.get("name"),
@@ -164,27 +180,49 @@ def _normalizar_modelo(m):
     }
 
 
-def importar_modelos(arquivo):
-    bruto = ler_json(arquivo)
-    itens = bruto.get("items") if isinstance(bruto, dict) else bruto
-    if not isinstance(itens, list) or not itens:
-        raise Erro("o arquivo não tem 'items' do models_explore")
-    atual = carregar_modelos()
+def importar_modelos(arquivos, saida, base=None):
+    """Monta um retrato novo a partir das listas do models_explore e grava em `saida`.
+
+    Parte do retrato `base` (ou do que vem com a skill). Para cada tipo presente na importação (video, image...),
+    o que não veio na lista sai do retrato: a lista do conector é a verdade daquele tipo. Por isso, todas as páginas
+    de um mesmo tipo entram no mesmo comando.
+    """
+    if not saida:
+        raise Erro("use --saida <arquivo>: o retrato novo vai para um caminho indicado, nunca para dentro da "
+                   "pasta da skill sem pedido")
     novos = {}
-    for m in itens:
-        n = _normalizar_modelo(m)
-        if n["id"]:
-            novos[n["id"]] = n
-    atual["modelos"].update(novos)
-    atual["gerado_em"] = _dt.date.today().isoformat()
-    atual["fonte"] = "conector Higgsfield, models_explore list (importado por hfd.py modelos --importar)"
-    MODELOS.parent.mkdir(parents=True, exist_ok=True)
-    MODELOS.write_text(json.dumps(atual, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    for arq in arquivos:
+        bruto = ler_json(arq)
+        itens = bruto.get("items") if isinstance(bruto, dict) else bruto
+        if not isinstance(itens, list) or not itens or not all(isinstance(m, dict) for m in itens):
+            raise Erro(f"{arq}: não tem a lista 'items' do models_explore")
+        for m in itens:
+            n = _normalizar_modelo(m)
+            if texto(n["id"]):
+                novos[n["id"]] = n
+    if not novos:
+        raise Erro("nenhum modelo com id nas listas importadas")
+    atual = carregar_modelos(base)
+    modelos = dict(atual["modelos"])
+    tipos_importados = {n["tipo"] for n in novos.values()}
+    removidos = sorted(k for k, m in modelos.items() if isinstance(m, dict) and m.get("tipo") in tipos_importados
+                       and k not in novos)
+    for k in removidos:
+        del modelos[k]
+    modelos.update(novos)
+    retrato = {"gerado_em": _dt.date.today().isoformat(), "modelos": modelos,
+               "fonte": "conector Higgsfield, models_explore list (importado por hfd.py modelos --importar)"}
+    destino = Path(saida)
+    try:
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(json.dumps(retrato, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    except OSError as e:
+        raise Erro(f"não consegui gravar {destino}: {e}")
     tipos = {}
     for n in novos.values():
         tipos[n["tipo"]] = tipos.get(n["tipo"], 0) + 1
-    return {"importados": len(novos), "por_tipo": tipos, "total_no_retrato": len(atual["modelos"]),
-            "gerado_em": atual["gerado_em"]}
+    return {"saida": str(destino), "importados": len(novos), "por_tipo": tipos, "removidos": removidos,
+            "total_no_retrato": len(modelos), "gerado_em": retrato["gerado_em"]}
 
 
 def checar_modelo(p, catalogo):
@@ -240,6 +278,53 @@ def _entidades(t):
     return e if isinstance(e, list) else []
 
 
+def _lista_de(v, tipo):
+    return isinstance(v, list) and all(isinstance(x, tipo) for x in v)
+
+
+def _ponto(v):
+    return isinstance(v, list) and len(v) == 2 and all(numero(x) for x in v)
+
+
+def forma(p):
+    """Erros de tipo. O resto da validação supõe estes formatos; se algum falhar, ela para aqui."""
+    erros = []
+    biblias = p.get("biblias")
+    if biblias is not None:
+        if not isinstance(biblias, dict):
+            erros.append("'biblias' deve ser um objeto {id: ficha}")
+        else:
+            for k, b in biblias.items():
+                if not isinstance(b, dict):
+                    erros.append(f"ficha '{k}' deve ser um objeto")
+                elif b.get("fixo") is not None and not isinstance(b["fixo"], dict):
+                    erros.append(f"ficha '{k}': 'fixo' deve ser um objeto {{atributo: valor}}")
+    for campo in ("restricoes", "preservar"):
+        if p.get(campo) is not None and not _lista_de(p[campo], str):
+            erros.append(f"'{campo}' deve ser uma lista de textos")
+    if p.get("eixo") is not None and not (isinstance(p["eixo"], list) and len(p["eixo"]) == 2
+                                          and all(_ponto(x) for x in p["eixo"])):
+        erros.append("'eixo' deve ser [[x1, y1], [x2, y2]] com números")
+    for n, t in enumerate(p["tomadas"], 1):
+        if not isinstance(t, dict):
+            erros.append(f"tomada {n}: deve ser um objeto")
+            continue
+        tid = t.get("id") if texto(t.get("id")) else f"tomada {n}"
+        for campo in ("entidades", "mudancas_aprovadas", "restricoes", "preservar"):
+            if t.get(campo) is not None and not _lista_de(t[campo], str):
+                erros.append(f"{tid}: '{campo}' deve ser uma lista de textos")
+        for campo in ("falas", "linha_do_tempo"):
+            if t.get(campo) is not None and not _lista_de(t[campo], dict):
+                erros.append(f"{tid}: '{campo}' deve ser uma lista de objetos")
+        for campo in ("inicio", "fim"):
+            v = t.get(campo)
+            if v is not None and not (isinstance(v, dict) and all(isinstance(a, dict) for a in v.values())):
+                erros.append(f"{tid}: '{campo}' deve ser um objeto {{entidade: {{atributo: valor}}}}")
+        if t.get("camera_xy") is not None and not _ponto(t["camera_xy"]):
+            erros.append(f"{tid}: 'camera_xy' deve ser [x, y] com números")
+    return erros
+
+
 def continuidade(p):
     erros, avisos = [], []
     biblias = p.get("biblias") or {}
@@ -284,10 +369,7 @@ def eixo(p):
     ax = p.get("eixo")
     if not ax:
         return avisos
-    try:
-        (x1, y1), (x2, y2) = ax
-    except (TypeError, ValueError):
-        return ["'eixo' deve ser [[x1,y1],[x2,y2]]"]
+    (x1, y1), (x2, y2) = ax  # formato já conferido em forma()
     dx, dy = x2 - x1, y2 - y1
     if dx == 0 and dy == 0:
         return ["'eixo' degenerado (dois pontos iguais)"]
@@ -317,16 +399,17 @@ def validar(p, catalogo=None):
         erros.append(f"modo '{modo}' inválido (use {', '.join(MODOS)})")
     tomadas = p.get("tomadas")
     if not isinstance(tomadas, list) or not tomadas:
-        return {"erros": erros + ["'tomadas' é obrigatório e não pode ser vazio"], "avisos": avisos}
+        return {"erros": erros + ["'tomadas' é obrigatório: uma lista não vazia de tomadas"], "avisos": avisos}
+    erros_de_forma = forma(p)
+    if erros_de_forma:
+        return {"erros": erros + erros_de_forma, "avisos": avisos}
     ids = set()
     for t in tomadas:
-        if not isinstance(t, dict):
-            erros.append("cada tomada deve ser um objeto")
-            continue
         tid = t.get("id")
         if not texto(tid) or tid in ids:
             erros.append(f"tomada sem id ou com id repetido: {tid!r}")
-        ids.add(tid)
+        else:
+            ids.add(tid)
         sujeito = texto(t.get("sujeito")) or texto(p.get("sujeito")) or _entidades(t)
         if not sujeito:
             erros.append(f"{tid}: falta sujeito (campo 'sujeito' ou 'entidades' com ficha)")
@@ -347,7 +430,7 @@ def validar(p, catalogo=None):
             avisos.append(f"{tid}: {palavras} palavras de fala não cabem em {t['duracao']} s "
                           f"(~{int(PALAVRAS_POR_SEGUNDO * t['duracao'])} no máximo); encurte ou aumente a tomada")
         for f in falas:
-            if isinstance(f, dict) and not texto(f.get("quem")):
+            if not texto(f.get("quem")):
                 erros.append(f"{tid}: toda fala precisa de 'quem' (rótulo do personagem)")
         trilhas = {}
         for ev in t.get("linha_do_tempo") or []:
@@ -464,22 +547,29 @@ def compilar(p, catalogo=None):
 # --------------------------------------------------------------------------- orçamento, óptica, nota
 
 def orcamento(tomadas, reserva=20.0, tentativas=None):
+    """Total em créditos. `tentativas` (da linha de comando) vale para as tomadas que não trazem o próprio número."""
     if not numero(reserva) or reserva < 0:
         raise Erro("reserva inválida")
-    linhas, base = [], 0.0
+    if not isinstance(tomadas, list) or not tomadas or not all(isinstance(t, dict) for t in tomadas):
+        raise Erro("'tomadas' deve ser uma lista não vazia de objetos")
+    padrao = tentativas if tentativas is not None else 2
+    linhas, avisos, base = [], [], 0.0
     for t in tomadas:
         ct, cf = t.get("custo_teste"), t.get("custo_final")
-        n = t.get("tentativas", tentativas if tentativas is not None else 2)
+        n = t.get("tentativas", padrao)
         if not numero(ct) or not numero(cf) or ct < 0 or cf < 0:
             raise Erro(f"{t.get('id')}: sem custo_teste/custo_final. Rode a estimativa do conector "
                        "(estimate_video_cost / estimate_image_cost) e preencha; não invente preço")
         if type(n) is not int or n < 0:
             raise Erro(f"{t.get('id')}: tentativas deve ser inteiro >= 0")
-        sub = n * ct + cf
+        if tentativas is not None and "tentativas" in t and n != tentativas:
+            avisos.append(f"{t.get('id')}: vale tentativas={n} da própria tomada, não --tentativas {tentativas}")
+        sub = round(n * ct + cf, 2)
         linhas.append({"id": t.get("id"), "tentativas": n, "custo_teste": ct, "custo_final": cf, "subtotal": sub})
         base += sub
+    base = round(base, 2)
     return {"tomadas": linhas, "base": base, "reserva_pct": reserva, "reserva": round(base * reserva / 100, 2),
-            "total": round(base * (1 + reserva / 100), 2),
+            "total": round(base * (1 + reserva / 100), 2), "avisos": avisos,
             "lembrete": "custo é estimativa do conector; gerar só depois do ok do operador com este total"}
 
 
@@ -502,11 +592,15 @@ def otica(f, d, n=2.8, sensor=36.0, coc=0.03):
 
 def pontuar(x):
     pesos = ler_json(DATA / "pesos.json")
+    if not isinstance(x, dict):
+        raise Erro("a avaliação deve ser um objeto JSON (veja templates/avaliacao.json)")
     if x.get("tipo") not in ("prompt", "resultado"):
         raise Erro("tipo deve ser 'prompt' ou 'resultado'")
     if x["tipo"] == "resultado" and not texto(x.get("arquivo")):
         raise Erro("nota de resultado exige 'arquivo' (o que foi visto)")
     crit = x.get("criterios") or {}
+    if not isinstance(crit, dict):
+        raise Erro("'criterios' deve ser um objeto {criterio: {nota, evidencia}}")
     total = den = 0.0
     faltando = []
     for k, w in pesos.items():
@@ -514,6 +608,8 @@ def pontuar(x):
         if c is None:
             faltando.append(k)
             continue
+        if not isinstance(c, dict):
+            raise Erro(f"{k}: deve ser um objeto com 'nota' e 'evidencia'")
         if not texto(c.get("evidencia")):
             raise Erro(f"{k}: evidência obrigatória (o que se viu, em que segundo)")
         v = c.get("nota")
@@ -577,10 +673,15 @@ def exportar(p, pasta, catalogo=None):
                         _csv_seguro(json.dumps(tc["parametros"], ensure_ascii=False))])
             cel = lambda s: str(s or "").replace("|", "/").replace("\n", " ")
             linhas_md.append(f"| {tc['id']} | {inicio:g} | {fim:g} | {cel(t.get('acao'))} | {cel(t.get('camera'))} |")
-            for fl in t.get("falas") or []:
-                if isinstance(fl, dict) and texto(fl.get("texto")):
-                    n += 1
-                    srt.append(f"{n}\n{_carimbo(inicio)} --> {_carimbo(fim)}\n{fl.get('quem')}: {fl['texto'].strip()}\n")
+            # várias falas dividem a tomada em trechos seguidos, proporcionais ao número de palavras
+            falas = [fl for fl in t.get("falas") or [] if isinstance(fl, dict) and texto(fl.get("texto"))]
+            pesos = [len(fl["texto"].split()) for fl in falas]
+            de = inicio
+            for i, fl in enumerate(falas if dur > 0 else []):
+                ate = fim if i == len(falas) - 1 else de + dur * pesos[i] / sum(pesos)
+                n += 1
+                srt.append(f"{n}\n{_carimbo(de)} --> {_carimbo(ate)}\n{fl.get('quem')}: {fl['texto'].strip()}\n")
+                de = ate
             inicio = fim
     linhas_md += ["", "## Prompts", ""]
     for tc in c["tomadas"]:
@@ -600,8 +701,10 @@ def exportar(p, pasta, catalogo=None):
 
 def _modelos_cli(a):
     if a.importar:
-        return importar_modelos(a.importar)
-    cat = carregar_modelos()
+        return importar_modelos(a.importar, a.saida, a.retrato)
+    if a.saida:
+        raise Erro("--saida só vale com --importar")
+    cat = carregar_modelos(a.retrato)
     ms = list(cat.get("modelos", {}).values())
     if a.id:
         m = cat.get("modelos", {}).get(a.id)
@@ -629,8 +732,10 @@ def _modelos_cli(a):
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="hfd", description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    comum = argparse.ArgumentParser(add_help=False)
+    comum.add_argument("--retrato", help="retrato dos modelos a usar no lugar de data/modelos.json")
     for nome in ("validar", "compilar", "pontuar"):
-        s = sub.add_parser(nome)
+        s = sub.add_parser(nome, parents=[comum] if nome != "pontuar" else [])
         s.add_argument("arquivo")
         if nome == "compilar":
             s.add_argument("--texto", action="store_true", help="só os prompts, prontos para copiar")
@@ -643,56 +748,73 @@ def main(argv=None):
     s.add_argument("--reserva", type=float, default=20.0)
     s = sub.add_parser("otica")
     s.add_argument("valores", nargs="+", type=float)
-    s = sub.add_parser("exportar")
+    s = sub.add_parser("exportar", parents=[comum])
     s.add_argument("arquivo")
     s.add_argument("pasta")
-    s = sub.add_parser("modelos")
+    s = sub.add_parser("modelos", parents=[comum])
     s.add_argument("--tipo", choices=["video", "image", "audio", "3d"])
     s.add_argument("--buscar")
     s.add_argument("--id")
-    s.add_argument("--importar")
+    s.add_argument("--importar", nargs="+", metavar="LISTA", help="respostas do models_explore list (JSON)")
+    s.add_argument("--saida", help="onde gravar o retrato novo (obrigatório com --importar)")
     a = ap.parse_args(argv)
     try:
-        if a.cmd == "validar":
-            r = validar(ler_json(a.arquivo))
-            code = 1 if r["erros"] else 0
-        elif a.cmd == "compilar":
-            r = compilar(ler_json(a.arquivo))
-            code = 1 if r.get("erros") else 0
-            if a.texto and not code:
-                for t in r["tomadas"]:
-                    print(f"## {t['id']}\n{t['prompt']}\n\nparametros: {json.dumps(t['parametros'], ensure_ascii=False)}\n")
-                for av in r["avisos"]:
-                    print(f"AVISO: {av}")
-                return 0
-        elif a.cmd == "orcamento":
-            if a.arquivo:
-                p = ler_json(a.arquivo)
-                r = orcamento(p.get("tomadas") or [], a.reserva, a.tentativas)
-            else:
-                if a.tomadas is None or a.custo_teste is None or a.custo_final is None:
-                    raise Erro("use um projeto.json ou --tomadas, --custo-teste e --custo-final")
-                n = a.tentativas if a.tentativas is not None else 2
-                r = orcamento([{"id": f"T{i + 1:02}", "custo_teste": a.custo_teste, "custo_final": a.custo_final,
-                                "tentativas": n} for i in range(a.tomadas)], a.reserva)
-            code = 0
-        elif a.cmd == "otica":
-            if len(a.valores) not in (2, 3):
-                raise Erro("uso: otica <mm> <distancia_m> [abertura]")
-            r = otica(*a.valores)
-            code = 0
-        elif a.cmd == "exportar":
-            r = exportar(ler_json(a.arquivo), a.pasta)
-            code = 1 if r.get("erros") else 0
-        elif a.cmd == "pontuar":
-            r = pontuar(ler_json(a.arquivo))
-            code = 0
-        else:
-            r = _modelos_cli(a)
-            code = 0
+        return _executar(a)
     except Erro as e:
         print(json.dumps({"erro": str(e)}, ensure_ascii=False), file=sys.stderr)
         return 2
+    except Exception as e:  # nunca um traceback com código 1, que o agente leria como "erro de conteúdo"
+        if os.environ.get("HFD_DEBUG"):
+            raise
+        print(json.dumps({"erro": f"entrada fora do formato esperado ou falha interna ({type(e).__name__}: {e}); "
+                                  "rode de novo com HFD_DEBUG=1 para ver o traceback"}, ensure_ascii=False),
+              file=sys.stderr)
+        return 2
+
+
+def _executar(a):
+    if a.cmd == "validar":
+        r = validar(ler_json(a.arquivo), carregar_modelos(a.retrato))
+        code = 1 if r["erros"] else 0
+    elif a.cmd == "compilar":
+        r = compilar(ler_json(a.arquivo), carregar_modelos(a.retrato))
+        code = 1 if r.get("erros") else 0
+        if a.texto and not code:
+            for t in r["tomadas"]:
+                print(f"## {t['id']}\n{t['prompt']}\n\nparametros: {json.dumps(t['parametros'], ensure_ascii=False)}\n")
+            for av in r["avisos"]:
+                print(f"AVISO: {av}")
+            return 0
+    elif a.cmd == "orcamento":
+        if a.arquivo:
+            p = ler_json(a.arquivo)
+            if not isinstance(p, dict):
+                raise Erro("o projeto deve ser um objeto JSON")
+            r = orcamento(p.get("tomadas"), a.reserva, a.tentativas)
+        else:
+            if a.tomadas is None or a.custo_teste is None or a.custo_final is None:
+                raise Erro("use um projeto.json ou --tomadas, --custo-teste e --custo-final")
+            n = a.tentativas if a.tentativas is not None else 2
+            r = orcamento([{"id": f"T{i + 1:02}", "custo_teste": a.custo_teste, "custo_final": a.custo_final,
+                            "tentativas": n} for i in range(a.tomadas)], a.reserva)
+        code = 0
+    elif a.cmd == "otica":
+        if len(a.valores) not in (2, 3):
+            raise Erro("uso: otica <mm> <distancia_m> [abertura]")
+        r = otica(*a.valores)
+        code = 0
+    elif a.cmd == "exportar":
+        try:
+            r = exportar(ler_json(a.arquivo), a.pasta, carregar_modelos(a.retrato))
+        except OSError as e:
+            raise Erro(f"não consegui gravar em {a.pasta}: {e}")
+        code = 1 if r.get("erros") else 0
+    elif a.cmd == "pontuar":
+        r = pontuar(ler_json(a.arquivo))
+        code = 0
+    else:
+        r = _modelos_cli(a)
+        code = 0
     print(json.dumps(r, ensure_ascii=False, indent=2))
     return code
 

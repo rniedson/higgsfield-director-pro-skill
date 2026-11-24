@@ -18,11 +18,11 @@ padrão, sem rede): rode `python3 <pasta-da-skill>/scripts/hfd.py ...` a partir 
 |---|---|
 | prompt, tomada ou sequência gerada por IA; escolher modelo; custo de geração; diagnosticar resultado gerado | **esta skill** |
 | UGC, ficha de personagem, foto de produto, miniatura, anúncio estático, microdrama, vídeo narrado sem rosto, dublagem | fluxo próprio do conector Higgsfield (`references/conector.md`); daqui vale só a regra de custo e "ok" |
-| vídeos do estudio-3d (aulas, Shorts de bandeira, mapas, Jardim das Memórias), render e motion graphics deles | `aulas-animadas`, `videos-br-bandeiras`, `video-de-mapa`, `animacoes-violetas`, `render-kit`, `motion-graphics` |
-| editar vídeo gravado (corte, legenda, cor, trilha) | `video-falado`, AI-Video-Studio, ou o fluxo `video-montage` do conector |
-| vídeo de proposta para diretoria | `video-de-proposta` |
-| voz, narração, trilha, efeitos sonoros | `audio-elevenlabs` |
-| título, descrição, publicação | `seo-youtube`, `tiktok-br-bandeiras` |
+| vídeo renderizado em 3D ou feito por código (Blender, animação de personagens, motion graphics) e o render dele | a skill ou a ferramenta desse projeto |
+| editar vídeo gravado (corte, legenda, cor, trilha) | uma skill ou editor de vídeo, ou o fluxo `video-montage` do conector |
+| vídeo montado a partir de páginas HTML ou slides (apresentação, proposta) | a skill ou a ferramenta desse formato |
+| voz, narração, trilha, efeitos sonoros | uma skill ou ferramenta de áudio |
+| título, descrição, publicação | uma skill de publicação |
 
 Quando outra skill de vídeo precisar de **um** plano gerado por IA, esta skill escreve e gera esse plano; o resto do
 vídeo continua com a skill dona dele.
@@ -87,5 +87,7 @@ vídeo continua com a skill dona dele.
 
 ## Comandos do `hfd.py`
 
-`validar` · `compilar [--texto]` · `orcamento` · `exportar` · `otica` · `pontuar` · `modelos [--tipo|--buscar|--id|--importar]`.
-Saída em JSON; código 1 = erro de conteúdo, 2 = erro de uso. Avisos não bloqueiam, mas devem ser lidos.
+`validar` · `compilar [--texto]` · `orcamento` · `exportar` · `otica` · `pontuar` · `modelos [--tipo|--buscar|--id]` ·
+`modelos --importar ... --saida ...`; `--retrato <arquivo>` troca o retrato dos modelos. Saída em JSON. Código 1: o
+projeto tem erros, listados em `erros`. Código 2: uso, arquivo ou entrada fora do formato, com a mensagem em `erro`.
+Avisos não bloqueiam, mas devem ser lidos.

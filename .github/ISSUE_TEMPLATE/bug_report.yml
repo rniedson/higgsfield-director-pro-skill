@@ -1,0 +1,35 @@
+name: Bug report
+description: Something in the skill or in hfd.py does not work as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: o-que
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduzir
+    attributes:
+      label: How to reproduce
+      description: The request to the agent or the hfd.py command, and a minimal project JSON if relevant.
+      render: text
+  - type: textarea
+    id: saida
+    attributes:
+      label: Output
+      description: The hfd.py JSON or the agent's answer. Remove keys, tokens, signed URLs and private media first.
+      render: text
+  - type: input
+    id: ambiente
+    attributes:
+      label: Environment
+      placeholder: "Claude Code or Codex, version; Python 3.x; commit or release of this skill"
+  - type: checkboxes
+    id: privacidade
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed credentials, signed URLs and media that are not mine to share.
+          required: true

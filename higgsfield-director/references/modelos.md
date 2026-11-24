@@ -70,5 +70,10 @@ com modelo, duração, resolução, modo, som e plano.
 
 1. Chame `models_explore` com `action: list`, `type: video`, `limit: 100`; salve a resposta JSON num arquivo.
    Repita com `type: image`. (No Claude Code, resposta grande já vem salva em arquivo; use esse caminho.)
-2. `python3 <skill>/scripts/hfd.py modelos --importar <arquivo>` para cada um.
-3. `python3 -m unittest discover -s <skill>/tests` e revise a tabela acima se algo grande mudou.
+2. Monte o retrato novo **fora da pasta da skill**, com todas as listas no mesmo comando:
+   `python3 <skill>/scripts/hfd.py modelos --importar video.json imagem.json --saida <projeto>/modelos.json`.
+   Para cada tipo importado, o que não veio na lista sai do retrato; confira `removidos` na resposta (lista cortada
+   em 100 itens tira modelos que ainda existem: importe todas as páginas juntas).
+3. Use esse retrato com `--retrato <projeto>/modelos.json` em `validar`, `compilar`, `exportar` e `modelos`.
+4. Atualizar o retrato que vem com a skill é trabalho de quem mantém o repositório: `--saida <clone>/higgsfield-director/data/modelos.json`,
+   rode `python3 -m unittest discover -s <skill>/tests`, revise a tabela acima se algo grande mudou e faça o commit.

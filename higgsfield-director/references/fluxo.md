@@ -74,5 +74,5 @@ pasta da skill.
 
 ## 8. Depois da geração
 
-Montagem, trilha, voz e legendas são de outras ferramentas: `audio-elevenlabs` (voz/trilha), o fluxo
-`video-montage` do conector, ou o AI-Video-Studio para edição local. Diga ao operador onde cada arquivo gerado está.
+Montagem, trilha, voz e legendas são de outras ferramentas: uma skill ou ferramenta de áudio para voz e trilha, um
+editor de vídeo local, ou o fluxo `video-montage` do conector. Diga ao operador onde cada arquivo gerado está.

@@ -1,0 +1,39 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  hfd:
+    name: hfd.py · Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Testes (só biblioteca padrão)
+        working-directory: higgsfield-director
+        run: python -m unittest discover -s tests -v
+
+  repositorio:
+    name: formato da skill e links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: PyYAML para ler o frontmatter como YAML de verdade
+        run: python -m pip install --disable-pip-version-check pyyaml==6.0.2
+      - name: Frontmatter, openai.yaml, JSON, links e âncoras
+        run: python tools/checar_repo.py --exigir-yaml

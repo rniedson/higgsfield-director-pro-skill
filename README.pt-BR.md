@@ -11,9 +11,8 @@
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-5.0.0-475569)
 ![Agentes](https://img.shields.io/badge/agentes-Claude%20Code%20%7C%20Codex-bca271)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
-![Testes](https://img.shields.io/badge/testes-41%20passando-2ea44f)
+[![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
-![Repositório](https://img.shields.io/badge/reposit%C3%B3rio-privado-orange)
 
 [Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Licenças](#licenças)
 
@@ -21,7 +20,7 @@
 
 </div>
 
-> **Estado:** repositório privado, versão 5.0.0. Projeto independente, sem vínculo com o Higgsfield nem aprovação dele.
+> **Estado:** versão 5.0.0. Projeto independente, sem vínculo com o Higgsfield nem aprovação dele.
 > Sozinha, a skill só *planeja*: vídeo e imagem são gerados pelo conector oficial do Higgsfield (MCP), com créditos da
 > sua conta, e **só depois que o custo é mostrado e o operador diz "ok"**.
 
@@ -125,7 +124,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests) | 41 testes, sem dependências | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests) | 50 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -148,11 +147,14 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/modelos.json             retrato datado do catálogo do conector (122 modelos)
   data/pesos.json               pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/test_hfd.py             41 testes (unittest)
+  tests/test_hfd.py             50 testes (unittest)
 docs/
   AVALIACAO-RC3.md              avaliação do pacote anterior e o que a v5 aproveitou
   assets/emblema.svg            emblema
   manual/                       manual ilustrado: README (11 partes), visual/ (185 imagens + catálogo)
+tools/checar_repo.py            formato da skill, JSON, links e âncoras (rodado pelo CI)
+.github/                        CI, modelos de issue e de pull request
+CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ```
 
 </details>
@@ -210,14 +212,14 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 
 | | v4.1 RC3 / RC4 | v5.0.0 |
 |---|---|---|
-| Skill | 328 arquivos, 121 MB, 116 "comandos" | 15 arquivos, 216 KB, `SKILL.md` de 91 linhas + 6 referências lidas sob demanda |
+| Skill | 328 arquivos, 121 MB, 116 "comandos" | 15 arquivos, 203 kB, `SKILL.md` de 91 linhas + 6 referências lidas sob demanda |
 | Código | 3 compiladores, 2 ópticas, 3 orçamentos; SDK, REST, Docker | um `hfd.py`, só biblioteca padrão do Python |
 | Modelos | 9 perfis, 7 com todos os campos `null` | retrato datado de **122 modelos** do catálogo do conector, atualizável por comando |
 | Checagem de câmera | recusava *"static camera, no orbit"* | entende negação e fases; avisa, não bloqueia |
 | Áudio | mandava o áudio do Cinema Studio para a pós-produção | lê o áudio nativo no catálogo (o Cinema Studio 4.0 gera áudio por padrão) |
 | Geração | nenhuma | MCP oficial do Higgsfield, depois do custo e do "ok" explícito |
 | Conflitos | descrição genérica de "vídeo" | gatilho preso a *gerado por IA / Higgsfield*, com exclusões nomeadas |
-| Testes | 67 (2 dependiam do OpenCV) | 41, sem dependências; 4 defeitos plantados, 4 pegos |
+| Testes | 67 (2 dependiam do OpenCV) | 50, sem dependências, CI no Python 3.9 a 3.13; 4 defeitos plantados, 4 pegos |
 
 ## Recursos
 
@@ -245,8 +247,8 @@ dentro de `.claude/skills/` do projeto. A skill passa a existir apenas nas sess�
 sessões ficam como estavam.
 
 ```bash
-git clone https://github.com/rniedson/HIGGSFIELD-DIRECTOR-PRO-SKILL.git
-R="$PWD/HIGGSFIELD-DIRECTOR-PRO-SKILL/higgsfield-director"
+git clone https://github.com/rniedson/higgsfield-director-pro-skill.git
+R="$PWD/higgsfield-director-pro-skill/higgsfield-director"
 cd /caminho/do/projeto
 mkdir -p .claude/skills && ln -s "$R" .claude/skills/higgsfield-director
 ```
@@ -380,9 +382,12 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 | `exportar PROJETO PASTA` | `roteiro.md`, `tomadas.csv`, `legendas.srt` |
 | `otica F D N` | campo de visão, largura do quadro, profundidade de campo, hiperfocal |
 | `pontuar AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
-| `modelos [--tipo] [--buscar] [--id] [--importar ARQUIVO]` | ler ou atualizar o retrato dos modelos |
+| `modelos [--tipo] [--buscar] [--id]` | ler o retrato dos modelos |
+| `modelos --importar LISTA... --saida ARQUIVO` | montar um retrato novo com as listas do `models_explore`, fora da pasta da skill |
 
-Saída em JSON; código `1` = erro de conteúdo, `2` = erro de uso. Sem acesso à rede; lê e grava só os caminhos indicados.
+`--retrato ARQUIVO` faz `validar`, `compilar`, `exportar` e `modelos` usarem outro retrato. Saída em JSON. Código `1`:
+o projeto tem erros, listados em `erros`. Código `2`: uso, arquivo ou entrada fora do formato, com a mensagem em
+`erro`; nunca um traceback. Sem acesso à rede; lê e grava só os caminhos indicados.
 
 ## Como escolher o modelo
 
@@ -420,11 +425,14 @@ vídeo continua com a skill dona dele.
 
 ```bash
 cd higgsfield-director && python3 -m unittest discover -s tests -v
+cd .. && python3 tools/checar_repo.py
 ```
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 41/41 passando (Python 3.12, sem pacotes de terceiros) |
+| Testes | 50/50 passando no Python 3.9 e 3.12 aqui, e no CI do 3.9 ao 3.13 (sem pacotes de terceiros) |
+| Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
+| Conferência do repositório | `tools/checar_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
 | Formato da skill | cabeçalho lido como YAML; descrição com 937 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
 | Encaminhamento no Claude Code (sem interface, descrição final) | 9 de 9 pedidos no lugar certo: 5 para esta skill (2 pedidos de prompt, 2 diagnósticos, 1 ficha de personagem passada ao fluxo do conector) e 4 para as skills donas (render, edição de vídeo gravado, voz, motion graphics). Uma primeira rodada, com a descrição anterior, perdeu 2 de 3 pedidos de prompt; a descrição foi corrigida e testada de novo |
@@ -441,14 +449,7 @@ Propriedades de segurança:
 
 ## Edições e histórico
 
-| Versão | Foco |
-|---|---|
-| v1.0 | skill de cinema e vocabulário de prompt |
-| v2.0 – v2.1 | produção estruturada, catálogos, regras de qualidade, referências esquemáticas |
-| v3.0 | inteligência cinematográfica, experimentos, laboratórios offline |
-| v4.0 | módulos master e manual ilustrado |
-| v4.1 RC1 – RC4 | empacotamento, endurecimento, separação público/privado, README ilustrado AAA |
-| **v5.0.0** | reescrita para Claude Code e Codex: skill enxuta, catálogo ao vivo, conector oficial, trava de custo, testes |
+Todas as mudanças, inclusive as edições anteriores (v1.0 a v4.1 RC4), estão no [CHANGELOG.md](CHANGELOG.md), em inglês.
 
 As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório; o que foi aproveitado e por quê está em
 [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
@@ -475,6 +476,9 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Qualidade | [references/qualidade.md](higgsfield-director/references/qualidade.md) |
 | Manual ilustrado | [docs/manual/README.md](docs/manual/README.md) |
 | Avaliação da v4.1 | [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md) |
+| Histórico de mudanças | [CHANGELOG.md](CHANGELOG.md) |
+| Como contribuir | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Política de segurança | [SECURITY.md](SECURITY.md) |
 
 ## Licenças
 

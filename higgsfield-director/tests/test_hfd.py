@@ -302,6 +302,137 @@ class Arquivos(unittest.TestCase):
                 self.assertEqual(hfd.main(["otica", "50", "4"]), 0)
 
 
+def _cli(*args):
+    """(código de saída, stdout, stderr) do hfd.main."""
+    out, err = io.StringIO(), io.StringIO()
+    with redirect_stdout(out), redirect_stderr(err):
+        code = hfd.main([str(a) for a in args])
+    return code, out.getvalue(), err.getvalue()
+
+
+class Robustez(unittest.TestCase):
+    """Revisão de 24/11/2026: entrada fora do formato não pode virar traceback com código 1."""
+
+    CASOS = {
+        "item da linha do tempo não é objeto": lambda p: tomada(p, linha_do_tempo=["x"]),
+        "camera_xy curto": lambda p: tomada(p, camera_xy=[1]),
+        "inicio com lista": lambda p: tomada(p, inicio=[1]),
+        "atributos do inicio não são objeto": lambda p: tomada(p, inicio={"P01": "red"}),
+        "biblias em lista": lambda p: p.update(biblias=[1]) or p,
+        "ficha não é objeto": lambda p: p.update(biblias={"P01": "frasco"}) or p,
+        "fixo não é objeto": lambda p: p.update(biblias={"P01": {"fixo": ["black"]}}) or p,
+        "entidade não é texto": lambda p: tomada(p, entidades=[{"id": "P01"}]),
+        "mudança aprovada não é texto": lambda p: tomada(p, mudancas_aprovadas=[["P01.cor"]]),
+        "fala não é objeto": lambda p: tomada(p, falas=["Oi."]),
+        "restricoes em texto": lambda p: p.update(restricoes="keep the label") or p,
+        "eixo malformado": lambda p: p.update(eixo=[[0, 0], ["a", 1]]) or p,
+        "id da tomada é lista": lambda p: tomada(p, id=["T01"]),
+    }
+
+    def test_forma_errada_vira_erro_listado(self):
+        for nome, estraga in self.CASOS.items():
+            with self.subTest(nome):
+                r = hfd.validar(estraga(projeto()), CATALOGO)
+                self.assertTrue(r["erros"], nome)
+
+    def test_cli_forma_errada_sai_1_com_json(self):
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "p.json"
+            for nome, estraga in self.CASOS.items():
+                with self.subTest(nome):
+                    arq.write_text(json.dumps(estraga(projeto())))
+                    for cmd in ("validar", "compilar"):
+                        code, out, err = _cli(cmd, arq)
+                        self.assertEqual(code, 1)
+                        self.assertTrue(json.loads(out)["erros"])
+                        self.assertNotIn("Traceback", err)
+
+    def test_pontuar_e_orcamento_fora_do_formato_saem_2(self):
+        modelo = json.loads((RAIZ / "templates/avaliacao.json").read_text())
+        ruins = {"pontuar": [[1, 2], {**modelo, "criterios": []},
+                             {**modelo, "criterios": {**modelo["criterios"], "camera": "boa"}}],
+                 "orcamento": [[1], {"tomadas": ["T01"]}, {"tomadas": {}}]}
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "x.json"
+            for cmd, entradas in ruins.items():
+                for x in entradas:
+                    with self.subTest(cmd=cmd, entrada=x):
+                        arq.write_text(json.dumps(x))
+                        code, _, err = _cli(cmd, arq)
+                        self.assertEqual(code, 2)
+                        self.assertIn("erro", json.loads(err))
+
+    def test_falha_inesperada_sai_2_sem_traceback(self):
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "p.json"
+            arq.write_text(json.dumps(projeto()))
+            with mock.patch.object(hfd, "validar", side_effect=TypeError("boom")):
+                code, _, err = _cli("validar", arq)
+        self.assertEqual(code, 2)
+        self.assertIn("TypeError", json.loads(err)["erro"])
+
+
+class Revisao(unittest.TestCase):
+    def test_orcamento_arredonda(self):
+        ts = [{"id": f"T0{i}", "custo_teste": 7.5, "custo_final": 0.1} for i in range(3)]
+        r = hfd.orcamento(ts, reserva=20, tentativas=3)
+        self.assertEqual(r["base"], 67.8)
+        self.assertEqual(r["total"], 81.36)
+
+    def test_tentativas_da_tomada_avisam(self):
+        ts = [{"id": "T01", "custo_teste": 1, "custo_final": 1, "tentativas": 5},
+              {"id": "T02", "custo_teste": 1, "custo_final": 1}]
+        r = hfd.orcamento(ts, tentativas=1)
+        self.assertEqual([t["tentativas"] for t in r["tomadas"]], [5, 1])
+        self.assertEqual(len(r["avisos"]), 1)
+        self.assertIn("T01", r["avisos"][0])
+        self.assertEqual(hfd.orcamento(ts)["avisos"], [])
+
+    def test_legendas_dividem_a_tomada(self):
+        p = tomada(projeto(), falas=[{"quem": "A", "texto": "Noir."},
+                                     {"quem": "A", "texto": "Para a noite."}])
+        with tempfile.TemporaryDirectory() as d:
+            hfd.exportar(p, d, CATALOGO)
+            srt = (Path(d) / "legendas.srt").read_text()
+        self.assertIn("00:00:00,000 --> 00:00:01,250", srt)
+        self.assertIn("00:00:01,250 --> 00:00:05,000", srt)
+
+    def test_importar_exige_saida_e_nao_toca_na_skill(self):
+        retrato = RAIZ / "data/modelos.json"
+        antes = retrato.read_bytes()
+        base = {"gerado_em": "2099-01-01", "modelos": {
+            "velho": {"id": "velho", "tipo": "video"}, "img": {"id": "img", "tipo": "image"}}}
+        lista = {"items": [{"id": "novo", "name": "Novo", "output_type": "video",
+                            "parameters": [{"name": "duration", "options": [5]}]}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(base))
+            (Path(d) / "lista.json").write_text(json.dumps(lista))
+            code, _, err = _cli("modelos", "--importar", Path(d) / "lista.json")
+            self.assertEqual(code, 2)
+            self.assertIn("--saida", json.loads(err)["erro"])
+            code, out, _ = _cli("modelos", "--importar", Path(d) / "lista.json", "--retrato", Path(d) / "base.json",
+                                "--saida", Path(d) / "novo.json")
+            self.assertEqual(code, 0)
+            r = json.loads(out)
+            self.assertEqual(r["removidos"], ["velho"])
+            novo = json.loads((Path(d) / "novo.json").read_text())
+            self.assertEqual(sorted(novo["modelos"]), ["img", "novo"])
+            code, out, _ = _cli("modelos", "--id", "novo", "--retrato", Path(d) / "novo.json")
+            self.assertEqual(code, 0)
+        self.assertEqual(retrato.read_bytes(), antes)
+
+    def test_retrato_indicado_vale_na_validacao(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "r.json").write_text(json.dumps(CATALOGO))
+            (Path(d) / "p.json").write_text(json.dumps(projeto()))
+            code, out, _ = _cli("validar", Path(d) / "p.json", "--retrato", Path(d) / "r.json")
+            self.assertEqual(code, 0)
+            self.assertNotIn("não está no retrato", out)
+            code, _, err = _cli("validar", Path(d) / "p.json", "--retrato", Path(d) / "falta.json")
+            self.assertEqual(code, 2)
+
+
 class Skill(unittest.TestCase):
     def setUp(self):
         self.txt = (RAIZ / "SKILL.md").read_text(encoding="utf-8")
