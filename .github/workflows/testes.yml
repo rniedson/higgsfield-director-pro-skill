@@ -11,11 +11,16 @@ permissions:
 jobs:
   hfd:
     name: hfd.py · Python ${{ matrix.python }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest]
+        include:
+          # o ubuntu-latest (26.04) não tem build do Python 3.9; o 24.04 ainda tem
+          - python: "3.9"
+            os: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
