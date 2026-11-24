@@ -1,0 +1,4 @@
+interface:
+  display_name: "Higgsfield Director"
+  short_description: "Direct AI-generated video and images on Higgsfield"
+  default_prompt: "Use $higgsfield-director to plan the shots, write the prompts, estimate the credit cost and wait for my ok before generating."
