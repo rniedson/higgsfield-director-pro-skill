@@ -15,7 +15,7 @@
 ![License](https://img.shields.io/badge/code-MIT-blue)
 ![Repository](https://img.shields.io/badge/repository-private-orange)
 
-[Quick start](#quick-start) · [Examples](#examples) · [Camera atlas](#camera-movement-atlas) · [Architecture](#architecture) · [Português](#português) · [License](#licensing)
+[Quick start](#quick-start) · [Examples](#examples) · [Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Português](#português) · [License](#licensing)
 
 </div>
 
@@ -32,7 +32,7 @@
 - [Examples](#examples)
 - [`hfd.py` reference](#hfdpy-reference)
 - [Choosing a model](#choosing-a-model)
-- [Camera movement atlas](#camera-movement-atlas)
+- [Illustrated manual](#illustrated-manual)
 - [Scope and coexistence](#scope-and-coexistence)
 - [Architecture](#architecture)
 - [Quality and security](#quality-and-security)
@@ -92,6 +92,7 @@ Full evaluation: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Model choice | by need (length, references, first/last frame, audio, cost), confirmed in the live catalog | [`modelos.md`](higgsfield-director/references/modelos.md) |
 | Prompt writing | golden order, per-model notes, 18 recipes against common defects | [`prompt.md`](higgsfield-director/references/prompt.md) |
 | Vocabulary | camera, framing, lens, light, color, physics, acting, audio | [`vocabulario.md`](higgsfield-director/references/vocabulario.md) |
+| Illustrated manual | 11 parts, 185 schematic images: movement, lighting, styles, sheets, optical atlas | [`docs/manual`](docs/manual/README.md) |
 | Continuity | bibles (character, product, place) with fixed attributes; boundary check between shots | `hfd.py validar` |
 | 180° rule | camera positions against the action axis | `hfd.py validar` |
 | Model limits | duration, aspect ratio, resolution, audio, image-to-video inputs | `hfd.py validar` + snapshot |
@@ -257,31 +258,68 @@ Source of truth is the **live catalog** (`models_explore`). The bundled snapshot
 Measured quotes (5 s, 24/11/2026): Cinema Studio 4.0 = 15 / 35 / 80 credits at 480p / 720p / 1080p; Seedance 2.5 720p
 = 35; Kling 3.0 = 7.5 to 10. Always re-quote. Full table: [`modelos.md`](higgsfield-director/references/modelos.md).
 
-## Camera movement atlas
+## Illustrated manual
 
-Plan-view schematics of the movements the skill writes into prompts (not rendered shots).
-Vocabulary and definitions: [`vocabulario.md`](higgsfield-director/references/vocabulario.md).
+The [illustrated direction manual](docs/manual/README.md) has **11 parts and 185 schematic images**: camera movement,
+framing, lenses and optics, lighting, color and styles, acting, physics and materials, time and editing, sound,
+continuity and production. Each part gives the rule, a positive prompt, what to avoid and the illustrations. The
+images explain direction; they are not renders and do not prove how a model behaves.
+
+| Part | Topic | | Part | Topic |
+|:---:|---|---|:---:|---|
+| 01 | [Camera and movement](docs/manual/README.md#parte-01--câmera-e-movimento) | | 07 | [Physics, materials and VFX](docs/manual/README.md#parte-07--física-materiais-e-vfx) |
+| 02 | [Framing and composition](docs/manual/README.md#parte-02--enquadramento-e-composição) | | 08 | [Time, transitions and editing](docs/manual/README.md#parte-08--tempo-transições-e-edição) |
+| 03 | [Cameras, lenses and optics](docs/manual/README.md#parte-03--câmeras-lentes-e-óptica) | | 09 | [Sound direction](docs/manual/README.md#parte-09--áudio-e-direção-sonora) |
+| 04 | [Cinematic lighting](docs/manual/README.md#parte-04--iluminação-cinematográfica) | | 10 | [Continuity and diagnostics](docs/manual/README.md#parte-10--continuidade-e-diagnóstico) |
+| 05 | [Color and visual styles](docs/manual/README.md#parte-05--cor-e-estilos-visuais) | | 11 | [Prompt engineering and production](docs/manual/README.md#parte-11--engenharia-de-prompts-e-produção) |
+| 06 | [Acting and emotion](docs/manual/README.md#parte-06--atuação-e-emoções) | | — | [Optical atlas, 100 studies](docs/manual/README.md#atlas-óptico--100-estudos) |
+
+### Camera movement
+
+Plan-view schematics of the movements the skill writes into prompts.
 
 | | | | |
 |:---:|:---:|:---:|:---:|
-| <img src="docs/assets/camera/dolly-in.gif" width="190" alt="Dolly in"><br>**Dolly in** | <img src="docs/assets/camera/dolly-out.gif" width="190" alt="Dolly out"><br>**Dolly out** | <img src="docs/assets/camera/zoom-in.gif" width="190" alt="Zoom in"><br>**Zoom in** | <img src="docs/assets/camera/zoom-out.gif" width="190" alt="Zoom out"><br>**Zoom out** |
-| <img src="docs/assets/camera/truck-left.gif" width="190" alt="Truck left"><br>**Truck left** | <img src="docs/assets/camera/truck-right.gif" width="190" alt="Truck right"><br>**Truck right** | <img src="docs/assets/camera/pan-left.gif" width="190" alt="Pan left"><br>**Pan left** | <img src="docs/assets/camera/pan-right.gif" width="190" alt="Pan right"><br>**Pan right** |
-| <img src="docs/assets/camera/orbit-clockwise.gif" width="190" alt="Orbit clockwise"><br>**Orbit clockwise** | <img src="docs/assets/camera/orbit-counterclockwise.gif" width="190" alt="Orbit counterclockwise"><br>**Orbit counterclockwise** | <img src="docs/assets/camera/arc-left.gif" width="190" alt="Arc left"><br>**Arc left** | <img src="docs/assets/camera/arc-right.gif" width="190" alt="Arc right"><br>**Arc right** |
-| <img src="docs/assets/camera/tilt-up.gif" width="190" alt="Tilt up"><br>**Tilt up** | <img src="docs/assets/camera/tilt-down.gif" width="190" alt="Tilt down"><br>**Tilt down** | <img src="docs/assets/camera/crane-up.gif" width="190" alt="Crane up"><br>**Crane up** | <img src="docs/assets/camera/crane-down.gif" width="190" alt="Crane down"><br>**Crane down** |
-| <img src="docs/assets/camera/pedestal-up.gif" width="190" alt="Pedestal up"><br>**Pedestal up** | <img src="docs/assets/camera/pedestal-down.gif" width="190" alt="Pedestal down"><br>**Pedestal down** | <img src="docs/assets/camera/camera-roll.gif" width="190" alt="Camera roll"><br>**Camera roll** | <img src="docs/assets/camera/static.gif" width="190" alt="Static"><br>**Static** |
+| <img src="docs/manual/visual/assets/GIF001.gif" width="190" alt="Dolly in"><br>**Dolly in** | <img src="docs/manual/visual/assets/GIF002.gif" width="190" alt="Dolly out"><br>**Dolly out** | <img src="docs/manual/visual/assets/GIF013.gif" width="190" alt="Zoom in"><br>**Zoom in** | <img src="docs/manual/visual/assets/GIF014.gif" width="190" alt="Zoom out"><br>**Zoom out** |
+| <img src="docs/manual/visual/assets/GIF003.gif" width="190" alt="Truck left"><br>**Truck left** | <img src="docs/manual/visual/assets/GIF004.gif" width="190" alt="Truck right"><br>**Truck right** | <img src="docs/manual/visual/assets/GIF009.gif" width="190" alt="Pan left"><br>**Pan left** | <img src="docs/manual/visual/assets/GIF010.gif" width="190" alt="Pan right"><br>**Pan right** |
+| <img src="docs/manual/visual/assets/GIF005.gif" width="190" alt="Orbit clockwise"><br>**Orbit clockwise** | <img src="docs/manual/visual/assets/GIF006.gif" width="190" alt="Orbit counterclockwise"><br>**Orbit counterclockwise** | <img src="docs/manual/visual/assets/GIF016.gif" width="190" alt="Arc left"><br>**Arc left** | <img src="docs/manual/visual/assets/GIF017.gif" width="190" alt="Arc right"><br>**Arc right** |
+| <img src="docs/manual/visual/assets/GIF011.gif" width="190" alt="Tilt up"><br>**Tilt up** | <img src="docs/manual/visual/assets/GIF012.gif" width="190" alt="Tilt down"><br>**Tilt down** | <img src="docs/manual/visual/assets/GIF007.gif" width="190" alt="Crane up"><br>**Crane up** | <img src="docs/manual/visual/assets/GIF008.gif" width="190" alt="Crane down"><br>**Crane down** |
+| <img src="docs/manual/visual/assets/GIF018.gif" width="190" alt="Pedestal up"><br>**Pedestal up** | <img src="docs/manual/visual/assets/GIF019.gif" width="190" alt="Pedestal down"><br>**Pedestal down** | <img src="docs/manual/visual/assets/GIF020.gif" width="190" alt="Camera roll"><br>**Camera roll** | <img src="docs/manual/visual/assets/GIF015.gif" width="190" alt="Static"><br>**Static** |
 
 Dolly moves the camera; zoom changes the lens. **One dominant movement per shot**, or explicit phases
 (*"static, then a slow push-in"*).
 
+### Lighting
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/manual/visual/assets/LGT001.png" width="170" alt="Front light"><br>**Front light** | <img src="docs/manual/visual/assets/LGT002.png" width="170" alt="Side light"><br>**Side light** | <img src="docs/manual/visual/assets/LGT003.png" width="170" alt="Top light"><br>**Top light** | <img src="docs/manual/visual/assets/LGT004.png" width="170" alt="Under light"><br>**Under light** |
+| <img src="docs/manual/visual/assets/LGT005.png" width="170" alt="Cross light"><br>**Cross light** | <img src="docs/manual/visual/assets/LGT006.png" width="170" alt="Back light"><br>**Back light** | <img src="docs/manual/visual/assets/LGT007.png" width="170" alt="Soft light"><br>**Soft light** | <img src="docs/manual/visual/assets/LGT008.png" width="170" alt="Hard light"><br>**Hard light** |
+
+### Visual styles
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/manual/visual/style/ST02.svg" width="190" alt="Neo Noir"><br>**Neo Noir** | <img src="docs/manual/visual/style/ST03.svg" width="190" alt="Cyberpunk"><br>**Cyberpunk** | <img src="docs/manual/visual/style/ST07.svg" width="190" alt="Luxury Editorial"><br>**Luxury Editorial** | <img src="docs/manual/visual/style/ST15.svg" width="190" alt="Art Deco"><br>**Art Deco** |
+| <img src="docs/manual/visual/style/ST01.svg" width="190" alt="Photorealism"><br>**Photorealism** | <img src="docs/manual/visual/style/ST09.svg" width="190" alt="Analog Horror"><br>**Analog Horror** | <img src="docs/manual/visual/style/ST10.svg" width="190" alt="Claymation"><br>**Claymation** | <img src="docs/manual/visual/style/ST11.svg" width="190" alt="2D Anime"><br>**2D Anime** |
+
+20 styles with ready prompts in [part 05](docs/manual/README.md#parte-05--cor-e-estilos-visuais).
+
 <details>
-<summary><b>Lighting and depth-of-field boards</b></summary>
+<summary><b>Boards, sheets and the optical atlas</b></summary>
 <br>
 
-| Lighting | Optics |
+| Optics | Character turnaround |
 |:---:|:---:|
-| <img src="docs/assets/prancha-luz.png" width="400" alt="Lighting comparison board"> | <img src="docs/assets/prancha-otica.png" width="400" alt="Depth of field comparison board"> |
+| <img src="docs/manual/visual/assets/BOARD_optics.png" width="400" alt="Optics board"> | <img src="docs/manual/visual/assets/SHT001.png" width="400" alt="Character turnaround sheet"> |
+| **Product orthographic views** | **Warm luxury moodboard** |
+| <img src="docs/manual/visual/assets/SHT003.png" width="400" alt="Product orthographic views"> | <img src="docs/manual/visual/assets/SHT007.png" width="400" alt="Warm luxury moodboard"> |
 
-Illustrative shading and blur, not lens calibration or model behavior.
+| 24 mm | 50 mm | 85 mm | 135 mm |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/manual/visual/atlas/AT001.png" width="190" alt="24mm study"> | <img src="docs/manual/visual/atlas/AT041.png" width="190" alt="50mm study"> | <img src="docs/manual/visual/atlas/AT067.png" width="190" alt="85mm study"> | <img src="docs/manual/visual/atlas/AT091.png" width="190" alt="135mm study"> |
+
+Geometric studies of one object across lenses, distances and palettes; the full atlas has 100.
 
 </details>
 
@@ -320,7 +358,8 @@ higgsfield-director/            the skill: install THIS folder
   tests/test_hfd.py             41 unittest cases
 docs/
   AVALIACAO-RC3.md              evaluation of the previous package and what v5 kept
-  assets/                       emblem, camera GIFs, lighting and optics boards
+  assets/emblema.svg            emblem
+  manual/                       illustrated direction manual: README (11 parts), visual/ (185 images + catalog)
 ```
 
 ## Quality and security
@@ -380,13 +419,16 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 | Models | [references/modelos.md](higgsfield-director/references/modelos.md) |
 | Connector | [references/conector.md](higgsfield-director/references/conector.md) |
 | Quality | [references/qualidade.md](higgsfield-director/references/qualidade.md) |
+| Illustrated manual | [docs/manual/README.md](docs/manual/README.md) |
 | Evaluation of v4.1 | [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md) |
 
 ## Licensing
 
 - Code and skill text: [MIT](LICENSE), © 2026 Robson Niedson.
-- Images in `docs/assets/` (camera GIFs and boards, emblem): come from the v4.1 illustrated package, which declares
-  them private and schematic, with no public authorization presumed. They are **not** covered by the MIT grant.
+- Illustrated manual text (`docs/manual/README.md`): adapted from the v4.1 illustrated package, which declares its
+  prose under [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md); the changes are listed at the end of the manual.
+- Images in `docs/manual/visual/` and the emblem in `docs/assets/`: come from the v4.1 package, which declares them
+  private and schematic, with no public authorization presumed. They are **not** covered by MIT or CC BY-SA.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. This project is
   independent and not affiliated with or endorsed by any of them.
 
@@ -454,6 +496,12 @@ A skill dispara para vídeo e imagem **gerados por IA**. Edição de vídeo grav
 que o conector resolve com fluxo próprio (UGC, ficha de personagem, foto de produto, miniatura) ficam com quem já cuida
 deles. Veja [Scope and coexistence](#scope-and-coexistence).
 
+### Manual ilustrado
+
+O [manual ilustrado](docs/manual/README.md) tem 11 partes e 185 imagens esquemáticas: movimentos de câmera,
+enquadramento, lentes, luz, cor e 20 estilos com prompt pronto, atuação, física, tempo, som, continuidade, produção e
+um atlas óptico de 100 estudos. Cada parte traz a regra, um prompt positivo e o que evitar.
+
 ### Testes e segurança
 
 `python3 -m unittest discover -s tests -v` na pasta da skill: 41 testes, sem dependências. O `hfd.py` não acessa a rede.
@@ -462,8 +510,9 @@ Custo mostrado e "ok" explícito antes de qualquer geração. Rosto e voz de pes
 ### Histórico e licenças
 
 A v5 reescreve o pacote v4.1 RC3/RC4 gerado no ChatGPT. A avaliação está em
-[docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md). Código e texto da skill: MIT. As imagens de `docs/assets/` vêm do pacote
-ilustrado v4.1, que as declara privadas, e não entram na licença MIT.
+[docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md). Código e texto da skill: MIT. O texto do manual ilustrado segue a CC BY-SA 4.0
+declarada pelo pacote v4.1. As imagens (`docs/manual/visual/` e o emblema) são privadas e não entram em nenhuma das
+duas licenças.
 
 <div align="center">
 

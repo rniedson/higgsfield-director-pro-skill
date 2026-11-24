@@ -1,0 +1,2 @@
+# Biblioteca HYBRID
+65 ativos locais originais procedurais: 20 diagramas, 20 GIFs, 12 ilustrações, 10 fichas e 3 pranchas. Dois links de descoberta externos não verificados nesta execução. Meta 1.800 ativos: 65 entregues, 1.735 restantes. Não são fotografias ou renders reais; fichas são exemplos esquemáticos, não referências de identidade validadas. Iluminação e óptica são aproximações didáticas. GIFs ilustram trajetórias; roll e crane são simplificações. Não use como prova de comportamento de um modelo.
