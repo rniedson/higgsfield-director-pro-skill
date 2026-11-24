@@ -8,7 +8,7 @@
     "prompt": "Dolly In camera movement schematic",
     "asset": "visual/assets/CAM001.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "12082220472e8e80cb53797aa9bdf44c1b85737956ae6daccad203dfa8e727eb"
   },
   {
@@ -20,7 +20,7 @@
     "prompt": "Dolly In animated camera schematic",
     "asset": "visual/assets/GIF001.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "c5d997780564bae27c4185dc8870d0f4d9a3ecfd9993c1130f1e8fc16ae43a9e"
   },
   {
@@ -32,7 +32,7 @@
     "prompt": "Dolly Out camera movement schematic",
     "asset": "visual/assets/CAM002.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "e7f9644d65cc6a658bd69970ee5c20c13c1fed0857881e7fade5be20ffc81787"
   },
   {
@@ -44,7 +44,7 @@
     "prompt": "Dolly Out animated camera schematic",
     "asset": "visual/assets/GIF002.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "de2028e39fec0125202af3a550e9c380d9d02cee36792f22d1904d0d8a476562"
   },
   {
@@ -56,7 +56,7 @@
     "prompt": "Truck Left camera movement schematic",
     "asset": "visual/assets/CAM003.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "0a022aee8d00bfaee579ef3c3a10b3ab1f66c7ffd3777f890fd6739fccf04e0f"
   },
   {
@@ -68,7 +68,7 @@
     "prompt": "Truck Left animated camera schematic",
     "asset": "visual/assets/GIF003.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "3a6ca6b2929bac6b8cf597f67fa0ea82c3ae468255141f6e24bf2571797a396a"
   },
   {
@@ -80,7 +80,7 @@
     "prompt": "Truck Right camera movement schematic",
     "asset": "visual/assets/CAM004.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "e5fcf5a3367a71cc521f81c234b853ccfdde270bb1037e017e55c4d038831cce"
   },
   {
@@ -92,7 +92,7 @@
     "prompt": "Truck Right animated camera schematic",
     "asset": "visual/assets/GIF004.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "96b9b70cb2999e9425f60a5d43cea7422d0c1ae8c04a811dfd24500392d163c8"
   },
   {
@@ -104,7 +104,7 @@
     "prompt": "Orbit Clockwise camera movement schematic",
     "asset": "visual/assets/CAM005.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "198bfa46f09e2479a6862af959b88e83a4ba803333b6c15b34d79f5c564ab81b"
   },
   {
@@ -116,7 +116,7 @@
     "prompt": "Orbit Clockwise animated camera schematic",
     "asset": "visual/assets/GIF005.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "6ec33991fd374207e6f31f476cd950a8332146fa1f181c03e3ef3dd1dcdce33e"
   },
   {
@@ -128,7 +128,7 @@
     "prompt": "Orbit Counterclockwise camera movement schematic",
     "asset": "visual/assets/CAM006.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "00414fa639f87ab31e50eb577e0148108667214cc54249d14e2d8a834cabb561"
   },
   {
@@ -140,7 +140,7 @@
     "prompt": "Orbit Counterclockwise animated camera schematic",
     "asset": "visual/assets/GIF006.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "88663de1602510a2bfb002f2f176f5b7174fd6505a76c87907683abd4a70a5db"
   },
   {
@@ -152,7 +152,7 @@
     "prompt": "Crane Up camera movement schematic",
     "asset": "visual/assets/CAM007.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "afd184d71f688b6a6c267053ef0a25d94b962002d093b0c67e6d6f5a5fa4491d"
   },
   {
@@ -164,7 +164,7 @@
     "prompt": "Crane Up animated camera schematic",
     "asset": "visual/assets/GIF007.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "ea83e24c935739c37186cf88fceaafce01ec5796cf8d18d29990b7e95de92f36"
   },
   {
@@ -176,7 +176,7 @@
     "prompt": "Crane Down camera movement schematic",
     "asset": "visual/assets/CAM008.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "0c4a8b03853ce87961357ba02df25e7f0fa8b10b2ba6c8c5dd9f82884af87b1e"
   },
   {
@@ -188,7 +188,7 @@
     "prompt": "Crane Down animated camera schematic",
     "asset": "visual/assets/GIF008.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "df90aaedde402273142b091480cdbac5058fc4ab23cc22f3d85087862f003ada"
   },
   {
@@ -200,7 +200,7 @@
     "prompt": "Pan Left camera movement schematic",
     "asset": "visual/assets/CAM009.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "9cb5cc53e34e41d1a7b59bf75a9793be9ffd56202db5a8fb73eb3b51be8abc1c"
   },
   {
@@ -212,7 +212,7 @@
     "prompt": "Pan Left animated camera schematic",
     "asset": "visual/assets/GIF009.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "b7c7b6f0ca8ec2daf24e14b89080075f823759c4b99328605e7c3c991e3baaa7"
   },
   {
@@ -224,7 +224,7 @@
     "prompt": "Pan Right camera movement schematic",
     "asset": "visual/assets/CAM010.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "1ce7fb3e5203df07c8f308586bd322b3c71a8860d81943e7abb4f5fa8c10d353"
   },
   {
@@ -236,7 +236,7 @@
     "prompt": "Pan Right animated camera schematic",
     "asset": "visual/assets/GIF010.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "91303d0534b6027d6a44b5f00919476e7e26c4e87c2805b3020177751be0019c"
   },
   {
@@ -248,7 +248,7 @@
     "prompt": "Tilt Up camera movement schematic",
     "asset": "visual/assets/CAM011.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "8ecc2ced427a1cdf925cd9eeece90f002225fca9252db12150481918a99eb9c8"
   },
   {
@@ -260,7 +260,7 @@
     "prompt": "Tilt Up animated camera schematic",
     "asset": "visual/assets/GIF011.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "bdfb19b6a50c1b41748adbb923dcf44c11d496601403e05ed91526ce46616374"
   },
   {
@@ -272,7 +272,7 @@
     "prompt": "Tilt Down camera movement schematic",
     "asset": "visual/assets/CAM012.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "bf38b318550b07384abb69eedb1d282f5f61efa858a5e9dd038b0adde7e6d6a3"
   },
   {
@@ -284,7 +284,7 @@
     "prompt": "Tilt Down animated camera schematic",
     "asset": "visual/assets/GIF012.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "37b7e337532e6f78e5a8f839e640338a0eb1fb2e6fef940d7390a9bfa3688792"
   },
   {
@@ -296,7 +296,7 @@
     "prompt": "Zoom In camera movement schematic",
     "asset": "visual/assets/CAM013.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "ab1f421fce840a9f74105314e41cbcc56a546149733ecf46022692925c5bb9ff"
   },
   {
@@ -308,7 +308,7 @@
     "prompt": "Zoom In animated camera schematic",
     "asset": "visual/assets/GIF013.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "2f3517548350df766d91cbdc18a5e511a62a82c16d998b1cf5d65b329c25e07c"
   },
   {
@@ -320,7 +320,7 @@
     "prompt": "Zoom Out camera movement schematic",
     "asset": "visual/assets/CAM014.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "eaec1df99ccf620e1a0f0fd1093079954da201a0ce5fad27fca1955f9d9942b1"
   },
   {
@@ -332,7 +332,7 @@
     "prompt": "Zoom Out animated camera schematic",
     "asset": "visual/assets/GIF014.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "104156e3aed0f1b6a530d518a293bc317180652ba5bc286fbea9d6b8d400a818"
   },
   {
@@ -344,7 +344,7 @@
     "prompt": "Static camera movement schematic",
     "asset": "visual/assets/CAM015.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "e28caca2213952c32e529fe88ba727d5c899fbfb0fa19e60c8c13e3f5040f944"
   },
   {
@@ -356,7 +356,7 @@
     "prompt": "Static animated camera schematic",
     "asset": "visual/assets/GIF015.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "a74f84e831951209a5781c1292e6a2febd6837767406949dc13bb169c740317f"
   },
   {
@@ -368,7 +368,7 @@
     "prompt": "Arc Left camera movement schematic",
     "asset": "visual/assets/CAM016.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "52f3663e84b0dcdd969f2c684eb04d8603edac49f0c191dcf7a8dbbf121eda5b"
   },
   {
@@ -380,7 +380,7 @@
     "prompt": "Arc Left animated camera schematic",
     "asset": "visual/assets/GIF016.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "d02bc703b4476001da508c677a63a5bd98b4400d42cc364ba2cabadae5d1f127"
   },
   {
@@ -392,7 +392,7 @@
     "prompt": "Arc Right camera movement schematic",
     "asset": "visual/assets/CAM017.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "d905be2d5647e5807a0e62db4a2868838a3f6f6221f05ab5d3343d9c1f3f4577"
   },
   {
@@ -404,7 +404,7 @@
     "prompt": "Arc Right animated camera schematic",
     "asset": "visual/assets/GIF017.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "25d54539bbd2af5677a188fbca1b093c69494105775920c2d96391f4c236c66e"
   },
   {
@@ -416,7 +416,7 @@
     "prompt": "Pedestal Up camera movement schematic",
     "asset": "visual/assets/CAM018.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "dc5bd966efb54ba2151ed599448fa6cf1a68b82d1b3b0734627b9aeadd852d49"
   },
   {
@@ -428,7 +428,7 @@
     "prompt": "Pedestal Up animated camera schematic",
     "asset": "visual/assets/GIF018.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "587dc94ff7a0d186b163392c0784f5457b26646334d729900975cfa4f40389eb"
   },
   {
@@ -440,7 +440,7 @@
     "prompt": "Pedestal Down camera movement schematic",
     "asset": "visual/assets/CAM019.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "86574d597df853a75cdba40bb4c226474a57d6ab68fc2f945cf25c26c7611d76"
   },
   {
@@ -452,7 +452,7 @@
     "prompt": "Pedestal Down animated camera schematic",
     "asset": "visual/assets/GIF019.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "f20ab09993e79cecbadc1ed3ba398cb736a3c463415ce49dde0a26c6012be95b"
   },
   {
@@ -464,7 +464,7 @@
     "prompt": "Camera Roll camera movement schematic",
     "asset": "visual/assets/CAM020.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "38aacb2bca1a576fe4f7bbe8c829d64b6266ec92e44549d029baae0b7f07b783"
   },
   {
@@ -476,7 +476,7 @@
     "prompt": "Camera Roll animated camera schematic",
     "asset": "visual/assets/GIF020.gif",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "8abc9fb4ee6f4aa2f9b6289ca95c7849922725a3958458499374558e57d6895c"
   },
   {
@@ -488,7 +488,7 @@
     "prompt": "Front light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT001.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "03011c52143141e1feb3c75f58f9a53f87aa140806c367db7b2d5eca3f1b49eb"
   },
   {
@@ -500,7 +500,7 @@
     "prompt": "Side light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT002.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "3ed8292ce2640462500886f4ffd40a248e7db28520fa73e6b2e386fe64d1d958"
   },
   {
@@ -512,7 +512,7 @@
     "prompt": "Top light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT003.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "e34a6b1343bc531bddab61abbe7fc952f19b9475b3ca0b4929863e82af96fd21"
   },
   {
@@ -524,7 +524,7 @@
     "prompt": "Under light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT004.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "a1174f060ff3110bd59e4e2b1526efba752420ff6809b10c3d6a63f9f6a9477c"
   },
   {
@@ -536,7 +536,7 @@
     "prompt": "Cross light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT005.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "280bc7e9eee6119d34b46cd135cd0548fe124627d0b3c663bd29c44a00b879fc"
   },
   {
@@ -548,7 +548,7 @@
     "prompt": "Back light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT006.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "abdc78063f08e4dd2b40b93c6088175673c40f7432652bf49d65521688d90247"
   },
   {
@@ -560,7 +560,7 @@
     "prompt": "Soft light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT007.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "180235c93935cb3ded9447cb8cf3e9cfe2573b7e7639b7e12f84c7cd4c058b30"
   },
   {
@@ -572,7 +572,7 @@
     "prompt": "Hard light on a neutral sphere; illustrative shading, not a portrait preset",
     "asset": "visual/assets/LGT008.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "5cd7e9b99b14d82a43cd6728c95511c4daf334067e1a47bf4cd78e55a90af65f"
   },
   {
@@ -584,7 +584,7 @@
     "prompt": "Deep focus with sharp foreground subject and variable background blur",
     "asset": "visual/assets/OPT001.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "3c25f4aa6ba85584cf6b799da0d0d7376f0f7bab313cdf9ca5df59277d94e362"
   },
   {
@@ -596,7 +596,7 @@
     "prompt": "Moderate depth with sharp foreground subject and variable background blur",
     "asset": "visual/assets/OPT002.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "58b7e3a04ae634279b9f9f8cb30e573804ec93b1cb51c45787f19319f3d83f46"
   },
   {
@@ -608,7 +608,7 @@
     "prompt": "Shallow depth with sharp foreground subject and variable background blur",
     "asset": "visual/assets/OPT003.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "0747a59f90c6a073aa33b6bcb3f15915c0725ceb74604fb3cd2166c5690820cd"
   },
   {
@@ -620,7 +620,7 @@
     "prompt": "Extreme shallow depth with sharp foreground subject and variable background blur",
     "asset": "visual/assets/OPT004.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "211af56d36cb2acbfc9dfcc2f1310145db9b6e929d8ddfe8040d38f8ca5114f8"
   },
   {
@@ -632,7 +632,7 @@
     "prompt": "Character turnaround schematic with four panels",
     "asset": "visual/assets/SHT001.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "65ea4ade2b18c4ca69a70536e36024e34ceb68245f59323c245458574d9d6e07"
   },
   {
@@ -644,7 +644,7 @@
     "prompt": "Expression sheet schematic with four panels",
     "asset": "visual/assets/SHT002.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "dbc1b967471e42dfae80b5e6fb4798517965d433123b8fd7a91fca53bdba2bd4"
   },
   {
@@ -656,7 +656,7 @@
     "prompt": "Product orthographic views schematic with four panels",
     "asset": "visual/assets/SHT003.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "182e5cae54a9cf688450c75071875f302b28fe306e6b675de12d720aad26139c"
   },
   {
@@ -668,7 +668,7 @@
     "prompt": "Material and label zones schematic with four panels",
     "asset": "visual/assets/SHT004.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "7e1e0484af7b3ab65e612db436570866f42c1be0b01a5245f3c4072b91618b56"
   },
   {
@@ -680,7 +680,7 @@
     "prompt": "World floor plan schematic with four panels",
     "asset": "visual/assets/SHT005.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "6afa22a0b1af54929272b9a7bb9d75466084c010950467d2ab49686471da54b2"
   },
   {
@@ -692,7 +692,7 @@
     "prompt": "World day and night schematic with four panels",
     "asset": "visual/assets/SHT006.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "89c259fa87830bf5bad98429adb0b7844e50104f7c33677ddeda2e00b6bf686c"
   },
   {
@@ -704,7 +704,7 @@
     "prompt": "Warm luxury moodboard schematic with four panels",
     "asset": "visual/assets/SHT007.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "72a51e40fbbb1dd0630f96cad67d392ebea6e8189179efc4433d27a43f790304"
   },
   {
@@ -716,7 +716,7 @@
     "prompt": "Cool noir moodboard schematic with four panels",
     "asset": "visual/assets/SHT008.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "f7711853b001bfd3945d224596de7bdec3e76c5145c897cca31ea2d2cd1f5c3a"
   },
   {
@@ -728,7 +728,7 @@
     "prompt": "Editorial lookbook schematic with four panels",
     "asset": "visual/assets/SHT009.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "5780363f6cbebf2d1548d85ae40bc17c0cbce61beb44521b67d80abe339f4410"
   },
   {
@@ -740,7 +740,7 @@
     "prompt": "Minimal product lookbook schematic with four panels",
     "asset": "visual/assets/SHT010.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "b91ddea46ecb8f8b0d4092bb4fad1ee8eb53e756eb2e207e78a37a495e808073"
   },
   {
@@ -752,7 +752,7 @@
     "prompt": "Comparative contact sheet of local references",
     "asset": "visual/assets/BOARD_lighting.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "f6a766410b7830c79197f3277497c3565d7867c3430b4a33e7dc9df6f588f8fa"
   },
   {
@@ -764,7 +764,7 @@
     "prompt": "Comparative contact sheet of local references",
     "asset": "visual/assets/BOARD_optics.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "ec1b37a5e4d3cfa9f9e275f21216781c8fd4ecdfb1b3b5acae329bb49f8aa684"
   },
   {
@@ -776,7 +776,7 @@
     "prompt": "Comparative contact sheet of local references",
     "asset": "visual/assets/BOARD_camera.png",
     "source": "original procedural illustration",
-    "rights": "Original instructional graphic; no third-party imagery",
+    "rights": "Original instructional graphic; no third-party imagery. CC BY-SA 4.0",
     "sha256": "df6111f20b53a5163bc25b3bdc4884c090b46b96c348836a0331dc42d322822b"
   }
 ]

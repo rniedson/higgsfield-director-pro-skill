@@ -11,13 +11,13 @@
 ![Partes](https://img.shields.io/badge/partes-11-475569)
 ![Ilustrações](https://img.shields.io/badge/ilustra%C3%A7%C3%B5es-185-bca271)
 ![Tipo](https://img.shields.io/badge/imagens-esquem%C3%A1ticas-6d8b9c)
-![Direitos](https://img.shields.io/badge/imagens-privadas-orange)
+![Licença](https://img.shields.io/badge/licen%C3%A7a-CC%20BY--SA%204.0-6d8b9c)
 
 [README principal](../../README.md) · [Vocabulário da skill](../../higgsfield-director/references/vocabulario.md) · [Atlas óptico](#atlas-óptico--100-estudos) · [Diagramas de câmera](#diagramas-de-câmera) · [Licença](#licença-e-origem)
 
 </div>
 
-> **Imagens esquemáticas e privadas.** Diagramas, esferas, fichas e projeções geométricas feitos para explicar a direção. Não são fotografias nem renders do Higgsfield e não provam o comportamento de nenhum modelo. Não redistribua: veja [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
+> **Imagens esquemáticas.** Diagramas, esferas, fichas e projeções geométricas feitos para explicar a direção. Não são fotografias nem renders do Higgsfield e não provam o comportamento de nenhum modelo. Texto e imagens sob [CC BY-SA 4.0](LICENSE-DOCS.md).
 
 ## Como ler cada parte
 
@@ -279,7 +279,7 @@ Versões estáticas, vistas de cima, dos movimentos animados da parte 01.
 ## Licença e origem
 
 - **Texto:** adaptado do README ilustrado da v4.1 (edição AAA), que o declara sob [CC BY-SA 4.0](LICENSE-DOCS.md). Modificações desta versão: ilustrações reorganizadas em grades; a linha repetida de "vantagem" e de "QA" de cada parte virou a seção "Como ler cada parte"; o fluxo da parte 11 passou a incluir custo, "ok" e geração pelo conector; ficaram de fora a cópia do README da RC4 e a enciclopédia dos 116 comandos e dos scripts antigos, que não existem na v5.
-- **Imagens** (`visual/`): privadas e esquemáticas, fora da licença MIT e da CC BY-SA. Ver [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
+- **Imagens** (`visual/`): ilustrações esquemáticas desenhadas por código, sob [CC BY-SA 4.0](LICENSE-DOCS.md), como o texto. Ver [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
 - Projeto independente, sem vínculo com o Higgsfield.
 
 <div align="center">

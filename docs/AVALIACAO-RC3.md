@@ -15,9 +15,9 @@ foi medido, e a última coluna das tabelas diz como.
 | `README-Higgsfield-Director-PRO.md` (19 KB) | o README desenhado: cabeçalho centralizado, selos, sumário, diagrama, tabelas, exemplos, seção em português | **O padrão, sim; o texto, não.** O texto descrevia SDK, REST e Docker que não existem mais. O `README.md` da raiz segue o mesmo desenho com o conteúdo da v5. |
 | `download.svg` | o emblema (só formas e texto, sem script) | **Sim**, `docs/assets/emblema.svg`. |
 
-Direitos das imagens: o próprio pacote declara que os ativos visuais são privados, esquemáticos (não são fotos nem
-renders do Higgsfield) e sem autorização pública presumida (`VISUAL-RIGHTS.md`). Por isso eles não estão na licença
-MIT do código: veja o README, seção de licenças.
+Direitos das imagens: o pacote as declarava privadas, esquemáticas (não são fotos nem renders do Higgsfield) e sem
+autorização pública presumida. Em 24/11/2026 o operador, titular do pacote, licenciou as imagens e o emblema sob
+CC BY-SA 4.0, a mesma licença do texto do manual: veja `docs/manual/LICENSE-DOCS.md`.
 
 ## 1. Em uma frase
 

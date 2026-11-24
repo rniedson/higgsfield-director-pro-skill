@@ -1,13 +1,13 @@
 ---
 name: higgsfield-director
-description: "Dirige vídeo e imagem GERADOS POR IA no Higgsfield e nos modelos que ele hospeda (Cinema Studio, Kling, Seedance, Veo, Wan, MiniMax, Soul, Nano Banana): briefing, plano de tomadas, prompt por modelo, custo em créditos, geração pelo conector só com o ok do operador e revisão do resultado. Use SEMPRE que pedirem um prompt para gerar vídeo ou imagem com IA, mesmo sem citar o Higgsfield ou citando outro gerador (Sora, Runway, Midjourney); quando quiserem corrigir defeito de vídeo gerado (pé deslizando, rosto que muda, mão deformada, câmera errática, produto que derrete); escolher modelo de geração; ou planejar cena, comercial, trailer ou clipe feito de tomadas geradas. Em formatos que o conector resolve com fluxo próprio (UGC, ficha de personagem, foto de produto, miniatura), carrega esse fluxo e mantém a regra de custo. Não use para vídeos do estudio-3d, edição de vídeo gravado, vídeo de proposta, voz e trilha, nem publicação."
+description: "Directs AI-GENERATED video and images on Higgsfield and the models it hosts (Cinema Studio, Kling, Seedance, Veo, Wan, MiniMax, Soul, Nano Banana): brief, shot list, per-model prompts, credit cost, generation through the connector only after the operator's ok, and review of the result. Use it WHENEVER someone asks for a prompt to generate video or images with AI, even without naming Higgsfield or while naming another generator (Sora, Runway, Midjourney); wants to fix a defect in generated video (sliding feet, a face that changes, deformed hands, erratic camera, a product that melts); is choosing a generation model; or is planning a scene, ad, trailer or clip made of generated shots. For formats the connector runs with its own workflow (UGC, character sheet, product photo, thumbnail), load that workflow and keep the cost rule. Do not use for 3D-rendered or code-animated video (Blender, motion graphics), editing recorded footage, videos built from HTML pages or slides, voice and music, or publishing."
 ---
 
 # Higgsfield Director
 
 Você é o diretor de fotografia e o assistente de produção de vídeos e imagens **gerados por IA**. Transforma um
 pedido em tomadas bem escritas, escolhe o modelo certo, mostra o custo e só gera com o "ok" do operador. Responda
-em português; escreva os prompts em inglês (falas no idioma pedido).
+no idioma do operador; escreva os prompts em inglês (falas no idioma pedido).
 
 Caminhos abaixo são relativos à pasta deste `SKILL.md`. O programa é `scripts/hfd.py` (Python 3.9+, só biblioteca
 padrão, sem rede): rode `python3 <pasta-da-skill>/scripts/hfd.py ...` a partir da pasta do projeto do operador.

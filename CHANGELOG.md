@@ -5,6 +5,10 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+Nothing yet.
+
+## [5.1.0] — 2026-11-24
+
 ### Fixed
 
 - `hfd.py` no longer crashes with a traceback and exit code 1 on malformed input. A type check now runs before the
@@ -28,10 +32,16 @@ All notable changes to this project are listed here. The format follows
 ### Changed
 
 - `SKILL.md` and `references/fluxo.md` no longer name private skills. Other tools are described by what they do.
+- The skill `description` is in English, and the skill replies in the operator's language. Prompts are still
+  written in English; the body of `SKILL.md` and the references stay in Portuguese for now.
+- The `description` names no private projects. It excludes 3D-rendered or code-animated video, editing recorded
+  footage, videos built from HTML pages or slides, voice and music, and publishing.
+- The manual's 185 images and the emblem are licensed under CC BY-SA 4.0 by the rights holder, the same license as
+  the manual's text. The v4.1 package had marked them private.
 - `docs/manual/visual/README.md` describes the 185 images. The v4.1 production notes are gone, and `external.json`
   and `protocol.md` were removed.
 
-## 5.0.0 — 2026-11-24
+## [5.0.0] — 2026-11-24
 
 Rewrite of the v4.1 RC3/RC4 package (generated in ChatGPT) for Claude Code and Codex.
 Evaluation of the old package: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
@@ -57,3 +67,6 @@ Generated in ChatGPT and kept out of this repository.
 | v3.0 | cinematic intelligence, experiments, offline labs |
 | v4.0 | master modules and illustrated manual |
 | v4.1 RC1 – RC4 | packaging, hardening, public/private split, AAA illustrated README |
+
+[5.1.0]: https://github.com/rniedson/higgsfield-director-pro-skill/compare/v5.0.0...v5.1.0
+[5.0.0]: https://github.com/rniedson/higgsfield-director-pro-skill/tree/v5.0.0

@@ -8,7 +8,7 @@
 
 **Plano de tomadas · Prompt por modelo · Orçamento em créditos · Geração com aprovação · Revisão com evidência**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.0.0-475569)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-475569)
 ![Agentes](https://img.shields.io/badge/agentes-Claude%20Code%20%7C%20Codex-bca271)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
@@ -20,7 +20,7 @@
 
 </div>
 
-> **Estado:** versão 5.0.0. Projeto independente, sem vínculo com o Higgsfield nem aprovação dele.
+> **Estado:** versão 5.1.0. Projeto independente, sem vínculo com o Higgsfield nem aprovação dele.
 > Sozinha, a skill só *planeja*: vídeo e imagem são gerados pelo conector oficial do Higgsfield (MCP), com créditos da
 > sua conta, e **só depois que o custo é mostrado e o operador diz "ok"**.
 
@@ -187,7 +187,7 @@ guias oficiais recomendam. Mantém personagem e produto iguais entre as tomadas,
 aprovação. Depois gera pelo conector do Higgsfield e revisa o resultado com evidência.
 
 A mesma pasta funciona no **Claude Code** e no **Codex** (formato Agent Skills: `SKILL.md` + referências + scripts). A
-skill conversa em português e escreve os prompts em inglês, que os modelos de vídeo seguem de forma mais previsível.
+skill responde no idioma de quem pede e escreve os prompts em inglês, que os modelos de vídeo seguem de forma mais previsível.
 
 ```mermaid
 flowchart LR
@@ -210,7 +210,7 @@ Higgsfield e avisa que o custo deve ser conferido lá.
 A v5 reescreve o pacote v4.1 RC3/RC4 gerado no ChatGPT. Cada defeito medido na RC3 virou um teste.
 Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 
-| | v4.1 RC3 / RC4 | v5.0.0 |
+| | v4.1 RC3 / RC4 | v5.1.0 |
 |---|---|---|
 | Skill | 328 arquivos, 121 MB, 116 "comandos" | 15 arquivos, 203 kB, `SKILL.md` de 91 linhas + 6 referências lidas sob demanda |
 | Código | 3 compiladores, 2 ópticas, 3 orçamentos; SDK, REST, Docker | um `hfd.py`, só biblioteca padrão do Python |
@@ -434,9 +434,9 @@ cd .. && python3 tools/checar_repo.py
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/checar_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
-| Formato da skill | cabeçalho lido como YAML; descrição com 937 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
-| Encaminhamento no Claude Code (sem interface, descrição final) | 9 de 9 pedidos no lugar certo: 5 para esta skill (2 pedidos de prompt, 2 diagnósticos, 1 ficha de personagem passada ao fluxo do conector) e 4 para as skills donas (render, edição de vídeo gravado, voz, motion graphics). Uma primeira rodada, com a descrição anterior, perdeu 2 de 3 pedidos de prompt; a descrição foi corrigida e testada de novo |
-| Gasto nos testes | 16 sessões, 0 chamadas de geração (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok" |
+| Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
+| Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 pedidos no lugar certo, 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
+| Gasto nos testes | 30 sessões em 3 rodadas, 0 chamadas de geração (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok" |
 
 Propriedades de segurança:
 
@@ -483,12 +483,11 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 ## Licenças
 
 - Código e texto da skill: [MIT](LICENSE), © 2026 Robson Niedson.
-- Texto do manual ilustrado (`docs/manual/README.md`): adaptado do pacote ilustrado v4.1, que declara seus textos sob
-  [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md); as mudanças estão listadas no fim do manual.
-- Imagens de `docs/manual/visual/` e o emblema de `docs/assets/`: vêm do pacote v4.1, que as declara privadas e
-  esquemáticas, sem autorização pública presumida. **Não** entram na MIT nem na CC BY-SA.
-- Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos. Este projeto é independente e
-  não tem vínculo com nenhum deles nem aprovação deles.
+- Manual ilustrado (`docs/manual/`, texto e imagens) e o emblema (`docs/assets/`):
+  [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md). O texto é adaptado do pacote ilustrado v4.1, com as mudanças listadas
+  no fim do manual; as imagens são desenhos esquemáticos feitos por código.
+- Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão
+  direito de usá-los. Este projeto é independente e não tem vínculo com nenhum deles nem aprovação deles.
 
 <div align="center">
 
