@@ -15,7 +15,9 @@
 ![License](https://img.shields.io/badge/code-MIT-blue)
 ![Repository](https://img.shields.io/badge/repository-private-orange)
 
-[Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Quick start](#quick-start) · [Examples](#examples) · [Português](#português) · [License](#licensing)
+[Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Quick start](#quick-start) · [Examples](#examples) · [License](#licensing)
+
+**English** · [Português](README.pt-BR.md)
 
 </div>
 
@@ -97,16 +99,16 @@ needs it. `hfd.py` works offline, and the only path to spending credits goes thr
 after the quoted total and the operator's "ok".
 
 ```mermaid
-flowchart LR
-    U([Request]) --> A[Claude Code<br/>or Codex]
+flowchart TD
+    U([Request]) --> A[Claude Code or Codex]
     A -->|reads first| S[SKILL.md<br/>scope · flow · rules]
     S -.->|only the guide a step needs| R[references/<br/>6 guides]
     S -->|studio mode| H[scripts/hfd.py<br/>validate · compile · budget]
     H --> D[(data/<br/>122-model snapshot)]
     H --> T[templates/<br/>ready projects]
-    A -->|quote| M{{Higgsfield MCP}}
-    M -->|cost| O{Operator<br/>ok?}
-    O -->|yes| G([Video · image])
+    H -->|parameters| M{{Higgsfield MCP<br/>quote}}
+    M --> O{Operator ok?}
+    O -->|yes| G([Generate video · image])
     O -->|no| S
     classDef core fill:#101217,stroke:#bca271,color:#f5f5f5,stroke-width:1.5px
     classDef gold fill:#bca271,stroke:#8a7448,color:#101217
@@ -172,7 +174,8 @@ docs/
 - [Roadmap](#roadmap)
 - [Documentation](#documentation)
 - [Licensing](#licensing)
-- [Português](#português)
+
+Em português: [README.pt-BR.md](README.pt-BR.md).
 
 ## Overview
 
@@ -453,10 +456,10 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 
 | Priority | Goal | Status |
 |---|---|---|
-| P0 | End-to-end run in Codex with the Higgsfield MCP configured | Pending (connector setup) |
 | P1 | Real pilot: generate a 3-shot sequence and score it with evidence | Pending (needs an approved budget) |
 | P1 | Monthly refresh of the model snapshot | Process documented in `modelos.md` |
 | P2 | Larger trigger evaluation set (more prompts, several runs each) | Planned |
+| P2 | End-to-end run in Codex with the Higgsfield MCP configured | Not scheduled (not in use with Codex) |
 
 ## Documentation
 
@@ -482,98 +485,12 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. This project is
   independent and not affiliated with or endorsed by any of them.
 
----
-
-## Português
-
-### Direção de cinema para vídeo gerado por IA, no Claude Code e no Codex
-
-O Higgsfield Director PRO é uma **skill** (`higgsfield-director`) que transforma um pedido em tomadas geradas por IA bem
-dirigidas. Ela escolhe o modelo pelo catálogo ao vivo, escreve um prompt por tomada e mantém personagem e produto iguais
-entre as tomadas. Antes de gerar, mostra o custo em créditos e espera o "ok". Depois gera pelo conector oficial do
-Higgsfield e revisa o resultado com evidência. A mesma pasta funciona no Claude Code e no Codex.
-
-**Estado:** repositório privado, versão 5.0.0. Projeto independente, sem vínculo com o Higgsfield.
-
-### Instalação
-
-Instale só onde for usar: um link da pasta `higgsfield-director/` (nunca a raiz do repositório) dentro de
-`.claude/skills/` do projeto. A skill passa a existir apenas nas sessões abertas naquele projeto; as outras ficam como
-estavam.
-
-```bash
-git clone https://github.com/rniedson/HIGGSFIELD-DIRECTOR-PRO-SKILL.git
-R="$PWD/HIGGSFIELD-DIRECTOR-PRO-SKILL/higgsfield-director"
-cd /caminho/do/projeto
-mkdir -p .claude/skills && ln -s "$R" .claude/skills/higgsfield-director
-```
-
-Para tirar: `rm .claude/skills/higgsfield-director` (sem barra no fim, apaga só o link). Para valer em todas as sessões
-do Claude Code, o link vai em `~/.claude/skills/`; no Codex, em `~/.agents/skills/`.
-
-Para gerar, conecte o Higgsfield. No Claude Code, ative o conector "Higgsfield" no claude.ai e abra uma sessão nova. No
-Codex, rode `codex mcp add higgsfield --url https://mcp.higgsfield.ai/mcp` e depois `codex mcp login higgsfield`. Sem
-conector, a skill trabalha em modo só planejamento.
-
-### Funcionalidades
-
-| Recurso | Situação |
-|---|---|
-| Briefing, plano de tomadas e fichas de continuidade | Implementado (`fluxo.md`, `hfd.py validar`) |
-| Prompt por modelo, na ordem dos guias oficiais | Implementado (`prompt.md`, `hfd.py compilar`) |
-| Limites de modelo (duração, proporção, resolução, áudio) | Conferidos no retrato de 122 modelos e no catálogo ao vivo |
-| Orçamento em créditos | Com cotação real do conector; sem cotação, o comando recusa |
-| Geração | Pelo MCP oficial do Higgsfield, só depois do "ok" |
-| Revisão | Checklist, diagnóstico por sintoma, quadros do início, meio e fim, nota com evidência |
-| Regra dos 180°, óptica, roteiro, CSV e legendas | Implementados (`hfd.py`) |
-
-### Exemplo
-
-Peça em linguagem natural:
-
-```text
-Planeja um comercial de 3 tomadas no Higgsfield para um tênis branco, vertical, e me diz quanto custa. Não gere ainda.
-```
-
-A skill responde com direção, premissas, modelo e limites (com a fonte), tabela de tomadas e prompts. Depois mostra o
-custo cotado no conector e pergunta qual caminho seguir. Nada é gerado até o "ok". Os exemplos de saída do `hfd.py`
-estão em [Examples](#examples).
-
-### Fluxo de trabalho
-
-Briefing → modelo → plano e fichas → prompts → custo → "ok" → geração → revisão → nova tentativa mudando **uma**
-variável. Duas falhas seguidas na mesma tomada: replaneje em vez de empilhar restrições.
-
-### Convivência com outras skills
-
-A skill dispara para vídeo e imagem **gerados por IA**. Edição de vídeo gravado, voz e trilha, publicação e os formatos
-que o conector resolve com fluxo próprio (UGC, ficha de personagem, foto de produto, miniatura) ficam com quem já cuida
-deles. Veja [Scope and coexistence](#scope-and-coexistence).
-
-### Manual ilustrado
-
-O [manual ilustrado](docs/manual/README.md) tem 11 partes e 185 imagens esquemáticas: movimentos de câmera,
-enquadramento, lentes, luz, cor e 20 estilos com prompt pronto, atuação, física, tempo, som, continuidade, produção e
-um atlas óptico de 100 estudos. Cada parte traz a regra, um prompt positivo e o que evitar.
-
-### Testes e segurança
-
-`python3 -m unittest discover -s tests -v` na pasta da skill: 41 testes, sem dependências. O `hfd.py` não acessa a rede.
-Custo mostrado e "ok" explícito antes de qualquer geração. Rosto e voz de pessoa real só com consentimento.
-
-### Histórico e licenças
-
-A v5 reescreve o pacote v4.1 RC3/RC4 gerado no ChatGPT. A avaliação está em
-[docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md). Código e texto da skill: MIT. O texto do manual ilustrado segue a CC BY-SA 4.0
-declarada pelo pacote v4.1. As imagens (`docs/manual/visual/` e o emblema) são privadas e não entram em nenhuma das
-duas licenças.
-
 <div align="center">
 
 **Higgsfield Director PRO — cinematic direction for AI-generated video**
 
-Independent project · Projeto independente
+Independent project
 
-[Back to top / Voltar ao início](#higgsfield-director-pro)
+[Back to top](#higgsfield-director-pro) · [Leia em português](README.pt-BR.md)
 
 </div>
