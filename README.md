@@ -9,7 +9,8 @@
 **Shot planning · Model-aware prompts · Credit budgeting · Generation with approval · Evidence-based review**
 
 ![Version](https://img.shields.io/badge/version-5.1.0-475569)
-![Agents](https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Codex-bca271)
+![Agents](https://img.shields.io/badge/tested%20in-Claude%20Code-bca271)
+![Codex](https://img.shields.io/badge/Codex-format%20only%2C%20untested-6d8b9c)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Tests](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
 ![License](https://img.shields.io/badge/code-MIT-blue)
@@ -124,7 +125,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests) | 50 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests) | 51 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -147,7 +148,7 @@ higgsfield-director/            the skill: install THIS folder
   data/modelos.json             dated snapshot of the connector catalog (122 models)
   data/pesos.json               scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/test_hfd.py             50 unittest cases
+  tests/test_hfd.py             51 unittest cases
 docs/
   AVALIACAO-RC3.md              evaluation of the previous package and what v5 kept
   assets/emblema.svg            emblem
@@ -186,7 +187,8 @@ AI-generated shots: it picks the model from the live catalog, writes one prompt 
 guides recommend, keeps characters and products consistent across shots, prices the job in credits, waits for approval,
 generates through the Higgsfield connector and reviews the result with evidence.
 
-The same folder works in **Claude Code** and **Codex** (Agent Skills format: `SKILL.md` + references + scripts). The skill
+It is tested in **Claude Code**. The folder uses the Agent Skills format (`SKILL.md` + references + scripts) that
+**Codex** also reads, but it has not been tested there. The skill
 replies in the operator's language and writes prompts in English, which video models follow more predictably.
 
 ```mermaid
@@ -219,7 +221,7 @@ Full evaluation: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Audio | moved Cinema Studio audio to post-production | reads native audio from the catalog (Cinema Studio 4.0 generates audio by default) |
 | Generation | none | official Higgsfield MCP, after cost and explicit "ok" |
 | Conflicts | generic "video" description | trigger anchored on *AI-generated / Higgsfield*, with named exclusions |
-| Tests | 67 (2 needed OpenCV) | 50, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
+| Tests | 67 (2 needed OpenCV) | 51, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
 
 ## Capabilities
 
@@ -429,13 +431,14 @@ cd .. && python3 tools/checar_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 50/50 passing on Python 3.9 and 3.12 here, and in CI on 3.9 to 3.13 (no third-party packages) |
+| Unit tests | 51/51 passing on Python 3.9 and 3.12 here, and in CI on 3.9 to 3.13 (no third-party packages) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/checar_repo.py` in CI: frontmatter read as YAML, every JSON file, links and anchors of the Markdown files |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |
 | Skill format | frontmatter parsed as YAML; English description, 1013/1024 characters; every path cited in `SKILL.md` and references exists (tested) |
-| Routing in Claude Code (headless, current English description) | 14/14 requests routed correctly, 9 in Portuguese and 5 in English: 8 to this skill (3 quick prompts, 3 diagnostics, 1 studio plan that priced and stopped, 1 character sheet handed to the connector's workflow) and 6 to the skills that own them (render, recorded-footage editing ×2, voice ×2, motion graphics). Each answer came in the language of the request. Earlier rounds: the first Portuguese description missed 2 of 3 prompt requests and was fixed; the fixed one scored 9/9 |
-| Spending in tests | 30 sessions in 3 rounds, 0 generation calls (generation tools blocked in the test); every session that priced a job stopped and asked for "ok" |
+| Routing in Claude Code (headless, current English description) | 14/14 in each of 3 rounds (42/42), the last two after the connector-first change. Per round: 9 in Portuguese and 5 in English: 8 to this skill (3 quick prompts, 3 diagnostics, 1 studio plan that priced and stopped, 1 character sheet handed to the connector's workflow) and 6 to the skills that own them (render, recorded-footage editing ×2, voice ×2, motion graphics). Each answer came in the language of the request. In the last two rounds the studio plan listed the connector's live workflows before planning. Earlier rounds: the first Portuguese description missed 2 of 3 prompt requests and was fixed; the fixed one scored 9/9 |
+| Spending in tests | 60 sessions (5 routing rounds and a 2-arm pilot), 0 generation calls (generation tools blocked in the test); every session that priced a job stopped and asked for "ok" |
+| Pilot, text only (same 3-shot sneaker ad, Cinema Studio 4.0 480p, with and without the skill) | Both priced 45 credits with live quotes and stopped. With the skill: live workflow list checked, the model's live limits imported and validated, one camera move per shot, the same product description in all three prompts, a planned end frame, an "ok" scoped to those three shots. Without it: two camera moves in one shot and negative phrasing ("no logos, no text"). Whether this changes the generated video is not measured yet: that needs the 6 generations (90 credits at the 24/11/2026 quote) and the operator's ok |
 
 Security properties:
 

@@ -5,7 +5,25 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
-Nothing yet.
+### Changed
+
+- The skill starts from the connector's live list of workflows (`get_workflow_instructions` with no argument). The
+  table in `references/conector.md` is now an offline snapshot, updated with the workflows added since
+  (`video-editing`, `katana`, `angles-hf`, `lighting-hf`, `grade-hf`, `narration`, `music-cards`).
+- `references/conector.md` states where the skill works: the connector has no workflow for multi-shot cinematic
+  generation and sends it to ordinary generation, which the skill plans, checks and gates.
+- In studio mode, the chosen model's live limits (`models_explore get`) go into the project's snapshot and are used
+  for validation.
+- `references/modelos.md` no longer stores prices: always quote.
+- The READMEs say the skill is tested in Claude Code; Codex reads the same format, but it is untested there.
+- The READMEs record two more routing rounds (14/14 each, 42/42 in total) and a text-only pilot with and without
+  the skill; the generated-video comparison is still to be run.
+
+### Added
+
+- `modelos --importar` accepts a single-model `get` response and merges it without removing other models.
+- The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulario.md`.
+- 1 test (51 in total).
 
 ## [5.1.0] — 2026-11-24
 

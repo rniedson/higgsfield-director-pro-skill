@@ -18,9 +18,10 @@ Os nomes das ferramentas abaixo são os mesmos nos dois agentes (muda só o pref
 
 ## Antes de planejar: existe um fluxo pronto?
 
-O conector traz fluxos completos para formatos específicos. Se o pedido é um deles, **carregue o fluxo**
-(`get_workflow_instructions` com o nome) e siga-o; esta skill só ajuda onde o fluxo pedir um prompt de tomada.
-`get_workflow_instructions` sem argumento lista todos. Os arquivos que um fluxo cita (guias, exemplos) se leem com
+Com o conector, **comece pela lista ao vivo**: `get_workflow_instructions` sem argumento (só leitura, não gasta). Os
+fluxos mudam; a tabela abaixo é o retrato de 24/11/2026, para quando o conector não estiver disponível. Se o pedido é
+um deles, **carregue o fluxo** (`get_workflow_instructions` com o nome) e siga-o; esta skill só ajuda onde o fluxo
+pedir um prompt de tomada. Fluxo marcado "só por /comando" carrega quando o operador usa aquele comando. Os arquivos que um fluxo cita (guias, exemplos) se leem com
 `get_workflow_bundle_file` (só leitura, não gasta). O fluxo manda no formato; a regra de custo e "ok" desta skill
 continua valendo, mesmo que o fluxo diga que a intenção de criar já autoriza gastar.
 
@@ -36,18 +37,28 @@ continua valendo, mesmo que o fluxo diga que a intenção de criar já autoriza 
 | vídeo narrado sem rosto (explicativo, história, infantil) | `faceless-video` |
 | dublar o vídeo de um criador | `creator-dub` |
 | montar clipes, trilha, legenda queimada | `video-montage` |
+| editar um vídeo com cortes, títulos animados, motion graphics (Higgsedit) | `video-editing` |
+| remixar um vídeo de referência com cenas novas | `katana` (só por /katana) |
+| refazer uma tomada única como edição de várias câmeras | `angles-hf` (só por /angles) |
+| reiluminar ou trocar a cor de um vídeo pronto | `lighting-hf`, `grade-hf` (só pelos comandos de luz e de cor) |
+| narração encaixada em janelas do vídeo, ou a pessoa da foto como narradora | `narration` |
+| vídeo musical de homenagem a uma pessoa | `music-cards` (só por /music-cards) |
 | efeitos sonoros num vídeo existente | `video-sound-design` |
 | melhorar/upscale 1:1 com Kling | `higgsfield-enhance-video` |
 | criatura, monstro | `monsters` |
 | modelo 3D a partir de foto | `photo-to-3d-model` |
 | logo, identidade, peças de marca | `brand-asset-creation` |
 
-Fica com esta skill: tomadas cinematográficas, comercial ou cena com várias tomadas geradas, trailer, clipe musical,
-plano de produto em movimento, imagem-para-vídeo de uma foto, e todo diagnóstico de prompt.
+Fica com esta skill o que o conector entrega à geração comum, sem fluxo próprio: tomadas cinematográficas,
+comercial ou cena com várias tomadas geradas, trailer, clipe musical, plano de produto em movimento, imagem-para-vídeo
+de uma foto, e todo diagnóstico de prompt. Os próprios fluxos mandam esses casos para a geração comum (o `ugc-video`
+diz isso do comercial de produto sem narração; o `faceless-video`, do vídeo genérico sobre um tema). A skill gera com as
+ferramentas do conector; o que ela acrescenta é o plano, a continuidade, a validação e a trava de custo.
 
 ## A ordem das chamadas
 
-1. **Modelo:** `models_explore` (`recommend` com o objetivo e o tipo de entrada; depois `get` no escolhido).
+1. **Modelo:** `models_explore` (`recommend` com o objetivo e o tipo de entrada; depois `get` no escolhido). No modo
+   estúdio, importe o `get` para o retrato do projeto e valide com `--retrato` (`references/modelos.md`).
 2. **Referências** (se houver): `media_upload` + upload + `media_confirm`, ou `media_import_url` (HTTPS). Só suba
    mídia que o operador forneceu e tem direito de usar. Guarde o id de cada uma com o papel (`start_image`,
    `end_image`, `image_references`...).

@@ -29,8 +29,8 @@ vídeo continua com a skill dona dele.
 
 ## Antes de começar
 
-1. **Fluxo pronto?** Se o formato está na tabela de fluxos de `references/conector.md`, carregue o fluxo do conector
-   e siga-o. Não duplique.
+1. **Fluxo pronto?** Com o conector, liste os fluxos ao vivo (`get_workflow_instructions` sem argumento; não gasta).
+   Se um serve, carregue-o e siga-o; não duplique. Sem conector, use a tabela de `references/conector.md`.
 2. **Conector disponível?** Veja `references/conector.md`. Sem ele, trabalhe em **modo só planejamento**: entregue
    prompt e parâmetros para colar no site, sem afirmar custo exato nem geração.
 3. **Modo:** *rápido* (uma tomada, uma imagem, revisar um prompt) ou *estúdio* (2+ tomadas, algo que se repete entre
@@ -41,7 +41,8 @@ vídeo continua com a skill dona dele.
 1. **Briefing** — objetivo, destino e proporção, duração, sujeito e invariantes, referências, áudio, orçamento
    (`references/fluxo.md` §1).
 2. **Modelo** — escolha pela necessidade (`references/modelos.md`) e confirme os limites no catálogo ao vivo
-   (`models_explore get`). Sem conector: `hfd.py modelos --id <id>`, citando a data do retrato.
+   (`models_explore get`); no modo estúdio, importe esse `get` para o retrato do projeto e valide com `--retrato`.
+   Sem conector: `hfd.py modelos --id <id>`, citando a data do retrato.
 3. **Plano** — modo estúdio: monte o projeto a partir de `templates/projeto.json` (ou `templates/i2v.json`), com
    fichas para o que se repete. `hfd.py validar projeto.json` até zerar os erros.
 4. **Prompt** — escreva pela `references/prompt.md` (vocabulário em `references/vocabulario.md`). No modo estúdio,

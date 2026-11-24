@@ -422,6 +422,27 @@ class Revisao(unittest.TestCase):
             self.assertEqual(code, 0)
         self.assertEqual(retrato.read_bytes(), antes)
 
+    def test_importar_get_de_um_modelo_nao_apaga_os_outros(self):
+        base = {"gerado_em": "2099-01-01", "modelos": {
+            "outro": {"id": "outro", "tipo": "video"}, "cs4": {"id": "cs4", "tipo": "video", "duracao": {"max": 5}}}}
+        get = {"id": "cs4", "name": "Cinema Studio 4.0", "output_type": "video", "aspect_ratios": ["9:16"],
+               "parameters": [{"name": "duration", "min": 4, "max": 30}],
+               "medias": [{"name": "medias", "roles": ["start_image"]}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(base))
+            (Path(d) / "get.json").write_text(json.dumps(get))
+            code, out, _ = _cli("modelos", "--importar", Path(d) / "get.json", "--retrato", Path(d) / "base.json",
+                                "--saida", Path(d) / "r.json")
+            self.assertEqual(code, 0)
+            self.assertEqual(json.loads(out)["removidos"], [])
+            r = json.loads((Path(d) / "r.json").read_text())
+            self.assertEqual(sorted(r["modelos"]), ["cs4", "outro"])
+            self.assertEqual(r["modelos"]["cs4"]["duracao"]["max"], 30)
+            p = tomada(projeto(), duracao=12)
+            (Path(d) / "p.json").write_text(json.dumps(p))
+            code, out, _ = _cli("validar", Path(d) / "p.json", "--retrato", Path(d) / "r.json")
+            self.assertEqual(code, 0, out)
+
     def test_retrato_indicado_vale_na_validacao(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "r.json").write_text(json.dumps(CATALOGO))

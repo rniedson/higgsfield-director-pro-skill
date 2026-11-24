@@ -20,7 +20,7 @@ python3 <skill>/scripts/hfd.py modelos --id seedance_2_5        # ficha completa
 | Primeiro **e** último quadro | `kling3_0`, `seedance_2_5`, `wan3_0`, `minimax_h3`, `veo3_1_lite`, `gemini_omni_flash_1_2` | papel `end_image` no catálogo |
 | Áudio e fala nativos | `cinematic_studio_video_4_0`, `seedance_2_5`, `kling3_0` (`sound`), `veo3_1`, `wan3_0` | parâmetro de áudio ou tag "audio" |
 | Editar ou estender um vídeo | `cinematic_studio_video_4_0`, `seedance_2_5` (`video_edit`, `video_extension`), `kling4_0` | modos no catálogo |
-| Testar composição barato | no mesmo modelo, em resolução baixa (Cinema Studio 4.0 480p = 15 créditos em 5 s); `seedance_2_5` tem `draft` | teste em outro modelo não prevê o resultado final |
+| Testar composição barato | no mesmo modelo, na resolução mais baixa que ele aceita (cote o teste e o final); `seedance_2_5` tem `draft` | teste em outro modelo não prevê o resultado final |
 | Imagem realista de pessoa/moda/UGC | `soul_2` | "Realistic UGC, fashion editorial and character" |
 | Still de cinema / concept art | `soul_cinematic`, `cinematic_studio_image` | "Cinema-grade stills and concept art" |
 | Texto legível na imagem, diagrama | `nano_banana_pro`, `ideogram_4_6` | "text and diagrams"; edição com máscara |
@@ -28,9 +28,8 @@ python3 <skill>/scripts/hfd.py modelos --id seedance_2_5        # ficha completa
 | Fundo transparente, PNG | `seedream_5_5` | "optional transparent background" |
 | Vetor, logo, ícone | `recraft_v4_1` | `model_type` para vetor |
 
-Custos medidos com `estimate_video_cost` em 24/11/2026 (5 s, 9:16 ou 16:9): Cinema Studio 4.0 = 15 (480p), 35 (720p),
-80 (1080p) créditos; Seedance 2.5 720p = 35; Kling 3.0 = 7,5 (std, sem som) a 10. **Sempre reestime**: o preço muda
-com modelo, duração, resolução, modo, som e plano.
+Preço não se guarda: ele muda com modelo, duração, resolução, modo, som e plano, e muda com o tempo. **Cote sempre**
+com `estimate_video_cost` / `estimate_image_cost` (não gasta, devolve `quote_ref`) e nunca use um número lembrado.
 
 ## Modelos de geração de vídeo no retrato (24/11/2026)
 
@@ -66,7 +65,14 @@ com modelo, duração, resolução, modo, som e plano.
   ainda oferece a variante `veo-3-1-preview`. Prefira `veo-3-1-fast` ou confira ao vivo.
 - **MiniMax:** há relato de terceiros de que o Hailuo 2.3 virou legado e o H3 é o atual (não confirmado).
 
-## Atualizar o retrato (quando tiver mais de 30 dias ou um modelo citado não estiver nele)
+## Validar contra os limites ao vivo (modo estúdio, com conector)
+
+Salve a resposta do `models_explore get` do modelo escolhido num arquivo do projeto e importe só ele:
+`python3 <skill>/scripts/hfd.py modelos --importar <projeto>/get.json --saida <projeto>/modelos.json`. O `get`
+entra ou atualiza aquele modelo sem tirar nenhum outro. Depois use `--retrato <projeto>/modelos.json` em `validar`,
+`compilar` e `exportar`: a validação passa a usar os limites de hoje, não os do retrato que vem com a skill.
+
+## Atualizar o retrato inteiro (quando tiver mais de 30 dias ou um modelo citado não estiver nele)
 
 1. Chame `models_explore` com `action: list`, `type: video`, `limit: 100`; salve a resposta JSON num arquivo.
    Repita com `type: image`. (No Claude Code, resposta grande já vem salva em arquivo; use esse caminho.)

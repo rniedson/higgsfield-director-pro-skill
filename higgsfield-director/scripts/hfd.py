@@ -183,28 +183,33 @@ def _normalizar_modelo(m):
 def importar_modelos(arquivos, saida, base=None):
     """Monta um retrato novo a partir das listas do models_explore e grava em `saida`.
 
-    Parte do retrato `base` (ou do que vem com a skill). Para cada tipo presente na importação (video, image...),
-    o que não veio na lista sai do retrato: a lista do conector é a verdade daquele tipo. Por isso, todas as páginas
-    de um mesmo tipo entram no mesmo comando.
+    Parte do retrato `base` (ou do que vem com a skill). Aceita dois formatos do models_explore:
+    - `list` (lista de modelos): para cada tipo presente (video, image...), o que não veio na lista sai do retrato,
+      porque a lista do conector é a verdade daquele tipo. Todas as páginas de um tipo entram no mesmo comando.
+    - `get` (um modelo só): entra ou é atualizado, sem tirar nenhum outro. É o jeito de validar o projeto contra
+      os limites ao vivo do modelo escolhido.
     """
     if not saida:
         raise Erro("use --saida <arquivo>: o retrato novo vai para um caminho indicado, nunca para dentro da "
                    "pasta da skill sem pedido")
-    novos = {}
+    novos, de_lista = {}, {}
     for arq in arquivos:
         bruto = ler_json(arq)
-        itens = bruto.get("items") if isinstance(bruto, dict) else bruto
+        um_so = isinstance(bruto, dict) and texto(bruto.get("id")) and "items" not in bruto
+        itens = [bruto] if um_so else (bruto.get("items") if isinstance(bruto, dict) else bruto)
         if not isinstance(itens, list) or not itens or not all(isinstance(m, dict) for m in itens):
-            raise Erro(f"{arq}: não tem a lista 'items' do models_explore")
+            raise Erro(f"{arq}: não é resposta do models_explore (list com 'items', ou get de um modelo)")
         for m in itens:
             n = _normalizar_modelo(m)
             if texto(n["id"]):
                 novos[n["id"]] = n
+                if not um_so:
+                    de_lista[n["id"]] = n
     if not novos:
         raise Erro("nenhum modelo com id nas listas importadas")
     atual = carregar_modelos(base)
     modelos = dict(atual["modelos"])
-    tipos_importados = {n["tipo"] for n in novos.values()}
+    tipos_importados = {n["tipo"] for n in de_lista.values()}
     removidos = sorted(k for k, m in modelos.items() if isinstance(m, dict) and m.get("tipo") in tipos_importados
                        and k not in novos)
     for k in removidos:

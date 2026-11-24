@@ -62,6 +62,19 @@ MiniMax Hailuo aceita comandos entre colchetes (até 3): `[Truck left]`, `[Truck
 - **Películas (aparência, não LUT):** Kodak Vision3 500T/250D, Portra 400, Ektar 100, CineStill 800T, Tri-X 400,
   Fujifilm Velvia 50, Super 16mm, Super 8, VHS, MiniDV.
 
+## Estilos visuais (os 20 do manual ilustrado, parte 05)
+
+O operador pode escolher olhando o manual; use os descritores no prompt, não só o nome.
+Photorealism: natural light, plausible materials, restrained grading · Neo Noir: low-key lighting, rain, deep shadows
+· Cyberpunk: neon, dense futuristic city · Solarpunk: green architecture, daylight · Steampunk: brass, industrial
+machinery · Dark Fantasy: gothic silhouettes, mist · Luxury Editorial: controlled reflections, premium materials ·
+Surrealism: impossible scale and spatial logic · Analog Horror: muted green, VHS texture · Claymation: handmade forms,
+soft texture · 2D Anime: cel shading, graphic contours · Brutalism: concrete, monumental geometry · Retrofuturism:
+space-age curves, vintage palette · Dreamcore: pastel haze, liminal spaces · Art Deco: symmetry, gold geometry ·
+Vaporwave: pastel neon, digital nostalgia · Space Opera: epic scale, cosmic contrast · Post-Apocalyptic: weathered
+ruins, vegetation · German Expressionism: angular sets, distorted shadows · Miniature Diorama: small-scale sets,
+selective focus.
+
 ## Atmosfera e física
 
 - **Atmosfera:** haze, ground fog, morning mist, dust particles, floating embers, drizzle, heavy rain, snowfall,

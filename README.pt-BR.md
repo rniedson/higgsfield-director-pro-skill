@@ -9,7 +9,8 @@
 **Plano de tomadas · Prompt por modelo · Orçamento em créditos · Geração com aprovação · Revisão com evidência**
 
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-475569)
-![Agentes](https://img.shields.io/badge/agentes-Claude%20Code%20%7C%20Codex-bca271)
+![Agentes](https://img.shields.io/badge/testada%20no-Claude%20Code-bca271)
+![Codex](https://img.shields.io/badge/Codex-s%C3%B3%20o%20formato%2C%20sem%20teste-6d8b9c)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
@@ -124,7 +125,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests) | 50 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests) | 51 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -147,7 +148,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/modelos.json             retrato datado do catálogo do conector (122 modelos)
   data/pesos.json               pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/test_hfd.py             50 testes (unittest)
+  tests/test_hfd.py             51 testes (unittest)
 docs/
   AVALIACAO-RC3.md              avaliação do pacote anterior e o que a v5 aproveitou
   assets/emblema.svg            emblema
@@ -186,7 +187,8 @@ geradas por IA bem dirigidas. Ela escolhe o modelo pelo catálogo ao vivo e escr
 guias oficiais recomendam. Mantém personagem e produto iguais entre as tomadas, calcula o custo em créditos e espera a
 aprovação. Depois gera pelo conector do Higgsfield e revisa o resultado com evidência.
 
-A mesma pasta funciona no **Claude Code** e no **Codex** (formato Agent Skills: `SKILL.md` + referências + scripts). A
+Ela é testada no **Claude Code**. A pasta segue o formato Agent Skills (`SKILL.md` + referências + scripts), que o
+**Codex** também lê, mas não foi testada lá. A
 skill responde no idioma de quem pede e escreve os prompts em inglês, que os modelos de vídeo seguem de forma mais previsível.
 
 ```mermaid
@@ -219,7 +221,7 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Áudio | mandava o áudio do Cinema Studio para a pós-produção | lê o áudio nativo no catálogo (o Cinema Studio 4.0 gera áudio por padrão) |
 | Geração | nenhuma | MCP oficial do Higgsfield, depois do custo e do "ok" explícito |
 | Conflitos | descrição genérica de "vídeo" | gatilho preso a *gerado por IA / Higgsfield*, com exclusões nomeadas |
-| Testes | 67 (2 dependiam do OpenCV) | 50, sem dependências, CI no Python 3.9 a 3.13; 4 defeitos plantados, 4 pegos |
+| Testes | 67 (2 dependiam do OpenCV) | 51, sem dependências, CI no Python 3.9 a 3.13; 4 defeitos plantados, 4 pegos |
 
 ## Recursos
 
@@ -430,13 +432,14 @@ cd .. && python3 tools/checar_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 50/50 passando no Python 3.9 e 3.12 aqui, e no CI do 3.9 ao 3.13 (sem pacotes de terceiros) |
+| Testes | 51/51 passando no Python 3.9 e 3.12 aqui, e no CI do 3.9 ao 3.13 (sem pacotes de terceiros) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/checar_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
 | Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
-| Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 pedidos no lugar certo, 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
-| Gasto nos testes | 30 sessões em 3 rodadas, 0 chamadas de geração (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok" |
+| Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 em cada uma de 3 rodadas (42 de 42), as duas últimas depois da mudança para o conector primeiro. Por rodada: 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Nas duas últimas rodadas, o plano de estúdio listou os fluxos ao vivo do conector antes de planejar. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
+| Gasto nos testes | 60 sessões (5 rodadas de encaminhamento e um piloto de 2 braços), 0 chamadas de geração (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok" |
+| Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). Se isso muda o vídeo gerado ainda não foi medido: falta gerar as 6 tomadas (90 créditos pela cotação de 24/11/2026) com o ok do operador |
 
 Propriedades de segurança:
 

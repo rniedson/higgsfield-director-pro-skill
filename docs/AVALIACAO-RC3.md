@@ -94,6 +94,6 @@ Levantados em 24/11/2026; a fonte de cada um está em `higgsfield-director/refer
 | `SKILL.md` | roteia para 116 comandos | 91 linhas, 6 referências lidas sob demanda |
 | Programa | 4 scripts + pacote, dependências opcionais | 1 `hfd.py`, só biblioteca padrão |
 | Modelos | 9 perfis, quase todos `null` | retrato de 122 modelos do catálogo, datado, atualizável por comando |
-| Testes | 67 (2 dependem do OpenCV) | 50, todos sem dependência, rodados no CI; 4 mutações plantadas, 4 pegas |
+| Testes | 67 (2 dependem do OpenCV) | 51, todos sem dependência, rodados no CI; 4 mutações plantadas, 4 pegas |
 | Geração | nenhuma integração | pelo conector oficial, só depois do custo e do "ok" |
 | Conflito com outras skills | descrição genérica de vídeo | descrição presa a "gerado por IA / Higgsfield", com exclusões nomeadas |
