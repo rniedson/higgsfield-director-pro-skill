@@ -147,6 +147,12 @@ class ModeloEAudio(unittest.TestCase):
         self.assertNotIn("Audio", r["tomadas"][0]["prompt"])
         self.assertNotIn("orbit", r["tomadas"][0]["prompt"].lower())
 
+    def test_imagem_com_modelo_desconhecido_nao_envia_duracao(self):
+        p = tomada(projeto(modelo="modelo_novo", modo="imagem"), duracao=7)
+        r = hfd.compilar(p, CATALOGO)
+        self.assertEqual(r["erros"], [])
+        self.assertNotIn("duration", r["tomadas"][0]["parametros"])
+
 
 class Continuidade(unittest.TestCase):
     def base(self):
@@ -270,6 +276,16 @@ class Arquivos(unittest.TestCase):
                 linhas = list(csv.reader(fh))
             self.assertFalse(linhas[1][4].startswith("="))
             self.assertIn("00:00:00,000 --> 00:00:05,000", (Path(d) / "legendas.srt").read_text())
+
+    def test_exportar_remove_legenda_antiga_sem_falas(self):
+        p = tomada(projeto(), falas=[{"quem": "A", "texto": "Hello."}])
+        with tempfile.TemporaryDirectory() as d:
+            hfd.exportar(p, d, CATALOGO)
+            self.assertTrue((Path(d) / "legendas.srt").exists())
+            del p["tomadas"][0]["falas"]
+            r = hfd.exportar(p, d, CATALOGO)
+            self.assertNotIn("legendas.srt", r["arquivos"])
+            self.assertFalse((Path(d) / "legendas.srt").exists())
 
     def test_modelos_importar_normaliza(self):
         bruto = {"items": [{"id": "x1", "name": "X", "output_type": "video", "aspect_ratios": ["16:9"],
@@ -454,6 +470,22 @@ class Revisao(unittest.TestCase):
             (Path(d) / "p.json").write_text(json.dumps(p))
             code, out, _ = _cli("validar", Path(d) / "p.json", "--retrato", Path(d) / "r.json")
             self.assertEqual(code, 0, out)
+
+    def test_importar_get_preserva_idade_dos_outros_modelos(self):
+        base = copy.deepcopy(CATALOGO)
+        base["gerado_em"] = "2020-01-01"
+        get = {"id": "cs4", "name": "Cinema Studio 4.0", "output_type": "video",
+               "parameters": [{"name": "duration", "min": 4, "max": 30}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(base))
+            (Path(d) / "get.json").write_text(json.dumps(get))
+            hfd.importar_modelos([Path(d) / "get.json"], Path(d) / "novo.json", Path(d) / "base.json")
+            retrato = hfd.carregar_modelos(Path(d) / "novo.json")
+            self.assertEqual(retrato["modelos"]["mudo"]["gerado_em"], "2020-01-01")
+            self.assertEqual(retrato["modelos"]["cs4"]["gerado_em"], retrato["gerado_em"])
+            antigo = hfd.validar(projeto(modelo="mudo"), retrato)
+            self.assertTrue(any("retrato dos modelos tem" in a for a in antigo["avisos"]))
+            self.assertEqual(hfd.compilar(projeto(modelo="mudo"), retrato)["retrato_dos_modelos"], "2020-01-01")
 
     def test_retrato_indicado_vale_na_validacao(self):
         with tempfile.TemporaryDirectory() as d:

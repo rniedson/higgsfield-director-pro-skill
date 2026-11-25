@@ -125,7 +125,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests) | 58 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests) | 61 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -148,7 +148,7 @@ higgsfield-director/            the skill: install THIS folder
   data/modelos.json             dated snapshot of the connector catalog (122 models)
   data/pesos.json               scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/test_hfd.py             52 unittest cases
+  tests/test_hfd.py             55 unittest cases
 docs/
   AVALIACAO-RC3.md              evaluation of the previous package and what v5 kept
   assets/emblema.svg            emblem
@@ -299,7 +299,7 @@ Full evaluation: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Audio | moved Cinema Studio audio to post-production | reads native audio from the catalog (Cinema Studio 4.0 generates audio by default) |
 | Generation | none | official Higgsfield MCP, after cost and explicit "ok" |
 | Conflicts | generic "video" description | trigger anchored on *AI-generated / Higgsfield*, with named exclusions |
-| Tests | 67 (2 needed OpenCV) | 58, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
+| Tests | 67 (2 needed OpenCV) | 61, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
 
 ## Capabilities
 
@@ -509,7 +509,7 @@ cd .. && python3 tools/checar_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 58/58 passing locally; CI runs on Python 3.9 to 3.13 (no third-party packages) |
+| Unit tests | 61/61 passing locally; CI runs on Python 3.9 to 3.13 (no third-party packages) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/checar_repo.py` in CI: frontmatter read as YAML, every JSON file, links and anchors of the Markdown files |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |
