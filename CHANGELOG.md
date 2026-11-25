@@ -15,9 +15,17 @@ All notable changes to this project are listed here. The format follows
   that names the new one, and will be removed in 7.0. Every old name and its new one is in `docs/MIGRATION-6.md`.
 - `CONTRIBUTING.md` states the rule: files, file names, code, commits and pull requests in English; issues may be in
   English or Portuguese.
+- The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
+  *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
+  `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated
+  manual, `agents/openai.yaml`, `hfd.py`, `CONTRIBUTING.md` and `SECURITY.md`.
 - The flow has a cheap pre-production step before the storyboard: idea, script draft as a table, sketch storyboard,
   refinement, a script locked by the operator, and then the question of where to make the audio (the connector, a
   service the operator already uses, a recorded voice, a free local voice for drafts, or none).
+- Work with a sketch storyboard, a storyboard or generated images keeps a local `review.html` that shows each
+  frame, its cost and the decision on it, and is opened for the director after every update (step 9 of
+  `SKILL.md`, a non-negotiable rule, and *Review page* in `references/preproduction.md`). An example from a
+  synthetic crop test is in `artifacts/sketch-test-2026-11-25/`.
 - `references/quality.md`: unrequested cuts inside a shot were seen in 3 of 11 shots of 4 to 5 s on Cinema Studio
   4.0, near the 2 s mark, and the scene detector at 0.3 missed one cut, so also look at a contact sheet; new row for an
   accessory from the bible that disappears.
