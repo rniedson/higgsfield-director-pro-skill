@@ -7,6 +7,10 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
+  *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
+  `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated
+  manual, `agents/openai.yaml`, `hfd.py`, `CONTRIBUTING.md` and `SECURITY.md`.
 - The skill starts from the connector's live list of workflows (`get_workflow_instructions` with no argument). The
   table in `references/conector.md` is now an offline snapshot, updated with the workflows added since
   (`video-editing`, `katana`, `angles-hf`, `lighting-hf`, `grade-hf`, `narration`, `music-cards`).
