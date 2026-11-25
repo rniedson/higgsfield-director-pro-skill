@@ -40,5 +40,7 @@ jobs:
           python-version: "3.12"
       - name: PyYAML to read the frontmatter as real YAML
         run: python -m pip install --disable-pip-version-check pyyaml==6.0.2
-      - name: Frontmatter, openai.yaml, JSON, links and anchors
+      - name: Public/private boundary tests
+        run: python -m unittest discover -s tools/tests -v
+      - name: Repository and public/private boundary checks
         run: python tools/check_repo.py --require-yaml
