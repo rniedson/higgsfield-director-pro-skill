@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 ROOT_FILES = {
-    ".gitignore", "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE",
+    ".gitignore", "AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "CONTRIBUTING.md", "LICENSE",
     "README.md", "README.pt-BR.md", "SECURITY.md",
 }
 TOP_LEVEL = {".github", "calibration", "docs", "higgsfield-director", "lessons-learned", "tools"}

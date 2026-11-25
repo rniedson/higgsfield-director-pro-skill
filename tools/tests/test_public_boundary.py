@@ -14,6 +14,11 @@ class PublicBoundaryTests(unittest.TestCase):
         self.assertEqual([], check_public_path("lessons-learned/README.md"))
         self.assertEqual([], check_public_path("tools/tests/test_public_boundary.py"))
 
+    def test_agent_instruction_files_pass(self):
+        for path in ("AGENTS.md", "CLAUDE.md"):
+            with self.subTest(path=path):
+                self.assertEqual([], check_public_path(path))
+
     def test_personal_files_and_media_are_rejected(self):
         for path in (
             "artifacts/sketch-test/review.html",
@@ -35,11 +40,11 @@ class PublicBoundaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "README.md").write_text("Shared guide\n", encoding="utf-8")
-            project = root / "projects" / "norns"
+            project = root / "projects" / "example"
             project.mkdir(parents=True)
             (project / "script.md").write_text("Private draft\n", encoding="utf-8")
             problems = check_public_boundary(root)
-            self.assertTrue(any("projects/norns/script.md" in problem for problem in problems))
+            self.assertTrue(any("projects/example/script.md" in problem for problem in problems))
 
 
 if __name__ == "__main__":
