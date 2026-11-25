@@ -1,0 +1,42 @@
+{
+ "format": 1,
+ "date": "2026-11-24",
+ "skill_version": "5.1.0+e4dee7b",
+ "category": "product-ad",
+ "model": "cinematic_studio_video_4_0",
+ "shots": 3,
+ "cost_credits": 92,
+ "image_reference": true,
+ "vote": "with",
+ "rater": "blind-auto",
+ "seen_first": "with",
+ "reason": "for the whole: how one scene connects to the next, more organic",
+ "scores": {
+  "with": {
+   "total": 82.5,
+   "criteria": {
+    "identity": 8.7,
+    "motion": 7.0,
+    "camera": 8.7,
+    "briefing": 8.7,
+    "lighting": 9.0,
+    "materials": 8.0,
+    "continuity": 8.7,
+    "audio": 6
+   }
+  },
+  "without": {
+   "total": 73.8,
+   "criteria": {
+    "identity": 6.3,
+    "motion": 7.0,
+    "camera": 8.3,
+    "briefing": 8.3,
+    "lighting": 7.7,
+    "materials": 7.7,
+    "continuity": 7.3,
+    "audio": 6
+   }
+  }
+ }
+}

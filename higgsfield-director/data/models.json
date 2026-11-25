@@ -1,0 +1,5308 @@
+{
+ "generated_at": "2026-11-24",
+ "models": {
+  "3d_jutsu_angles": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "3D Jutsu Angles powered by Seedream 5.0 Pro",
+   "duration": null,
+   "id": "3d_jutsu_angles",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "3D Jutsu Angles",
+   "parameters": [
+    "height",
+    "is_inpaint",
+    "remove_bg",
+    "resolution",
+    "width"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "editing",
+    "angles",
+    "2k"
+   ],
+   "type": "image"
+  },
+  "ad_multiplier": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Ad Multiplier video generation powered by Seedance 2.5",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "ad_multiplier",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "t2v",
+    "omni_reference",
+    "video_edit",
+    "video_extension"
+   ],
+   "name": "Ad Multiplier",
+   "parameters": [
+    "bitrate_mode",
+    "duration",
+    "extension_mode",
+    "generate_audio",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "video-edit",
+    "video-extension",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "ad_multiplier_v2": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Recreate a 4-30 second source ad as a new ad for another audience, language, product, cast or setting, keeping its structure, beats and pacing, or regenerate only its hook, its CTA or both and stitch them back into the source. Everything is decided from the video, the images and the prompt: the backend analyzes the source, classifies the images and writes the generation prompt.",
+   "duration": null,
+   "id": "ad_multiplier_v2",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": [
+    "recreate",
+    "sections"
+   ],
+   "name": "Ad Multiplier Recreate",
+   "parameters": [
+    "mode",
+    "resolution",
+    "section"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "ad",
+    "recreate",
+    "video-reference",
+    "localization",
+    "product-swap",
+    "audience",
+    "hook",
+    "cta",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "bytedance_image_upscale": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "bytedance_image_upscale",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Bytedance Image Upscale",
+   "parameters": [
+    "remove_bg",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "4k",
+    "options": [
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "image"
+  },
+  "bytedance_video_upscale": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "bytedance_video_upscale",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Bytedance Video Upscale",
+   "parameters": [
+    "fps",
+    "model_version",
+    "preset",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1080p",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "video"
+  },
+  "cinematic_studio_2_5": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "16:9",
+    "9:16",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Cinematic stills, up to 4K resolution",
+   "duration": null,
+   "id": "cinematic_studio_2_5",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Cinema Studio Image 2.5",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "cinematic",
+    "4k",
+    "high-resolution",
+    "dramatic",
+    "film"
+   ],
+   "type": "image"
+  },
+  "cinematic_studio_3_0": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": false,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Most advanced cinema-grade model",
+   "duration": {
+    "range": {
+     "max": 15,
+     "min": 4
+    }
+   },
+   "id": "cinematic_studio_3_0",
+   "media": [
+    "end_image",
+    "image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Cinema Studio Video 3.0",
+   "parameters": [
+    "generate_audio",
+    "genre",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "cinematic",
+    "premium",
+    "advanced",
+    "sota",
+    "film",
+    "best-quality"
+   ],
+   "type": "video"
+  },
+  "cinematic_studio_image": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "cinematic_studio_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Cinematic Studio Image",
+   "parameters": [
+    "camera_aperture_id",
+    "camera_focal_length_id",
+    "camera_lens_id",
+    "camera_model_id",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "image"
+  },
+  "cinematic_studio_soul_cast": {
+   "aspect_ratios": [
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3",
+    "5:4",
+    "4:5",
+    "21:9",
+    "9:21"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "cinematic_studio_soul_cast",
+   "media": [],
+   "modes": null,
+   "name": "Cinematic Studio Soul Cast",
+   "parameters": [
+    "budget"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "cinematic_studio_soul_location": {
+   "aspect_ratios": [
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3",
+    "21:9",
+    "9:21"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "cinematic_studio_soul_location",
+   "media": [],
+   "modes": null,
+   "name": "Cinematic Studio Soul Location",
+   "parameters": [],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "cinematic_studio_video": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "sound"
+   },
+   "audio_in_tags": true,
+   "description": "Solid cinematic, dramatic compositions",
+   "duration": null,
+   "id": "cinematic_studio_video",
+   "media": [
+    "end_image",
+    "image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Cinema Studio Video",
+   "parameters": [
+    "slow_motion",
+    "sound"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "cinematic",
+    "dramatic",
+    "compositions",
+    "sound",
+    "slow-motion"
+   ],
+   "type": "video"
+  },
+  "cinematic_studio_video_3_5": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": false,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "",
+   "duration": {
+    "default": 15,
+    "max": null,
+    "min": 4
+   },
+   "id": "cinematic_studio_video_3_5",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Cinematic Studio Video 3.5",
+   "parameters": [
+    "camera_style",
+    "color_grading",
+    "duration",
+    "enhance_prompt",
+    "generate_audio",
+    "genre",
+    "light_scheme",
+    "multi_prompt",
+    "multi_shot_mode",
+    "multi_shots",
+    "prompt_language",
+    "resolution",
+    "style_prompt"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "video"
+  },
+  "cinematic_studio_video_4_0": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Cinema-grade video generation with automatic prompt direction and camera, lighting, pacing, genre, era, and color controls",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "cinematic_studio_video_4_0",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "t2v",
+    "omni_reference",
+    "video_edit",
+    "video_extension"
+   ],
+   "name": "Cinema Studio 4.0",
+   "parameters": [
+    "bitrate_mode",
+    "camera_aperture_id",
+    "camera_lens_id",
+    "camera_model_id",
+    "color_palette",
+    "duration",
+    "era_id",
+    "extension_mode",
+    "generate_audio",
+    "genre_id",
+    "light",
+    "light_custom",
+    "light_id",
+    "mode",
+    "pacing_id",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "cinematic",
+    "director",
+    "text-to-video",
+    "reference",
+    "audio-reference",
+    "video-reference",
+    "video-edit",
+    "video-extension",
+    "480p",
+    "720p"
+   ],
+   "type": "video"
+  },
+  "cinematic_studio_video_v2": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": {
+    "default": "on",
+    "options": [
+     "on",
+     "off"
+    ],
+    "parameter": "sound"
+   },
+   "audio_in_tags": false,
+   "description": "Refined cinematic camera and color, genre control",
+   "duration": {
+    "range": {
+     "max": 12,
+     "min": 3
+    }
+   },
+   "id": "cinematic_studio_video_v2",
+   "media": [
+    "end_image",
+    "image",
+    "start_image"
+   ],
+   "modes": [
+    "pro",
+    "std"
+   ],
+   "name": "Cinema Studio Video",
+   "parameters": [
+    "cfg_scale",
+    "genre",
+    "mode",
+    "multi_shot_mode",
+    "multi_shots",
+    "preset_id",
+    "sound",
+    "speedramp"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "cinematic",
+    "camera",
+    "color",
+    "genre",
+    "refined"
+   ],
+   "type": "video"
+  },
+  "depth_anything_video": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Generate a depth map from a source video",
+   "duration": null,
+   "id": "depth_anything_video",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Depth Anything Video",
+   "parameters": [
+    "colormap",
+    "max_frames",
+    "resolution",
+    "side_by_side",
+    "variant"
+   ],
+   "provider": "Depth Anything",
+   "resolution": {
+    "default": "auto",
+    "options": [
+     "auto",
+     "360p",
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "depth-map"
+   ],
+   "type": "video"
+  },
+  "draw_to_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": false,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "draw_to_video",
+   "media": [
+    "image_references",
+    "ref_image",
+    "video"
+   ],
+   "modes": null,
+   "name": "Draw To Video",
+   "parameters": [
+    "duration",
+    "enhancer",
+    "generate_audio",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "video"
+  },
+  "dubbing": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "dubbing",
+   "media": [
+    "input_video"
+   ],
+   "modes": null,
+   "name": "dubbing",
+   "parameters": [
+    "folder_id",
+    "target_language"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "flux_2": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Multiple model variants (pro, flex, max), precise prompt adherence",
+   "duration": null,
+   "id": "flux_2",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "FLUX.2",
+   "parameters": [
+    "resolution",
+    "variant"
+   ],
+   "provider": "Black Forest Labs",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "precise",
+    "prompt-adherence",
+    "creative",
+    "versatile",
+    "pro",
+    "quality"
+   ],
+   "type": "image"
+  },
+  "flux_2_pro_outpaint": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Expands an image beyond its borders with FLUX.2 [pro]: per-side pixel expansion painted as a coherent, seamless scene extension. Negative values crop that side instead; an all-crop request is served locally for free without the model.",
+   "duration": null,
+   "id": "flux_2_pro_outpaint",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "FLUX.2 Pro Outpaint",
+   "parameters": [
+    "expand_bottom",
+    "expand_left",
+    "expand_right",
+    "expand_top",
+    "folder_id"
+   ],
+   "provider": "Black Forest Labs",
+   "resolution": null,
+   "tags": [
+    "outpaint",
+    "image-edit",
+    "photorealism",
+    "quality"
+   ],
+   "type": "image"
+  },
+  "flux_3_image": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "2:1",
+    "16:9",
+    "3:2",
+    "7:5",
+    "4:3",
+    "5:4",
+    "1:1",
+    "4:5",
+    "3:4",
+    "5:7",
+    "2:3",
+    "9:16",
+    "1:2"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "FLUX 3 image generation and editing with up to ten reference images",
+   "duration": null,
+   "id": "flux_3_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "FLUX 3 Image",
+   "parameters": [
+    "batch_size",
+    "folder_id",
+    "resolution"
+   ],
+   "provider": "Black Forest Labs",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "768sq",
+     "1k",
+     "1.5k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-image",
+    "image-to-image",
+    "editing",
+    "multi-reference",
+    "4k"
+   ],
+   "type": "image"
+  },
+  "flux_3_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "2:1",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "Text-to-video, multi-frame image-to-video, and video continuation with synchronized audio",
+   "duration": {
+    "default": 5,
+    "max": 20,
+    "min": 5
+   },
+   "id": "flux_3_video",
+   "media": [
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "FLUX 3 Video",
+   "parameters": [
+    "duration",
+    "generate_audio",
+    "resolution"
+   ],
+   "provider": "Black Forest Labs",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "image-to-video",
+    "video-continuation",
+    "audio",
+    "start-frame",
+    "end-frame",
+    "storyboard",
+    "1080p",
+    "2k",
+    "4k"
+   ],
+   "type": "video"
+  },
+  "flux_3_video_edit": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Edit a video with a text prompt. Uses the first 15 seconds at most; costs 1 credit per second of the processed clip.",
+   "duration": null,
+   "id": "flux_3_video_edit",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "FLUX 3 Video Edit",
+   "parameters": [
+    "folder_id"
+   ],
+   "provider": "Black Forest Labs",
+   "resolution": null,
+   "tags": [
+    "video-to-video",
+    "video-editing"
+   ],
+   "type": "video"
+  },
+  "flux_kontext": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Context-aware editing and style transfer",
+   "duration": null,
+   "id": "flux_kontext",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Flux Kontext",
+   "parameters": [],
+   "provider": "Black Forest Labs",
+   "resolution": null,
+   "tags": [
+    "editing",
+    "style-transfer",
+    "context-aware",
+    "typography",
+    "remix"
+   ],
+   "type": "image"
+  },
+  "fps_boost": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Increase video frame rate with ByteDance or Topaz",
+   "duration": null,
+   "id": "fps_boost",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "FPS Boost",
+   "parameters": [
+    "fps",
+    "variant"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [
+    "frame-interpolation"
+   ],
+   "type": "video"
+  },
+  "gemini_omni_flash_1_1": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Gemini Omni Flash 1.1 text-to-video, keyframe animation, multimodal reference generation, and video editing with native audio",
+   "duration": {
+    "default": 8,
+    "max": 10,
+    "min": 3
+   },
+   "id": "gemini_omni_flash_1_1",
+   "media": [
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "edit"
+   ],
+   "name": "Gemini Omni Flash 1.1",
+   "parameters": [
+    "duration",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "360p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "text-to-video",
+    "image-to-video",
+    "reference",
+    "video-edit",
+    "360p",
+    "720p",
+    "1080p",
+    "4k"
+   ],
+   "type": "video"
+  },
+  "gemini_omni_flash_1_2": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Gemini Omni Flash 1.2 video generation, keyframes, multimodal references, editing with reference images, and clip extension with native audio",
+   "duration": {
+    "default": 8,
+    "max": 15,
+    "min": 3
+   },
+   "id": "gemini_omni_flash_1_2",
+   "media": [
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "edit",
+    "extend"
+   ],
+   "name": "Gemini Omni Flash 1.2",
+   "parameters": [
+    "duration",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "360p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "text-to-video",
+    "image-to-video",
+    "reference",
+    "video-edit",
+    "360p",
+    "720p",
+    "1080p",
+    "4k",
+    "video-extend"
+   ],
+   "type": "video"
+  },
+  "gpt_image_2": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "21:9",
+    "9:16",
+    "3:2",
+    "2:3"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Next-gen GPT Image model with 1k/2k/4k resolution and low/medium/high quality tiers",
+   "duration": null,
+   "id": "gpt_image_2",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "GPT Image 2",
+   "parameters": [
+    "quality",
+    "resolution"
+   ],
+   "provider": "OpenAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-rendering",
+    "editing",
+    "typography",
+    "photorealistic",
+    "4k",
+    "high-resolution",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "gpt_image_2_5": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "21:9",
+    "27:16",
+    "16:27",
+    "9:8",
+    "8:9",
+    "4:5",
+    "5:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "GPT Image 2.5 generation and editing with Flare and Sunburst variants",
+   "duration": null,
+   "id": "gpt_image_2_5",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "GPT Image 2.5",
+   "parameters": [
+    "background",
+    "quality",
+    "resolution",
+    "variant"
+   ],
+   "provider": "OpenAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "image-generation",
+    "editing",
+    "reference-images",
+    "4k",
+    "text-rendering",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "gpt_image_2_6": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "21:9",
+    "27:16",
+    "16:27",
+    "9:8",
+    "8:9",
+    "4:5",
+    "5:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "GPT Image 2.6 Sunburst image generation and editing, GIF and SVG output",
+   "duration": null,
+   "id": "gpt_image_2_6",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "GPT Image 2.6",
+   "parameters": [
+    "background",
+    "batch_size",
+    "frame_count",
+    "frame_duration_ms",
+    "output_format",
+    "quality",
+    "resolution",
+    "size"
+   ],
+   "provider": "OpenAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "image-generation",
+    "editing",
+    "reference-images",
+    "4k",
+    "text-rendering",
+    "vector",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "gpt_image_2_6_flare": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "21:9",
+    "27:16",
+    "16:27",
+    "9:8",
+    "8:9",
+    "4:5",
+    "5:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "GPT Image 2.6 Flare image generation and editing, GIF and SVG output",
+   "duration": null,
+   "id": "gpt_image_2_6_flare",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "GPT Image 2.6 Flare",
+   "parameters": [
+    "background",
+    "batch_size",
+    "frame_count",
+    "frame_duration_ms",
+    "output_format",
+    "quality",
+    "resolution",
+    "size"
+   ],
+   "provider": "OpenAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "image-generation",
+    "editing",
+    "reference-images",
+    "4k",
+    "text-rendering",
+    "vector"
+   ],
+   "type": "image"
+  },
+  "grok_image": {
+   "aspect_ratios": [
+    "1:1",
+    "auto",
+    "1:2",
+    "2:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Expressive, high-contrast generation and editing",
+   "duration": null,
+   "id": "grok_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": [
+    "std",
+    "quality"
+   ],
+   "name": "Grok Image",
+   "parameters": [
+    "mode",
+    "resolution"
+   ],
+   "provider": "xAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "expressive",
+    "high-contrast",
+    "editing",
+    "creative",
+    "bold"
+   ],
+   "type": "image"
+  },
+  "grok_image_2_0": {
+   "aspect_ratios": [
+    "1:1",
+    "auto",
+    "1:2",
+    "2:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Next-generation image creation and editing from xAI",
+   "duration": null,
+   "id": "grok_image_2_0",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Grok Image 2.0",
+   "parameters": [
+    "quality",
+    "resolution"
+   ],
+   "provider": "xAI",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "expressive",
+    "high-contrast",
+    "editing",
+    "creative",
+    "bold"
+   ],
+   "type": "image"
+  },
+  "grok_video": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Text and image-to-video, audio support",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 1
+   },
+   "id": "grok_video",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Grok Video",
+   "parameters": [
+    "duration"
+   ],
+   "provider": "xAI",
+   "resolution": null,
+   "tags": [
+    "audio",
+    "versatile",
+    "text-to-video",
+    "image-to-video"
+   ],
+   "type": "video"
+  },
+  "grok_video_v15": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Multimodal video generation from text, a start image, or image and audio references",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 2
+   },
+   "id": "grok_video_v15",
+   "media": [
+    "audio_references",
+    "image_references",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Grok Video 1.5",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "xAI",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "cinematic",
+    "text-to-video",
+    "image-to-video",
+    "reference",
+    "audio-reference",
+    "start-frame",
+    "physics",
+    "camera-motion",
+    "preview"
+   ],
+   "type": "video"
+  },
+  "grok_video_v15_lite": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "1:1",
+    "3:2",
+    "2:3"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Fast text and first-frame image-to-video generation, up to 1080p (upscaled)",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 1
+   },
+   "id": "grok_video_v15_lite",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Grok Imagine Video 1.5 Lite",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "xAI",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "fast",
+    "lite",
+    "text-to-video",
+    "image-to-video",
+    "start-frame"
+   ],
+   "type": "video"
+  },
+  "happy_horse_video": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Text-to-video and single start-frame animation",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 3
+   },
+   "id": "happy_horse_video",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Happy Horse Video",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "Happy Horse",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "image-to-video",
+    "start-frame",
+    "happy-horse"
+   ],
+   "type": "video"
+  },
+  "hf_mult_motion_control": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Transfer motion from a reference video to subjects in reference images",
+   "duration": null,
+   "id": "hf_mult_motion_control",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Genjutsu",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "motion-control",
+    "image-to-video",
+    "video-reference",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "hf_mult_motion_control_flash": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Transfer motion from a reference video to subjects in reference images (Wan 3.0, up to 15 seconds)",
+   "duration": null,
+   "id": "hf_mult_motion_control_flash",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Genjutsu Lite",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "motion-control",
+    "image-to-video",
+    "video-reference",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "hf_mult_replace_object": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Replace objects in a source video using reference images",
+   "duration": null,
+   "id": "hf_mult_replace_object",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Genjutsu",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "object-replacement",
+    "reference",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "hf_mult_replace_object_flash": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Replace objects in a source video using reference images (Kling 4.0)",
+   "duration": null,
+   "id": "hf_mult_replace_object_flash",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Genjutsu Lite",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "object-replacement",
+    "reference",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "higgsfield_preset": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Legacy image-to-video generation for an existing preset ID. Browse new Viral presets with get_presets and execute them with execute_preset",
+   "duration": null,
+   "id": "higgsfield_preset",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Higgsfield Preset",
+   "parameters": [
+    "folder_id",
+    "preset_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "preset",
+    "image-to-video",
+    "viral",
+    "template"
+   ],
+   "type": "video"
+  },
+  "ideogram_4_5": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "1:2",
+    "2:1",
+    "2:3",
+    "3:2",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "5:8",
+    "8:5",
+    "3:4",
+    "4:3",
+    "9:22",
+    "22:9",
+    "9:23",
+    "23:9",
+    "3:8",
+    "8:3",
+    "5:12",
+    "12:5",
+    "1:3",
+    "3:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Ideogram 4.5 image generation and transformation with up to five source images",
+   "duration": null,
+   "id": "ideogram_4_5",
+   "media": [
+    "image_references",
+    "mask"
+   ],
+   "modes": null,
+   "name": "Ideogram 4.5",
+   "parameters": [
+    "batch_size",
+    "magic_prompt",
+    "quality",
+    "resolution",
+    "seed"
+   ],
+   "provider": "Ideogram",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-image",
+    "image-to-image",
+    "editing",
+    "typography"
+   ],
+   "type": "image"
+  },
+  "ideogram_4_6": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "1:2",
+    "2:1",
+    "2:3",
+    "3:2",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "5:8",
+    "8:5",
+    "3:4",
+    "4:3",
+    "9:21",
+    "21:9",
+    "9:22",
+    "22:9",
+    "9:23",
+    "23:9",
+    "3:8",
+    "8:3",
+    "5:12",
+    "12:5",
+    "1:3",
+    "3:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Ideogram 4.6 image generation, references and masked editing at 2K or 4K",
+   "duration": null,
+   "id": "ideogram_4_6",
+   "media": [
+    "image_references",
+    "mask"
+   ],
+   "modes": null,
+   "name": "Ideogram 4.6",
+   "parameters": [
+    "background",
+    "batch_size",
+    "magic_prompt",
+    "quality",
+    "resolution",
+    "seed"
+   ],
+   "provider": "Ideogram",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-image",
+    "image-to-image",
+    "editing",
+    "typography"
+   ],
+   "type": "image"
+  },
+  "ideogram_4_6_precise_edit": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Ideogram 4.6 Precise Edit with original canvas preservation and context windows",
+   "duration": null,
+   "id": "ideogram_4_6_precise_edit",
+   "media": [
+    "image_references",
+    "mask"
+   ],
+   "modes": null,
+   "name": "Ideogram 4.6 Precise Edit",
+   "parameters": [
+    "batch_size",
+    "context_window",
+    "quality",
+    "seed"
+   ],
+   "provider": "Ideogram",
+   "resolution": {
+    "default": "medium",
+    "options": [
+     "low",
+     "medium",
+     "high"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "image-to-image",
+    "editing",
+    "inpainting"
+   ],
+   "type": "image"
+  },
+  "ideogram_vector": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "1:4",
+    "1:3",
+    "1:2",
+    "9:16",
+    "10:16",
+    "2:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "4:3",
+    "3:2",
+    "16:10",
+    "16:9",
+    "2:1",
+    "3:1",
+    "4:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Generate SVG images or vectorize an existing image with Ideogram Vector",
+   "duration": null,
+   "id": "ideogram_vector",
+   "media": [
+    "image_references"
+   ],
+   "modes": [
+    "simple",
+    "default"
+   ],
+   "name": "Ideogram Vector",
+   "parameters": [
+    "batch_size",
+    "mode",
+    "operation",
+    "quality",
+    "seed"
+   ],
+   "provider": "Ideogram",
+   "resolution": {
+    "default": null,
+    "options": [
+     "low",
+     "medium",
+     "high"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "text-to-image",
+    "image-to-image",
+    "vector",
+    "vectorize"
+   ],
+   "type": "image"
+  },
+  "image_auto": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Auto-selects the best image model based on prompt intent",
+   "duration": null,
+   "id": "image_auto",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Auto",
+   "parameters": [],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "auto",
+    "smart",
+    "routing",
+    "editing",
+    "generation"
+   ],
+   "type": "image"
+  },
+  "image_background_remover": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "image_background_remover",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Image Background Remover",
+   "parameters": [],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "image_command": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Runs a Higgsfield image command such as polish on one photo. Higgsfield writes the prompt from the command's own recipe and generates one image, so the caller never writes a prompt or picks settings. Use it only when the user invokes the command (/polish), with one request per photo.",
+   "duration": null,
+   "id": "image_command",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Image Command",
+   "parameters": [
+    "command",
+    "command_version",
+    "folder_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "image_decompose": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "image_decompose",
+   "media": [
+    "image_references"
+   ],
+   "modes": [
+    "granular",
+    "standard"
+   ],
+   "name": "Image Decompose",
+   "parameters": [
+    "folder_id",
+    "mode"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "intone": {
+   "aspect_ratios": [
+    "21:9",
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Talking-head video: one or two characters speak one to six voice recordings, alone to the camera or to each other, in the room of a location image or one the prompt names; a prompt asking for action, several places or camera work stages it in up to five shots. It runs the voices (2 to 30 seconds in total, the pauses between files not counted) and 2.5 s more, 4 to 30 seconds",
+   "duration": null,
+   "id": "intone",
+   "media": [
+    "audio_references",
+    "character_images",
+    "image_references",
+    "location_image"
+   ],
+   "modes": null,
+   "name": "Higgsfield Intone",
+   "parameters": [
+    "bitrate_mode",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "1080p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "talking-head",
+    "lip-sync",
+    "dialogue",
+    "image-to-video",
+    "audio-reference",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "kling2_6": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "sound"
+   },
+   "audio_in_tags": true,
+   "description": "Cinematic motion, advanced physics",
+   "duration": {
+    "default": 5,
+    "options": [
+     5,
+     10
+    ]
+   },
+   "id": "kling2_6",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Kling 2.6 Video",
+   "parameters": [
+    "duration",
+    "sound"
+   ],
+   "provider": "Kling",
+   "resolution": null,
+   "tags": [
+    "cinematic",
+    "motion",
+    "physics",
+    "advanced",
+    "audio"
+   ],
+   "type": "video"
+  },
+  "kling3_0": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": {
+    "default": "on",
+    "options": [
+     "on",
+     "off"
+    ],
+    "parameter": "sound"
+   },
+   "audio_in_tags": true,
+   "description": "Multi-shot, audio sync, motion transfer",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 3
+   },
+   "id": "kling3_0",
+   "media": [
+    "end_image",
+    "start_image"
+   ],
+   "modes": [
+    "std",
+    "pro",
+    "4k"
+   ],
+   "name": "Kling v3.0",
+   "parameters": [
+    "duration",
+    "mode",
+    "sound"
+   ],
+   "provider": "Kling",
+   "resolution": null,
+   "tags": [
+    "multi-shot",
+    "audio",
+    "motion-transfer",
+    "cinematic",
+    "advanced"
+   ],
+   "type": "video"
+  },
+  "kling3_0_motion_control": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "kling3_0_motion_control",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": [
+    "std",
+    "pro"
+   ],
+   "name": "Kling 3.0 Motion Control",
+   "parameters": [
+    "background_source",
+    "mode"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "kling3_0_turbo": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Fast text-to-video and single start-frame animation",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 3
+   },
+   "id": "kling3_0_turbo",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Kling 3.0 Turbo",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "Kling",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "turbo",
+    "text-to-video",
+    "image-to-video",
+    "start-frame",
+    "budget",
+    "kling"
+   ],
+   "type": "video"
+  },
+  "kling4_0": {
+   "aspect_ratios": [
+    "21:9",
+    "16:9",
+    "9:16",
+    "1:1",
+    "auto"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Generate video from text, ordered keyframes, references, or edit an input video",
+   "duration": {
+    "default": 10,
+    "max": 30,
+    "min": 3
+   },
+   "id": "kling4_0",
+   "media": [
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "video-edit"
+   ],
+   "name": "Kling 4.0",
+   "parameters": [
+    "duration",
+    "dynamic_range",
+    "kling_element_ids",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Kling",
+   "resolution": {
+    "default": "1080p",
+    "options": [
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "video-edit",
+    "keyframes"
+   ],
+   "type": "video"
+  },
+  "kling_4_0_flash": {
+   "aspect_ratios": [
+    "21:9",
+    "16:9",
+    "9:16",
+    "1:1",
+    "auto"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Fast 720p video from text, one first frame, references, or an input video",
+   "duration": {
+    "default": 10,
+    "max": 20,
+    "min": 3
+   },
+   "id": "kling_4_0_flash",
+   "media": [
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "video-edit"
+   ],
+   "name": "Kling 4.0 Flash",
+   "parameters": [
+    "duration",
+    "kling_element_ids",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Kling",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "text-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "video-edit"
+   ],
+   "type": "video"
+  },
+  "kling_image_4_0": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Image generation and editing with image references and elements",
+   "duration": null,
+   "id": "kling_image_4_0",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Kling Image 4.0",
+   "parameters": [
+    "kling_element_ids",
+    "resolution",
+    "result_type"
+   ],
+   "provider": "Kling",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "2k",
+     "4k",
+     "8k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "image"
+  },
+  "kling_o3_flf": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": {
+    "default": "on",
+    "options": [
+     "on",
+     "off"
+    ],
+    "parameter": "sound"
+   },
+   "audio_in_tags": true,
+   "description": "Generate video from text or a first frame and optional last frame",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 3
+   },
+   "id": "kling_o3_flf",
+   "media": [
+    "end_image",
+    "start_image"
+   ],
+   "modes": [
+    "std",
+    "pro",
+    "4k"
+   ],
+   "name": "Kling 3.0 Omni (Frames)",
+   "parameters": [
+    "duration",
+    "mode",
+    "multi_prompt",
+    "multi_shots",
+    "sound"
+   ],
+   "provider": "Kling",
+   "resolution": null,
+   "tags": [
+    "multi-shot",
+    "audio",
+    "4k"
+   ],
+   "type": "video"
+  },
+  "kling_o3_image_reference": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": {
+    "default": "on",
+    "options": [
+     "on",
+     "off"
+    ],
+    "parameter": "sound"
+   },
+   "audio_in_tags": true,
+   "description": "Generate video from text and up to seven reference images",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 3
+   },
+   "id": "kling_o3_image_reference",
+   "media": [
+    "image_references"
+   ],
+   "modes": [
+    "std",
+    "pro",
+    "4k"
+   ],
+   "name": "Kling 3.0 Omni",
+   "parameters": [
+    "duration",
+    "mode",
+    "multi_prompt",
+    "multi_shots",
+    "sound"
+   ],
+   "provider": "Kling",
+   "resolution": null,
+   "tags": [
+    "multi-shot",
+    "audio",
+    "4k"
+   ],
+   "type": "video"
+  },
+  "kling_omni_image": {
+   "aspect_ratios": [
+    "1:1",
+    "auto",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Versatile photorealistic generation",
+   "duration": null,
+   "id": "kling_omni_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Kling O1 Image",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Kling",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "photorealistic",
+    "versatile",
+    "wide-aspect-ratio",
+    "realistic"
+   ],
+   "type": "image"
+  },
+  "kling_video_edit": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Edit a source video with text instructions and optional reference images",
+   "duration": null,
+   "id": "kling_video_edit",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": [
+    "std",
+    "pro",
+    "4k"
+   ],
+   "name": "Kling 3.0 Omni Edit",
+   "parameters": [
+    "mode"
+   ],
+   "provider": "Kling",
+   "resolution": null,
+   "tags": [
+    "video-edit",
+    "reference",
+    "4k"
+   ],
+   "type": "video"
+  },
+  "magi_2": {
+   "aspect_ratios": [
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "MAGI-2 video with native audio from text, a first frame, first and last frames, or image, video and audio references",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "magi_2",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "MAGI-2",
+   "parameters": [
+    "duration",
+    "generate_audio",
+    "resolution",
+    "seed"
+   ],
+   "provider": "Sand AI",
+   "resolution": {
+    "default": "1080p",
+    "options": [
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "text-to-video",
+    "image-to-video",
+    "first-last-frame",
+    "reference",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "marketing_studio_2_image": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "9:16",
+    "16:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Marketing Studio product shots, posters, and ad creatives",
+   "duration": null,
+   "id": "marketing_studio_2_image",
+   "media": [
+    "character_photo",
+    "input_images",
+    "model_image",
+    "product_image"
+   ],
+   "modes": null,
+   "name": "Marketing Studio Product Shot",
+   "parameters": [
+    "brand_kit_id",
+    "folder_id",
+    "notes",
+    "preset_id",
+    "style_id",
+    "type",
+    "want_person"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "marketing",
+    "ads",
+    "product",
+    "poster",
+    "marketplace",
+    "social-media"
+   ],
+   "type": "image"
+  },
+  "marketing_studio_image": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "One-click product image ads for social campaigns",
+   "duration": null,
+   "id": "marketing_studio_image",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Marketing Studio Image",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "marketing",
+    "ads",
+    "product",
+    "social-media",
+    "creative"
+   ],
+   "type": "image"
+  },
+  "marketing_studio_v2_reference2video": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Recreate a reference video with your own character and product",
+   "duration": null,
+   "id": "marketing_studio_v2_reference2video",
+   "media": [
+    "character_image",
+    "input_video",
+    "product_image"
+   ],
+   "modes": null,
+   "name": "Marketing Studio Reference Video",
+   "parameters": [
+    "folder_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "marketing",
+    "ugc",
+    "reference",
+    "video-to-video"
+   ],
+   "type": "video"
+  },
+  "marketing_studio_v2_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Marketing Studio V2 motion and UGC product videos, and the Product Link, Ad Reference and App video tools",
+   "duration": {
+    "default": null,
+    "max": 30,
+    "min": 4
+   },
+   "id": "marketing_studio_v2_video",
+   "media": [
+    "avatars",
+    "character_photo",
+    "input_images",
+    "location_photo",
+    "product_photo"
+   ],
+   "modes": null,
+   "name": "Marketing Studio Video",
+   "parameters": [
+    "ad_reference_id",
+    "avatar_id",
+    "batch_size",
+    "brand_url",
+    "delivery_specs",
+    "device",
+    "duration",
+    "folder_id",
+    "generate_audio",
+    "include_reference_video",
+    "medias",
+    "mode_id",
+    "preset_id",
+    "product_description",
+    "product_id",
+    "product_ids",
+    "product_url",
+    "resolution",
+    "style_id",
+    "type",
+    "user_context",
+    "web_product_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": null,
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "marketing",
+    "ugc",
+    "ads",
+    "product",
+    "motion",
+    "social-media"
+   ],
+   "type": "video"
+  },
+  "marketing_studio_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "One-click product ads, TikTok/Reels ready",
+   "duration": {
+    "range": {
+     "max": 15,
+     "min": 12
+    }
+   },
+   "id": "marketing_studio_video",
+   "media": [
+    "end_image",
+    "image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Marketing Studio",
+   "parameters": [
+    "ad_reference_id",
+    "assets",
+    "avatar_ids",
+    "folder_id",
+    "generate_audio",
+    "height",
+    "hook_id",
+    "mode",
+    "product_ids",
+    "resolution",
+    "setting_id",
+    "width"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "marketing",
+    "ugc",
+    "ads",
+    "tiktok",
+    "reels",
+    "product",
+    "social-media"
+   ],
+   "type": "video"
+  },
+  "minimax_h3": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Multimodal video generation with keyframes or image/video/audio references",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 4
+   },
+   "id": "minimax_h3",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "MiniMax H3",
+   "parameters": [
+    "batch_size",
+    "duration",
+    "folder_id",
+    "resolution"
+   ],
+   "provider": "MiniMax",
+   "resolution": {
+    "default": "2K",
+    "options": [
+     "2K"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "image-to-video",
+    "reference",
+    "audio-reference",
+    "video-reference",
+    "start-frame",
+    "end-frame",
+    "2k"
+   ],
+   "type": "video"
+  },
+  "minimax_h3_image": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Image generation and editing with up to sixteen reference images",
+   "duration": null,
+   "id": "minimax_h3_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "MiniMax H3 Image",
+   "parameters": [
+    "batch_size",
+    "folder_id",
+    "resolution"
+   ],
+   "provider": "MiniMax",
+   "resolution": {
+    "default": "4k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-image",
+    "image-to-image",
+    "editing",
+    "multi-reference",
+    "4k"
+   ],
+   "type": "image"
+  },
+  "minimax_h3_max": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Fast text-to-video, keyframe, and multimodal-reference video generation",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 5
+   },
+   "id": "minimax_h3_max",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "MiniMax H3 Max",
+   "parameters": [
+    "batch_size",
+    "duration",
+    "folder_id",
+    "resolution"
+   ],
+   "provider": "MiniMax",
+   "resolution": {
+    "default": "768p",
+    "options": [
+     "480p",
+     "768p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "image-to-video",
+    "reference",
+    "video-reference",
+    "audio-reference",
+    "start-frame",
+    "end-frame",
+    "fast"
+   ],
+   "type": "video"
+  },
+  "minimax_hailuo": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Natural physics, facial emotion, multiple variants",
+   "duration": {
+    "default": 6,
+    "options": [
+     6,
+     10
+    ]
+   },
+   "id": "minimax_hailuo",
+   "media": [
+    "end_image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Minimax Hailuo",
+   "parameters": [
+    "duration",
+    "resolution",
+    "variant"
+   ],
+   "provider": "Hailuo",
+   "resolution": {
+    "default": "768",
+    "options": [
+     "512",
+     "768",
+     "1080"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "physics",
+    "emotion",
+    "facial",
+    "realistic",
+    "1080p",
+    "natural"
+   ],
+   "type": "video"
+  },
+  "ms_image": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "21:9",
+    "27:16",
+    "16:27",
+    "9:8",
+    "8:9",
+    "4:9",
+    "9:4",
+    "auto"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "DTC ad image generation with brand-kit-aware prompts, avatars, products, and curated ad formats",
+   "duration": null,
+   "id": "ms_image",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "DTC Ads",
+   "parameters": [
+    "batch_size",
+    "brand_kit_id",
+    "folder_id",
+    "product_ids",
+    "quality",
+    "resolution",
+    "style_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "marketing",
+    "ads",
+    "product",
+    "brand-kit",
+    "ad-format",
+    "avatar",
+    "dtc"
+   ],
+   "type": "image"
+  },
+  "nano_banana": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Realistic images, budget-friendly",
+   "duration": null,
+   "id": "nano_banana",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Nano Banana",
+   "parameters": [],
+   "provider": "Google",
+   "resolution": null,
+   "tags": [
+    "budget",
+    "realistic",
+    "affordable",
+    "text-to-image",
+    "image-to-image"
+   ],
+   "type": "image"
+  },
+  "nano_banana_2": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Fast, next-gen high-quality images",
+   "duration": null,
+   "id": "nano_banana_2",
+   "media": [
+    "image_references",
+    "mask"
+   ],
+   "modes": null,
+   "name": "Nano Banana 2",
+   "parameters": [
+    "is_inpaint",
+    "resolution"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "high-quality",
+    "photorealistic",
+    "versatile",
+    "4k",
+    "text-to-image",
+    "image-to-image",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "nano_banana_2_1": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9",
+    "4:1",
+    "1:4",
+    "8:1",
+    "1:8"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Nano Banana 2.1 image generation with image and video references",
+   "duration": null,
+   "id": "nano_banana_2_1",
+   "media": [
+    "image_references",
+    "mask",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Nano Banana 2.1",
+   "parameters": [
+    "enable_image_search",
+    "enable_web_search",
+    "is_inpaint",
+    "resolution",
+    "seed",
+    "thinking_level"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "high-quality",
+    "photorealistic",
+    "versatile",
+    "4k",
+    "text-to-image",
+    "image-to-image",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "nano_banana_2_lite": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Lite next-gen high-quality images",
+   "duration": null,
+   "id": "nano_banana_2_lite",
+   "media": [
+    "image_references",
+    "mask"
+   ],
+   "modes": null,
+   "name": "Nano Banana 2 Lite",
+   "parameters": [
+    "is_inpaint",
+    "resolution",
+    "thinking"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "high-quality",
+    "photorealistic",
+    "versatile",
+    "text-to-image",
+    "image-to-image"
+   ],
+   "type": "image"
+  },
+  "nano_banana_2_shots": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "nano_banana_2_shots",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Nano Banana Pro",
+   "parameters": [],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "nano_banana_pro": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Ultimate quality, text and diagrams",
+   "duration": null,
+   "id": "nano_banana_pro",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Nano Banana Pro",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "quality",
+    "text-rendering",
+    "diagrams",
+    "photorealistic",
+    "versatile",
+    "4k",
+    "text-to-image",
+    "image-to-image",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "openai_hazel": {
+   "aspect_ratios": [
+    "1:1",
+    "3:2",
+    "2:3",
+    "auto"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Powerful editing, best text rendering",
+   "duration": null,
+   "id": "openai_hazel",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "OpenAI Hazel",
+   "parameters": [
+    "quality"
+   ],
+   "provider": "OpenAI",
+   "resolution": {
+    "default": "medium",
+    "options": [
+     "low",
+     "medium",
+     "high"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "text-rendering",
+    "editing",
+    "typography",
+    "logos",
+    "diagram",
+    "infographic"
+   ],
+   "type": "image"
+  },
+  "outpaint": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "4:5",
+    "5:4",
+    "9:16",
+    "16:9",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "outpaint",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Outpaint",
+   "parameters": [
+    "folder_id"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "realtor_studio_render_still": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "21:9",
+    "27:16",
+    "16:27",
+    "9:8",
+    "8:9",
+    "4:5",
+    "5:4"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Property Studio room pictures and shot frames, made only in the Property Studio flow; not a general image model",
+   "duration": null,
+   "id": "realtor_studio_render_still",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Property Studio room picture",
+   "parameters": [
+    "background",
+    "batch_size",
+    "frame_count",
+    "frame_duration_ms",
+    "output_format",
+    "quality",
+    "resolution",
+    "size"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "image-generation",
+    "editing",
+    "reference-images",
+    "4k",
+    "text-rendering",
+    "vector"
+   ],
+   "type": "image"
+  },
+  "realtor_studio_still": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Property Studio stills, made only in the Property Studio flow; not a general image model",
+   "duration": null,
+   "id": "realtor_studio_still",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Property Studio still",
+   "parameters": [
+    "height",
+    "is_inpaint",
+    "remove_bg",
+    "resolution",
+    "width"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "editing",
+    "instruction",
+    "reasoning",
+    "pro",
+    "2k"
+   ],
+   "type": "image"
+  },
+  "realtor_studio_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Property Studio walkthrough and close-up clips, made only in the Property Studio flow; not a general video model",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "realtor_studio_video",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "t2v",
+    "omni_reference",
+    "video_edit",
+    "video_extension"
+   ],
+   "name": "Property Studio video",
+   "parameters": [
+    "bitrate_mode",
+    "draft",
+    "draft_job_id",
+    "duration",
+    "extension_mode",
+    "generate_audio",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "video-edit",
+    "video-extension",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "recraft_v4_1": {
+   "aspect_ratios": [
+    "1:1",
+    "3:4",
+    "4:3",
+    "4:5",
+    "5:4",
+    "3:2",
+    "2:3",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "V4.1 image generation with selectable model_type for standard exploration, vector logos/icons, utility product shots/mockups, and utility_vector brand assets",
+   "duration": null,
+   "id": "recraft_v4_1",
+   "media": [],
+   "modes": null,
+   "name": "Recraft V4.1",
+   "parameters": [
+    "background_color",
+    "colors",
+    "model_type",
+    "resolution"
+   ],
+   "provider": "Recraft",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "photorealistic",
+    "illustration",
+    "typography",
+    "logos",
+    "icons",
+    "vector",
+    "utility",
+    "product",
+    "mockups",
+    "brand",
+    "palette",
+    "text-to-image"
+   ],
+   "type": "image"
+  },
+  "recraft_v4_styles": {
+   "aspect_ratios": [
+    "1:1",
+    "2:1",
+    "1:2",
+    "3:2",
+    "2:3",
+    "4:3",
+    "3:4",
+    "5:4",
+    "4:5",
+    "6:10",
+    "14:10",
+    "10:14",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Generate images using your saved, ready Recraft style.",
+   "duration": null,
+   "id": "recraft_v4_styles",
+   "media": [],
+   "modes": null,
+   "name": "Recraft V4 Styles",
+   "parameters": [
+    "resolution",
+    "style_id",
+    "style_match"
+   ],
+   "provider": "Recraft",
+   "resolution": {
+    "default": "1k",
+    "options": [
+     "1k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "illustration",
+    "brand",
+    "custom-style",
+    "text-to-image"
+   ],
+   "type": "image"
+  },
+  "reframe": {
+   "aspect_ratios": [
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "reframe",
+   "media": [
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Reframe",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "video"
+  },
+  "sam_3_video": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "sam_3_video",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Remove Background",
+   "parameters": [
+    "apply_mask",
+    "frames_count"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "seedance_2_0": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "1:1",
+    "21:9"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "Reference-driven video with image/video/audio reference inputs, consistent identity, multi-SKU; optional generate_audio for native audio",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 4
+   },
+   "id": "seedance_2_0",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "std",
+    "fast"
+   ],
+   "name": "Seedance 2.0",
+   "parameters": [
+    "bitrate_mode",
+    "duration",
+    "generate_audio",
+    "genre",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "reference",
+    "identity",
+    "consistent",
+    "product",
+    "multi-sku",
+    "e-commerce",
+    "audio",
+    "audio-reference",
+    "video-reference",
+    "start-frame",
+    "end-frame",
+    "4k",
+    "high-resolution",
+    "unlim"
+   ],
+   "type": "video"
+  },
+  "seedance_2_0_mini": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "1:1",
+    "21:9"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "Fast budget Seedance 2.0 variant with image/video/audio reference inputs and native audio",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 4
+   },
+   "id": "seedance_2_0_mini",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Seedance 2.0 Mini",
+   "parameters": [
+    "bitrate_mode",
+    "duration",
+    "generate_audio",
+    "genre",
+    "resolution"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "fast",
+    "budget",
+    "reference",
+    "identity",
+    "consistent",
+    "audio",
+    "audio-reference",
+    "video-reference",
+    "start-frame",
+    "end-frame"
+   ],
+   "type": "video"
+  },
+  "seedance_2_5": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Seedance 2.5 text-to-video, multimodal omni-reference generation, video edit, and video extension",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "seedance_2_5",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "t2v",
+    "omni_reference",
+    "video_edit",
+    "video_extension"
+   ],
+   "name": "Seedance 2.5",
+   "parameters": [
+    "bitrate_mode",
+    "draft",
+    "draft_job_id",
+    "duration",
+    "extension_mode",
+    "generate_audio",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p",
+     "4k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "video-edit",
+    "video-extension",
+    "480p",
+    "720p",
+    "1080p",
+    "unlim"
+   ],
+   "type": "video"
+  },
+  "seedance_2_5_flash": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Seedance 2.5 Flash video generation, editing, and extension",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": 4
+   },
+   "id": "seedance_2_5_flash",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": [
+    "t2v",
+    "omni_reference",
+    "video_edit",
+    "video_extension"
+   ],
+   "name": "Seedance 2.5 Flash",
+   "parameters": [
+    "bitrate_mode",
+    "duration",
+    "extension_mode",
+    "generate_audio",
+    "mode",
+    "resolution"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "video-edit",
+    "video-extension",
+    "480p",
+    "720p"
+   ],
+   "type": "video"
+  },
+  "seedream_5_0_flash": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Fast image generation and instruction-based editing, up to 2K",
+   "duration": null,
+   "id": "seedream_5_0_flash",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Seedream 5.0 Flash",
+   "parameters": [
+    "height",
+    "resolution",
+    "width"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "editing",
+    "instruction",
+    "flash",
+    "2k"
+   ],
+   "type": "image"
+  },
+  "seedream_5_5": {
+   "aspect_ratios": [
+    "auto",
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Image generation and editing with PNG output and optional transparent background",
+   "duration": null,
+   "id": "seedream_5_5",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Seedream 5.5",
+   "parameters": [
+    "background",
+    "resolution"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "editing",
+    "instruction",
+    "2k",
+    "transparent"
+   ],
+   "type": "image"
+  },
+  "seedream_v4_5": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "16:9",
+    "3:2",
+    "21:9",
+    "3:4",
+    "9:16",
+    "2:3"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "4K output, precise control, transformations",
+   "duration": null,
+   "id": "seedream_v4_5",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Seedream 4.5",
+   "parameters": [
+    "quality"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "basic",
+    "options": [
+     "basic",
+     "high"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "4k",
+    "high-resolution",
+    "precise",
+    "transformations",
+    "editing",
+    "control"
+   ],
+   "type": "image"
+  },
+  "seedream_v5_lite": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Visual reasoning, instruction-based editing",
+   "duration": null,
+   "id": "seedream_v5_lite",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Seedream 5.0 Lite",
+   "parameters": [
+    "quality"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "basic",
+    "options": [
+     "basic",
+     "high"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "editing",
+    "instruction",
+    "reasoning",
+    "versatile",
+    "smart"
+   ],
+   "type": "image"
+  },
+  "seedream_v5_pro": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Pro-tier visual reasoning, instruction-based editing, up to 2K",
+   "duration": null,
+   "id": "seedream_v5_pro",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Seedream 5.0 Pro",
+   "parameters": [
+    "height",
+    "is_inpaint",
+    "remove_bg",
+    "resolution",
+    "width"
+   ],
+   "provider": "Bytedance",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1k",
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "editing",
+    "instruction",
+    "reasoning",
+    "pro",
+    "2k",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "soul_2": {
+   "aspect_ratios": [
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Realistic UGC, fashion editorial and character generation",
+   "duration": null,
+   "id": "soul_2",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Higgsfield Soul 2.0",
+   "parameters": [
+    "quality",
+    "soul_id",
+    "style_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "ugc",
+    "fashion",
+    "editorial",
+    "realistic",
+    "character",
+    "character-generation",
+    "soul",
+    "portrait",
+    "v2",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "soul_cast": {
+   "aspect_ratios": [
+    "16:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Consistent cinematic character identity",
+   "duration": null,
+   "id": "soul_cast",
+   "media": [],
+   "modes": null,
+   "name": "Soul Cast",
+   "parameters": [
+    "budget"
+   ],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "character",
+    "identity",
+    "consistent",
+    "cinematic",
+    "persona"
+   ],
+   "type": "image"
+  },
+  "soul_cinema_studio": {
+   "aspect_ratios": [
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "soul_cinema_studio",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "soul_cinema_studio",
+   "parameters": [
+    "custom_reference_id",
+    "enhance_prompt",
+    "quality",
+    "style_id"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [],
+   "type": "image"
+  },
+  "soul_cinematic": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Cinema-grade stills and concept art",
+   "duration": null,
+   "id": "soul_cinematic",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Soul Cinema",
+   "parameters": [
+    "quality",
+    "soul_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "cinematic",
+    "dramatic",
+    "concept-art",
+    "lighting",
+    "soul",
+    "film"
+   ],
+   "type": "image"
+  },
+  "soul_location": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16",
+    "3:2",
+    "2:3",
+    "21:9",
+    "9:21"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Environment and location generation",
+   "duration": null,
+   "id": "soul_location",
+   "media": [],
+   "modes": null,
+   "name": "Soul Location",
+   "parameters": [],
+   "provider": "Higgsfield",
+   "resolution": null,
+   "tags": [
+    "environment",
+    "location",
+    "background",
+    "scene",
+    "landscape"
+   ],
+   "type": "image"
+  },
+  "soul_v2": {
+   "aspect_ratios": [
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "3:2",
+    "2:3"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Realistic UGC, fashion editorial and character generation",
+   "duration": null,
+   "id": "soul_v2",
+   "media": [
+    "image"
+   ],
+   "modes": null,
+   "name": "Higgsfield Soul 2.0",
+   "parameters": [
+    "quality",
+    "soul_id",
+    "style_id"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "2k",
+    "options": [
+     "1.5k",
+     "2k"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "ugc",
+    "fashion",
+    "editorial",
+    "realistic",
+    "character",
+    "character-generation",
+    "soul",
+    "portrait",
+    "v2",
+    "unlim"
+   ],
+   "type": "image"
+  },
+  "sync_so": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "sync_so",
+   "media": [
+    "input_audio",
+    "input_video"
+   ],
+   "modes": null,
+   "name": "Sync Lipsync 3",
+   "parameters": [
+    "active_speaker_detection",
+    "folder_id",
+    "segments",
+    "sync_mode"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "topaz_hyperion_2_5": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Convert SDR video to HDR while preserving the source dimensions and frame rate.",
+   "duration": null,
+   "id": "topaz_hyperion_2_5",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Topaz Hyperion 2.5",
+   "parameters": [
+    "output_format"
+   ],
+   "provider": "topaz",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "topaz_image": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "topaz_image",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Topaz",
+   "parameters": [
+    "denoise",
+    "face_enhancement",
+    "face_enhancement_creativity",
+    "face_enhancement_strength",
+    "folder_id",
+    "output_height",
+    "output_width",
+    "sharpen",
+    "variant"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "topaz_image_generative": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "topaz_image_generative",
+   "media": [
+    "image_references"
+   ],
+   "modes": null,
+   "name": "Topaz",
+   "parameters": [
+    "autoprompt",
+    "creativity",
+    "denoise",
+    "face_enhancement",
+    "face_enhancement_creativity",
+    "face_enhancement_strength",
+    "output_height",
+    "output_width",
+    "sharpen",
+    "texture",
+    "variant"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "image"
+  },
+  "topaz_video": {
+   "aspect_ratios": [
+    "auto",
+    "21:9",
+    "16:9",
+    "4:3",
+    "1:1",
+    "3:4",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "topaz_video",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Topaz",
+   "parameters": [
+    "enhancement",
+    "frame_interpolation",
+    "resolution"
+   ],
+   "provider": "",
+   "resolution": {
+    "default": "1080p",
+    "options": [
+     "1080p",
+     "2160p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [],
+   "type": "video"
+  },
+  "veo3_1": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Ultra-realistic, top-tier cinematic quality",
+   "duration": {
+    "default": 8,
+    "options": [
+     4,
+     6,
+     8
+    ]
+   },
+   "id": "veo3_1",
+   "media": [
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Google Veo 3.1",
+   "parameters": [
+    "duration",
+    "quality",
+    "variant"
+   ],
+   "provider": "Google",
+   "resolution": {
+    "default": "basic",
+    "options": [
+     "basic",
+     "high",
+     "ultra"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "ultra-realistic",
+    "cinematic",
+    "top-tier",
+    "quality",
+    "audio"
+   ],
+   "type": "video"
+  },
+  "veo3_1_lite": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "auto"
+   ],
+   "audio": {
+    "default": false,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": false,
+   "description": "Fast, affordable, budget batch clips",
+   "duration": {
+    "default": 8,
+    "options": [
+     4,
+     6,
+     8
+    ]
+   },
+   "id": "veo3_1_lite",
+   "media": [
+    "end_image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Google Veo 3.1 Lite",
+   "parameters": [
+    "duration",
+    "generate_audio"
+   ],
+   "provider": "Google",
+   "resolution": null,
+   "tags": [
+    "fast",
+    "budget",
+    "affordable",
+    "batch",
+    "lite"
+   ],
+   "type": "video"
+  },
+  "video_background_remover": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "video_background_remover",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Video Background Remover",
+   "parameters": [],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "video_deflicker": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": {
+    "default": null,
+    "max": null,
+    "min": 0
+   },
+   "id": "video_deflicker",
+   "media": [
+    "input_video"
+   ],
+   "modes": null,
+   "name": "Video Deflicker",
+   "parameters": [
+    "duration",
+    "folder_id"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "video_upscale": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": {
+    "default": null,
+    "max": null,
+    "min": 0
+   },
+   "id": "video_upscale",
+   "media": [
+    "input_video"
+   ],
+   "modes": null,
+   "name": "Video Upscale",
+   "parameters": [
+    "duration",
+    "folder_id"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "videoshop_camera_move": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Re-film one video clip of 0.5 to 30 seconds with a camera move or a new angle",
+   "duration": null,
+   "id": "videoshop_camera_move",
+   "media": [
+    "video_references"
+   ],
+   "modes": [
+    "move",
+    "angles"
+   ],
+   "name": "Editing Room Camera Move",
+   "parameters": [
+    "angle",
+    "mode",
+    "move_id",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "camera-move",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "videoshop_edit": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Change what a prompt asks for in one video clip of 0.5 to 30 seconds",
+   "duration": null,
+   "id": "videoshop_edit",
+   "media": [
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Editing Room Edit",
+   "parameters": [
+    "resolution",
+    "selection"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "videoshop_genjutsu": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Swap an object in one video clip of 0.5 to 30 seconds for one from images",
+   "duration": null,
+   "id": "videoshop_genjutsu",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Editing Room Genjutsu",
+   "parameters": [
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "object-replacement",
+    "reference",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "videoshop_relight": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Relight one video clip of 0.5 to 30 seconds by placed lights, words or an image",
+   "duration": null,
+   "id": "videoshop_relight",
+   "media": [
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Editing Room Relight",
+   "parameters": [
+    "keys",
+    "nudge",
+    "relight",
+    "resolution"
+   ],
+   "provider": "Higgsfield",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "video-edit",
+    "relight",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "voice_change": {
+   "aspect_ratios": [],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "",
+   "duration": null,
+   "id": "voice_change",
+   "media": [
+    "input_video"
+   ],
+   "modes": null,
+   "name": "voice_change",
+   "parameters": [
+    "folder_id",
+    "voice_id",
+    "voice_type"
+   ],
+   "provider": "",
+   "resolution": null,
+   "tags": [],
+   "type": "video"
+  },
+  "wan2_6": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Open-weight, stylized, experimental creative",
+   "duration": {
+    "default": 5,
+    "options": [
+     5,
+     10,
+     15
+    ]
+   },
+   "id": "wan2_6",
+   "media": [
+    "audio_references",
+    "image_references",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Wan 2.6 Video",
+   "parameters": [
+    "duration",
+    "quality"
+   ],
+   "provider": "Wan",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p"
+    ],
+    "parameter": "quality"
+   },
+   "tags": [
+    "stylized",
+    "experimental",
+    "creative",
+    "open-weight",
+    "artistic"
+   ],
+   "type": "video"
+  },
+  "wan2_7": {
+   "aspect_ratios": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4"
+   ],
+   "audio": null,
+   "audio_in_tags": true,
+   "description": "Synchronized audio, character-consistent video",
+   "duration": {
+    "default": 5,
+    "max": 15,
+    "min": 2
+   },
+   "id": "wan2_7",
+   "media": [
+    "audio_references",
+    "end_image",
+    "start_image"
+   ],
+   "modes": null,
+   "name": "Wan 2.7",
+   "parameters": [
+    "duration",
+    "resolution"
+   ],
+   "provider": "Wan",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "audio",
+    "character",
+    "consistent",
+    "sync",
+    "sound"
+   ],
+   "type": "video"
+  },
+  "wan3_0": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "Wan 3.0 text-to-video, first/last frame video, and multimodal reference-to-video with native audio",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": -1
+   },
+   "id": "wan3_0",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Wan 3.0",
+   "parameters": [
+    "duration",
+    "enable_thinking",
+    "generate_audio",
+    "resolution"
+   ],
+   "provider": "Wan",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "first-last-frame",
+    "sound",
+    "thinking",
+    "480p",
+    "720p",
+    "1080p"
+   ],
+   "type": "video"
+  },
+  "wan3_0_prime": {
+   "aspect_ratios": [
+    "auto",
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:3",
+    "3:4"
+   ],
+   "audio": {
+    "default": true,
+    "options": null,
+    "parameter": "generate_audio"
+   },
+   "audio_in_tags": true,
+   "description": "Wan 3.0 Prime text-to-video, first/last frame video, and multimodal reference-to-video with native audio",
+   "duration": {
+    "default": 5,
+    "max": 30,
+    "min": -1
+   },
+   "id": "wan3_0_prime",
+   "media": [
+    "audio_references",
+    "end_image",
+    "image_references",
+    "start_image",
+    "video_references"
+   ],
+   "modes": null,
+   "name": "Wan 3.0 Prime",
+   "parameters": [
+    "duration",
+    "enable_thinking",
+    "generate_audio",
+    "resolution"
+   ],
+   "provider": "Wan",
+   "resolution": {
+    "default": "720p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ],
+    "parameter": "resolution"
+   },
+   "tags": [
+    "text-to-video",
+    "reference",
+    "identity",
+    "audio-reference",
+    "video-reference",
+    "first-last-frame",
+    "sound",
+    "thinking",
+    "480p",
+    "720p",
+    "1080p",
+    "prime"
+   ],
+   "type": "video"
+  },
+  "z_image": {
+   "aspect_ratios": [
+    "1:1",
+    "4:3",
+    "3:4",
+    "16:9",
+    "9:16"
+   ],
+   "audio": null,
+   "audio_in_tags": false,
+   "description": "Super fast, stylized text-to-image",
+   "duration": null,
+   "id": "z_image",
+   "media": [],
+   "modes": null,
+   "name": "Z Image",
+   "parameters": [],
+   "provider": "Tongyi-MAI",
+   "resolution": null,
+   "tags": [
+    "fast",
+    "budget",
+    "stylized",
+    "quick"
+   ],
+   "type": "image"
+  }
+ },
+ "source": "Higgsfield connector, models_explore list (imported by hfd.py models --import)"
+}

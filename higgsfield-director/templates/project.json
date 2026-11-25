@@ -1,0 +1,73 @@
+{
+  "title": "Perfume Noir — 3-shot commercial",
+  "model": "cinematic_studio_video_4_0",
+  "mode": "t2v",
+  "aspect_ratio": "9:16",
+  "resolution": "720p",
+  "bibles": {
+    "P01": {
+      "type": "product",
+      "description": "A black glass perfume bottle with a faceted gold cap and a flat cream label reading NOIR",
+      "fixed": {"color": "black", "cap": "gold"},
+      "variable": {"position": "can change"}
+    }
+  },
+  "constraints": ["Keep the label flat, sharp and readable."],
+  "shots": [
+    {
+      "id": "T01",
+      "duration": 5,
+      "entities": ["P01"],
+      "setting": "A dark studio with a polished obsidian plinth",
+      "action": "A thin curl of mist drifts past the bottle and clears",
+      "framing": "Extreme close-up on the cap, eye level",
+      "camera": "Static camera, locked off",
+      "optics": "100mm macro look, shallow depth of field",
+      "lighting": "Single hard rim light from camera left, deep black background",
+      "final": "The cap fills the upper third of the frame",
+      "sound": "Low airy hum, a soft glass chime as the mist clears",
+      "start": {"P01": {"position": "plinth"}},
+      "end": {"P01": {"position": "plinth"}},
+      "test_cost": 35,
+      "final_cost": 35
+    },
+    {
+      "id": "T02",
+      "duration": 5,
+      "entities": ["P01"],
+      "setting": "The same dark studio and obsidian plinth",
+      "action": "The bottle stays still while light sweeps across the facets",
+      "framing": "Medium close-up, slightly low angle",
+      "camera": "Slow 90-degree orbit to the right at constant speed",
+      "optics": "85mm look",
+      "lighting": "Moving soft rim light, controlled specular highlights",
+      "final": "Bottle centered, label facing camera",
+      "sound": "Low airy hum continues",
+      "start": {"P01": {"position": "plinth"}},
+      "end": {"P01": {"position": "plinth"}},
+      "camera_xy": [1, -2],
+      "test_cost": 35,
+      "final_cost": 35
+    },
+    {
+      "id": "T03",
+      "duration": 5,
+      "entities": ["P01"],
+      "setting": "The same dark studio, now with a faint warm haze",
+      "action": "A woman's hand enters frame and lifts the bottle off the plinth",
+      "framing": "Medium shot, eye level",
+      "camera": "Locked-off shot on a tripod",
+      "optics": "50mm look",
+      "lighting": "Warm key from the right, soft fill",
+      "final": "Hero frame: bottle held at center, label readable",
+      "sound": "A soft glass tap, then silence",
+      "dialogue": [{"speaker": "Narrator", "language": "English", "text": "Noir. For the whole night."}],
+      "start": {"P01": {"position": "plinth"}},
+      "end": {"P01": {"position": "in hand"}},
+      "camera_xy": [2, -2],
+      "test_cost": 35,
+      "final_cost": 35
+    }
+  ],
+  "axis": [[0, 0], [4, 0]]
+}

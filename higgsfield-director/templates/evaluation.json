@@ -1,0 +1,15 @@
+{
+  "type": "result",
+  "file": "T02_attempt2.mp4 (connector job_id)",
+  "criteria": {
+    "identity": {"score": 9, "evidence": "label and cap match bible entry P01 from 0 to 5 s"},
+    "motion": {"score": 8, "evidence": "light sweeps across the facets without flicker"},
+    "camera": {"score": 7, "evidence": "orbit stops at ~70°, not 90°; constant speed"},
+    "lighting": {"score": 8, "evidence": "soft rim light, the glass is not blown out"},
+    "materials": {"score": 9, "evidence": "glass refracts the background; base rests on the plinth"},
+    "continuity": {"score": 9, "evidence": "opening frame matches the final frame of T01"},
+    "briefing": {"score": 8, "evidence": "night luxury ok; the slight gold glow requested is missing"},
+    "audio": {"score": null, "not_applicable": "sound will be redone in the mix", "evidence": "generated audio discarded"}
+  },
+  "critical_failure": false
+}
