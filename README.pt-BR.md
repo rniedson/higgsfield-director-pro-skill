@@ -125,7 +125,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests) | 51 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests) | 58 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -148,7 +148,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/modelos.json             retrato datado do catálogo do conector (122 modelos)
   data/pesos.json               pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/test_hfd.py             51 testes (unittest)
+  tests/test_hfd.py             52 testes (unittest)
 docs/
   AVALIACAO-RC3.md              avaliação do pacote anterior e o que a v5 aproveitou
   assets/emblema.svg            emblema
@@ -214,14 +214,14 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 
 | | v4.1 RC3 / RC4 | v5.1.0 |
 |---|---|---|
-| Skill | 328 arquivos, 121 MB, 116 "comandos" | 15 arquivos, 203 kB, `SKILL.md` de 91 linhas + 6 referências lidas sob demanda |
+| Skill | 328 arquivos, 121 MB, 116 "comandos" | 16 arquivos, `SKILL.md` de 91 linhas + 6 referências lidas sob demanda |
 | Código | 3 compiladores, 2 ópticas, 3 orçamentos; SDK, REST, Docker | um `hfd.py`, só biblioteca padrão do Python |
 | Modelos | 9 perfis, 7 com todos os campos `null` | retrato datado de **122 modelos** do catálogo do conector, atualizável por comando |
 | Checagem de câmera | recusava *"static camera, no orbit"* | entende negação e fases; avisa, não bloqueia |
 | Áudio | mandava o áudio do Cinema Studio para a pós-produção | lê o áudio nativo no catálogo (o Cinema Studio 4.0 gera áudio por padrão) |
 | Geração | nenhuma | MCP oficial do Higgsfield, depois do custo e do "ok" explícito |
 | Conflitos | descrição genérica de "vídeo" | gatilho preso a *gerado por IA / Higgsfield*, com exclusões nomeadas |
-| Testes | 67 (2 dependiam do OpenCV) | 51, sem dependências, CI no Python 3.9 a 3.13; 4 defeitos plantados, 4 pegos |
+| Testes | 67 (2 dependiam do OpenCV) | 58, sem dependências, CI no Python 3.9 a 3.13; 4 defeitos plantados, 4 pegos |
 
 ## Recursos
 
@@ -432,7 +432,7 @@ cd .. && python3 tools/checar_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 51/51 passando no Python 3.9 e 3.12 aqui, e no CI do 3.9 ao 3.13 (sem pacotes de terceiros) |
+| Testes | 58/58 passando localmente; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/checar_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
