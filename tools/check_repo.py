@@ -20,7 +20,8 @@ MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "
 # Language check. README.pt-BR.md is the Portuguese translation of README.md; MIGRATION-6.md lists the old names.
 # Anywhere else, Portuguese is allowed only between the lines "language-check: off" and "language-check: on".
 LANGUAGE_EXEMPT = {"README.pt-BR.md", "docs/MIGRATION-6.md"}
-TEXT_SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".sh", ".txt", ".svg", ".toml", ".cfg"}
+TEXT_SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".sh", ".txt", ".svg", ".toml", ".cfg", ".html", ".css",
+                 ".js"}
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "node_modules"}
 # language-check: off  (the Portuguese this check looks for)
 PT_LETTERS = re.compile(r"[ãõçÃÕÇ]")
@@ -32,7 +33,8 @@ PT_ACCENTS = re.compile(r"[áéíóúâêôà]")
 # old Portuguese names that must not come back as file or folder names
 PT_NAME_PARTS = {"fluxo", "vocabulario", "modelos", "conector", "qualidade", "modos", "calibracao", "preproducao",
                  "pesos", "projeto", "avaliacao", "calibrar", "checar", "agregar", "testes", "emblema", "roteiro",
-                 "legendas", "tomadas", "pedidos", "chave", "cegos", "cega", "preferencias", "retrato"}
+                 "legendas", "tomadas", "pedidos", "chave", "cegos", "cega", "preferencias", "retrato", "croqui",
+                 "croquis", "folha", "tomada", "teste", "sintetica", "quadro", "quadros", "recorte", "recortes"}
 # language-check: on
 
 try:
