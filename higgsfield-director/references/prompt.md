@@ -9,6 +9,11 @@ velocidade → lente e foco → luz e cor → atmosfera e movimento secundário 
 
 - **Uma ação dominante e um movimento de câmera por tomada.** Mais de um só em fases explícitas:
   "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" por bloco.)
+- **Câmera simples não é tomada parada.** Em anúncio, cada tomada precisa de um momento de impacto no produto ou em
+  quem o usa: um toque que deforma o material, um respingo em câmera lenta, um gesto que mostra o efeito. A câmera
+  continua com um movimento só; quem carrega a emoção é a ação, e o som acompanha esse momento. Num teste às cegas, os
+  prompts contidos (uma gota escorrendo, um deslize lateral) deram câmera e luz melhores e perderam para os prompts com
+  ação, emoção e som.
 - **Duração, proporção, resolução e áudio liga/desliga vão nos PARÂMETROS**, nunca no texto. "Make it longer"
   no prompt não muda a duração. (Sora, Veo, MiniMax.)
 - **Descreva o que quer ver, não o que não quer.** "The label stays flat and readable", não "no warped label".
@@ -42,6 +47,10 @@ platform.minimax.io/docs/api-reference/video-generation-t2v.
 - **Rotule quem fala** e repita o mesmo rótulo em toda tomada: `Ana says in Brazilian Portuguese: "..."` (Kling, Sora).
 - **A fala cabe na duração**: ~2,5 palavras por segundo. Em 4 s cabem 1 ou 2 falas curtas (Sora). O `validar` avisa.
 - Para silêncio de fala: "No dialogue" (Wan). Para não ter trilha: "No music" (prática do Higgsfield para Seedance).
+- **Em anúncio, cada tomada tem um acento sonoro preso à ação** (o respingo, o rangido do material, um grave no quadro
+  final) por cima de um ambiente baixo. Só o ambiente deixa a tomada morna.
+- **O áudio gerado sai baixo**: entre −26 e −28 LUFS integrados num teste com o Cinema Studio 4.0. Normalize na pós
+  para a plataforma de destino, ou use o fluxo `video-sound-design` do conector.
 - Seedance (convenção copiada de documento da ByteDance pelo Higgsfield, fonte secundária): música entre `( )`,
   efeitos entre `< >`, fala entre `{ }`. Use só no Seedance e só depois de testar.
 - Pessoa real, voz de alguém, menor de idade: veja as regras duras do `SKILL.md`.
@@ -105,6 +114,10 @@ curta, tire ações antes de acelerar.
 | Gesto de emoção | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" num momento-chave: o modelo tende a virar a pessoa para a câmera. |
 | Símbolo oficial (bandeira, brasão, selo) | Pass the real symbol as a reference image; put mottos and small text in post. | Descrever o símbolo só em palavras: o modelo inventa ou embaralha. |
 | Objetos de marca | Unbranded industrial sewing machines. | Deixar a marca sem dizer: modelos de imagem às vezes estampam marcas reais. |
+| Movimento e estado final | Slow push-in from a wide shot to a medium shot; the whole product stays in frame at the end. | "Push-in to a close-up" junto com "the whole product visible at the end": o modelo segue o movimento e corta o produto. |
+| Produto em plano de detalhe | Keep one identifying feature in frame: the laces cross the knit in the foreground. | Um detalhe que só mostra o material: o modelo completa o resto de memória e pode inventar outro produto (num teste, saiu um tênis sem cadarço). |
+| Mesmo produto em várias tomadas | Generate one product image first, get it approved, and pass it as the reference in every shot. | Só a descrição repetida em cada prompt: segura o estilo, não o desenho. |
+| Impacto em anúncio | A fingertip presses into the knit and it springs back; slow-motion droplets burst from each footfall. | Só câmera e ambiente: a tomada sai correta e morna. |
 
 ## 7. Exemplos curtos (texto para vídeo)
 

@@ -165,6 +165,7 @@ CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 - [Manual ilustrado](#manual-ilustrado)
 - [Arquitetura](#arquitetura)
 - [Visão geral](#visão-geral)
+- [Com e sem a skill](#com-e-sem-a-skill)
 - [O que mudou na v5](#o-que-mudou-na-v5)
 - [Recursos](#recursos)
 - [Começo rápido](#começo-rápido)
@@ -206,6 +207,82 @@ flowchart LR
 
 Sem o conector, a skill trabalha em **modo só planejamento**: entrega prompts e parâmetros prontos para colar no site do
 Higgsfield e avisa que o custo deve ser conferido lá.
+
+## Com e sem a skill
+
+O conector do Higgsfield é **a câmera e o estúdio**: gera o que você pedir, do jeito que você pedir. A skill é **a
+equipe de direção** ao lado do Claude: planeja as tomadas, cuida da continuidade, faz o orçamento e revisa o resultado.
+O mesmo pedido, nos dois casos:
+
+| Etapa | Só o Claude + o conector | Com a skill |
+|---|---|---|
+| 1. Planejar | um prompt por pedido, cena a cena | o pedido vira um plano de tomadas com duração, ordem e custo total, antes de gastar um crédito (num teste, um roteiro falado de 7 minutos virou 36 tomadas) |
+| 2. Escrever o prompt | texto livre, numa ordem diferente a cada vez | sempre a mesma ordem (quem, onde, ação, câmera, luz, final), em inglês, com as regras do projeto em todas as tomadas, um momento de impacto por tomada nos anúncios e [receitas contra defeitos comuns](higgsfield-director/references/prompt.md) |
+| 3. Conferir antes de gastar | nada confere | o `hfd.py validar` confere os limites do modelo, se a fala cabe no tempo, a continuidade e a câmera (num teste, barrou uma tomada com dois movimentos de câmera) |
+| 4. Custo | depende de cada fluxo do conector | custo de cada tomada vindo do conector, versão de teste e versão final separadas, e o "ok" explícito antes de qualquer gasto |
+| 5. Continuidade | cada tomada sai solta | fichas de personagem, produto e lugar repetidas em todas as tomadas; produto sem foto ganha antes uma imagem de referência, porque o texto sozinho não segura o desenho ([medido](#o-que-medimos)); o último quadro de uma tomada vira o primeiro da seguinte |
+| 6. Avaliar | "ficou bom?" no olho | quadros do início, do meio e do fim, nota por critério com evidência, e conferências que não gastam crédito: a fala transcrita, a emenda do loop, o modelo que de fato rodou |
+| 7. Aprender | o mesmo erro volta na próxima vez | o erro vira receita nas referências da skill |
+
+**O que não muda:**
+
+- **O modelo e o preço.** A skill não deixa a geração mais barata nem o modelo melhor: ela muda o que se pede e quando.
+- **Os fluxos prontos do conector** (foto de produto, vídeo de criador, dublagem, anúncio…). Neles a skill sai da
+  frente e deixa o conector conduzir.
+- **O olho de quem conhece o assunto.** A nota mede se o vídeo obedeceu o prompt, não se a cena acontece assim na vida
+  real. A skill pergunta isso antes de gastar, mas quem responde é você.
+
+**Quando vale a pena:** em trabalho com várias tomadas (comercial, trailer, vídeo institucional, clipe). Para uma
+imagem solta ou um fluxo pronto do conector, ela é dispensável.
+
+### O que medimos
+
+A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 25/11/2026.
+
+**1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
+pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
+ferramentas de gerar bloqueadas.
+
+- Nas fotos de produto e no vídeo de criador, as duas condições escolheram o fluxo pronto do conector: a skill não
+  atrapalha o que o conector já faz.
+- 17 das 18 sessões cotaram pelo conector antes de propor uma geração. A outra, sem a skill, parou antes de cotar, ao
+  notar que as ferramentas de gerar estavam bloqueadas.
+- Com a skill, o trabalho levou 34% mais tempo no conjunto (753 s contra 564 s). Numa imagem solta, cerca de 40% a mais.
+- **O que não deu para medir:** se a skill evita "gastar sem pedir ok". Com as ferramentas de gerar bloqueadas, nenhuma
+  sessão podia gastar.
+
+**2. O resultado: o comercial gerado e julgado às cegas (6 tomadas de 5 s, 90 créditos).** Foi um comercial de tênis
+de corrida em 3 tomadas: detalhe do material, corrida na pista molhada à noite e o produto como herói no fim. Os
+prompts de cada condição foram gerados no Cinema Studio 4.0 em 480p, com som, e os dois vídeos ganharam rótulos
+sorteados (X e Y). Um avaliador automático, que só via o pedido e os vídeos, deu as notas, e uma pessoa votou sem saber
+qual era qual.
+
+| | Com a skill | Sem a skill |
+|---|---|---|
+| Nota do avaliador cego (0–100) | 70,7 | 71,3 |
+| Câmera (0–10) | **8,7** | 7,3 |
+| Luz (0–10) | **8,7** | 7,0 |
+| Identidade do produto (0–10) | 5,0 | **6,3** |
+| Materiais (0–10) | 7,7 | **8,3** |
+| Voto da pessoa, às cegas | | **escolhido**: "pelo movimento, ação, emoção, som" |
+
+**Deu empate técnico, e a pessoa preferiu a versão feita sem a skill.**
+
+- **Onde a skill ajudou:** um movimento de câmera limpo por tomada e a luz estável. Sem ela, o modelo cortou uma tomada
+  em três planos por conta própria, e o último segundo saiu desfocado e estourado.
+- **Onde ela perdeu, e por culpa das regras dela:**
+  1. **Prompts contidos demais.** Uma gota escorrendo e um deslize lateral ficaram corretos e mornos, ao lado de um
+     dedo apertando a malha, respingos em câmera lenta e um grave no quadro final.
+  2. **Movimento contra estado final.** O texto pedia uma aproximação até o close e o produto inteiro no fim. O modelo
+     seguiu o movimento e cortou o produto.
+  3. **Produto só em texto.** Num close só da malha, o modelo desenhou um tênis sem cadarço. As duas condições avisaram
+     do risco, mas nenhuma propôs gerar antes uma imagem de referência do produto.
+
+Os três pontos viraram regras nesta versão ([prompt](higgsfield-director/references/prompt.md),
+[qualidade](higgsfield-director/references/qualidade.md)).
+
+**Cautela:** foi uma rodada, com um pedido e um voto, então a amostra é pequena. A revanche, com a skill corrigida e a
+mesma imagem de referência nas duas condições, entra aqui quando for feita, ganhe quem ganhar.
 
 ## O que mudou na v5
 
@@ -438,8 +515,8 @@ cd .. && python3 tools/checar_repo.py
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
 | Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
 | Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 em cada uma de 3 rodadas (42 de 42), as duas últimas depois da mudança para o conector primeiro. Por rodada: 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Nas duas últimas rodadas, o plano de estúdio listou os fluxos ao vivo do conector antes de planejar. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
-| Gasto nos testes | 60 sessões (5 rodadas de encaminhamento e um piloto de 2 braços), 0 chamadas de geração (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok" |
-| Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). Se isso muda o vídeo gerado ainda não foi medido: falta gerar as 6 tomadas (90 créditos pela cotação de 24/11/2026) com o ok do operador |
+| Gasto nos testes | 78 sessões (5 rodadas de encaminhamento, um piloto de 2 braços e 18 sessões com e sem a skill), 0 chamadas de geração nelas (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok". A rodada gerada da comparação (6 tomadas, 90 créditos) foi feita à parte, com a cotação e o ok do operador |
+| Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). O vídeo gerado foi medido depois, às cegas: empate, com o voto humano na versão sem a skill (veja [O que medimos](#o-que-medimos)) |
 
 Propriedades de segurança:
 
@@ -461,7 +538,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 
 | Prioridade | Objetivo | Situação |
 |---|---|---|
-| P1 | Piloto real: gerar uma sequência de 3 tomadas e dar nota com evidência | Pendente (precisa de orçamento aprovado) |
+| P1 | Revanche com e sem a skill, depois das correções, com a mesma imagem de referência do produto nas duas condições | Pendente (92 créditos pela cotação de 25/11/2026; o 1º piloto gerado foi feito em 25/11) |
 | P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `modelos.md` |
 | P2 | Mais casos no teste de gatilho (mais pedidos, várias rodadas cada) | Planejado |
 | P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Sem data (não está em uso no Codex) |

@@ -17,7 +17,7 @@ orçamento em créditos · modelo preferido (se houver).
 
 | Formato | Esqueleto |
 |---|---|
-| Comercial de produto | detalhe/material → demonstração ou benefício → hero frame (produto centrado, rótulo legível); texto e CTA na pós |
+| Comercial de produto | imagem de referência do produto (a do cliente, ou uma gerada e aprovada antes) → detalhe/material com um momento de impacto → demonstração ou benefício → hero frame (produto inteiro e centrado, rótulo legível); texto e CTA na pós |
 | Trailer | premissa → escalada → título (na pós) |
 | Clipe musical | mapa de batidas fornecido pelo operador; tomadas cortadas na batida; direitos da música não se presumem |
 | Documental | observação → contexto → fato verificável; luz disponível, poucos cortes |

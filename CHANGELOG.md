@@ -21,7 +21,7 @@ All notable changes to this project are listed here. The format follows
   MCP server (operator approval first) and rented GPUs (billed while running).
 - The READMEs say the skill is tested in Claude Code; Codex reads the same format, but it is untested there.
 - The READMEs record two more routing rounds (14/14 each, 42/42 in total) and a text-only pilot with and without
-  the skill; the generated-video comparison is still to be run.
+  the skill.
 
 ### Added
 
@@ -30,6 +30,13 @@ All notable changes to this project are listed here. The format follows
   check before spending, two new diagnoses and three free checks after generation: speech by local transcription,
   loops by SSIM, and the model that actually ran (`references/qualidade.md`); the one-model, one-mode-per-project
   limit (`references/fluxo.md`).
+- Lessons from a blind with/without comparison (6 generated shots, scored by a blind judge and voted on by a person
+  who did not know which was which): one moment of impact per ad shot, with sound tied to it; the end framing of the
+  camera move must contain the final state; a product reference image before any multi-shot product work; generated
+  audio comes out quiet, so normalize it in post. Four recipes in `references/prompt.md`, three checks and four
+  diagnoses in `references/qualidade.md`, and the product-ad outline in `references/fluxo.md`.
+- READMEs: a "With and without the skill" section, with what was measured (18 automated sessions and one blind
+  generated round). The round was a tie, and the blind human vote went to the version made without the skill.
 - `modelos --importar` accepts a single-model `get` response and merges it without removing other models.
 - The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulario.md`.
 - 1 test (51 in total).
