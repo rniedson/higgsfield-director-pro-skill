@@ -14,6 +14,16 @@ class PublicBoundaryTests(unittest.TestCase):
         self.assertEqual([], check_public_path("lessons-learned/README.md"))
         self.assertEqual([], check_public_path("tools/tests/test_public_boundary.py"))
 
+    def test_frame_sheets_of_skill_tests_pass_but_not_video(self):
+        self.assertEqual([], check_public_path("lessons-learned/tests/2026-11-25-timed-beats/A1-sheet.jpg"))
+        for path in (
+            "lessons-learned/tests/2026-11-25-timed-beats/A1.mp4",
+            "lessons-learned/A1-sheet.jpg",
+            "lessons-learned/tests/2026-11-25-timed-beats/review.html",
+        ):
+            with self.subTest(path=path):
+                self.assertTrue(check_public_path(path))
+
     def test_agent_instruction_files_pass(self):
         for path in ("AGENTS.md", "CLAUDE.md"):
             with self.subTest(path=path):

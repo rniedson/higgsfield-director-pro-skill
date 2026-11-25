@@ -50,7 +50,9 @@ def check_public_path(path):
     if rel.suffix.lower() in MEDIA_SUFFIXES:
         shared_visual = path.startswith(("docs/manual/visual/assets/", "docs/manual/visual/atlas/",
                                          "docs/manual/visual/style/", "docs/assets/"))
-        if not shared_visual or rel.suffix.lower() not in {".gif", ".png", ".svg"}:
+        # Frame sheets of the skill's own tests: generic scenes, still images only, never video.
+        test_evidence = path.startswith("lessons-learned/tests/") and rel.suffix.lower() in {".jpg", ".png"}
+        if not test_evidence and (not shared_visual or rel.suffix.lower() not in {".gif", ".png", ".svg"}):
             problems.append(f"{path}: production media belongs outside this repository")
     return problems
 
