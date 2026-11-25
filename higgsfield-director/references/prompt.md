@@ -11,11 +11,12 @@ audio block).
 - **One dominant action and one camera movement per shot.** More than one only in explicit phases:
   "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.) A continuous
   camera path copied from a blocking reference video (§2) counts as one movement.
-- **A continuous action is written as one continuous motion, not as timed beats.** Splitting the action into time
-  slots ("0–3 s he enters, 3–6 s he turns") made Seedance cut at every slot, in every attempt; the cuts stopped when
-  the same action was written as one continuous motion in a single continuous shot (one tutorial, shown on the
-  timeline). A phase with its time is only for a change in the camera's movement, and only after a test on that
-  model.
+- **A shot that must not cut: write the action as one continuous motion, not as beats.** In one tutorial on
+  Seedance 2.0, with three references and a long prompt that already asked for no cuts, the shot cut when the action
+  was split into timed phases, and again when the phases became paragraphs without times; one continuous motion
+  fixed it, in a rewrite that also slowed the walk. A test here with three short timed beats and no references did
+  not cut on Seedance 2.5 (0 of 2, 2026-11-25). So beats are the first suspect when an unwanted cut appears, not a
+  rule against them, and a "no cuts" line did not prevent the cut.
 - **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
   product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
   the effect. The camera keeps a single movement; the action carries the emotion, and the sound follows that moment.

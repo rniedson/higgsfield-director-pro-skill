@@ -33,6 +33,12 @@ All notable changes to this project are listed here. The format follows
   start; rewriting instead of piling up patches; no repeated description of a referenced subject; the camera anchored
   to the set; clean, three-quarter locations built for the action; one change per image edit; a face fixed on the
   sheet; a free check for duplicated frames. Five more are marked as things to test.
+- Reproduction cards in `lessons-learned/tests/`: what each testable lesson's source showed (model, mode, references,
+  prompt structure, attempts), how to run the test, the difference from the original, and the result. The first test
+  (timed beats, Seedance 2.5) did not reproduce the cut in a simpler form, so timed beats became the first suspect
+  for an unwanted cut rather than a rule. A content-filter refusal now tells two cases apart: every attempt refused
+  points to the text; one refusal among passes (one of two identical requests here, refunded) is retried once. Every source time in the lessons links to that second of the video. The boundary check accepts
+  still frame sheets under `lessons-learned/tests/`.
 - The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
   *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
   `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated
