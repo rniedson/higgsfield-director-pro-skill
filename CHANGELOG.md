@@ -15,6 +15,12 @@ All notable changes to this project are listed here. The format follows
   that names the new one, and will be removed in 7.0. Every old name and its new one is in `docs/MIGRATION-6.md`.
 - `CONTRIBUTING.md` states the rule: files, file names, code, commits and pull requests in English; issues may be in
   English or Portuguese.
+- Lessons from the twelve most-viewed tutorials on Higgsfield's YouTube channel, recorded in `lessons-learned/` with
+  the video, the minute and where each one went: one face per reference sheet, a top-view layout map for positions,
+  a new reference for a change of state, show instead of describe, named gestures, extras without clones, shot and
+  reverse shot, the previous clip as a video reference, edits of the operator's own footage (`video_edit`), a 3D
+  blocking render as a camera reference, coverage and attempts in the plan, and one short note per defect. A cut
+  written on purpose inside a shot is allowed after a test; one camera movement per shot stays.
 - The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
   *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
   `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated
@@ -24,8 +30,8 @@ All notable changes to this project are listed here. The format follows
   service the operator already uses, a recorded voice, a free local voice for drafts, or none).
 - Work with a sketch storyboard, a storyboard or generated images keeps a local `review.html` that shows each
   frame, its cost and the decision on it, and is opened for the director after every update (step 9 of
-  `SKILL.md`, a non-negotiable rule, and *Review page* in `references/preproduction.md`). An example from a
-  synthetic crop test is in `artifacts/sketch-test-2026-11-25/`.
+  `SKILL.md`, a non-negotiable rule, and *Review page* in `references/preproduction.md`). The page lives in the
+  operator's project folder, not in this repository.
 - `references/quality.md`: unrequested cuts inside a shot were seen in 3 of 11 shots of 4 to 5 s on Cinema Studio
   4.0, near the 2 s mark, and the scene detector at 0.3 missed one cut, so also look at a contact sheet; new row for an
   accessory from the bible that disappears.

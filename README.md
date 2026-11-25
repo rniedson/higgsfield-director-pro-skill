@@ -161,6 +161,7 @@ higgsfield-director/            the skill: install THIS folder
   templates/                    3-shot commercial, image-to-video, evaluation
   tests/                        83 unittest cases
 calibration/                    blind-test records and the scoreboard source
+lessons-learned/                lessons that changed the skill, each with its source
 docs/
   MIGRATION-6.md                every name from before 6.0 and its English name
   RC3-EVALUATION.md             evaluation of the previous package and what v5 kept
@@ -659,6 +660,7 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 | Quality | [references/quality.md](higgsfield-director/references/quality.md) |
 | Illustrated manual | [docs/manual/README.md](docs/manual/README.md) |
 | Evaluation of v4.1 | [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md) |
+| Lessons learned | [lessons-learned/README.md](lessons-learned/README.md) |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) |
 | Contributing | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Security policy | [SECURITY.md](SECURITY.md) |

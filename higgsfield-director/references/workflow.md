@@ -22,6 +22,7 @@ budget in credits · preferred model (if any).
 | Music video | beat map supplied by the operator; shots cut on the beat; music rights are not assumed |
 | Documentary | observation → context → verifiable fact; available light, few cuts |
 | Narrative scene | establishing → action → reaction; 180° axis respected |
+| Dialogue or several people | establishing wide shot first, to fix who stands where; one background anchor per person (the window behind A, the shelf behind B); a reference of the set from both sides for shot and reverse shot; a layout map (§4) when they move |
 | Loop | last frame = first frame (pose, camera, light, speed) |
 | Campaign | same bibles; vary **one** dimension per piece |
 
@@ -40,6 +41,16 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 - Each shot can record `start` and `end` per entity; `validate` compares the end of one with the start of the next.
   A deliberate change goes in `approved_changes: ["P01.position"]`.
 - To chain shots, generate shot N, extract the last frame and use it as the `start_image` of N+1.
+- **One face per reference sheet.** A character sheet carries one face close-up; the other panels (full body, front
+  and back) are cropped from the neck down, so the model has a single face to read. Neutral mid-grey background, soft
+  even light, no strong highlights. With several faces on the sheet, the model picks one and drifts. (Higgsfield YouTube tutorials, 2026.)
+- **A change of state is a new reference.** When a character or product changes on purpose (wet, sweaty, torn
+  clothes, a dent), generate and approve a reference in the new state and use it from that shot on, together with
+  `approved_changes`. Written only in the prompt, the change tends to snap back. Images are cheap; video is not.
+- **Positions: a layout map.** When several people or objects must keep their places or their count, generate a
+  top-view map first: flat silhouettes with no faces, one muted color per person, the fixed anchors of the set (a
+  table, a door, a tree) and the positions in plain words or as percentages of the frame. Pass it as an image
+  reference and name the same colors in the prompt. The map fixes where they are; the text says how they move.
 
 **Pre-production before the storyboard.** While the idea is still changing, work on the block sketch storyboard and
 the script draft (`references/preproduction.md`); the storyboard below comes after the official script.
@@ -85,7 +96,13 @@ folder.
 the limits) · **Prompt(s)** in a copyable block · **Shot plan** (studio) · **Cost** (studio, or whenever generating) ·
 **Risks and next test**. Simple request: only the prompt, parameters and one risk.
 
+The cost counts the expected attempts per shot (`attempts`): an ad is often cut from the best part of several takes,
+and a quote prices one take.
+
 ## 8. After generation
 
 Editing, music, voice and subtitles belong to other tools: an audio skill or tool for voice and music, a local video
 editor, or the connector's `video-montage` workflow. Tell the operator where each generated file is.
+
+A shot found missing in the edit is generated later with the same bibles, references and light. Listing the
+cutaways and B-roll in the script draft (`references/preproduction.md`) avoids most of these.
