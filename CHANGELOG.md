@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Public/private boundary: production files stay in their own project; the repository check and CI reject personal
+  directories, review pages, working media and machine-specific paths. Contributions use an updated topic branch
+  and PR; direct pushes to `main` are not part of the workflow.
 - **Breaking: everything in the repository is in English.** `SKILL.md`, the references, the docs, `hfd.py`
   (commands, options, JSON fields and values, messages), the templates, the tests, the tools and the calibration
   records now use English names, and the reference files, templates, data files, tools and the calibration folder were

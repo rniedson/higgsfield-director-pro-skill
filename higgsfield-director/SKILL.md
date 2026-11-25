@@ -20,7 +20,9 @@ library only, no network): run `python3 <skill-folder>/scripts/hfd.py ...` from 
 This is a shared skill containing reusable methods only. Keep each production's brief, characters, scripts,
 sketches, images, preferences, quotes and results in the operator's project folder, **outside this skill and its
 public repository**. Instructions specific to a brand, channel or project belong with that project or in a
-separate personal skill.
+separate personal skill. Before committing this shared repository, inspect staged paths and content and run
+`python3 tools/check_repo.py`. Sync with the latest `main`, use a topic branch and PR, and never push directly to
+`main`.
 
 ## Where this skill ends
 
