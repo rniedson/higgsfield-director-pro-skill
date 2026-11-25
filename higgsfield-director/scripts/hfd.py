@@ -224,15 +224,23 @@ def importar_modelos(arquivos, saida, base=None):
     if not novos:
         raise Erro("nenhum modelo com id nas listas importadas")
     atual = carregar_modelos(base)
-    modelos = dict(atual["modelos"])
+    data_anterior = atual.get("gerado_em")
+    modelos = {}
+    for k, m in atual["modelos"].items():
+        modelos[k] = dict(m) if isinstance(m, dict) else m
+        if isinstance(modelos[k], dict) and data_anterior and not modelos[k].get("gerado_em"):
+            modelos[k]["gerado_em"] = data_anterior
     tipos_importados = {n["tipo"] for n in de_lista.values()}
     removidos = sorted(k for k, m in modelos.items() if isinstance(m, dict) and m.get("tipo") in tipos_importados
                        and k not in novos)
     for k in removidos:
         del modelos[k]
+    hoje = _dt.date.today().isoformat()
+    for n in novos.values():
+        n["gerado_em"] = hoje
     modelos.update(novos)
-    retrato = {"gerado_em": _dt.date.today().isoformat(), "modelos": modelos,
-               "fonte": "conector Higgsfield, models_explore list (importado por hfd.py modelos --importar)"}
+    retrato = {"gerado_em": hoje, "modelos": modelos,
+               "fonte": "conector Higgsfield, models_explore list/get (importado por hfd.py modelos --importar)"}
     destino = Path(saida)
     try:
         destino.parent.mkdir(parents=True, exist_ok=True)
@@ -258,6 +266,7 @@ def checar_modelo(p, catalogo):
     if not m:
         avisos.append(f"modelo '{mid}' não está no retrato de {data}; confira o id ao vivo (models_explore get)")
         return erros, avisos, None
+    data = m.get("gerado_em") or data
     if p.get("modo") == "imagem" and m["tipo"] != "image":
         erros.append(f"modo imagem com modelo de {m['tipo']} ({mid})")
     if p.get("modo") in ("t2v", "i2v", "edit", "extend") and m["tipo"] != "video":
@@ -551,7 +560,9 @@ def compilar_tomada(p, t, modelo=None):
             if alvo:
                 params["mode"] = alvo
     elif p.get("modelo"):
-        params = {"model": p["modelo"], "duration": t.get("duracao"), "aspect_ratio": p.get("proporcao")}
+        params = {"model": p["modelo"], "aspect_ratio": p.get("proporcao")}
+        if modo != "imagem":
+            params["duration"] = t.get("duracao")
     return {"id": t.get("id"), "prompt": prompt, "parametros": {k: v for k, v in params.items() if v is not None},
             "referencias": t.get("referencias") or p.get("referencias") or []}
 
@@ -562,7 +573,8 @@ def compilar(p, catalogo=None):
     if rel["erros"]:
         return rel
     _, _, modelo = checar_modelo(p, catalogo)
-    return {**rel, "modelo": p.get("modelo"), "retrato_dos_modelos": catalogo.get("gerado_em"),
+    data_modelo = (modelo or {}).get("gerado_em") or catalogo.get("gerado_em")
+    return {**rel, "modelo": p.get("modelo"), "retrato_dos_modelos": data_modelo,
             "tomadas": [compilar_tomada(p, t, modelo) for t in p["tomadas"]]}
 
 
@@ -716,6 +728,8 @@ def exportar(p, pasta, catalogo=None):
     if srt:
         (out / "legendas.srt").write_text("\n".join(srt), encoding="utf-8")
         arquivos.append("legendas.srt")
+    else:
+        (out / "legendas.srt").unlink(missing_ok=True)
     return {"pasta": str(out), "arquivos": arquivos, "duracao_total_s": inicio, "avisos": c["avisos"]}
 
 
@@ -745,6 +759,7 @@ def _modelos_cli(a):
         dur = (f"{minimo}-{maximo} s" if maximo is not None else
                f"{d['opcoes']} s" if d.get("opcoes") else "?")
         resumo.append({"id": m["id"], "nome": m["nome"], "tipo": m["tipo"], "duracao": dur,
+                       "gerado_em": m.get("gerado_em") or cat.get("gerado_em"),
                        "audio": bool(m.get("audio") or m.get("audio_nas_tags")),
                        "imagem_inicial": "start_image" in m["midias"],
                        "quadro_final": "end_image" in m["midias"],

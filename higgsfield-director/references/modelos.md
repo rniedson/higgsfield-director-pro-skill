@@ -3,6 +3,8 @@
 **A fonte de verdade é o catálogo ao vivo** do conector (`models_explore`: `recommend` para sugerir, `get` para os
 limites de um modelo). `data/modelos.json` é um **retrato datado** do mesmo catálogo, para trabalhar sem o conector e
 para o `hfd.py validar` conferir duração, proporção, resolução e áudio. Ao citar um limite, diga de onde veio e a data.
+Se a importação atualizar só parte do catálogo, cada modelo conserva sua própria data de atualização; a data geral
+do arquivo registra quando o retrato foi salvo. O aviso de retrato antigo usa a data do modelo escolhido.
 
 ```bash
 python3 <skill>/scripts/hfd.py modelos --tipo video            # resumo de todos
