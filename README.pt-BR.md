@@ -161,6 +161,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
   tests/                        83 testes (unittest)
 calibration/                    registros do teste às cegas, fonte do placar
+lessons-learned/                lições que mudaram a skill, cada uma com a fonte
 docs/
   MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
   RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou
@@ -660,6 +661,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Qualidade | [references/quality.md](higgsfield-director/references/quality.md) |
 | Manual ilustrado | [docs/manual/README.md](docs/manual/README.md) |
 | Avaliação da v4.1 | [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md) |
+| Lições aprendidas | [lessons-learned/README.md](lessons-learned/README.md) |
 | Histórico de mudanças | [CHANGELOG.md](CHANGELOG.md) |
 | Como contribuir | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Política de segurança | [SECURITY.md](SECURITY.md) |

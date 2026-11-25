@@ -7,7 +7,8 @@ plus a fraction of a credit for the sketch.
 ## Order
 
 1. **Idea:** one sentence (who, what, the twist), plus format, duration and destination.
-2. **Script draft:** a short table with shot, duration, what is seen and what is heard. No prose.
+2. **Script draft:** a short table with shot, duration, what is seen and what is heard. No prose. List the coverage
+   too: the cutaways and B-roll the edit will need, so a missing shot is not improvised later.
 3. **Sketch storyboard:** Phase A and then Phase B (below). Pose, action, camera and who is who.
 4. **Refinement:** idea, script and sketch change together. Rewrite only the part that changed; redo only the frame
    that changed.
@@ -56,6 +57,8 @@ folder can be moved as a whole.
 - **A face only when the expression matters** for the shot (a scream, a fright). In the others, a blank head.
 - **One trait that identifies** each character (a hat, the size) and the **same shape description** in every panel.
 - **State the scale:** "three times taller than him". Without it, the big object shrinks.
+- **Who is where carries over.** In a scene with several people, the sketch's positions become the layout map used
+  as a reference for the video (`references/workflow.md` §4).
 - **Only who appears.** Each panel describes only who is in it, in a normal sentence. The "NAME = description" format
   made the model draw everyone in every panel and swap one for another.
 - **Shapes, not labels.** "Robot" became a figure with a face; "a box on a conveyor belt with a round lens on the

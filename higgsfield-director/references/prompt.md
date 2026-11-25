@@ -9,7 +9,9 @@ movement and speed → lens and focus → lighting and color → atmosphere and 
 audio block).
 
 - **One dominant action and one camera movement per shot.** More than one only in explicit phases:
-  "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.)
+  "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.) A continuous
+  camera path copied from a blocking reference video (§2) counts as one movement; write it phase by phase, with the
+  time of each phase.
 - **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
   product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
   the effect. The camera keeps a single movement; the action carries the emotion, and the sound follows that moment.
@@ -20,6 +22,12 @@ audio block).
 - **Describe what you want to see, not what you don't want.** "The label stays flat and readable", not
   "no warped label". Use a negative field only if the model has one (none of the main ones shows one in the
   2026-11-24 catalog). (Veo; Higgsfield: "Say what you want, not what you don't".)
+- **Show it instead of describing it.** A detail that is hard to put into words (a creature, an odd shape, the
+  button to press, where something lands) goes in as an image reference, marked if needed (an arrow on the button,
+  an annotated drawing), and the text names it. (Higgsfield YouTube tutorials, 2026.)
+- **Name the gestures.** A generic verb ("she dances", "they fight") comes out soft and vague. Write the one action
+  as named gestures, one per beat: head turn, shoulder drop, finger snap. In a fight: who stands where, the blow, the
+  fall; medium shots for the movement, close shots for the contact.
 - **English** gives the most predictable result. Dialogue stays in the requested language, with the language written
   out. The Higgsfield guide says Seedance and Kling sometimes respond better to Chinese for subtle motion: test, do not
   assume.
@@ -41,7 +49,12 @@ help.aliyun.com/en/model-studio/text-to-video-prompt; platform.minimax.io/docs/a
 | Edit | `Change only [target]; preserve everything else exactly as it is. [What the target looks like].` |
 | Extension | `Continue seamlessly from the final frame of the previous clip. [What happens next].` |
 | Still image | No time, no moving camera, no sound: subject, setting, shot size, angle, lens, lighting, color, style. |
-| Sequence | Generate shot by shot; the **last frame** of one becomes the start image of the next (Higgsfield; Veo first/last frame). |
+| Sequence | Generate shot by shot; the **last frame** of one becomes the start image of the next (Higgsfield; Veo first/last frame). On a model whose catalog lists `video_references`, the previous shot itself can be the reference (2026-11-25 catalog: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5 and Cinema Studio 4.0, up to 10). Not yet compared with the last frame here: test it one variable at a time. |
+| Edit real footage | `mode: video_edit` on a model that has it (2026-11-25 catalog: Seedance 2.5 and Cinema Studio 4.0; billed by the length of the input clip). `Change [what], at [the moment: when he snaps his fingers]. Keep exactly: [face, gestures, rings, camera move, background].` The footage is the operator's; a real person in it only with consent. |
+| Motion from a blocking render | A rough 3D blocking render, made in another tool, as a video reference for the camera path and its timing. The text adds what the render does not show (look, materials, acting), phase by phase with times. The render fixes the positions; people's movement is written in the text, or they copy the stiffness of the blocks. |
+
+A clip shown as a screen inside the shot (a TV, a phone) sets the shot's length: the shot lasts as long as the clip,
+or the model invents the rest.
 
 ## 3. Audio and speech
 
@@ -56,6 +69,9 @@ help.aliyun.com/en/model-studio/text-to-video-prompt; platform.minimax.io/docs/a
   in post for the target platform, or use the connector's `video-sound-design` workflow.
 - Seedance (convention copied by Higgsfield from a ByteDance document, secondary source): music inside `( )`, effects
   inside `< >`, speech inside `{ }`. Use it only in Seedance and only after testing.
+- **Music as a beat reference:** on a model that accepts `audio_references`, the track can time the motion to the
+  beat (Seedance 2.0 also needs an image or video reference). Music rights are the operator's. One tutorial; not
+  tested here.
 - Real person, someone's voice, a minor: see the hard rules in `SKILL.md`.
 
 ## 4. Notes by model (official fact when there is a manufacturer source)
@@ -112,6 +128,9 @@ is short, remove actions before speeding up.
 | Product | Reveal material detail, then finish on a centered product frame. | Hide the product and change its label. |
 | UGC | Demonstrate one concrete use case in a natural voice. | Unsupported claims about the product. |
 | Crowd | A crowd of local fans in plain green T-shirts with no crest, in the small concrete stands of a neighborhood field. | "Fans in green and white football shirts" (pulls in a real club's kit), or a crowd with no clothing stated (the model may take the shirts off). |
+| Extras | A group reference with different people (age, build, clothes), each with one small action: one checks a phone, one laughs, one walks off. | One person's sheet for all the extras (they come out as clones), or extras with no action (they freeze). |
+| Reverse shot | Say where the camera is and what must be in frame: the camera stands beside the building, looking down at the valley. | "Reverse shot" alone: the model may put a wall behind the character. |
+| Transition between generated places | Hide the cut in a gesture or in something passing the lens; the camera keeps the same movement and only the place changes. | A hard cut with a different camera move on each side. |
 | Hands of two people | Four hands of two people: a man's hands on the left, a woman's hands on the right. | "Two hands" (you get a single person with both hands). |
 | Final state | The banner stays raised above the crowd at the end. | A final state that undoes the action (the cloth goes back to folded after being opened). |
 | Emotional gesture | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" at a key moment: the model tends to turn the person toward the camera. |

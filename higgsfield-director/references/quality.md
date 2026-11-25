@@ -14,6 +14,8 @@
       the whole product in frame.
 - [ ] A product that appears in more than one shot has a reference image: the client's, or one generated and approved
       beforehand.
+- [ ] A character sheet has one face; a scene with several people, or a count that matters, has a layout map
+      (`references/workflow.md` §4).
 - [ ] In an ad, each shot has a moment of impact (an action on the product, with sound tied to it), not just a camera
       movement.
 - [ ] The speech fits the duration; the speaker is labeled.
@@ -25,7 +27,7 @@
 
 | Symptom | Likely hypothesis | Change (one thing) | Check |
 |---|---|---|---|
-| Face changes between frames | weak reference, large rotation | lock the reference, reduce the orbit, shorten | compare the face at the start and at the end |
+| Face changes between frames | weak reference, large rotation, a reference sheet with several faces | lock the reference (one face per sheet, the other panels from the neck down), reduce the orbit, shorten | compare the face at the start and at the end |
 | Deformed hands/fingers | simultaneous gestures, hand in the foreground | a single gesture, hand smaller in frame | frame by frame on the hand |
 | Sliding feet | walk with no contact described | "each planted foot stays fixed until lifted"; simple path | contact with the ground |
 | Erratic camera | two movements, or none defined | one movement, constant speed | path from start to end |
@@ -40,12 +42,21 @@
 | Invented symbol or flag | a "film still" model draws from memory | reference with the real symbol; switch models | compare with the original |
 | Product changes between shots | text only; detail shot without a feature that identifies the product | product reference image in every shot | compare the product shot by shot |
 | Product cropped in the final frame | the movement ends on a tighter framing than the final state needs | make the movement end on a shot that contains the final state | last frame |
-| Cuts inside a shot | the model edited several shots together on its own (Cinema Studio 4.0: 3 of 11 shots of 4 to 5 s in one test, around the 2 s mark) | one continuous shot with a single movement; "Single continuous shot" | scene change frame by frame (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`); the 0.3 threshold missed a cut to a similar shot, so also look at a sheet of frames every 0.5 s |
+| Cuts inside a shot that nobody asked for | the model edited several shots together on its own (Cinema Studio 4.0: 3 of 11 shots of 4 to 5 s in one test, around the 2 s mark) | one continuous shot with a single movement; "Single continuous shot" | scene change frame by frame (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`); the 0.3 threshold missed a cut to a similar shot, so also look at a sheet of frames every 0.5 s |
 | An accessory from the bible disappears (hat, glasses) | hypothesis: in a wide shot the accessory is small and the opening frame weighs more than the bible (one sample) | the accessory visible in the approved storyboard frame; a tighter shot when it matters | compare with the bible, frame by frame |
+| People or objects swap places, or their count changes | positions given only in the text | a top-view layout map as a reference, with the same colors named in the prompt (`references/workflow.md` §4) | count and positions in each frame |
+| Geometry changes between attempts (where something lands, its scale) | words do not fix the geometry | an annotated image as a reference: arrows, marks, positions | compare the attempts frame by frame |
+| A changed state snaps back (torn clothes mend, wet hair dries) | the change is only in the text | a new approved reference in the new state | the state in every frame after the change |
+| Extras look like clones | the reference shows one person | a group reference with different people | the extras' faces |
+| A generated reference image looks flat | the image model | the same prompt in another image model; compare (one sample) | depth and shadows |
 | Correct but lukewarm shot | only camera and setting, nothing happens | one moment of impact per shot, with sound tied to it | blind vote against an alternative version |
 
 Two failures in a row on the same shot: **replan** (another framing, another model, a shorter shot) instead of
 piling up constraints. A hypothesis is not a cause: record what changed and what happened.
+
+Give each defect one short, concrete note (where it is, and how it should look or move) and regenerate only the shot
+it affects. A cut written on purpose, with its timing, on a model whose catalog lists multi-shot, is allowed after a
+test; only a cut nobody asked for is a defect.
 
 ## Look at the result
 
