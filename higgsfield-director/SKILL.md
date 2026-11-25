@@ -43,18 +43,21 @@ vídeo continua com a skill dona dele.
 
 1. **Briefing** — objetivo, destino e proporção, duração, sujeito e invariantes, referências, áudio, orçamento
    (`references/fluxo.md` §1).
-2. **Modelo** — escolha pela necessidade (`references/modelos.md`) e confirme os limites no catálogo ao vivo
+2. **Pré-produção barata** — no modo estúdio, ou quando a ideia ainda não está madura: ideia → esboço de roteiro em
+   tabela → croqui em blocos (folha única, depois quadros soltos) → refino → roteiro oficial travado pelo operador →
+   pergunta de por onde gerar o áudio (`references/preproducao.md`). Gasta tokens e frações de crédito, não vídeo.
+3. **Modelo** — escolha pela necessidade (`references/modelos.md`) e confirme os limites no catálogo ao vivo
    (`models_explore get`); no modo estúdio, importe esse `get` para o retrato do projeto e valide com `--retrato`.
    Sem conector: `hfd.py modelos --id <id>`, citando a data do retrato.
-3. **Plano** — modo estúdio: monte o projeto a partir de `templates/projeto.json` (ou `templates/i2v.json`), com
+4. **Plano** — modo estúdio: monte o projeto a partir de `templates/projeto.json` (ou `templates/i2v.json`), com
    fichas para o que se repete. `hfd.py validar projeto.json` até zerar os erros.
-4. **Prompt** — escreva pela `references/prompt.md` (vocabulário em `references/vocabulario.md`). No modo estúdio,
+5. **Prompt** — escreva pela `references/prompt.md` (vocabulário em `references/vocabulario.md`). No modo estúdio,
    `hfd.py compilar projeto.json --texto` devolve um prompt por tomada e os `parametros` prontos para o conector.
-5. **Storyboard** — no modo estúdio, um quadro por tomada em imagem antes de qualquer vídeo; o quadro aprovado vira
+6. **Storyboard** — no modo estúdio, um quadro por tomada em imagem antes de qualquer vídeo; o quadro aprovado vira
    a imagem inicial ou a referência da tomada (`references/fluxo.md` §4).
-6. **Custo e ok** — estime cada tomada no conector, preencha `custo_teste`/`custo_final`, rode `hfd.py orcamento` e
+7. **Custo e ok** — estime cada tomada no conector, preencha `custo_teste`/`custo_final`, rode `hfd.py orcamento` e
    **pare**: mostre o total e o que será gerado. Só siga com "ok" explícito, ou dentro do teto do modo `teto`.
-7. **Gerar e revisar** — gere, veja o resultado (quadros do início, meio e fim) e pontue com evidência
+8. **Gerar e revisar** — gere, veja o resultado (quadros do início, meio e fim) e pontue com evidência
    (`references/qualidade.md`). No modo `acompanhar`, mostre cada imagem e cada vídeo ao operador e espere a
    aprovação dele. Nova tentativa muda **uma** variável.
 
@@ -90,6 +93,7 @@ vídeo continua com a skill dona dele.
 | Arquivo | Quando |
 |---|---|
 | `references/fluxo.md` | briefing, modo estúdio, fichas de continuidade, campos do projeto, entrega |
+| `references/preproducao.md` | ideia, esboço de roteiro, croqui em duas fases, roteiro oficial, por onde gerar o áudio |
 | `references/prompt.md` | escrever ou revisar qualquer prompt; notas por modelo; receitas contra defeitos |
 | `references/vocabulario.md` | termos de câmera, plano, lente, luz, cor, física, atuação e áudio |
 | `references/modelos.md` | escolher modelo, ler o retrato, atualizar o retrato |
@@ -101,7 +105,8 @@ vídeo continua com a skill dona dele.
 ## Comandos do `hfd.py`
 
 `validar` · `compilar [--texto]` · `orcamento` · `exportar` · `otica` · `pontuar` · `modelos [--tipo|--buscar|--id]` ·
-`modelos --importar ... --saida ...` · `preferencias` · `cego` · `resultado` (os três últimos são do modo de trabalho
-e da calibração; `scripts/calibrar_claude_code.sh` roda as duas condições). `--retrato <arquivo>` troca o retrato dos
-modelos. Saída em JSON. Código 1: o projeto tem erros, listados em `erros`. Código 2: uso, arquivo ou entrada fora do
-formato, com a mensagem em `erro`. Avisos não bloqueiam, mas devem ser lidos.
+`modelos --importar ... --saida ...` · `preferencias` · `cego` · `resultado` (os três são do modo de trabalho e da
+calibração; `scripts/calibrar_claude_code.sh` roda as duas condições) · `recortar` (escreve os comandos que recortam
+a folha de croqui em quadros). `--retrato <arquivo>` troca o retrato dos modelos. Saída em JSON. Código 1: o projeto
+tem erros, listados em `erros`. Código 2: uso, arquivo ou entrada fora do formato, com a mensagem em `erro`. Avisos
+não bloqueiam, mas devem ser lidos.

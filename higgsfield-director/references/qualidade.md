@@ -38,7 +38,8 @@
 | Símbolo ou bandeira inventada | modelo de "still de cinema" desenha de memória | referência com o símbolo real; troque de modelo | compare com o original |
 | Produto muda entre tomadas | só texto; plano de detalhe sem um traço que identifica o produto | imagem de referência do produto em todas as tomadas | compare o produto tomada a tomada |
 | Produto cortado no quadro final | o movimento termina num enquadramento mais fechado do que o estado final pede | faça o movimento terminar num plano que contenha o estado final | último quadro |
-| Cortes dentro de uma tomada | o modelo montou vários planos sozinho (Cinema Studio 4.0, uma amostra) | um plano contínuo com um movimento só; "Single continuous shot" | mudança de cena quadro a quadro (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`) |
+| Cortes dentro de uma tomada | o modelo montou vários planos sozinho (Cinema Studio 4.0: 3 de 11 tomadas de 4 a 5 s num teste, perto dos 2 s) | um plano contínuo com um movimento só; "Single continuous shot" | mudança de cena quadro a quadro (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`); o limiar 0,3 deixou passar um corte para um plano parecido, então olhe também uma folha de quadros a cada 0,5 s |
+| Acessório da ficha some (chapéu, óculos) | hipótese: no plano aberto o acessório é pequeno e o quadro inicial pesa mais que a ficha (uma amostra) | o acessório visível no quadro aprovado do storyboard; plano mais fechado quando ele importa | compare com a ficha, quadro a quadro |
 | Tomada correta, mas morna | só câmera e ambiente, nenhum acontecimento | um momento de impacto por tomada, com som preso a ele | voto às cegas contra uma versão alternativa |
 
 Duas falhas seguidas na mesma tomada: **replaneje** (outro enquadramento, outro modelo, tomada mais curta) em vez

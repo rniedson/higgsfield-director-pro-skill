@@ -354,6 +354,13 @@ skill loses, the loss shows where to fix it.
 fraction of the video, and moves to video only after the frame is approved
 ([fluxo.md](higgsfield-director/references/fluxo.md)). This rule has not been measured blind yet.
 
+**Cheap pre-production.** Before that, the idea matures where mistakes cost little: an idea in one sentence, a script
+draft as a table, then a sketch storyboard in two phases. First the whole storyboard in one sketch sheet from the
+cheapest image model; then each panel, cropped (`hfd.py recortar`), becomes the reference for its own frame in a
+cheap model that accepts references, so every frame keeps the same block figures and can be redone alone. Only after
+the operator locks the script does the skill ask where to make the audio
+([preproducao.md](higgsfield-director/references/preproducao.md)). Tested once, not measured blind.
+
 ## What changed in v5
 
 v5 is a rewrite of the v4.1 RC3/RC4 package generated with ChatGPT. Every defect measured in RC3 became a test.
@@ -387,6 +394,7 @@ Full evaluation: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Review | pre-spend checklist, symptom → cause table, frames, weighted score with evidence | [`qualidade.md`](higgsfield-director/references/qualidade.md), `hfd.py pontuar` |
 | Delivery | script, shot list CSV, subtitles | `hfd.py exportar` |
 | Working mode | follow every step, price only, or a ceiling said in the conversation; asked on first use | [`modos.md`](higgsfield-director/references/modos.md), `hfd.py preferencias` |
+| Pre-production | idea, script draft, two-phase sketch storyboard in block figures, locked script, where to make the audio | [`preproducao.md`](higgsfield-director/references/preproducao.md), `hfd.py recortar` |
 | Storyboard | one still frame per shot before the video | [`fluxo.md`](higgsfield-director/references/fluxo.md) |
 | Blind calibration | the same request with and without the skill; X, Y and order drawn; allowlisted record | [`calibracao.md`](higgsfield-director/references/calibracao.md), `hfd.py cego`, `hfd.py resultado` |
 

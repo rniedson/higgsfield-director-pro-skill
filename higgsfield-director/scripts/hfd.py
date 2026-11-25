@@ -16,6 +16,7 @@ Subcomandos:
   preferencias [--modo acompanhar|preco|teto] [--calibrar sim|nao|depois] [--arquivo caminho]
   cego      --com com.json --sem sem.json --saida <pasta>   sorteia X e Y e grava a chave sem mostrá-la
   resultado --chave chave-cega.json --voto X|Y|empate ... --saida calibracao/<arquivo>.json
+  recortar  <folha.png> <pasta> nome:x0,y0,x1,y1 [...]   comandos ffmpeg que recortam a folha de croqui
 
 --retrato arquivo.json (em validar, compilar, exportar e modelos) usa outro retrato dos modelos no lugar de
 data/modelos.json. Nenhum comando grava dentro da pasta da skill sem que o caminho seja dado. `preferencias` usa
@@ -32,6 +33,7 @@ import math
 import os
 import re
 import secrets
+import shlex
 import sys
 from pathlib import Path
 
@@ -975,6 +977,48 @@ def _modelos_cli(a):
     return {"gerado_em": cat.get("gerado_em"), "quantidade": len(resumo), "modelos": resumo}
 
 
+CAIXA = re.compile(r"([A-Za-z0-9_-]{1,40}):([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+)")
+
+
+def recortar(folha, pasta, caixas, margem=0.01):
+    """Comandos ffmpeg que recortam cada quadro de uma folha de croqui (Fase A → Fase B, references/preproducao.md).
+
+    Cada caixa é nome:x0,y0,x1,y1 em frações da largura e da altura (0 a 1), anotadas ao olhar a folha; a margem
+    tira a moldura desenhada. Não executa nada: devolve os comandos, que não sobrescrevem arquivo existente (-n).
+    """
+    if not 0 <= margem < 0.2:
+        raise Erro("--margem deve ficar entre 0 e 0.2")
+    erros, comandos, nomes = [], [], set()
+    for item in caixas:
+        m = CAIXA.fullmatch(item)
+        if not m:
+            erros.append(f"{item!r}: use nome:x0,y0,x1,y1, com frações de 0 a 1 e nome só com letras, números, _ e -")
+            continue
+        nome = m.group(1)
+        try:
+            x0, y0, x1, y1 = (float(v) for v in m.groups()[1:])
+        except ValueError:
+            erros.append(f"{item!r}: coordenada que não é número")
+            continue
+        if nome in nomes:
+            erros.append(f"{nome}: nome repetido")
+            continue
+        nomes.add(nome)
+        if not (0 <= x0 < x1 <= 1 and 0 <= y0 < y1 <= 1):
+            erros.append(f"{nome}: a caixa precisa de 0 <= x0 < x1 <= 1 e 0 <= y0 < y1 <= 1")
+            continue
+        w, h = x1 - x0 - 2 * margem, y1 - y0 - 2 * margem
+        if w <= 0.02 or h <= 0.02:
+            erros.append(f"{nome}: caixa pequena demais depois de tirar a margem da moldura")
+            continue
+        filtro = f"crop=w=iw*{w:.4f}:h=ih*{h:.4f}:x=iw*{x0 + margem:.4f}:y=ih*{y0 + margem:.4f}"
+        cmd = ["ffmpeg", "-v", "error", "-n", "-i", str(folha), "-vf", filtro, "-frames:v", "1",
+               str(Path(pasta) / f"{nome}.png")]
+        comandos.append({"quadro": nome, "comando": cmd, "shell": shlex.join(cmd)})
+    return {"erros": erros, "pasta": str(pasta), "comandos": comandos,
+            "lembrete": "crie a pasta antes; confira cada recorte antes de enviá-lo como referência"}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="hfd", description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1027,6 +1071,11 @@ def main(argv=None):
     s.add_argument("--primeiro", choices=["X", "Y", "juntos"], help="qual a pessoa viu primeiro")
     s.add_argument("--data")
     s.add_argument("--saida", required=True, help="arquivo novo em calibracao/")
+    s = sub.add_parser("recortar", help="comandos ffmpeg que recortam uma folha de croqui em quadros")
+    s.add_argument("folha")
+    s.add_argument("pasta")
+    s.add_argument("caixas", nargs="+", metavar="nome:x0,y0,x1,y1")
+    s.add_argument("--margem", type=float, default=0.01, help="fração tirada de cada lado (a moldura)")
     a = ap.parse_args(argv)
     try:
         return _executar(a)
@@ -1108,6 +1157,9 @@ def _executar(a):
         r = {"erros": erros, "registro": reg, "arquivo": None if erros else str(a.saida),
              "lembrete": "a pessoa lê o registro inteiro antes de qualquer PR"}
         code = 1 if erros else 0
+    elif a.cmd == "recortar":
+        r = recortar(a.folha, a.pasta, a.caixas, a.margem)
+        code = 1 if r["erros"] else 0
     else:
         r = _modelos_cli(a)
         code = 0
