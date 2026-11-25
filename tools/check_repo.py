@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "higgsfield-director"
-MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md",
+MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md", "AGENTS.md", "CLAUDE.md",
             "docs/RC3-EVALUATION.md", "docs/manual/README.md", "docs/manual/visual/README.md", "calibration/README.md",
             "docs/MIGRATION-6.md"]
 

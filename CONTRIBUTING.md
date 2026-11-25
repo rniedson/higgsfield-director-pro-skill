@@ -23,6 +23,8 @@ CI runs both on every push and pull request.
 
 ## Rules for changes
 
+- **Every change goes through a pull request.** Nobody pushes to `main`, maintainers and coding agents included;
+  the maintainer merges. The rules for agents are in [AGENTS.md](AGENTS.md).
 - **Credits are spent only after the cost is shown and the operator says "ok".** A change that weakens this
   rule, in `SKILL.md`, in the references or in the code, will not be merged.
 - **`hfd.py` stays offline and stdlib-only.** It reads and writes only the paths it is given, never inside the skill

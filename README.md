@@ -169,7 +169,7 @@ docs/
 tools/check_repo.py             skill format, JSON, links, anchors and language (run by CI)
 tools/aggregate_calibration.py  builds the scoreboard in both READMEs from calibration/
 .github/                        CI workflow, issue and pull request templates
-CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
+AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ```
 
 </details>
