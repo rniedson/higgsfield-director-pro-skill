@@ -14,14 +14,21 @@
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
+![Não oficial](https://img.shields.io/badge/n%C3%A3o%20oficial-sem%20v%C3%ADnculo%20com%20o%20Higgsfield-b45309)
 
-[Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Licenças](#licenças)
+[Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Aviso](#aviso) · [Licenças](#licenças)
 
 [English](README.md) · **Português**
 
 </div>
 
-> **Estado:** versão 5.1.0. Projeto independente, sem vínculo com o Higgsfield nem aprovação dele.
+> [!IMPORTANT]
+> **Projeto não oficial.** O Higgsfield Director PRO é uma skill independente, feita pela comunidade. **Não é feita,
+> aprovada, patrocinada nem mantida pelo Higgsfield, e não tem vínculo com ele.** O nome "Higgsfield" aparece só para
+> dizer com qual serviço a skill funciona. Para conta, créditos, cobrança ou o conector, fale com o Higgsfield; este
+> repositório não resolve isso. Veja o [Aviso](#aviso).
+
+> **Estado:** versão 5.1.0.
 > Sozinha, a skill só *planeja*: vídeo e imagem são gerados pelo conector oficial do Higgsfield (MCP), com créditos da
 > sua conta, e **só depois que o custo é mostrado e o operador diz "ok"**.
 
@@ -178,6 +185,7 @@ CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 - [Edições e histórico](#edições-e-histórico)
 - [Próximos passos](#próximos-passos)
 - [Documentação](#documentação)
+- [Aviso](#aviso)
 - [Licenças](#licenças)
 
 In English: [README.md](README.md).
@@ -421,7 +429,8 @@ precisar ser reiniciadas para ver a mudança.
 | Todas as sessões do Claude Code | `ln -s "$R" ~/.claude/skills/higgsfield-director` | vale em todos os projetos de uma vez |
 | Codex | `ln -s "$R" ~/.agents/skills/higgsfield-director` | vale nas sessões do Codex |
 
-**2. Conecte o Higgsfield** (opcional; sem ele a skill só planeja):
+**2. Conecte o Higgsfield** (opcional; sem ele a skill só planeja). O conector é do próprio Higgsfield; este
+repositório não oficial não o distribui, não o altera e não fala por ele:
 
 | Agente | Como |
 |---|---|
@@ -647,6 +656,20 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Como contribuir | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Política de segurança | [SECURITY.md](SECURITY.md) |
 
+## Aviso
+
+- **Este não é um produto oficial do Higgsfield.** É um projeto independente de Robson Niedson, sem vínculo com o
+  Higgsfield, que não o fez, não o aprovou, não o patrocina e não lhe dá suporte. O Higgsfield não revisou este projeto.
+- **O nome aparece só para descrever compatibilidade.** "Higgsfield" diz com qual serviço a skill funciona. Este
+  repositório não usa o logotipo do Higgsfield, e o emblema é um desenho original.
+- **O suporte é separado.** Sua conta, créditos, cobrança, o site e o conector MCP são do Higgsfield: fale com eles.
+  Issues aqui tratam só da skill, do `hfd.py` e desta documentação.
+- **Os créditos são seus.** Toda geração roda na sua conta do Higgsfield, sob os termos dele. A skill pede o seu "ok"
+  antes, mas a responsabilidade pelo que você aprova é sua.
+- **Dados de modelos e preços podem estar desatualizados.** O retrato dos modelos e as cotações medidas têm data; o
+  catálogo ao vivo e as cotações do próprio Higgsfield sempre valem mais.
+- **Sem garantia.** O software é fornecido "no estado em que se encontra", como diz a [licença MIT](LICENSE).
+
 ## Licenças
 
 - Código e texto da skill: [MIT](LICENSE), © 2026 Robson Niedson.
@@ -660,7 +683,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 
 **Higgsfield Director PRO — direção de cinema para vídeo gerado por IA**
 
-Projeto independente
+Projeto independente e não oficial · sem vínculo com o Higgsfield nem aprovação dele
 
 [Voltar ao início](#higgsfield-director-pro) · [Read in English](README.md)
 
