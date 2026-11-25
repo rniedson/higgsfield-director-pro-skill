@@ -15,7 +15,8 @@ All notable changes to this project are listed here. The format follows
 - In studio mode, the chosen model's live limits (`models_explore get`) go into the project's snapshot and are used
   for validation.
 - `references/modelos.md` no longer stores prices: always quote.
-- The offline workflow table in `references/conector.md` is refreshed to 25/11/2026 (31 workflows: adds
+- The tests and the offline workflow snapshot are dated 24/11/2026, Brasília time (they had been written as 25/11).
+- The offline workflow table in `references/conector.md` is refreshed to 24/11/2026 (31 workflows: adds
   `website-builder-flow`, `short-drama`, `shorts-studio`, `reel-effects`, `manga-engine`, `layer-reveal-hf`,
   `property-studio`, `autobadge`, `color-grade`), and it covers presets, desktop-app commands that install a local
   MCP server (operator approval first) and rented GPUs (billed while running).
@@ -39,7 +40,22 @@ All notable changes to this project are listed here. The format follows
   generated round). The round was a tie, and the blind human vote went to the version made without the skill.
 - `modelos --importar` accepts a single-model `get` response and merges it without removing other models.
 - The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulario.md`.
-- 1 test (51 in total).
+- Working modes (`references/modos.md`, `hfd.py preferencias`). On first use in a project the skill asks whether the
+  operator wants to approve every step (`acompanhar`), see only the total price (`preco`), or give a spending ceiling
+  for the session in the conversation (`teto`). The preference file stores how to work, never how much to spend:
+  `hfd.py` rejects any other field, and the cost protocol in `references/conector.md` covers the ceiling.
+- Blind calibration with and without the skill (`references/calibracao.md`). `scripts/calibrar_claude_code.sh` runs
+  both conditions in fresh Claude Code sessions with generation blocked. `hfd.py cego` checks that both ask for the
+  same format, draws X and Y and, separately, which one is shown first, and writes the key (mode 600) without showing
+  it. `hfd.py resultado` turns the vote into an allowlisted record.
+- `calibracao/` with the first three records, `tools/agregar_calibracao.py`, and a calibration scoreboard in both
+  READMEs. `tools/checar_repo.py` checks every record against the allowlist and fails when the scoreboard is stale.
+  CONTRIBUTING explains how to send a record.
+- Storyboard before video in studio mode (`references/fluxo.md`, `SKILL.md`): one still per shot, approved before
+  any video is generated. Not yet measured blind.
+- READMEs: the rematch after the fixes (2 rounds, 152 credits). The blind vote and the blind judge both chose the
+  version with the skill in both rounds; the voter noted that it was also shown first both times.
+- 21 tests (71 in total).
 
 ## [5.1.0] — 2026-11-24
 

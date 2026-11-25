@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Confere o repositório antes de publicar: formato da skill, JSON, links e âncoras dos Markdown.
+"""Confere o repositório antes de publicar: formato da skill, JSON, links e âncoras dos Markdown, e os registros de
+calibração com o placar dos READMEs (tools/agregar_calibracao.py).
 
 Uso: python3 tools/checar_repo.py [--exigir-yaml]
 Sai com 0 se está tudo certo; 1 com a lista de problemas. Só lê arquivos; não acessa a rede.
@@ -12,7 +13,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 SKILL = RAIZ / "higgsfield-director"
 MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md",
-            "docs/AVALIACAO-RC3.md", "docs/manual/README.md", "docs/manual/visual/README.md"]
+            "docs/AVALIACAO-RC3.md", "docs/manual/README.md", "docs/manual/visual/README.md", "calibracao/README.md"]
 
 try:
     import yaml
@@ -110,9 +111,12 @@ def main():
     checar_skill(problemas, exigir_yaml)
     checar_json(problemas)
     checar_links(problemas)
+    sys.path.insert(0, str(RAIZ / "tools"))
+    import agregar_calibracao
+    agregar_calibracao.checar(problemas)
     for p in problemas:
         print(p)
-    print(f"{len(problemas)} problema(s)" if problemas else "ok: skill, JSON, links e âncoras")
+    print(f"{len(problemas)} problema(s)" if problemas else "ok: skill, JSON, links, âncoras e calibração")
     return 1 if problemas else 0
 
 

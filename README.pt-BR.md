@@ -166,6 +166,7 @@ CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 - [Arquitetura](#arquitetura)
 - [Visão geral](#visão-geral)
 - [Com e sem a skill](#com-e-sem-a-skill)
+- [Do seu jeito: modos e calibração](#do-seu-jeito-modos-e-calibração)
 - [O que mudou na v5](#o-que-mudou-na-v5)
 - [Recursos](#recursos)
 - [Começo rápido](#começo-rápido)
@@ -237,7 +238,7 @@ imagem solta ou um fluxo pronto do conector, ela é dispensável.
 
 ### O que medimos
 
-A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 25/11/2026.
+A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 24/11/2026.
 
 **1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
 pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
@@ -281,8 +282,77 @@ qual era qual.
 Os três pontos viraram regras nesta versão ([prompt](higgsfield-director/references/prompt.md),
 [qualidade](higgsfield-director/references/qualidade.md)).
 
-**Cautela:** foi uma rodada, com um pedido e um voto, então a amostra é pequena. A revanche, com a skill corrigida e a
-mesma imagem de referência nas duas condições, entra aqui quando for feita, ganhe quem ganhar.
+**3. A revanche, com a skill corrigida (2 rodadas, 152 créditos).** Com as três correções, o mesmo método rodou de
+novo, com um sorteio de X e Y por rodada. Na rodada 1, o mesmo comercial de tênis, agora com a mesma foto do produto
+nas duas condições (gerada antes, por 2 créditos). Na rodada 2, um trailer de 3 tomadas em 16:9: um faroleiro numa
+noite de tempestade. A tomada do meio foi recusada pelo filtro de direitos autorais do conector nas duas condições,
+sem cobrança, e a comparação ficou com as tomadas 1 e 3.
+
+| Rodada | Nota do avaliador cego, com a skill | Sem a skill | Voto da pessoa, às cegas |
+|---|---|---|---|
+| 1 · comercial de tênis, com a foto do produto | **82,5** | 73,8 | com a skill |
+| 2 · trailer do faroleiro (tomadas 1 e 3) | **78,0** | 69,8 | com a skill |
+
+**A pessoa escolheu a versão com a skill nas duas rodadas**, "pelo conjunto: a ligação de uma cena com outra, mais
+orgânico". O avaliador cego, que pontuou cada versão por critério e com evidência, escolheu a mesma.
+
+- **O que decidiu, segundo o avaliador.** Na rodada 1, com a skill o tênis da foto ficou igual nas três tomadas, e o
+  estádio à noite liga a primeira tomada à última. Sem ela, o modelo pôs uma sola que acende em azul e deixou o tênis
+  branco cinza: num anúncio, é mostrar outro produto. Na rodada 2, sem a skill a tomada 3 teve dois cortes que ninguém
+  pediu, e o barco mudou de modelo no meio.
+- **O que ainda falta.** O som: as duas condições saíram baixas (de −22 a −32 LUFS, contra perto de −14 pedido nas
+  redes) e com salto de volume entre tomadas. E, com a skill, as faixas do farol mudaram entre as tomadas e a cor
+  passou de fria para quente.
+
+**Cautela, levantada por quem votou:** nas duas rodadas, a versão com a skill caiu como X e apareceu primeiro, à
+esquerda, e "a percepção de ter visto primeiro também pode afetar a escolha". Com duas rodadas não dá para separar esse
+efeito. Por isso o `hfd.py cego` agora sorteia, à parte, qual versão aparece primeiro, e o registro guarda a ordem para
+o placar medi-la. A amostra ainda é pequena: três rodadas e uma pessoa votando.
+
+### Placar da calibração
+
+Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
+([como mandar a sua](calibracao/README.md)).
+
+<!-- calibracao:inicio -->
+| Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |
+|---|---:|---:|---:|---:|---|
+| Anúncio de produto | 2 | 1 | 1 | 0 | 76,6 × 72,5 (2) |
+| Trailer | 1 | 1 | 0 | 0 | 78,0 × 69,8 (1) |
+| **Total** | 3 | 2 | 1 | 0 | |
+
+Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0.
+
+A versão vista primeiro foi a escolhida em 2 de 2 rodada(s) com a ordem registrada.
+
+Gerado por `tools/agregar_calibracao.py` a partir de 3 registro(s) em `calibracao/`.
+<!-- calibracao:fim -->
+
+## Do seu jeito: modos e calibração
+
+Cada pessoa trabalha de um jeito. Na primeira vez num projeto, a skill pergunta como você quer seguir e guarda a
+resposta em `.higgsfield-director/preferencias.json`, na pasta do projeto
+([modos.md](higgsfield-director/references/modos.md)).
+
+| Modo | Para quem | O que acontece |
+|---|---|---|
+| `acompanhar` | quer ver e aprovar cada passo | cada imagem e cada vídeo vão para os seus olhos, com a pré-checagem da skill ao lado, e nada avança sem a sua aprovação |
+| `preco` | quer saber só o preço | a skill decide o plano e mostra o total; um "ok" vale para o pacote inteiro |
+| `teto` | não quer ser consultado | você diz na conversa até quantos créditos ela pode gastar na sessão; ela mostra o acumulado e para no teto |
+
+O arquivo guarda **como** trabalhar, nunca **quanto** gastar: o `hfd.py` recusa um arquivo com teto ou com qualquer
+outro campo, e a autorização de gasto continua vindo só da conversa.
+
+**Calibração às cegas.** Na mesma pergunta, a skill oferece um teste com e sem ela, com um pedido seu, para você ver se
+ela faz diferença no seu trabalho ([calibracao.md](higgsfield-director/references/calibracao.md)). No Claude Code,
+`scripts/calibrar_claude_code.sh` roda as duas condições sem gastar. Depois, `hfd.py cego` sorteia X, Y e a ordem,
+você vota, e `hfd.py resultado` monta um registro só com campos permitidos: nada de prompt, mídia, nome ou cliente. Se
+você quiser, o registro vira um pull request e entra no [placar](#placar-da-calibração). Se a skill perder, a derrota
+mostra onde corrigir.
+
+**Storyboard antes do vídeo.** No modo estúdio, a skill gera primeiro um quadro por tomada em imagem, que custa uma
+fração do vídeo, e só parte para o vídeo depois do quadro aprovado
+([fluxo.md](higgsfield-director/references/fluxo.md)). Esta regra ainda não foi medida às cegas.
 
 ## O que mudou na v5
 
@@ -316,6 +386,9 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Geração | ordem das chamadas do conector, fluxos prontos, envio de mídia, espera | [`conector.md`](higgsfield-director/references/conector.md) |
 | Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`qualidade.md`](higgsfield-director/references/qualidade.md), `hfd.py pontuar` |
 | Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py exportar` |
+| Modo de trabalho | acompanhar cada passo, só o preço, ou um teto dito na conversa; perguntado no primeiro uso | [`modos.md`](higgsfield-director/references/modos.md), `hfd.py preferencias` |
+| Storyboard | um quadro por tomada em imagem antes do vídeo | [`fluxo.md`](higgsfield-director/references/fluxo.md) |
+| Calibração às cegas | o mesmo pedido com e sem a skill; X, Y e ordem sorteados; registro com lista branca | [`calibracao.md`](higgsfield-director/references/calibracao.md), `hfd.py cego`, `hfd.py resultado` |
 
 ## Começo rápido
 
@@ -463,10 +536,14 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 | `pontuar AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
 | `modelos [--tipo] [--buscar] [--id]` | ler o retrato dos modelos |
 | `modelos --importar LISTA... --saida ARQUIVO` | montar um retrato novo com as listas do `models_explore`, fora da pasta da skill |
+| `preferencias [--modo M] [--calibrar C]` | ler ou gravar como o operador quer trabalhar (`acompanhar`, `preco`, `teto`); nunca guarda teto de gasto |
+| `cego --com A --sem B --saida PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la |
+| `resultado --chave C --voto X ... --saida ARQUIVO` | montar o registro de calibração com lista branca, pronto para o placar |
 
 `--retrato ARQUIVO` faz `validar`, `compilar`, `exportar` e `modelos` usarem outro retrato. Saída em JSON. Código `1`:
 o projeto tem erros, listados em `erros`. Código `2`: uso, arquivo ou entrada fora do formato, com a mensagem em
-`erro`; nunca um traceback. Sem acesso à rede; lê e grava só os caminhos indicados.
+`erro`; nunca um traceback. Sem acesso à rede; lê e grava só os caminhos indicados (sem `--arquivo`, o `preferencias` usa
+`.higgsfield-director/preferencias.json` na pasta atual).
 
 ## Como escolher o modelo
 
@@ -516,7 +593,7 @@ cd .. && python3 tools/checar_repo.py
 | Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
 | Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 em cada uma de 3 rodadas (42 de 42), as duas últimas depois da mudança para o conector primeiro. Por rodada: 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Nas duas últimas rodadas, o plano de estúdio listou os fluxos ao vivo do conector antes de planejar. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
 | Gasto nos testes | 78 sessões (5 rodadas de encaminhamento, um piloto de 2 braços e 18 sessões com e sem a skill), 0 chamadas de geração nelas (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok". A rodada gerada da comparação (6 tomadas, 90 créditos) foi feita à parte, com a cotação e o ok do operador |
-| Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). O vídeo gerado foi medido depois, às cegas: empate, com o voto humano na versão sem a skill (veja [O que medimos](#o-que-medimos)) |
+| Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). O vídeo gerado foi medido depois, às cegas: empate, com o voto humano na versão sem a skill; na revanche, depois das correções, a skill ganhou as duas rodadas (veja [O que medimos](#o-que-medimos)) |
 
 Propriedades de segurança:
 
@@ -538,7 +615,9 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 
 | Prioridade | Objetivo | Situação |
 |---|---|---|
-| P1 | Revanche com e sem a skill, depois das correções, com a mesma imagem de referência do produto nas duas condições | Pendente (92 créditos pela cotação de 25/11/2026; o 1º piloto gerado foi feito em 25/11) |
+| P1 | Revanche com e sem a skill, depois das correções, com a mesma imagem de referência do produto nas duas condições | Feita em 24/11/2026: a skill ganhou as duas rodadas (veja [O que medimos](#o-que-medimos)) |
+| P1 | Calibrações de outras pessoas, com a ordem sorteada, para separar o efeito de quem aparece primeiro | Aberta: [mande a sua](calibracao/README.md) |
+| P2 | Teste às cegas do storyboard antes do vídeo contra o vídeo direto | Planejado |
 | P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `modelos.md` |
 | P2 | Mais casos no teste de gatilho (mais pedidos, várias rodadas cada) | Planejado |
 | P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Sem data (não está em uso no Codex) |

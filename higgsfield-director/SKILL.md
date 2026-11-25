@@ -29,11 +29,14 @@ vídeo continua com a skill dona dele.
 
 ## Antes de começar
 
-1. **Fluxo pronto?** Com o conector, liste os fluxos ao vivo (`get_workflow_instructions` sem argumento; não gasta).
+1. **Como o operador quer trabalhar?** Rode `hfd.py preferencias`. Se vier `"definido": false`, faça a pergunta que
+   o comando devolve (modo de trabalho e calibração às cegas) e grave a resposta. Siga o modo em todo o fluxo
+   (`references/modos.md`).
+2. **Fluxo pronto?** Com o conector, liste os fluxos ao vivo (`get_workflow_instructions` sem argumento; não gasta).
    Se um serve, carregue-o e siga-o; não duplique. Sem conector, use a tabela de `references/conector.md`.
-2. **Conector disponível?** Veja `references/conector.md`. Sem ele, trabalhe em **modo só planejamento**: entregue
+3. **Conector disponível?** Veja `references/conector.md`. Sem ele, trabalhe em **modo só planejamento**: entregue
    prompt e parâmetros para colar no site, sem afirmar custo exato nem geração.
-3. **Modo:** *rápido* (uma tomada, uma imagem, revisar um prompt) ou *estúdio* (2+ tomadas, algo que se repete entre
+4. **Modo:** *rápido* (uma tomada, uma imagem, revisar um prompt) ou *estúdio* (2+ tomadas, algo que se repete entre
    tomadas, campanha, orçamento). Pergunte só o que bloqueia; o resto vira premissa declarada.
 
 ## Fluxo
@@ -47,18 +50,22 @@ vídeo continua com a skill dona dele.
    fichas para o que se repete. `hfd.py validar projeto.json` até zerar os erros.
 4. **Prompt** — escreva pela `references/prompt.md` (vocabulário em `references/vocabulario.md`). No modo estúdio,
    `hfd.py compilar projeto.json --texto` devolve um prompt por tomada e os `parametros` prontos para o conector.
-5. **Custo e ok** — estime cada tomada no conector, preencha `custo_teste`/`custo_final`, rode `hfd.py orcamento` e
-   **pare**: mostre o total e o que será gerado. Só siga com "ok" explícito.
-6. **Gerar e revisar** — gere, veja o resultado (quadros do início, meio e fim) e pontue com evidência
-   (`references/qualidade.md`). Nova tentativa muda **uma** variável.
+5. **Storyboard** — no modo estúdio, um quadro por tomada em imagem antes de qualquer vídeo; o quadro aprovado vira
+   a imagem inicial ou a referência da tomada (`references/fluxo.md` §4).
+6. **Custo e ok** — estime cada tomada no conector, preencha `custo_teste`/`custo_final`, rode `hfd.py orcamento` e
+   **pare**: mostre o total e o que será gerado. Só siga com "ok" explícito, ou dentro do teto do modo `teto`.
+7. **Gerar e revisar** — gere, veja o resultado (quadros do início, meio e fim) e pontue com evidência
+   (`references/qualidade.md`). No modo `acompanhar`, mostre cada imagem e cada vídeo ao operador e espere a
+   aprovação dele. Nova tentativa muda **uma** variável.
 
 ## Regras que não se negociam
 
-- **Nada é gerado sem custo mostrado e "ok" explícito** do operador para aquele total. Abrir preset, galeria ou
-  widget não autoriza gerar. O "ok" de um pedido não vale para o próximo. Vincule o consentimento à cotação e aos
-  parâmetros exatos; mudanças, expiração ou novas tentativas exigem nova autorização. Em erro ambíguo, consulte
-  o estado antes de repetir. Siga o protocolo de autorização em `references/conector.md`; é uma regra operacional,
-  não uma trava programática do servidor.
+- **Nada é gerado sem custo mostrado e "ok" explícito** do operador para aquele total, ou, no modo `teto`, dentro do
+  teto que ele disse **na conversa** nesta sessão. Preferência gravada em arquivo nunca autoriza gasto. Abrir preset,
+  galeria ou widget não autoriza gerar. O "ok" de um pedido não vale para o próximo. Vincule o consentimento à
+  cotação e aos parâmetros exatos; mudanças, expiração ou novas tentativas exigem nova autorização. Em erro ambíguo,
+  consulte o estado antes de repetir. Siga o protocolo de autorização em `references/conector.md`; é uma regra
+  operacional, não uma trava programática do servidor.
 - **Capacidade de modelo só do catálogo** (ao vivo, ou o retrato `data/modelos.json` com a data dita). Nunca de
   memória; desconhecido é desconhecido.
 - **Uma ação dominante e um movimento de câmera por tomada**; mais que isso, em fases explícitas.
@@ -88,10 +95,13 @@ vídeo continua com a skill dona dele.
 | `references/modelos.md` | escolher modelo, ler o retrato, atualizar o retrato |
 | `references/conector.md` | ferramentas do Higgsfield no Claude e no Codex, fluxos prontos, ordem das chamadas |
 | `references/qualidade.md` | checklist antes de gastar, diagnóstico de defeitos, ver o resultado, nota |
+| `references/modos.md` | primeiro uso; os modos `acompanhar`, `preco` e `teto`; o que nenhum modo muda |
+| `references/calibracao.md` | teste às cegas com e sem a skill e o registro para contribuir com o repositório |
 
 ## Comandos do `hfd.py`
 
 `validar` · `compilar [--texto]` · `orcamento` · `exportar` · `otica` · `pontuar` · `modelos [--tipo|--buscar|--id]` ·
-`modelos --importar ... --saida ...`; `--retrato <arquivo>` troca o retrato dos modelos. Saída em JSON. Código 1: o
-projeto tem erros, listados em `erros`. Código 2: uso, arquivo ou entrada fora do formato, com a mensagem em `erro`.
-Avisos não bloqueiam, mas devem ser lidos.
+`modelos --importar ... --saida ...` · `preferencias` · `cego` · `resultado` (os três últimos são do modo de trabalho
+e da calibração; `scripts/calibrar_claude_code.sh` roda as duas condições). `--retrato <arquivo>` troca o retrato dos
+modelos. Saída em JSON. Código 1: o projeto tem erros, listados em `erros`. Código 2: uso, arquivo ou entrada fora do
+formato, com a mensagem em `erro`. Avisos não bloqueiam, mas devem ser lidos.

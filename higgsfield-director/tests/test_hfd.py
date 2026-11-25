@@ -521,5 +521,124 @@ class Skill(unittest.TestCase):
         self.assertLessEqual(len(self.txt.splitlines()), 200)
 
 
+def _silencioso(args):
+    out, err = io.StringIO(), io.StringIO()
+    with redirect_stdout(out), redirect_stderr(err):
+        code = hfd.main([str(a) for a in args])
+    return code, out.getvalue(), err.getvalue()
+
+
+def _avaliacao(nota):
+    return {"tipo": "resultado", "arquivo": "x.mp4",
+            "criterios": {k: {"nota": nota, "evidencia": "visto"} for k in
+                          ("identidade", "movimento", "camera", "luz", "materiais", "continuidade", "briefing",
+                           "audio")}}
+
+
+class ModosECalibracao(unittest.TestCase):
+    def test_preferencias_sem_arquivo_pede_a_pergunta(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = hfd.preferencias(Path(d) / "p.json")
+            self.assertFalse(r["definido"])
+            self.assertIn("pergunta", r)
+
+    def test_preferencias_grava_e_le(self):
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "sub" / "p.json"
+            hfd.preferencias(arq, "acompanhar", "sim")
+            r = hfd.preferencias(arq)
+            self.assertTrue(r["definido"])
+            self.assertEqual((r["modo"], r["calibrar"]), ("acompanhar", "sim"))
+            self.assertNotIn("pergunta", r)
+
+    def test_preferencias_recusa_campo_de_gasto(self):
+        """O arquivo guarda como trabalhar, nunca quanto gastar: um teto plantado no arquivo é recusado."""
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "p.json"
+            arq.write_text('{"modo": "teto", "teto_creditos": 500}', encoding="utf-8")
+            with self.assertRaises(hfd.Erro):
+                hfd.preferencias(arq)
+            self.assertEqual(_silencioso(["preferencias", "--arquivo", arq])[0], 2)
+
+    def test_preferencias_modo_invalido(self):
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(SystemExit) as cm, redirect_stderr(io.StringIO()):
+                hfd.main(["preferencias", "--modo", "livre", "--arquivo", str(Path(d) / "p")])
+            self.assertEqual(cm.exception.code, 2)
+            with self.assertRaises(hfd.Erro):
+                hfd.preferencias(Path(d) / "p.json", calibrar="sim")
+
+    def _par(self):
+        base = {"model": "cs4", "duration": 5, "aspect_ratio": "9:16", "resolution": "480p", "generate_audio": True}
+        com = [{"index": i, "params": {**base, "prompt": f"com {i}", "count": 1}} for i in (1, 2)]
+        sem = {"requests": [{"index": i, "params": {**base, "prompt": f"sem {i}"}} for i in (1, 2)]}
+        return com, sem
+
+    def test_cego_sorteia_e_guarda_a_chave_fechada(self):
+        com, sem = self._par()
+        for sorteio, x_e in ((0, "com"), (1, "sem")):
+            with tempfile.TemporaryDirectory() as d:
+                r = hfd.cego(com, sem, Path(d) / "r", sorteio, ordem=sorteio)
+                self.assertEqual(r["erros"], [])
+                self.assertEqual(r["mostrar_primeiro"], "XY"[sorteio])
+                saida = json.dumps(r, ensure_ascii=False)
+                self.assertNotIn('"com"', saida)  # a saída não revela quem é quem
+                self.assertNotIn('"sem"', saida)
+                chave = json.loads((Path(d) / "r" / "chave-cega.json").read_text(encoding="utf-8"))
+                self.assertEqual(chave[x_e], "X")
+                self.assertEqual((Path(d) / "r" / "chave-cega.json").stat().st_mode & 0o777, 0o600)
+                pedidos = json.loads((Path(d) / "r" / "pedidos-cegos.json").read_text(encoding="utf-8"))
+                self.assertEqual([p["index"] for p in pedidos], [11, 12, 21, 22])
+                self.assertTrue(pedidos[0]["params"]["prompt"].startswith(x_e))
+                self.assertNotIn("count", json.dumps(pedidos))
+                with self.assertRaises(hfd.Erro):  # um sorteio por pasta
+                    hfd.cego(com, sem, Path(d) / "r")
+
+    def test_cego_recusa_formato_diferente(self):
+        com, sem = self._par()
+        sem["requests"][1]["params"]["resolution"] = "720p"
+        with tempfile.TemporaryDirectory() as d:
+            r = hfd.cego(com, sem, Path(d) / "r")
+            self.assertTrue(any("resolution" in e for e in r["erros"]))
+            self.assertFalse((Path(d) / "r").exists())
+            self.assertEqual(hfd.cego(com, sem["requests"][:1], Path(d) / "s")["erros"][0][:9], "--com tem")
+
+    def test_resultado_traduz_o_voto_pela_chave(self):
+        reg, erros = hfd.resultado({"com": "Y", "sem": "X"}, "Y", "trailer", "cs4", 3, 90, "5.1.0+abcdef1",
+                                   aval_x=_avaliacao(6), aval_y=_avaliacao(8), motivo="mais emoção", primeiro="X")
+        self.assertEqual(erros, [])
+        self.assertEqual(reg["voto"], "com")
+        self.assertEqual(reg["notas"]["com"]["total"], 80.0)
+        self.assertEqual(reg["notas"]["sem"]["total"], 60.0)
+        self.assertEqual(reg["avaliador"], "cego-automatico")
+        self.assertEqual(reg["visto_primeiro"], "sem")
+
+    def test_registro_lista_branca(self):
+        reg, _ = hfd.resultado({"com": "X", "sem": "Y"}, "empate", "loop", "cs4", 1, 10, "5.1.0")
+        self.assertEqual(hfd.checar_registro(reg), [])
+        for ruim in ({**reg, "prompt": "a shoe"}, {**reg, "motivo": "fale com a@b.com"},
+                     {**reg, "motivo": "veja https://x.y"}, {**reg, "categoria": "cliente-acme"},
+                     {**reg, "tomadas": True}, {**reg, "notas": {"com": {"total": 120}}},
+                     {**reg, "visto_primeiro": "X"}):
+            self.assertTrue(hfd.checar_registro(ruim), ruim)
+
+    def test_resultado_cli_grava_e_nao_sobrescreve(self):
+        with tempfile.TemporaryDirectory() as d:
+            chave = Path(d) / "chave.json"
+            chave.write_text('{"com": "X", "sem": "Y"}', encoding="utf-8")
+            saida = Path(d) / "calibracao" / "2026-01-01-trailer-a1.json"
+            args = ["resultado", "--chave", chave, "--voto", "X", "--categoria", "trailer", "--modelo", "cs4",
+                    "--tomadas", "3", "--custo", "90", "--versao", "5.1.0", "--saida", saida]
+            self.assertEqual(_silencioso(args)[0], 0)
+            self.assertEqual(json.loads(saida.read_text(encoding="utf-8"))["custo_creditos"], 90)
+            self.assertEqual(_silencioso(args)[0], 2)
+
+    def test_registros_do_repositorio_passam(self):
+        pasta = RAIZ.parent / "calibracao"
+        arquivos = sorted(pasta.glob("*.json")) if pasta.exists() else []
+        for arq in arquivos:
+            self.assertEqual(hfd.checar_registro(json.loads(arq.read_text(encoding="utf-8"))), [], arq.name)
+
+
 if __name__ == "__main__":
     unittest.main()

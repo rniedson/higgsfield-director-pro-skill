@@ -1,0 +1,41 @@
+{
+ "formato": 1,
+ "data": "2026-11-24",
+ "versao_skill": "5.1.0+982e7fa",
+ "categoria": "anuncio-produto",
+ "modelo": "cinematic_studio_video_4_0",
+ "tomadas": 3,
+ "custo_creditos": 90,
+ "referencia_de_imagem": false,
+ "voto": "sem",
+ "avaliador": "cego-automatico",
+ "motivo": "pelo movimento, ação, emoção, som",
+ "notas": {
+  "com": {
+   "total": 70.7,
+   "criterios": {
+    "identidade": 5.0,
+    "movimento": 7.0,
+    "camera": 8.7,
+    "briefing": 8.0,
+    "luz": 8.7,
+    "materiais": 7.7,
+    "continuidade": 6.3,
+    "audio": 5
+   }
+  },
+  "sem": {
+   "total": 71.3,
+   "criterios": {
+    "identidade": 6.3,
+    "movimento": 7.7,
+    "camera": 7.3,
+    "briefing": 8.3,
+    "luz": 7.0,
+    "materiais": 8.3,
+    "continuidade": 6.3,
+    "audio": 4
+   }
+  }
+ }
+}
