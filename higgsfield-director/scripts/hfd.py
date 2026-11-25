@@ -44,9 +44,17 @@ class Erro(Exception):
 
 # --------------------------------------------------------------------------- utilidades
 
+def _constante_invalida(valor):
+    raise Erro(f"constante JSON não finita: {valor}")
+
+
 def ler_json(caminho):
     try:
-        return json.loads(Path(caminho).read_text(encoding="utf-8"))
+        with Path(caminho).open("rb") as arquivo:
+            bruto = arquivo.read(16 * 1024 * 1024 + 1)
+        if len(bruto) > 16 * 1024 * 1024:
+            raise Erro("JSON excede o limite de 16 MiB")
+        return json.loads(bruto.decode("utf-8"), parse_constant=_constante_invalida)
     except FileNotFoundError:
         raise Erro(f"arquivo não encontrado: {caminho}")
     except json.JSONDecodeError as e:
@@ -56,7 +64,7 @@ def ler_json(caminho):
 
 
 def numero(v):
-    return type(v) in (int, float) and math.isfinite(v) and abs(v) <= 1e9
+    return type(v) in (int, float) and abs(v) <= 1e9 and math.isfinite(v)
 
 
 def texto(v):
@@ -476,7 +484,7 @@ def compilar_tomada(p, t, modelo=None):
     modo = p.get("modo", "t2v")
     partes = []
     if modo == "i2v":
-        inv = p.get("preservar") or t.get("preservar")
+        inv = list(dict.fromkeys((p.get("preservar") or []) + (t.get("preservar") or [])))
         partes.append("The reference image is the opening frame" +
                       (f"; preserve {', '.join(inv)}" if inv else "") + ".")
     elif modo == "edit":
@@ -565,8 +573,8 @@ def orcamento(tomadas, reserva=20.0, tentativas=None):
         if not numero(ct) or not numero(cf) or ct < 0 or cf < 0:
             raise Erro(f"{t.get('id')}: sem custo_teste/custo_final. Rode a estimativa do conector "
                        "(estimate_video_cost / estimate_image_cost) e preencha; não invente preço")
-        if type(n) is not int or n < 0:
-            raise Erro(f"{t.get('id')}: tentativas deve ser inteiro >= 0")
+        if type(n) is not int or not 0 <= n <= 10**9:
+            raise Erro(f"{t.get('id')}: tentativas deve ser inteiro entre 0 e 1000000000")
         if tentativas is not None and "tentativas" in t and n != tentativas:
             avisos.append(f"{t.get('id')}: vale tentativas={n} da própria tomada, não --tentativas {tentativas}")
         sub = round(n * ct + cf, 2)
@@ -799,6 +807,8 @@ def _executar(a):
         else:
             if a.tomadas is None or a.custo_teste is None or a.custo_final is None:
                 raise Erro("use um projeto.json ou --tomadas, --custo-teste e --custo-final")
+            if not 1 <= a.tomadas <= 10000:
+                raise Erro("--tomadas deve estar entre 1 e 10000")
             n = a.tentativas if a.tentativas is not None else 2
             r = orcamento([{"id": f"T{i + 1:02}", "custo_teste": a.custo_teste, "custo_final": a.custo_final,
                             "tentativas": n} for i in range(a.tomadas)], a.reserva)
