@@ -17,6 +17,8 @@
 
 </div>
 
+> **Projeto não oficial.** Este manual faz parte de um projeto independente, sem vínculo com o Higgsfield nem aprovação dele. O nome Higgsfield aparece só para dizer com qual serviço a skill funciona.
+
 > **Imagens esquemáticas.** Diagramas, esferas, fichas e projeções geométricas feitos para explicar a direção. Não são fotografias nem renders do Higgsfield e não provam o comportamento de nenhum modelo. Texto e imagens sob [CC BY-SA 4.0](LICENSE-DOCS.md).
 
 ## Como ler cada parte
@@ -280,7 +282,7 @@ Versões estáticas, vistas de cima, dos movimentos animados da parte 01.
 
 - **Texto:** adaptado do README ilustrado da v4.1 (edição AAA), que o declara sob [CC BY-SA 4.0](LICENSE-DOCS.md). Modificações desta versão: ilustrações reorganizadas em grades; a linha repetida de "vantagem" e de "QA" de cada parte virou a seção "Como ler cada parte"; o fluxo da parte 11 passou a incluir custo, "ok" e geração pelo conector; ficaram de fora a cópia do README da RC4 e a enciclopédia dos 116 comandos e dos scripts antigos, que não existem na v5.
 - **Imagens** (`visual/`): ilustrações esquemáticas desenhadas por código, sob [CC BY-SA 4.0](LICENSE-DOCS.md), como o texto. Ver [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
-- Projeto independente, sem vínculo com o Higgsfield.
+- Projeto independente e não oficial, sem vínculo com o Higgsfield, que não fez, não aprovou e não revisou este manual.
 
 <div align="center">
 
