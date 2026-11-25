@@ -1,6 +1,14 @@
 # Contributing
 
-Thanks for helping. Issues and pull requests are welcome in English or Portuguese.
+Thanks for helping. Issues are welcome in English or Portuguese.
+
+## Everything in the repository is in English
+
+Every file, file name, folder name, `hfd.py` command, option, JSON field and value, message, test, comment, commit
+message and pull request goes in English. The skill still answers each person in their own language; only its
+content is in English. The one exception is `README.pt-BR.md`, the Portuguese translation of `README.md`.
+`tools/check_repo.py` rejects Portuguese text and file names elsewhere, and CI runs it on every pull request. The
+Portuguese names used before 6.0 are listed in [`docs/MIGRATION-6.md`](docs/MIGRATION-6.md).
 
 ## Run the checks
 
@@ -8,7 +16,7 @@ There is nothing to install. The skill uses only the Python standard library (3.
 
 ```bash
 cd higgsfield-director && python3 -m unittest discover -s tests -v   # hfd.py and skill format
-cd .. && python3 tools/checar_repo.py                               # JSON, links and anchors
+cd .. && python3 tools/check_repo.py                                # JSON, links, anchors and language
 ```
 
 CI runs both on every push and pull request.
@@ -18,8 +26,8 @@ CI runs both on every push and pull request.
 - **Credits are spent only after the cost is shown and the operator says "ok".** A change that weakens this
   rule, in `SKILL.md`, in the references or in the code, will not be merged.
 - **`hfd.py` stays offline and stdlib-only.** It reads and writes only the paths it is given, never inside the skill
-  folder unless the path is passed explicitly. The one default path is `preferencias`, which uses
-  `.higgsfield-director/preferencias.json` in the current folder.
+  folder unless the path is passed explicitly. The one default path is `preferences`, which uses
+  `.higgsfield-director/preferences.json` in the current folder.
 - **The preference file never authorizes spending.** It stores how the operator wants to work, nothing else; a change
   that lets it carry a ceiling or a budget will not be merged.
 - **Keep the project clearly unofficial.** Do not add Higgsfield's logo or wording that suggests the skill is
@@ -27,7 +35,7 @@ CI runs both on every push and pull request.
   the notice at the top of both READMEs, the *Disclaimer* / *Aviso* sections and the line at the top of `SKILL.md`.
 - **Every bug fix comes with a test that fails before the fix.** Add one for each defect you correct.
 - **Model capabilities come from the catalog.** Use the live `models_explore` or the dated snapshot, never memory.
-  To refresh the bundled snapshot, follow "Atualizar o retrato" in `references/modelos.md`.
+  To refresh the bundled snapshot, follow the snapshot section in `references/models.md`.
 - **Keep `SKILL.md` lean.** At most 200 lines; detail goes into `references/`, which the agent reads on demand. The
   `description` has at most 1024 characters and is a quoted YAML string.
 - **The two READMEs move together.** A change to `README.md` needs the same change in `README.pt-BR.md`.
@@ -38,15 +46,15 @@ CI runs both on every push and pull request.
 
 A blind round, with and without the skill, on a request of your own, is the most useful contribution: it shows where
 the skill wins and where it loses. The steps are in
-[`references/calibracao.md`](higgsfield-director/references/calibracao.md).
+[`references/calibration.md`](higgsfield-director/references/calibration.md).
 
-1. Build the record with `hfd.py resultado`. It writes only allowlisted fields: date, skill version, request type,
+1. Build the record with `hfd.py result`. It writes only allowlisted fields: date, skill version, request type,
    model, shots, credits, whether a reference image was used, the vote, which version was seen first, an optional
    reason of up to 160 characters, and the blind reviewer's scores.
 2. **Read the whole record before you share it.** Never add the request text, prompts, images, videos, names,
    clients, brands, links, e-mail addresses or file paths. CI rejects any field outside the allowlist.
-3. Put it in `calibracao/` as `YYYY-MM-DD-<category>-<suffix>.json`, run `python3 tools/agregar_calibracao.py
-   --escrever` to refresh the scoreboard in both READMEs, and run the checks above.
+3. Put it in `calibration/` as `YYYY-MM-DD-<category>-<suffix>.json`, run `python3 tools/aggregate_calibration.py
+   --write` to refresh the scoreboard in both READMEs, and run the checks above.
 4. Open a pull request with the record and the two README changes. A round where the skill lost is just as welcome:
    it is how the next fix gets found.
 
