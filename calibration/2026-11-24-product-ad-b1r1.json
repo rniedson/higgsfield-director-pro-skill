@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "date": "2026-11-24",
+ "skill_version": "5.1.0+982e7fa",
+ "category": "product-ad",
+ "model": "cinematic_studio_video_4_0",
+ "shots": 3,
+ "cost_credits": 90,
+ "image_reference": false,
+ "vote": "without",
+ "rater": "blind-auto",
+ "reason": "for the movement, action, emotion, sound",
+ "scores": {
+  "with": {
+   "total": 70.7,
+   "criteria": {
+    "identity": 5.0,
+    "motion": 7.0,
+    "camera": 8.7,
+    "briefing": 8.0,
+    "lighting": 8.7,
+    "materials": 7.7,
+    "continuity": 6.3,
+    "audio": 5
+   }
+  },
+  "without": {
+   "total": 71.3,
+   "criteria": {
+    "identity": 6.3,
+    "motion": 7.7,
+    "camera": 7.3,
+    "briefing": 8.3,
+    "lighting": 7.0,
+    "materials": 8.3,
+    "continuity": 6.3,
+    "audio": 4
+   }
+  }
+ }
+}

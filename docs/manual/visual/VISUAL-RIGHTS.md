@@ -1,8 +1,8 @@
-# Direitos das imagens
+# Image rights
 
-As 185 imagens desta pasta estão sob a licença **CC BY-SA 4.0**, por decisão do titular, Robson Niedson, em
-24/11/2026. O texto da licença e a forma de atribuição estão em [LICENSE-DOCS.md](../LICENSE-DOCS.md).
+The 185 images in this folder are under the **CC BY-SA 4.0** license, by decision of the rights holder, Robson
+Niedson, on 2026-11-24. The license text and how to give attribution are in [LICENSE-DOCS.md](../LICENSE-DOCS.md).
 
-São ilustrações esquemáticas desenhadas por código: não são fotografias nem renders do Higgsfield e não provam como
-um modelo se comporta. As fichas são exemplos, não referências de identidade de pessoas reais. A licença não dá
-direito de uso das marcas citadas, como Higgsfield.
+They are schematic illustrations drawn by code: they are not photographs or Higgsfield renders, and they do not prove
+how a model behaves. The sheets are examples, not identity references of real people. The license gives no right to
+use the marks it mentions, such as Higgsfield.

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/emblema.svg" alt="Emblema do Higgsfield Director PRO" width="420">
+<img src="docs/assets/emblem.svg" alt="Emblema do Higgsfield Director PRO" width="420">
 
 # HIGGSFIELD DIRECTOR PRO
 
@@ -12,7 +12,7 @@
 ![Agentes](https://img.shields.io/badge/testada%20no-Claude%20Code-bca271)
 ![Codex](https://img.shields.io/badge/Codex-s%C3%B3%20o%20formato%2C%20sem%20teste-6d8b9c)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
-[![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/testes.yml)
+[![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
 ![Não oficial](https://img.shields.io/badge/n%C3%A3o%20oficial-sem%20v%C3%ADnculo%20com%20o%20Higgsfield-b45309)
 
@@ -61,7 +61,7 @@ movimento principal por tomada**, ou fases explícitas (*"static, then a slow pu
 | <img src="docs/manual/visual/style/ST02.svg" width="190" alt="Neo Noir"><br>**Neo Noir** | <img src="docs/manual/visual/style/ST03.svg" width="190" alt="Cyberpunk"><br>**Cyberpunk** | <img src="docs/manual/visual/style/ST07.svg" width="190" alt="Luxury Editorial"><br>**Luxury Editorial** | <img src="docs/manual/visual/style/ST15.svg" width="190" alt="Art Deco"><br>**Art Deco** |
 | <img src="docs/manual/visual/style/ST01.svg" width="190" alt="Photorealism"><br>**Photorealism** | <img src="docs/manual/visual/style/ST09.svg" width="190" alt="Analog Horror"><br>**Analog Horror** | <img src="docs/manual/visual/style/ST10.svg" width="190" alt="Claymation"><br>**Claymation** | <img src="docs/manual/visual/style/ST11.svg" width="190" alt="2D Anime"><br>**2D Anime** |
 
-São 20 estilos com prompt pronto na [parte 05](docs/manual/README.md#parte-05--cor-e-estilos-visuais).
+São 20 estilos com prompt pronto na [parte 05](docs/manual/README.md#part-05--color-and-visual-styles).
 
 ### Luz
 
@@ -74,12 +74,12 @@ São 20 estilos com prompt pronto na [parte 05](docs/manual/README.md#parte-05--
 
 | Parte | Tema | | Parte | Tema |
 |:---:|---|---|:---:|---|
-| 01 | [Câmera e movimento](docs/manual/README.md#parte-01--câmera-e-movimento) | | 07 | [Física, materiais e VFX](docs/manual/README.md#parte-07--física-materiais-e-vfx) |
-| 02 | [Enquadramento e composição](docs/manual/README.md#parte-02--enquadramento-e-composição) | | 08 | [Tempo, transições e edição](docs/manual/README.md#parte-08--tempo-transições-e-edição) |
-| 03 | [Câmeras, lentes e óptica](docs/manual/README.md#parte-03--câmeras-lentes-e-óptica) | | 09 | [Áudio e direção sonora](docs/manual/README.md#parte-09--áudio-e-direção-sonora) |
-| 04 | [Iluminação cinematográfica](docs/manual/README.md#parte-04--iluminação-cinematográfica) | | 10 | [Continuidade e diagnóstico](docs/manual/README.md#parte-10--continuidade-e-diagnóstico) |
-| 05 | [Cor e estilos visuais](docs/manual/README.md#parte-05--cor-e-estilos-visuais) | | 11 | [Engenharia de prompts e produção](docs/manual/README.md#parte-11--engenharia-de-prompts-e-produção) |
-| 06 | [Atuação e emoções](docs/manual/README.md#parte-06--atuação-e-emoções) | | — | [Atlas óptico, 100 estudos](docs/manual/README.md#atlas-óptico--100-estudos) |
+| 01 | [Câmera e movimento](docs/manual/README.md#part-01--camera-and-movement) | | 07 | [Física, materiais e VFX](docs/manual/README.md#part-07--physics-materials-and-vfx) |
+| 02 | [Enquadramento e composição](docs/manual/README.md#part-02--framing-and-composition) | | 08 | [Tempo, transições e edição](docs/manual/README.md#part-08--time-transitions-and-editing) |
+| 03 | [Câmeras, lentes e óptica](docs/manual/README.md#part-03--cameras-lenses-and-optics) | | 09 | [Áudio e direção sonora](docs/manual/README.md#part-09--audio-and-sound-direction) |
+| 04 | [Iluminação cinematográfica](docs/manual/README.md#part-04--cinematic-lighting) | | 10 | [Continuidade e diagnóstico](docs/manual/README.md#part-10--continuity-and-diagnostics) |
+| 05 | [Cor e estilos visuais](docs/manual/README.md#part-05--color-and-visual-styles) | | 11 | [Engenharia de prompts e produção](docs/manual/README.md#part-11--prompt-engineering-and-production) |
+| 06 | [Atuação e emoções](docs/manual/README.md#part-06--acting-and-emotions) | | — | [Atlas óptico, 100 estudos](docs/manual/README.md#optical-atlas--100-studies) |
 
 <details>
 <summary><b>Pranchas, fichas e o atlas óptico</b></summary>
@@ -110,7 +110,7 @@ flowchart TD
     U([Pedido]) --> A[Claude Code ou Codex]
     A -->|lê primeiro| S[SKILL.md<br/>escopo · fluxo · regras]
     S -.->|só o guia que o passo pede| R[references/<br/>6 guias]
-    S -->|modo estúdio| H[scripts/hfd.py<br/>validar · compilar · orçar]
+    S -->|mode estúdio| H[scripts/hfd.py<br/>validate · compile · orçar]
     H --> D[(data/<br/>retrato de 122 modelos)]
     H --> T[templates/<br/>projetos prontos]
     H -->|parâmetros| M{{MCP do Higgsfield<br/>cotação}}
@@ -142,25 +142,32 @@ flowchart TD
 
 ```text
 higgsfield-director/            a skill: é ESTA pasta que se instala
-  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento (91 linhas)
+  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento (124 linhas)
   agents/openai.yaml            nome e prompt padrão na interface do Codex
   references/
-    fluxo.md                    briefing, modo estúdio, fichas, campos do projeto, entrega
+    workflow.md                 briefing, modo estúdio, fichas, campos do projeto, entrega
+    preproduction.md            ideia, esboço de roteiro, croqui em duas fases, roteiro travado, rota do áudio
     prompt.md                   ordem de ouro, notas por modelo, receitas, exemplos
-    vocabulario.md              câmera, plano, lente, luz, cor, física, atuação, áudio
-    modelos.md                  escolher modelo, tabela do retrato, atualizar o retrato
-    conector.md                 MCP do Higgsfield no Claude e no Codex, fluxos prontos, ordem das chamadas
-    qualidade.md                checklist antes de gastar, diagnóstico, quadros, nota
-  scripts/hfd.py                validar, compilar, orçar, exportar, óptica, nota, modelos
-  data/modelos.json             retrato datado do catálogo do conector (122 modelos)
-  data/pesos.json               pesos da nota
+    vocabulary.md               câmera, plano, lente, luz, cor, física, atuação, áudio
+    models.md                   escolher modelo, tabela do retrato, atualizar o retrato
+    connector.md                MCP do Higgsfield no Claude e no Codex, fluxos prontos, ordem das chamadas
+    quality.md                  checklist antes de gastar, diagnóstico, quadros, nota
+    modes.md                    primeiro uso; modos follow, price e ceiling
+    calibration.md              teste às cegas com e sem a skill, e o registro
+  scripts/hfd.py                validate, compile, budget, export, optics, score, models, crop, blind, result
+  scripts/calibrate_claude_code.sh  roda as duas condições da calibração no Claude Code
+  data/models.json              retrato datado do catálogo do conector (122 modelos)
+  data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/test_hfd.py             55 testes (unittest)
+  tests/                        83 testes (unittest)
+calibration/                    registros do teste às cegas, fonte do placar
 docs/
-  AVALIACAO-RC3.md              avaliação do pacote anterior e o que a v5 aproveitou
-  assets/emblema.svg            emblema
+  MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
+  RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou
+  assets/emblem.svg             emblema
   manual/                       manual ilustrado: README (11 partes), visual/ (185 imagens + catálogo)
-tools/checar_repo.py            formato da skill, JSON, links e âncoras (rodado pelo CI)
+tools/check_repo.py             formato da skill, JSON, links, âncoras e língua (rodado pelo CI)
+tools/aggregate_calibration.py  monta o placar nos dois READMEs a partir de calibration/
 .github/                        CI, modelos de issue e de pull request
 CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ```
@@ -205,7 +212,7 @@ skill responde no idioma de quem pede e escreve os prompts em inglês, que os mo
 flowchart LR
     A[Briefing] --> B[Modelo<br/>catálogo ao vivo]
     B --> C[Plano de tomadas<br/>+ fichas]
-    C --> D[Prompts<br/>hfd.py compilar]
+    C --> D[Prompts<br/>hfd.py compile]
     D --> E[Custo estimado<br/>conector]
     E --> F{Operador<br/>deu ok?}
     F -- sim --> G[Gerar<br/>MCP do Higgsfield]
@@ -227,7 +234,7 @@ O mesmo pedido, nos dois casos:
 |---|---|---|
 | 1. Planejar | um prompt por pedido, cena a cena | o pedido vira um plano de tomadas com duração, ordem e custo total, antes de gastar um crédito (num teste, um roteiro falado de 7 minutos virou 36 tomadas) |
 | 2. Escrever o prompt | texto livre, numa ordem diferente a cada vez | sempre a mesma ordem (quem, onde, ação, câmera, luz, final), em inglês, com as regras do projeto em todas as tomadas, um momento de impacto por tomada nos anúncios e [receitas contra defeitos comuns](higgsfield-director/references/prompt.md) |
-| 3. Conferir antes de gastar | nada confere | o `hfd.py validar` confere os limites do modelo, se a fala cabe no tempo, a continuidade e a câmera (num teste, barrou uma tomada com dois movimentos de câmera) |
+| 3. Conferir antes de gastar | nada confere | o `hfd.py validate` confere os limites do modelo, se a fala cabe no tempo, a continuidade e a câmera (num teste, barrou uma tomada com dois movimentos de câmera) |
 | 4. Custo | depende de cada fluxo do conector | custo de cada tomada vindo do conector, versão de teste e versão final separadas, e o "ok" explícito antes de qualquer gasto |
 | 5. Continuidade | cada tomada sai solta | fichas de personagem, produto e lugar repetidas em todas as tomadas; produto sem foto ganha antes uma imagem de referência, porque o texto sozinho não segura o desenho ([medido](#o-que-medimos)); o último quadro de uma tomada vira o primeiro da seguinte |
 | 6. Avaliar | "ficou bom?" no olho | quadros do início, do meio e do fim, nota por critério com evidência, e conferências que não gastam crédito: a fala transcrita, a emenda do loop, o modelo que de fato rodou |
@@ -288,7 +295,7 @@ qual era qual.
      do risco, mas nenhuma propôs gerar antes uma imagem de referência do produto.
 
 Os três pontos viraram regras nesta versão ([prompt](higgsfield-director/references/prompt.md),
-[qualidade](higgsfield-director/references/qualidade.md)).
+[qualidade](higgsfield-director/references/quality.md)).
 
 **3. A revanche, com a skill corrigida (2 rodadas, 152 créditos).** Com as três correções, o mesmo método rodou de
 novo, com um sorteio de X e Y por rodada. Na rodada 1, o mesmo comercial de tênis, agora com a mesma foto do produto
@@ -314,15 +321,15 @@ orgânico". O avaliador cego, que pontuou cada versão por critério e com evid�
 
 **Cautela, levantada por quem votou:** nas duas rodadas, a versão com a skill caiu como X e apareceu primeiro, à
 esquerda, e "a percepção de ter visto primeiro também pode afetar a escolha". Com duas rodadas não dá para separar esse
-efeito. Por isso o `hfd.py cego` agora sorteia, à parte, qual versão aparece primeiro, e o registro guarda a ordem para
+efeito. Por isso o `hfd.py blind` agora sorteia, à parte, qual versão aparece primeiro, e o registro guarda a ordem para
 o placar medi-la. A amostra ainda é pequena: três rodadas e uma pessoa votando.
 
 ### Placar da calibração
 
 Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
-([como mandar a sua](calibracao/README.md)).
+([como mandar a sua](calibration/README.md)).
 
-<!-- calibracao:inicio -->
+<!-- calibration:start -->
 | Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |
 |---|---:|---:|---:|---:|---|
 | Anúncio de produto | 2 | 1 | 1 | 0 | 76,6 × 72,5 (2) |
@@ -333,46 +340,46 @@ Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 �
 
 A versão vista primeiro foi a escolhida em 2 de 2 rodada(s) com a ordem registrada.
 
-Gerado por `tools/agregar_calibracao.py` a partir de 3 registro(s) em `calibracao/`.
-<!-- calibracao:fim -->
+Gerado por `tools/aggregate_calibration.py` a partir de 3 registro(s) em `calibration/`.
+<!-- calibration:end -->
 
 ## Do seu jeito: modos e calibração
 
 Cada pessoa trabalha de um jeito. Na primeira vez num projeto, a skill pergunta como você quer seguir e guarda a
-resposta em `.higgsfield-director/preferencias.json`, na pasta do projeto
-([modos.md](higgsfield-director/references/modos.md)).
+resposta em `.higgsfield-director/preferences.json`, na pasta do projeto
+([modos.md](higgsfield-director/references/modes.md)).
 
 | Modo | Para quem | O que acontece |
 |---|---|---|
-| `acompanhar` | quer ver e aprovar cada passo | cada imagem e cada vídeo vão para os seus olhos, com a pré-checagem da skill ao lado, e nada avança sem a sua aprovação |
-| `preco` | quer saber só o preço | a skill decide o plano e mostra o total; um "ok" vale para o pacote inteiro |
-| `teto` | não quer ser consultado | você diz na conversa até quantos créditos ela pode gastar na sessão; ela mostra o acumulado e para no teto |
+| `follow` | quer ver e aprovar cada passo | cada imagem e cada vídeo vão para os seus olhos, com a pré-checagem da skill ao lado, e nada avança sem a sua aprovação |
+| `price` | quer saber só o preço | a skill decide o plano e mostra o total; um "ok" vale para o pacote inteiro |
+| `ceiling` | não quer ser consultado | você diz na conversa até quantos créditos ela pode gastar na sessão; ela mostra o acumulado e para no teto |
 
 O arquivo guarda **como** trabalhar, nunca **quanto** gastar: o `hfd.py` recusa um arquivo com teto ou com qualquer
 outro campo, e a autorização de gasto continua vindo só da conversa.
 
 **Calibração às cegas.** Na mesma pergunta, a skill oferece um teste com e sem ela, com um pedido seu, para você ver se
-ela faz diferença no seu trabalho ([calibracao.md](higgsfield-director/references/calibracao.md)). No Claude Code,
-`scripts/calibrar_claude_code.sh` roda as duas condições sem gastar. Depois, `hfd.py cego` sorteia X, Y e a ordem,
-você vota, e `hfd.py resultado` monta um registro só com campos permitidos: nada de prompt, mídia, nome ou cliente. Se
+ela faz diferença no seu trabalho ([calibracao.md](higgsfield-director/references/calibration.md)). No Claude Code,
+`scripts/calibrate_claude_code.sh` roda as duas condições sem gastar. Depois, `hfd.py blind` sorteia X, Y e a ordem,
+você vota, e `hfd.py result` monta um registro só com campos permitidos: nada de prompt, mídia, nome ou cliente. Se
 você quiser, o registro vira um pull request e entra no [placar](#placar-da-calibração). Se a skill perder, a derrota
 mostra onde corrigir.
 
 **Storyboard antes do vídeo.** No modo estúdio, a skill gera primeiro um quadro por tomada em imagem, que custa uma
 fração do vídeo, e só parte para o vídeo depois do quadro aprovado
-([fluxo.md](higgsfield-director/references/fluxo.md)). Esta regra ainda não foi medida às cegas.
+([fluxo.md](higgsfield-director/references/workflow.md)). Esta regra ainda não foi medida às cegas.
 
 **Pré-produção barata.** Antes disso, a ideia amadurece onde errar custa pouco: a ideia numa frase, o esboço de
 roteiro em tabela e um croqui em duas fases. Primeiro o storyboard inteiro numa folha de rabisco, no modelo de imagem
-mais barato; depois cada quadro, recortado (`hfd.py recortar`), vira a referência do seu próprio quadro num modelo
+mais barato; depois cada quadro, recortado (`hfd.py crop`), vira a referência do seu próprio quadro num modelo
 barato que aceita referência, e todos mantêm os mesmos bonecos de bloco e podem ser refeitos um a um. Só com o roteiro
 travado pelo operador a skill pergunta por onde gerar o áudio
-([preproducao.md](higgsfield-director/references/preproducao.md)). Testado uma vez, ainda não medido às cegas.
+([preproducao.md](higgsfield-director/references/preproduction.md)). Testado uma vez, ainda não medido às cegas.
 
 ## O que mudou na v5
 
 A v5 reescreve o pacote v4.1 RC3/RC4 gerado no ChatGPT. Cada defeito medido na RC3 virou um teste.
-Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
+Avaliação completa: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 
 | | v4.1 RC3 / RC4 | v5.1.0 |
 |---|---|---|
@@ -389,22 +396,22 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 
 | Recurso | Como | Onde |
 |---|---|---|
-| Briefing e premissas | pergunta só o que bloqueia; o resto vira premissa declarada | [`fluxo.md`](higgsfield-director/references/fluxo.md) |
-| Escolha do modelo | pela necessidade (duração, referências, primeiro/último quadro, áudio, custo), confirmada no catálogo ao vivo | [`modelos.md`](higgsfield-director/references/modelos.md) |
+| Briefing e premissas | pergunta só o que bloqueia; o resto vira premissa declarada | [`fluxo.md`](higgsfield-director/references/workflow.md) |
+| Escolha do modelo | pela necessidade (duração, referências, primeiro/último quadro, áudio, custo), confirmada no catálogo ao vivo | [`models.md`](higgsfield-director/references/models.md) |
 | Escrita do prompt | ordem de ouro, notas por modelo, 18 receitas contra defeitos comuns | [`prompt.md`](higgsfield-director/references/prompt.md) |
-| Vocabulário | câmera, plano, lente, luz, cor, física, atuação, áudio | [`vocabulario.md`](higgsfield-director/references/vocabulario.md) |
+| Vocabulário | câmera, plano, lente, luz, cor, física, atuação, áudio | [`vocabulario.md`](higgsfield-director/references/vocabulary.md) |
 | Manual ilustrado | 11 partes, 185 imagens: movimento, luz, estilos, fichas, atlas óptico | [`docs/manual`](docs/manual/README.md) |
-| Continuidade | fichas (personagem, produto, lugar) com atributos fixos; conferência na passagem entre tomadas | `hfd.py validar` |
-| Regra dos 180° | posições de câmera contra o eixo da ação | `hfd.py validar` |
-| Limites do modelo | duração, proporção, resolução, áudio, entradas de imagem-para-vídeo | `hfd.py validar` + retrato |
-| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço | `hfd.py orcamento` |
-| Geração | ordem das chamadas do conector, fluxos prontos, envio de mídia, espera | [`conector.md`](higgsfield-director/references/conector.md) |
-| Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`qualidade.md`](higgsfield-director/references/qualidade.md), `hfd.py pontuar` |
-| Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py exportar` |
-| Modo de trabalho | acompanhar cada passo, só o preço, ou um teto dito na conversa; perguntado no primeiro uso | [`modos.md`](higgsfield-director/references/modos.md), `hfd.py preferencias` |
-| Pré-produção | ideia, esboço de roteiro, croqui em blocos em duas fases, roteiro travado, por onde gerar o áudio | [`preproducao.md`](higgsfield-director/references/preproducao.md), `hfd.py recortar` |
-| Storyboard | um quadro por tomada em imagem antes do vídeo | [`fluxo.md`](higgsfield-director/references/fluxo.md) |
-| Calibração às cegas | o mesmo pedido com e sem a skill; X, Y e ordem sorteados; registro com lista branca | [`calibracao.md`](higgsfield-director/references/calibracao.md), `hfd.py cego`, `hfd.py resultado` |
+| Continuidade | fichas (personagem, produto, lugar) com atributos fixos; conferência na passagem entre tomadas | `hfd.py validate` |
+| Regra dos 180° | posições de câmera contra o eixo da ação | `hfd.py validate` |
+| Limites do modelo | duração, proporção, resolução, áudio, entradas de imagem-para-vídeo | `hfd.py validate` + retrato |
+| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço | `hfd.py budget` |
+| Geração | ordem das chamadas do conector, fluxos prontos, envio de mídia, espera | [`conector.md`](higgsfield-director/references/connector.md) |
+| Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`qualidade.md`](higgsfield-director/references/quality.md), `hfd.py score` |
+| Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py export` |
+| Modo de trabalho | acompanhar cada passo, só o preço, ou um teto dito na conversa; perguntado no primeiro uso | [`modes.md`](higgsfield-director/references/modes.md), `hfd.py preferences` |
+| Pré-produção | ideia, esboço de roteiro, croqui em blocos em duas fases, roteiro travado, por onde gerar o áudio | [`preproducao.md`](higgsfield-director/references/preproduction.md), `hfd.py crop` |
+| Storyboard | um quadro por tomada em imagem antes do vídeo | [`fluxo.md`](higgsfield-director/references/workflow.md) |
+| Calibração às cegas | o mesmo pedido com e sem a skill; X, Y e ordem sorteados; registro com lista branca | [`calibracao.md`](higgsfield-director/references/calibration.md), `hfd.py blind`, `hfd.py result` |
 
 ## Começo rápido
 
@@ -452,29 +459,29 @@ Todas as saídas abaixo são execuções reais dos modelos que vêm com a skill.
 
 ### 01 — Comercial de produto em 3 tomadas
 
-O projeto declara o modelo, as fichas e as tomadas ([`templates/projeto.json`](higgsfield-director/templates/projeto.json)):
+O projeto declara o modelo, as fichas e as tomadas ([`templates/project.json`](higgsfield-director/templates/project.json)):
 
 ```json
 {
-  "modelo": "cinematic_studio_video_4_0",
-  "proporcao": "9:16",
-  "biblias": {
+  "model": "cinematic_studio_video_4_0",
+  "aspect_ratio": "9:16",
+  "bibles": {
     "P01": {
-      "tipo": "produto",
-      "descricao": "A black glass perfume bottle with a faceted gold cap and a flat cream label reading NOIR",
-      "fixo": {"cor": "black", "tampa": "gold"}
+      "type": "product",
+      "description": "A black glass perfume bottle with a faceted gold cap and a flat cream label reading NOIR",
+      "fixed": {"color": "black", "cap": "gold"}
     }
   },
-  "tomadas": [
-    {"id": "T01", "duracao": 5, "entidades": ["P01"],
-     "acao": "A thin curl of mist drifts past the bottle and clears",
-     "camera": "Static camera, locked off", "otica": "100mm macro look, shallow depth of field"}
+  "shots": [
+    {"id": "T01", "duration": 5, "entities": ["P01"],
+     "action": "A thin curl of mist drifts past the bottle and clears",
+     "camera": "Static camera, locked off", "optics": "100mm macro look, shallow depth of field"}
   ]
 }
 ```
 
 ```bash
-python3 higgsfield-director/scripts/hfd.py compilar higgsfield-director/templates/projeto.json --texto
+python3 higgsfield-director/scripts/hfd.py compile higgsfield-director/templates/project.json --text
 ```
 
 ```text
@@ -486,7 +493,7 @@ deep black background. The cap fills the upper third of the frame. Keep the labe
 
 Audio: Low airy hum, a soft glass chime as the mist clears.
 
-parametros: {"model": "cinematic_studio_video_4_0", "duration": 5, "aspect_ratio": "9:16", "resolution": "720p", "generate_audio": true}
+parameters: {"model": "cinematic_studio_video_4_0", "duration": 5, "aspect_ratio": "9:16", "resolution": "720p", "generate_audio": true}
 ```
 
 A descrição da ficha abre cada tomada palavra por palavra: é isso que segura a identidade do produto entre as gerações.
@@ -495,15 +502,15 @@ Duração, proporção, resolução e áudio vão nos **parâmetros**, não no t
 ### 02 — Orçamento antes de gastar
 
 ```bash
-python3 higgsfield-director/scripts/hfd.py orcamento higgsfield-director/templates/projeto.json --tentativas 1
+python3 higgsfield-director/scripts/hfd.py budget higgsfield-director/templates/project.json --attempts 1
 ```
 
 ```json
-{"base": 210.0, "reserva_pct": 20.0, "reserva": 42.0, "total": 252.0,
- "lembrete": "custo é estimativa do conector; gerar só depois do ok do operador com este total"}
+{"base": 210.0, "reserve_pct": 20.0, "reserve": 42.0, "total": 252.0,
+ "reminder": "the cost is the connector's estimate; generate only after the operator's ok with this total"}
 ```
 
-Os preços vêm do `estimate_video_cost` do conector (que não cobra). Sem eles, o `orcamento` se recusa a rodar em vez de
+Os preços vêm do `estimate_video_cost` do conector (que não cobra). Sem eles, o `budget` se recusa a rodar em vez de
 chutar.
 
 ### 03 — O validador pega uma quebra de continuidade
@@ -512,12 +519,12 @@ A tomada T02 começa com o frasco vermelho, mas a ficha diz que ele é preto:
 
 ```json
 {
-  "erros": ["T02 inicio: P01.cor = 'red', mas a ficha fixa 'black'"],
-  "avisos": ["cinematic_studio_video_4_0 não tem multi-shot no retrato: cada tomada é uma geração separada"]
+  "errors": ["T02 start: P01.color = 'red', but the bible fixes 'black'"],
+  "warnings": ["cinematic_studio_video_4_0 has no multi-shot in the snapshot: each shot is a separate generation"]
 }
 ```
 
-Código de saída 1. Mudança de propósito se declara na tomada, em `mudancas_aprovadas: ["P01.cor"]`.
+Código de saída 1. Mudança de propósito se declara na tomada, em `approved_changes: ["P01.color"]`.
 
 ### 04 — Checagem da direção de câmera
 
@@ -531,12 +538,12 @@ Código de saída 1. Mudança de propósito se declara na tomada, em `mudancas_a
 ### 05 — Óptica
 
 ```bash
-python3 higgsfield-director/scripts/hfd.py otica 85 2 1.8   # distância focal mm, distância m, abertura f
+python3 higgsfield-director/scripts/hfd.py optics 85 2 1.8   # distância focal mm, distância m, abertura f
 ```
 
 ```json
-{"campo_de_visao_horizontal_graus": 23.91, "largura_do_quadro_m": 0.847,
- "foco_de_m": 1.972, "foco_ate_m": 2.029, "hiperfocal_m": 133.88}
+{"horizontal_fov_degrees": 23.91, "frame_width_m": 0.847,
+ "focus_from_m": 1.972, "focus_to_m": 2.029, "hyperfocal_m": 133.88}
 ```
 
 Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir, não é parâmetro do modelo.
@@ -545,26 +552,27 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 
 | Comando | Para quê |
 |---|---|
-| `validar PROJETO` | estrutura, câmera, tamanho das falas, linha do tempo, continuidade, eixo de 180°, limites do modelo |
-| `compilar PROJETO [--texto]` | um prompt por tomada + `parametros` prontos para o conector |
-| `orcamento PROJETO [--reserva N]` | total de créditos com cotação real, tentativas e reserva |
-| `exportar PROJETO PASTA` | `roteiro.md`, `tomadas.csv`, `legendas.srt` |
-| `otica F D N` | campo de visão, largura do quadro, profundidade de campo, hiperfocal |
-| `pontuar AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
-| `modelos [--tipo] [--buscar] [--id]` | ler o retrato dos modelos |
-| `modelos --importar LISTA... --saida ARQUIVO` | montar um retrato novo com as listas do `models_explore`, fora da pasta da skill |
-| `preferencias [--modo M] [--calibrar C]` | ler ou gravar como o operador quer trabalhar (`acompanhar`, `preco`, `teto`); nunca guarda teto de gasto |
-| `cego --com A --sem B --saida PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la |
-| `resultado --chave C --voto X ... --saida ARQUIVO` | montar o registro de calibração com lista branca, pronto para o placar |
+| `validate PROJETO` | estrutura, câmera, tamanho das falas, linha do tempo, continuidade, eixo de 180°, limites do modelo |
+| `compile PROJETO [--text]` | um prompt por tomada + `parameters` prontos para o conector |
+| `budget PROJETO [--reserve N]` | total de créditos com cotação real, tentativas e reserva |
+| `export PROJETO PASTA` | `script.md`, `shots.csv`, `subtitles.srt` |
+| `optics F D N` | campo de visão, largura do quadro, profundidade de campo, hiperfocal |
+| `score AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
+| `models [--type] [--search] [--id]` | ler o retrato dos modelos |
+| `models --import LISTA... --out ARQUIVO` | montar um retrato novo com as listas do `models_explore`, fora da pasta da skill |
+| `preferences [--mode M] [--calibrate C]` | ler ou gravar como o operador quer trabalhar (`follow`, `price`, `ceiling`); nunca guarda teto de gasto |
+| `blind --with A --without B --out PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la |
+| `result --key C --vote X ... --out ARQUIVO` | montar o registro de calibração com lista branca, pronto para o placar |
+| `crop FOLHA PASTA NOME:x0,y0,x1,y1...` | escreve os comandos do ffmpeg que recortam a folha de croqui em quadros; não executa nada nem sobrescreve |
 
-`--retrato ARQUIVO` faz `validar`, `compilar`, `exportar` e `modelos` usarem outro retrato. Saída em JSON. Código `1`:
-o projeto tem erros, listados em `erros`. Código `2`: uso, arquivo ou entrada fora do formato, com a mensagem em
-`erro`; nunca um traceback. Sem acesso à rede; lê e grava só os caminhos indicados (sem `--arquivo`, o `preferencias` usa
-`.higgsfield-director/preferencias.json` na pasta atual).
+`--snapshot ARQUIVO` faz `validate`, `compile`, `export` e `models` usarem outro retrato. Saída em JSON. Código `1`:
+o projeto tem erros, listados em `errors`. Código `2`: uso, arquivo ou entrada fora do formato, com a mensagem em
+`error`; nunca um traceback. Sem acesso à rede; lê e grava só os caminhos indicados (sem `--file`, o `preferences` usa
+`.higgsfield-director/preferences.json` na pasta atual).
 
 ## Como escolher o modelo
 
-A fonte de verdade é o **catálogo ao vivo** (`models_explore`). O retrato que vem junto (`data/modelos.json`, 24/11/2026,
+A fonte de verdade é o **catálogo ao vivo** (`models_explore`). O retrato que vem junto (`data/models.json`, 24/11/2026,
 66 modelos de vídeo + 56 de imagem) serve para trabalhar sem conector e para validar, sempre citado com a data.
 
 | Preciso de… | Comece por |
@@ -577,7 +585,7 @@ A fonte de verdade é o **catálogo ao vivo** (`models_explore`). O retrato que 
 | Texto legível numa imagem | Nano Banana Pro, Ideogram 4.6 |
 
 Cotações medidas (5 s, 24/11/2026): Cinema Studio 4.0 = 15 / 35 / 80 créditos em 480p / 720p / 1080p; Seedance 2.5 720p
-= 35; Kling 3.0 = 7,5 a 10. Sempre recote. Tabela completa: [`modelos.md`](higgsfield-director/references/modelos.md).
+= 35; Kling 3.0 = 7,5 a 10. Sempre recote. Tabela completa: [`models.md`](higgsfield-director/references/models.md).
 
 ## Escopo e convivência
 
@@ -598,14 +606,14 @@ vídeo continua com a skill dona dele.
 
 ```bash
 cd higgsfield-director && python3 -m unittest discover -s tests -v
-cd .. && python3 tools/checar_repo.py
+cd .. && python3 tools/check_repo.py
 ```
 
 | Conferência | Resultado |
 |---|---|
 | Testes | 61/61 passando localmente; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
-| Conferência do repositório | `tools/checar_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
+| Conferência do repositório | `tools/check_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
 | Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
 | Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 em cada uma de 3 rodadas (42 de 42), as duas últimas depois da mudança para o conector primeiro. Por rodada: 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Nas duas últimas rodadas, o plano de estúdio listou os fluxos ao vivo do conector antes de planejar. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
@@ -626,16 +634,16 @@ Propriedades de segurança:
 Todas as mudanças, inclusive as edições anteriores (v1.0 a v4.1 RC4), estão no [CHANGELOG.md](CHANGELOG.md), em inglês.
 
 As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório; o que foi aproveitado e por quê está em
-[docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
+[docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 
 ## Próximos passos
 
 | Prioridade | Objetivo | Situação |
 |---|---|---|
 | P1 | Revanche com e sem a skill, depois das correções, com a mesma imagem de referência do produto nas duas condições | Feita em 24/11/2026: a skill ganhou as duas rodadas (veja [O que medimos](#o-que-medimos)) |
-| P1 | Calibrações de outras pessoas, com a ordem sorteada, para separar o efeito de quem aparece primeiro | Aberta: [mande a sua](calibracao/README.md) |
+| P1 | Calibrações de outras pessoas, com a ordem sorteada, para separar o efeito de quem aparece primeiro | Aberta: [mande a sua](calibration/README.md) |
 | P2 | Teste às cegas do storyboard antes do vídeo contra o vídeo direto | Planejado |
-| P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `modelos.md` |
+| P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `models.md` |
 | P2 | Mais casos no teste de gatilho (mais pedidos, várias rodadas cada) | Planejado |
 | P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Sem data (não está em uso no Codex) |
 
@@ -644,14 +652,14 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Recurso | Link |
 |---|---|
 | Entrada da skill | [higgsfield-director/SKILL.md](higgsfield-director/SKILL.md) |
-| Fluxo de produção | [references/fluxo.md](higgsfield-director/references/fluxo.md) |
+| Fluxo de produção | [references/workflow.md](higgsfield-director/references/workflow.md) |
 | Escrita do prompt | [references/prompt.md](higgsfield-director/references/prompt.md) |
-| Vocabulário | [references/vocabulario.md](higgsfield-director/references/vocabulario.md) |
-| Modelos | [references/modelos.md](higgsfield-director/references/modelos.md) |
-| Conector | [references/conector.md](higgsfield-director/references/conector.md) |
-| Qualidade | [references/qualidade.md](higgsfield-director/references/qualidade.md) |
+| Vocabulário | [references/vocabulary.md](higgsfield-director/references/vocabulary.md) |
+| Modelos | [references/models.md](higgsfield-director/references/models.md) |
+| Conector | [references/connector.md](higgsfield-director/references/connector.md) |
+| Qualidade | [references/quality.md](higgsfield-director/references/quality.md) |
 | Manual ilustrado | [docs/manual/README.md](docs/manual/README.md) |
-| Avaliação da v4.1 | [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md) |
+| Avaliação da v4.1 | [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md) |
 | Histórico de mudanças | [CHANGELOG.md](CHANGELOG.md) |
 | Como contribuir | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Política de segurança | [SECURITY.md](SECURITY.md) |

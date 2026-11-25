@@ -1,131 +1,134 @@
-# Escrever o prompt
+# Writing the prompt
 
-Leia antes de escrever ou revisar qualquer prompt. O vocabulário fica em `references/vocabulario.md`.
+Read before writing or reviewing any prompt. The vocabulary is in `references/vocabulary.md`.
 
-## 1. A regra de ouro (ordem)
+## 1. The golden rule (order)
 
-Sujeito e detalhes que não mudam → ambiente → ação em ordem cronológica → plano e ângulo → movimento de câmera e
-velocidade → lente e foco → luz e cor → atmosfera e movimento secundário → estado final → (bloco de áudio separado).
+Subject and details that do not change → setting → action in chronological order → shot size and angle → camera
+movement and speed → lens and focus → lighting and color → atmosphere and secondary motion → final state → (separate
+audio block).
 
-- **Uma ação dominante e um movimento de câmera por tomada.** Mais de um só em fases explícitas:
-  "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" por bloco.)
-- **Câmera simples não é tomada parada.** Em anúncio, cada tomada precisa de um momento de impacto no produto ou em
-  quem o usa: um toque que deforma o material, um respingo em câmera lenta, um gesto que mostra o efeito. A câmera
-  continua com um movimento só; quem carrega a emoção é a ação, e o som acompanha esse momento. Num teste às cegas, os
-  prompts contidos (uma gota escorrendo, um deslize lateral) deram câmera e luz melhores e perderam para os prompts com
-  ação, emoção e som.
-- **Duração, proporção, resolução e áudio liga/desliga vão nos PARÂMETROS**, nunca no texto. "Make it longer"
-  no prompt não muda a duração. (Sora, Veo, MiniMax.)
-- **Descreva o que quer ver, não o que não quer.** "The label stays flat and readable", não "no warped label".
-  Campo de negativo só se o modelo tiver (nenhum dos principais mostra no catálogo de 24/11/2026). (Veo; Higgsfield:
-  "Say what you want, not what you don't".)
-- **Inglês** dá o resultado mais previsível. Diálogo fica no idioma pedido, com o idioma escrito. O guia do Higgsfield
-  diz que Seedance e Kling às vezes respondem melhor a chinês em movimento sutil: teste, não suponha.
-- **Clipe curto obedece melhor.** Quanto mais longa a tomada, mais o modelo inventa; divida em tomadas.
-- **Mude uma coisa por vez** entre tentativas. Duas falhas seguidas: replaneje a tomada em vez de empilhar restrições.
+- **One dominant action and one camera movement per shot.** More than one only in explicit phases:
+  "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.)
+- **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
+  product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
+  the effect. The camera keeps a single movement; the action carries the emotion, and the sound follows that moment.
+  In a blind test, the restrained prompts (a drop running down, a lateral slide) gave better camera and lighting and
+  lost to the prompts with action, emotion and sound.
+- **Duration, aspect ratio, resolution and audio on/off go in the PARAMETERS**, never in the text. "Make it longer"
+  in the prompt does not change the duration. (Sora, Veo, MiniMax.)
+- **Describe what you want to see, not what you don't want.** "The label stays flat and readable", not
+  "no warped label". Use a negative field only if the model has one (none of the main ones shows one in the
+  2026-11-24 catalog). (Veo; Higgsfield: "Say what you want, not what you don't".)
+- **English** gives the most predictable result. Dialogue stays in the requested language, with the language written
+  out. The Higgsfield guide says Seedance and Kling sometimes respond better to Chinese for subtle motion: test, do not
+  assume.
+- **A short clip obeys better.** The longer the shot, the more the model invents; split it into shots.
+- **Change one thing at a time** between attempts. Two failures in a row: replan the shot instead of piling on
+  constraints.
 
-Fontes: higgsfield.ai/creator-hub/help-center/getting-started/how-do-i-write-a-good-prompt (mod. 14/09/2026);
+Sources: higgsfield.ai/creator-hub/help-center/getting-started/how-do-i-write-a-good-prompt (modified 2026-09-14);
 docs.cloud.google.com/vertex-ai/generative-ai/docs/video/video-gen-prompt-guide; kling.ai/blog/kling-ai-prompt-guide
-(07/08/2026); developers.openai.com/cookbook/examples/sora/sora2_prompting_guide; help.aliyun.com/en/model-studio/text-to-video-prompt;
-platform.minimax.io/docs/api-reference/video-generation-t2v.
+(2026-08-07); developers.openai.com/cookbook/examples/sora/sora2_prompting_guide;
+help.aliyun.com/en/model-studio/text-to-video-prompt; platform.minimax.io/docs/api-reference/video-generation-t2v.
 
-## 2. Moldes por modo
+## 2. Templates by mode
 
-| Modo | Molde |
+| Mode | Template |
 |---|---|
-| Texto para vídeo | `[Sujeito e invariantes]. [Ambiente]. [Ação cronológica]. [Plano e ângulo]. [Câmera: trajetória e velocidade]. [Lente e foco]. [Luz e cor]. [Atmosfera e movimento secundário]. [Estado final].` + `Audio: ...` |
-| Imagem para vídeo | `The reference image is the opening frame; preserve [identidade, geometria, figurino, fundo]. [Uma ação]. [Câmera]. [Movimento secundário]. [Estado final].` A imagem já traz sujeito e cena: o texto fala de **movimento e câmera** (Wan). O texto e a imagem precisam concordar: não peça "calm, still" sobre um quadro tremido (Higgsfield). |
-| Edição | `Change only [alvo]; preserve everything else exactly as it is. [Como fica o alvo].` |
-| Extensão | `Continue seamlessly from the final frame of the previous clip. [O que acontece a seguir].` |
-| Imagem parada | Sem tempo, sem câmera em movimento, sem som: sujeito, ambiente, plano, ângulo, lente, luz, cor, estilo. |
-| Sequência | Gere tomada por tomada; o **último quadro** de uma vira a imagem inicial da seguinte (Higgsfield; Veo first/last frame). |
+| Text to video | `[Subject and invariants]. [Setting]. [Chronological action]. [Shot size and angle]. [Camera: path and speed]. [Lens and focus]. [Lighting and color]. [Atmosphere and secondary motion]. [Final state].` + `Audio: ...` |
+| Image to video | `The reference image is the opening frame; preserve [identity, geometry, wardrobe, background]. [One action]. [Camera]. [Secondary motion]. [Final state].` The image already brings the subject and the scene: the text talks about **motion and camera** (Wan). Text and image must agree: do not ask for "calm, still" over a shaky frame (Higgsfield). |
+| Edit | `Change only [target]; preserve everything else exactly as it is. [What the target looks like].` |
+| Extension | `Continue seamlessly from the final frame of the previous clip. [What happens next].` |
+| Still image | No time, no moving camera, no sound: subject, setting, shot size, angle, lens, lighting, color, style. |
+| Sequence | Generate shot by shot; the **last frame** of one becomes the start image of the next (Higgsfield; Veo first/last frame). |
 
-## 3. Áudio e fala
+## 3. Audio and speech
 
-- Peça o som **explicitamente, em frase ou bloco separado** (Veo, Wan, Kling, Sora). O `hfd.py compilar` já põe
-  tudo depois de `Audio:`.
-- **Rotule quem fala** e repita o mesmo rótulo em toda tomada: `Ana says in Brazilian Portuguese: "..."` (Kling, Sora).
-- **A fala cabe na duração**: ~2,5 palavras por segundo. Em 4 s cabem 1 ou 2 falas curtas (Sora). O `validar` avisa.
-- Para silêncio de fala: "No dialogue" (Wan). Para não ter trilha: "No music" (prática do Higgsfield para Seedance).
-- **Em anúncio, cada tomada tem um acento sonoro preso à ação** (o respingo, o rangido do material, um grave no quadro
-  final) por cima de um ambiente baixo. Só o ambiente deixa a tomada morna.
-- **O áudio gerado sai baixo**: entre −26 e −28 LUFS integrados num teste com o Cinema Studio 4.0. Normalize na pós
-  para a plataforma de destino, ou use o fluxo `video-sound-design` do conector.
-- Seedance (convenção copiada de documento da ByteDance pelo Higgsfield, fonte secundária): música entre `( )`,
-  efeitos entre `< >`, fala entre `{ }`. Use só no Seedance e só depois de testar.
-- Pessoa real, voz de alguém, menor de idade: veja as regras duras do `SKILL.md`.
+- Ask for sound **explicitly, in a separate sentence or block** (Veo, Wan, Kling, Sora). `hfd.py compile` already
+  puts it all after `Audio:`.
+- **Label who speaks** and repeat the same label in every shot: `Ana says in Brazilian Portuguese: "..."` (Kling, Sora).
+- **The speech fits the duration**: ~2.5 words per second. 4 s fits 1 or 2 short lines (Sora). `validate` warns.
+- For no speech: "No dialogue" (Wan). For no music track: "No music" (Higgsfield practice for Seedance).
+- **In an ad, each shot has a sound accent tied to the action** (the splash, the creak of the material, a low boom on
+  the final frame) over a low ambience. Ambience alone leaves the shot lukewarm.
+- **Generated audio comes out quiet**: between −26 and −28 LUFS integrated in a test with Cinema Studio 4.0. Normalize
+  in post for the target platform, or use the connector's `video-sound-design` workflow.
+- Seedance (convention copied by Higgsfield from a ByteDance document, secondary source): music inside `( )`, effects
+  inside `< >`, speech inside `{ }`. Use it only in Seedance and only after testing.
+- Real person, someone's voice, a minor: see the hard rules in `SKILL.md`.
 
-## 4. Notas por modelo (fato oficial quando há fonte do fabricante)
+## 4. Notes by model (official fact when there is a manufacturer source)
 
-| Modelo | O que muda no prompt | Fonte |
+| Model | What changes in the prompt | Source |
 |---|---|---|
-| Cinema Studio 4.0 (Higgsfield) | Câmera, lente, abertura, época, gênero, ritmo e luz existem como **controles** (`camera_model_id`, `camera_lens_id`, `light`...); movimento de câmera vai no texto. Áudio ligado por padrão. 4–30 s. | catálogo do conector; central de ajuda do Cinema Studio (mod. 19/11/2026) |
-| Seedance 2.5 / 2.0 | Referências citadas no texto como `@Image 1`, `@Video 1`, `@Audio 1`, com o papel de cada uma escrito (não dentro da imagem). Ordem: sujeito e ação; cena; estilo; câmera ou corte; áudio. | central de ajuda Seedance (mod. 17/11/2026), guia do blog do Higgsfield |
-| Kling 3.x / 4.0 | Sujeito, ação, cena, câmera, luz, humor. Rótulos claros de quem fala; fala em chinês, inglês, japonês, coreano ou espanhol (português: teste antes). | kling.ai/blog/kling-ai-prompt-guide |
-| Veo 3.1 | Elementos: sujeito, ação, cena, ângulo, movimento, lente, estilo, tempo, áudio. **Zoom não é dolly.** Ângulos "avançados" não são oficialmente suportados. 4, 6 ou 8 s. | Vertex AI video prompt guide; aistudio.google.com/docs/veo |
-| Wan 2.6–3.0 | T2V = entidade + cena + movimento; I2V = movimento + câmera. Multi-shot no texto: `Shot 1 [0-3s] ...`; plano único: "Generate single shot." | help.aliyun.com/en/model-studio/text-to-video-prompt |
-| MiniMax Hailuo | Comandos de câmera entre colchetes, até 3: `[Push in]`, `[Pan left]`, `[Truck right]`, `[Tilt up]`, `[Zoom in]`, `[Tracking shot]`, `[Static shot]`, `[Shake]`... Mais precisos que texto livre. | platform.minimax.io (API t2v) |
+| Cinema Studio 4.0 (Higgsfield) | Camera, lens, aperture, era, genre, pacing and light exist as **controls** (`camera_model_id`, `camera_lens_id`, `light`...); camera movement goes in the text. Audio on by default. 4–30 s. | connector catalog; Cinema Studio help center (modified 2026-11-19) |
+| Seedance 2.5 / 2.0 | References cited in the text as `@Image 1`, `@Video 1`, `@Audio 1`, with the role of each one written out (not inside the image). Order: subject and action; scene; style; camera or cut; audio. | Seedance help center (modified 2026-11-17), Higgsfield blog guide |
+| Kling 3.x / 4.0 | Subject, action, scene, camera, light, mood. Clear labels for who speaks; speech in Chinese, English, Japanese, Korean or Spanish (Portuguese: test first). | kling.ai/blog/kling-ai-prompt-guide |
+| Veo 3.1 | Elements: subject, action, scene, angle, motion, lens, style, time, audio. **Zoom is not dolly.** "Advanced" angles are not officially supported. 4, 6 or 8 s. | Vertex AI video prompt guide; aistudio.google.com/docs/veo |
+| Wan 2.6–3.0 | T2V = entity + scene + motion; I2V = motion + camera. Multi-shot in the text: `Shot 1 [0-3s] ...`; single shot: "Generate single shot." | help.aliyun.com/en/model-studio/text-to-video-prompt |
+| MiniMax Hailuo | Camera commands in square brackets, up to 3: `[Push in]`, `[Pan left]`, `[Truck right]`, `[Tilt up]`, `[Zoom in]`, `[Tracking shot]`, `[Static shot]`, `[Shake]`... More precise than free text. | platform.minimax.io (t2v API) |
 
-Sora 2 **não está** no catálogo do Higgsfield (24/11/2026) e a imprensa noticiou a descontinuação em 03/2026.
+Sora 2 **is not** in the Higgsfield catalog (2026-11-24), and the press reported its discontinuation in 2026-03.
 
-## 5. Intenção → linguagem visual (ponto de partida, o briefing manda)
+## 5. Intent → visual language (a starting point; the briefing decides)
 
-| Intenção | Câmera | Luz | Risco |
+| Intent | Camera | Lighting | Risk |
 |---|---|---|---|
-| Intimidade | close-up, slow push-in | janela suave | identidade |
-| Poder | low angle, static | rim light | distorção |
-| Solidão | extreme wide, static | difusa | sujeito ilegível |
-| Luxo | slow orbit | reflexos controlados | geometria e rótulo |
-| Ansiedade | handheld discreto | low key | tremor |
-| Descoberta | reveal, crane up | motivada | continuidade |
-| Ação | tracking | contraste legível | contato físico |
-| Contemplação | locked-off | natural | movimento demais |
-| UGC | medium close-up, handheld leve | janela | sincronia labial |
-| Arquitetura | fly-through estabilizado | dia | linhas e escala |
+| Intimacy | close-up, slow push-in | soft window light | identity |
+| Power | low angle, static | rim light | distortion |
+| Loneliness | extreme wide, static | diffuse | unreadable subject |
+| Luxury | slow orbit | controlled reflections | geometry and label |
+| Anxiety | subtle handheld | low key | shake |
+| Discovery | reveal, crane up | motivated | continuity |
+| Action | tracking | readable contrast | physical contact |
+| Contemplation | locked-off | natural | too much motion |
+| UGC | medium close-up, light handheld | window light | lip sync |
+| Architecture | stabilized fly-through | daylight | lines and scale |
 
-Se identidade importa, reduza oclusão e rotação. Se texto importa, deixe espaço e ponha o texto na pós. Se a tomada é
-curta, tire ações antes de acelerar.
+If identity matters, reduce occlusion and rotation. If text matters, leave room and add the text in post. If the shot
+is short, remove actions before speeding up.
 
-## 6. Receitas contra defeitos clássicos
+## 6. Recipes against classic defects
 
-| Tema | Escreva assim | Evite |
+| Topic | Write it like this | Avoid |
 |---|---|---|
-| Olhar e subtexto | She looks away, pauses, then exhales softly. | She expresses every emotion at once. |
-| Peso | She plants her left foot before turning. | She glides while walking. |
-| Vidro | A clear glass bottle refracts the background; its base remains on the table. | The rigid bottle bends as it rotates. |
-| Tecido | Silk follows the arm with a slight delayed sway. | The silk moves like rigid metal. |
-| Líquido | Water pours downward into the cup, with a rising fill level. | Water flows upward without a force. |
-| Identidade | Preserve facial proportions and hairstyle from reference A. | Change the face each time the camera turns. |
+| Gaze and subtext | She looks away, pauses, then exhales softly. | She expresses every emotion at once. |
+| Weight | She plants her left foot before turning. | She glides while walking. |
+| Glass | A clear glass bottle refracts the background; its base remains on the table. | The rigid bottle bends as it rotates. |
+| Fabric | Silk follows the arm with a slight delayed sway. | The silk moves like rigid metal. |
+| Liquid | Water pours downward into the cup, with a rising fill level. | Water flows upward without a force. |
+| Identity | Preserve facial proportions and hairstyle from reference A. | Change the face each time the camera turns. |
 | Logo | Keep the label flat and readable; add typography in post if needed. | Make the logo transform during the orbit. |
-| Cintilação | Maintain constant key light and exposure throughout. | Random exposure changes in a continuous shot. |
-| Pés | Each planted foot stays fixed until lifted. | Walk without lifting either foot. |
-| Cenário | Keep straight architectural lines fixed in world space. | The room changes shape during the pan. |
-| Luz | Large soft key at camera left, weaker fill. | Hard and soft shadows from the same tiny source. |
-| Cor | Neutral white balance; preserve highlight detail. | Apply an unspecified log conversion twice. |
-| Perspectiva sonora | Distant traffic under close dry dialogue. | All sounds equally loud and close. |
+| Flicker | Maintain constant key light and exposure throughout. | Random exposure changes in a continuous shot. |
+| Feet | Each planted foot stays fixed until lifted. | Walk without lifting either foot. |
+| Set | Keep straight architectural lines fixed in world space. | The room changes shape during the pan. |
+| Lighting | Large soft key at camera left, weaker fill. | Hard and soft shadows from the same tiny source. |
+| Color | Neutral white balance; preserve highlight detail. | Apply an unspecified log conversion twice. |
+| Sound perspective | Distant traffic under close dry dialogue. | All sounds equally loud and close. |
 | Foley | A soft click exactly when the latch closes. | Random loud impacts unrelated to action. |
 | Suspense | Hold a wide frame with negative space before the reveal. | Reveal all threats immediately. |
-| Documentário | Observe a single everyday action in available light. | Gratuitous cuts during a quiet observation. |
-| Produto | Reveal material detail, then finish on a centered product frame. | Hide the product and change its label. |
+| Documentary | Observe a single everyday action in available light. | Gratuitous cuts during a quiet observation. |
+| Product | Reveal material detail, then finish on a centered product frame. | Hide the product and change its label. |
 | UGC | Demonstrate one concrete use case in a natural voice. | Unsupported claims about the product. |
-| Multidão | A crowd of local fans in plain green T-shirts with no crest, in the small concrete stands of a neighborhood field. | "Fans in green and white football shirts" (puxa o uniforme de um clube real) ou multidão sem roupa dita (o modelo pode tirar a camisa). |
-| Mãos de duas pessoas | Four hands of two people: a man's hands on the left, a woman's hands on the right. | "Two hands" (sai uma pessoa só com as duas mãos). |
-| Estado final | The banner stays raised above the crowd at the end. | Um estado final que desfaz a ação (o pano volta dobrado depois de aberto). |
-| Gesto de emoção | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" num momento-chave: o modelo tende a virar a pessoa para a câmera. |
-| Símbolo oficial (bandeira, brasão, selo) | Pass the real symbol as a reference image; put mottos and small text in post. | Descrever o símbolo só em palavras: o modelo inventa ou embaralha. |
-| Objetos de marca | Unbranded industrial sewing machines. | Deixar a marca sem dizer: modelos de imagem às vezes estampam marcas reais. |
-| Movimento e estado final | Slow push-in from a wide shot to a medium shot; the whole product stays in frame at the end. | "Push-in to a close-up" junto com "the whole product visible at the end": o modelo segue o movimento e corta o produto. |
-| Produto em plano de detalhe | Keep one identifying feature in frame: the laces cross the knit in the foreground. | Um detalhe que só mostra o material: o modelo completa o resto de memória e pode inventar outro produto (num teste, saiu um tênis sem cadarço). |
-| Mesmo produto em várias tomadas | Generate one product image first, get it approved, and pass it as the reference in every shot. | Só a descrição repetida em cada prompt: segura o estilo, não o desenho. |
-| Impacto em anúncio | A fingertip presses into the knit and it springs back; slow-motion droplets burst from each footfall. | Só câmera e ambiente: a tomada sai correta e morna. |
+| Crowd | A crowd of local fans in plain green T-shirts with no crest, in the small concrete stands of a neighborhood field. | "Fans in green and white football shirts" (pulls in a real club's kit), or a crowd with no clothing stated (the model may take the shirts off). |
+| Hands of two people | Four hands of two people: a man's hands on the left, a woman's hands on the right. | "Two hands" (you get a single person with both hands). |
+| Final state | The banner stays raised above the crowd at the end. | A final state that undoes the action (the cloth goes back to folded after being opened). |
+| Emotional gesture | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" at a key moment: the model tends to turn the person toward the camera. |
+| Official symbol (flag, coat of arms, seal) | Pass the real symbol as a reference image; put mottos and small text in post. | Describing the symbol only in words: the model invents or scrambles it. |
+| Branded objects | Unbranded industrial sewing machines. | Leaving the brand unstated: image models sometimes stamp real brands on them. |
+| Movement and final state | Slow push-in from a wide shot to a medium shot; the whole product stays in frame at the end. | "Push-in to a close-up" together with "the whole product visible at the end": the model follows the movement and crops the product. |
+| Product in a detail shot | Keep one identifying feature in frame: the laces cross the knit in the foreground. | A detail that only shows the material: the model fills in the rest from memory and may invent another product (in one test, a sneaker came out without laces). |
+| Same product across several shots | Generate one product image first, get it approved, and pass it as the reference in every shot. | Only the description repeated in each prompt: it holds the style, not the design. |
+| Impact in an ad | A fingertip presses into the knit and it springs back; slow-motion droplets burst from each footfall. | Only camera and setting: the shot comes out correct and lukewarm. |
 
-## 7. Exemplos curtos (texto para vídeo)
+## 7. Short examples (text to video)
 
 - **Perfume:** A black perfume bottle on polished obsidian. Slow 180-degree orbit, macro close-up, controlled specular highlights, black and gold palette. The label stays flat and readable. Single continuous shot.
-- **Moda:** A model walks through a minimalist concrete interior. Smooth reverse tracking, full-body framing, soft cross lighting, natural fabric motion.
-- **Carro:** A sports car drives along a coastal highway at sunset. Low-angle side tracking, realistic wheel rotation and reflections, golden hour backlight.
-- **Retrato:** Extreme close-up, slow push-in, 85mm portrait look, soft window light, natural blinking and subtle breathing.
-- **Imóvel:** Smooth stabilized fly-through from the entrance to the living room, wide-angle, straight verticals, natural daylight.
+- **Fashion:** A model walks through a minimalist concrete interior. Smooth reverse tracking, full-body framing, soft cross lighting, natural fabric motion.
+- **Car:** A sports car drives along a coastal highway at sunset. Low-angle side tracking, realistic wheel rotation and reflections, golden hour backlight.
+- **Portrait:** Extreme close-up, slow push-in, 85mm portrait look, soft window light, natural blinking and subtle breathing.
+- **Real estate:** Smooth stabilized fly-through from the entrance to the living room, wide-angle, straight verticals, natural daylight.
 - **Suspense:** A detective listens in a dim corridor. Slow push-in, muted green shadows, restrained expression, subtle head turn, one continuous take.
-- **Transição:** The camera passes through a dewdrop into an underwater world. Continuous forward motion, realistic refraction.
+- **Transition:** The camera passes through a dewdrop into an underwater world. Continuous forward motion, realistic refraction.
 - **Loop:** A glass sphere completes one slow revolution. Locked-off camera, stable lighting, the closing frame matches the opening frame.

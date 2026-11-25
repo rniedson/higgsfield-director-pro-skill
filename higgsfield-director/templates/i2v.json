@@ -1,18 +1,18 @@
 {
-  "titulo": "Retrato a partir de foto (imagem para vídeo)",
-  "modelo": "kling3_0",
-  "modo": "i2v",
-  "proporcao": "9:16",
-  "preservar": ["facial features", "hairstyle", "wardrobe", "background"],
-  "referencias": ["start_image: foto aprovada pelo retratado (media_id depois do upload)"],
-  "tomadas": [
+  "title": "Portrait from a photo (image to video)",
+  "model": "kling3_0",
+  "mode": "i2v",
+  "aspect_ratio": "9:16",
+  "preserve": ["facial features", "hairstyle", "wardrobe", "background"],
+  "references": ["start_image: photo approved by the person portrayed (media_id after the upload)"],
+  "shots": [
     {
       "id": "T01",
-      "duracao": 5,
-      "sujeito": "The person in the reference photo",
-      "acao": "She blinks naturally, breathes in, then gives a small genuine smile",
+      "duration": 5,
+      "subject": "The person in the reference photo",
+      "action": "She blinks naturally, breathes in, then gives a small genuine smile",
       "camera": "Very slow push-in",
-      "luz": "Keep the soft window light of the photo",
+      "lighting": "Keep the soft window light of the photo",
       "final": "Medium close-up, eyes on the upper third"
     }
   ]

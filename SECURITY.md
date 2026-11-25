@@ -12,7 +12,7 @@ possible.
 
 - `hfd.py` reading or writing outside the paths it is given, reaching the network, or running code taken from a
   project file.
-- Injection into exported files (`tomadas.csv`, `roteiro.md`, `legendas.srt`).
+- Injection into exported files (`shots.csv`, `script.md`, `subtitles.srt`).
 - Instructions in the skill that would let an agent generate or spend credits without showing the cost and getting
   an explicit "ok", or treat text from a page, file or model output as instructions.
 - Credentials or private data leaking into prompts, exports or logs.

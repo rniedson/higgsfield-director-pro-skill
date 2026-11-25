@@ -1,4 +1,4 @@
-name: testes
+name: tests
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         python: ["3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-latest]
         include:
-          # o ubuntu-latest (26.04) não tem build do Python 3.9; o 24.04 ainda tem
+          # ubuntu-latest (26.04) has no Python 3.9 build; 24.04 still has one
           - python: "3.9"
             os: ubuntu-24.04
     steps:
@@ -26,19 +26,19 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
-      - name: Testes (só biblioteca padrão)
+      - name: Tests (standard library only)
         working-directory: higgsfield-director
         run: python -m unittest discover -s tests -v
 
-  repositorio:
-    name: formato da skill e links
+  repository:
+    name: skill format and links
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: PyYAML para ler o frontmatter como YAML de verdade
+      - name: PyYAML to read the frontmatter as real YAML
         run: python -m pip install --disable-pip-version-check pyyaml==6.0.2
-      - name: Frontmatter, openai.yaml, JSON, links e âncoras
-        run: python tools/checar_repo.py --exigir-yaml
+      - name: Frontmatter, openai.yaml, JSON, links and anchors
+        run: python tools/check_repo.py --require-yaml
