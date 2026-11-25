@@ -22,6 +22,9 @@ CI runs both on every push and pull request.
   `.higgsfield-director/preferencias.json` in the current folder.
 - **The preference file never authorizes spending.** It stores how the operator wants to work, nothing else; a change
   that lets it carry a ceiling or a budget will not be merged.
+- **Keep the project clearly unofficial.** Do not add Higgsfield's logo or wording that suggests the skill is
+  official, endorsed or supported by Higgsfield. Use the name only to say which service the skill works with. Keep
+  the notice at the top of both READMEs, the *Disclaimer* / *Aviso* sections and the line at the top of `SKILL.md`.
 - **Every bug fix comes with a test that fails before the fix.** Add one for each defect you correct.
 - **Model capabilities come from the catalog.** Use the live `models_explore` or the dated snapshot, never memory.
   To refresh the bundled snapshot, follow "Atualizar o retrato" in `references/modelos.md`.
