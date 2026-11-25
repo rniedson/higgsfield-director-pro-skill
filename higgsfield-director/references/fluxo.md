@@ -52,6 +52,9 @@ Cada personagem, produto, lugar ou marca que se repete ganha uma ficha em `bibli
 | tomada | `inicio`, `fim`, `mudancas_aprovadas`, `camera_xy`, `cruzamento_motivado`, `linha_do_tempo` [{`trilha`,`de`,`ate`}] | checagens |
 | tomada | `custo_teste`, `custo_final`, `tentativas` | orçamento (preço vindo da estimativa do conector) |
 
+Limite atual: **um modelo e um modo por projeto**. Tomadas em modelos ou modos diferentes (uma em texto para
+vídeo, outra a partir de imagem, outra no Kling) vão em arquivos de projeto separados.
+
 ## 6. Comandos
 
 ```bash

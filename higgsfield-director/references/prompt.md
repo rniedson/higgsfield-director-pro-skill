@@ -99,6 +99,12 @@ curta, tire ações antes de acelerar.
 | Documentário | Observe a single everyday action in available light. | Gratuitous cuts during a quiet observation. |
 | Produto | Reveal material detail, then finish on a centered product frame. | Hide the product and change its label. |
 | UGC | Demonstrate one concrete use case in a natural voice. | Unsupported claims about the product. |
+| Multidão | A crowd of local fans in plain green T-shirts with no crest, in the small concrete stands of a neighborhood field. | "Fans in green and white football shirts" (puxa o uniforme de um clube real) ou multidão sem roupa dita (o modelo pode tirar a camisa). |
+| Mãos de duas pessoas | Four hands of two people: a man's hands on the left, a woman's hands on the right. | "Two hands" (sai uma pessoa só com as duas mãos). |
+| Estado final | The banner stays raised above the crowd at the end. | Um estado final que desfaz a ação (o pano volta dobrado depois de aberto). |
+| Gesto de emoção | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" num momento-chave: o modelo tende a virar a pessoa para a câmera. |
+| Símbolo oficial (bandeira, brasão, selo) | Pass the real symbol as a reference image; put mottos and small text in post. | Descrever o símbolo só em palavras: o modelo inventa ou embaralha. |
+| Objetos de marca | Unbranded industrial sewing machines. | Deixar a marca sem dizer: modelos de imagem às vezes estampam marcas reais. |
 
 ## 7. Exemplos curtos (texto para vídeo)
 
