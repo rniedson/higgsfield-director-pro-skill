@@ -1,0 +1,42 @@
+{
+ "formato": 1,
+ "data": "2026-11-24",
+ "versao_skill": "5.1.0+e4dee7b",
+ "categoria": "anuncio-produto",
+ "modelo": "cinematic_studio_video_4_0",
+ "tomadas": 3,
+ "custo_creditos": 92,
+ "referencia_de_imagem": true,
+ "voto": "com",
+ "avaliador": "cego-automatico",
+ "visto_primeiro": "com",
+ "motivo": "pelo conjunto: a ligação de uma cena com outra, mais orgânico",
+ "notas": {
+  "com": {
+   "total": 82.5,
+   "criterios": {
+    "identidade": 8.7,
+    "movimento": 7.0,
+    "camera": 8.7,
+    "briefing": 8.7,
+    "luz": 9.0,
+    "materiais": 8.0,
+    "continuidade": 8.7,
+    "audio": 6
+   }
+  },
+  "sem": {
+   "total": 73.8,
+   "criterios": {
+    "identidade": 6.3,
+    "movimento": 7.0,
+    "camera": 8.3,
+    "briefing": 8.3,
+    "luz": 7.7,
+    "materiais": 7.7,
+    "continuidade": 7.3,
+    "audio": 6
+   }
+  }
+ }
+}

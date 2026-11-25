@@ -41,6 +41,13 @@ Cada personagem, produto, lugar ou marca que se repete ganha uma ficha em `bibli
   Mudança de propósito vai em `mudancas_aprovadas: ["P01.posicao"]`.
 - Para encadear tomadas, gere a tomada N, extraia o último quadro e use como `start_image` da N+1.
 
+**Storyboard antes do vídeo (modo estúdio).** Antes de gerar qualquer tomada em vídeo, gere um quadro por tomada em
+imagem, com as mesmas fichas e referências, e mostre a folha com o tempo, a ação, a câmera e o som de cada tomada
+escritos embaixo. A imagem custa uma fração do vídeo e mostra antes o que mais reprova: produto trocado, rosto
+trocado, enquadramento que corta o estado final. O quadro aprovado vira a imagem inicial (`start_image`) ou a
+referência da tomada. A folha aprova o **visual**; movimento, ação, emoção e som só se aprovam no teste em vídeo.
+No modo `acompanhar`, o operador vê e aprova cada quadro (`references/modos.md`).
+
 ## 5. O projeto (campos que o `hfd.py` entende)
 
 | Nível | Campo | O que é |

@@ -13,9 +13,13 @@ Subcomandos:
   pontuar   <avaliacao.json>          nota 0-100 com evidência obrigatória
   modelos   [--tipo video|image] [--buscar termo] [--id ID]
   modelos   --importar lista.json [mais.json ...] --saida retrato.json
+  preferencias [--modo acompanhar|preco|teto] [--calibrar sim|nao|depois] [--arquivo caminho]
+  cego      --com com.json --sem sem.json --saida <pasta>   sorteia X e Y e grava a chave sem mostrá-la
+  resultado --chave chave-cega.json --voto X|Y|empate ... --saida calibracao/<arquivo>.json
 
 --retrato arquivo.json (em validar, compilar, exportar e modelos) usa outro retrato dos modelos no lugar de
-data/modelos.json. Nenhum comando grava dentro da pasta da skill sem que o caminho seja dado.
+data/modelos.json. Nenhum comando grava dentro da pasta da skill sem que o caminho seja dado. `preferencias` usa
+.higgsfield-director/preferencias.json na pasta atual, salvo --arquivo.
 
 Saída: JSON em stdout. Código de saída: 0 ok; 1 o projeto tem erros (listados em "erros"); 2 uso, arquivo ou
 entrada fora do formato (mensagem em "erro", no stderr). Nunca um traceback: HFD_DEBUG=1 mostra o traceback.
@@ -27,6 +31,7 @@ import json
 import math
 import os
 import re
+import secrets
 import sys
 from pathlib import Path
 
@@ -668,6 +673,209 @@ def pontuar(x):
     return {"tipo": x["tipo"], "nota": nota, "situacao": sit}
 
 
+# --------------------------------------------------------------------------- modo de trabalho e calibração
+
+MODOS_DE_TRABALHO = ("acompanhar", "preco", "teto")
+CALIBRAR = ("sim", "nao", "depois")
+PREFERENCIAS = Path(".higgsfield-director") / "preferencias.json"
+CATEGORIAS = ("anuncio-produto", "cena-com-personagem", "trailer", "institucional", "clipe", "loop", "imagem",
+              "outro")
+CAMPOS_DO_FORMATO = ("model", "duration", "aspect_ratio", "resolution", "generate_audio")
+PERGUNTA = ("Antes de começar, duas perguntas. 1) Como prefere trabalhar? (a) acompanhar e aprovar cada etapa, "
+            "vendo cada imagem e cada vídeo; (b) ver só o preço total e dar um ok; (c) me dar um teto de créditos "
+            "por sessão e não ser consultado. 2) Quer calibrar a skill com um teste às cegas, com e sem ela, para ver "
+            "se vale para você? Custa créditos, cotados antes. (sim, não ou depois)")
+LEMBRETE = ("o arquivo guarda como trabalhar, nunca quanto gastar: a autorização de gasto só vem da conversa "
+            "(references/modos.md)")
+CAMPOS_DO_REGISTRO = {"formato", "data", "versao_skill", "categoria", "modelo", "tomadas", "custo_creditos",
+                      "referencia_de_imagem", "voto", "avaliador", "motivo", "notas", "visto_primeiro"}
+OPCIONAIS_DO_REGISTRO = {"motivo", "notas", "visto_primeiro"}
+
+
+def preferencias(arquivo=None, modo=None, calibrar=None):
+    caminho = Path(arquivo) if arquivo else PREFERENCIAS
+    atual = {}
+    if caminho.exists():
+        atual = ler_json(caminho)
+        if not isinstance(atual, dict):
+            raise Erro(f"{caminho}: deve ser um objeto JSON")
+        extras = sorted(set(atual) - {"modo", "calibrar", "atualizado_em"})
+        if extras:
+            raise Erro(f"{caminho}: campos desconhecidos {extras}; o arquivo guarda só como trabalhar, "
+                       "nunca quanto gastar")
+    if modo is None and calibrar is None:
+        definido = atual.get("modo") in MODOS_DE_TRABALHO
+        r = {"definido": definido, "arquivo": str(caminho)}
+        r.update({k: atual[k] for k in ("modo", "calibrar", "atualizado_em") if k in atual})
+        if not definido:
+            r["pergunta"] = PERGUNTA
+        r["lembrete"] = LEMBRETE
+        return r
+    if modo is not None and modo not in MODOS_DE_TRABALHO:
+        raise Erro(f"--modo deve ser um de: {', '.join(MODOS_DE_TRABALHO)}")
+    if calibrar is not None and calibrar not in CALIBRAR:
+        raise Erro(f"--calibrar deve ser um de: {', '.join(CALIBRAR)}")
+    novo = dict(atual)
+    if modo:
+        novo["modo"] = modo
+    if calibrar:
+        novo["calibrar"] = calibrar
+    if novo.get("modo") not in MODOS_DE_TRABALHO:
+        raise Erro("defina --modo junto (acompanhar, preco ou teto)")
+    novo["atualizado_em"] = _dt.date.today().isoformat()
+    try:
+        caminho.parent.mkdir(parents=True, exist_ok=True)
+        caminho.write_text(json.dumps(novo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    except OSError as e:
+        raise Erro(f"não consegui gravar {caminho}: {e}")
+    return {"definido": True, "arquivo": str(caminho), **novo, "lembrete": LEMBRETE}
+
+
+def _pedidos(x, nome):
+    lista = x.get("requests") if isinstance(x, dict) else x
+    if not isinstance(lista, list) or not lista:
+        raise Erro(f"{nome}: deve ser uma lista de pedidos ou {{\"requests\": [...]}}")
+    saida = []
+    for i, r in enumerate(lista, 1):
+        p = r.get("params", r) if isinstance(r, dict) else None
+        if not isinstance(p, dict) or not texto(p.get("model")):
+            raise Erro(f"{nome}: o pedido {i} não tem 'model'")
+        saida.append({k: v for k, v in p.items() if k != "count"})
+    return saida
+
+
+def cego(com, sem, pasta, sorteio=None, ordem=None):
+    """Confere que as duas condições pedem o mesmo formato, sorteia quem é X e quem é Y e, à parte, quem se mostra
+    primeiro (quem vê primeiro tende a escolher o primeiro; o sorteio separado espalha esse efeito)."""
+    a, b = _pedidos(com, "--com"), _pedidos(sem, "--sem")
+    erros = []
+    if len(a) != len(b):
+        erros.append(f"--com tem {len(a)} pedidos e --sem tem {len(b)}: as duas condições geram o mesmo número "
+                     "de tomadas")
+    for i, (x, y) in enumerate(zip(a, b), 1):
+        for k in CAMPOS_DO_FORMATO:
+            if x.get(k) != y.get(k):
+                erros.append(f"tomada {i}: '{k}' difere ({x.get(k)!r} com a skill, {y.get(k)!r} sem); formato e "
+                             "preço têm de ser iguais nas duas condições")
+    if erros:
+        return {"erros": erros}
+    pasta = Path(pasta)
+    arq_chave = pasta / "chave-cega.json"
+    if arq_chave.exists():
+        raise Erro(f"{arq_chave} já existe: um sorteio por rodada; use outra pasta")
+    com_e_x = (secrets.randbelow(2) if sorteio is None else sorteio) == 0
+    primeiro = "XY"[secrets.randbelow(2) if ordem is None else ordem]
+    chave = {"com": "X" if com_e_x else "Y", "sem": "Y" if com_e_x else "X"}
+    pedidos = []
+    for cond, lista in (("com", a), ("sem", b)):
+        base = 10 if chave[cond] == "X" else 20
+        pedidos += [{"index": base + i, "params": p} for i, p in enumerate(lista, 1)]
+    pedidos.sort(key=lambda r: r["index"])
+    try:
+        pasta.mkdir(parents=True, exist_ok=True)
+        (pasta / "pedidos-cegos.json").write_text(json.dumps(pedidos, ensure_ascii=False, indent=1) + "\n",
+                                                  encoding="utf-8")
+        fd = os.open(arq_chave, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(chave, f)
+    except OSError as e:
+        raise Erro(f"não consegui gravar em {pasta}: {e}")
+    return {"erros": [], "pedidos": len(pedidos), "arquivo_pedidos": str(pasta / "pedidos-cegos.json"),
+            "chave": f"{arq_chave} (não abra antes do voto)",
+            "indices": "10+n são as tomadas de X; 20+n, as de Y",
+            "mostrar_primeiro": primeiro,
+            "como_mostrar": f"{primeiro} primeiro (à esquerda, ou tocando antes); depois os dois juntos, lado a lado"}
+
+
+def checar_registro(d):
+    """Lista branca do registro de calibração: o que não está aqui não entra no repositório."""
+    if not isinstance(d, dict):
+        return ["o registro deve ser um objeto JSON"]
+    e = []
+    extras = sorted(set(d) - CAMPOS_DO_REGISTRO)
+    if extras:
+        e.append(f"campos fora da lista branca: {extras} (prompts, mídia, nomes e clientes nunca entram)")
+    faltam = sorted(CAMPOS_DO_REGISTRO - OPCIONAIS_DO_REGISTRO - set(d))
+    if faltam:
+        e.append(f"campos obrigatórios ausentes: {faltam}")
+    if d.get("formato") != 1:
+        e.append("'formato' deve ser 1")
+    if not (isinstance(d.get("data"), str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d["data"])):
+        e.append("'data' no formato AAAA-MM-DD")
+    if not (isinstance(d.get("versao_skill"), str)
+            and re.fullmatch(r"\d+\.\d+\.\d+(\+[0-9a-f]{7,12})?", d["versao_skill"])):
+        e.append("'versao_skill' como 5.1.0 ou 5.1.0+<commit>")
+    if d.get("categoria") not in CATEGORIAS:
+        e.append(f"'categoria' deve ser uma de: {', '.join(CATEGORIAS)}")
+    if not (isinstance(d.get("modelo"), str) and re.fullmatch(r"[a-z0-9][a-z0-9_.-]{1,63}", d["modelo"])):
+        e.append("'modelo' é o id do catálogo (minúsculas, números, _ . -)")
+    t = d.get("tomadas")
+    if not (type(t) is int and 1 <= t <= 30):
+        e.append("'tomadas' inteiro de 1 a 30 (por condição)")
+    c = d.get("custo_creditos")
+    if not (numero(c) and 0 <= c <= 100000):
+        e.append("'custo_creditos' número de 0 a 100000")
+    if not isinstance(d.get("referencia_de_imagem"), bool):
+        e.append("'referencia_de_imagem' true ou false")
+    if d.get("voto") not in ("com", "sem", "empate"):
+        e.append("'voto' deve ser com, sem ou empate")
+    if d.get("avaliador") not in ("cego-automatico", "pessoa", "nenhum"):
+        e.append("'avaliador' deve ser cego-automatico, pessoa ou nenhum")
+    if "visto_primeiro" in d and d["visto_primeiro"] not in ("com", "sem", "juntos"):
+        e.append("'visto_primeiro' deve ser com, sem ou juntos")
+    if "motivo" in d:
+        m = d["motivo"]
+        if not (isinstance(m, str) and 1 <= len(m.strip()) <= 160):
+            e.append("'motivo' com 1 a 160 caracteres")
+        elif re.search(r"https?:|www\.|@|\d{5,}", m, re.I):
+            e.append("'motivo' não pode ter link, e-mail, @ ou número longo")
+    if "notas" in d:
+        n = d["notas"]
+        pesos = ler_json(DATA / "pesos.json")
+        if not (isinstance(n, dict) and n and set(n) <= {"com", "sem"}):
+            e.append("'notas' deve ter 'com' e/ou 'sem'")
+        else:
+            for cond, v in n.items():
+                if not (isinstance(v, dict) and set(v) <= {"total", "criterios"} and numero(v.get("total"))
+                        and 0 <= v["total"] <= 100):
+                    e.append(f"'notas.{cond}' precisa de 'total' de 0 a 100 (e, opcional, 'criterios')")
+                    continue
+                cr = v.get("criterios", {})
+                if not (isinstance(cr, dict) and set(cr) <= set(pesos)
+                        and all(numero(x) and 0 <= x <= 10 for x in cr.values())):
+                    e.append(f"'notas.{cond}.criterios' só com {', '.join(pesos)}, de 0 a 10")
+    return e
+
+
+def resultado(chave, voto, categoria, modelo, tomadas, custo, versao, referencia=False, motivo=None,
+              aval_x=None, aval_y=None, avaliador=None, data=None, primeiro=None):
+    if not (isinstance(chave, dict) and set(chave) == {"com", "sem"} and sorted(chave.values()) == ["X", "Y"]):
+        raise Erro("chave inválida: esperado {\"com\": \"X\" ou \"Y\", \"sem\": o outro}")
+    if voto not in ("X", "Y", "empate"):
+        raise Erro("--voto deve ser X, Y ou empate")
+    cond = {v: k for k, v in chave.items()}
+    reg = {"formato": 1, "data": data or _dt.date.today().isoformat(), "versao_skill": versao,
+           "categoria": categoria, "modelo": modelo, "tomadas": tomadas, "custo_creditos": custo,
+           "referencia_de_imagem": bool(referencia), "voto": "empate" if voto == "empate" else cond[voto],
+           "avaliador": avaliador or ("cego-automatico" if aval_x else "nenhum")}
+    if primeiro:
+        if primeiro not in ("X", "Y", "juntos"):
+            raise Erro("--primeiro deve ser X, Y ou juntos")
+        reg["visto_primeiro"] = "juntos" if primeiro == "juntos" else cond[primeiro]
+    if motivo:
+        reg["motivo"] = motivo.strip()
+    if aval_x or aval_y:
+        if not (aval_x and aval_y):
+            raise Erro("use --avaliacao-x e --avaliacao-y juntas")
+        reg["notas"] = {}
+        for letra, av in (("X", aval_x), ("Y", aval_y)):
+            nota = pontuar(av)["nota"]
+            crit = {k: round(c["nota"], 1) for k, c in (av.get("criterios") or {}).items()
+                    if isinstance(c, dict) and numero(c.get("nota"))}
+            reg["notas"][cond[letra]] = {"total": nota, "criterios": crit}
+    return reg, checar_registro(reg)
+
+
 # --------------------------------------------------------------------------- exportação
 
 def _csv_seguro(v):
@@ -795,6 +1003,30 @@ def main(argv=None):
     s.add_argument("--id")
     s.add_argument("--importar", nargs="+", metavar="LISTA", help="respostas do models_explore list (JSON)")
     s.add_argument("--saida", help="onde gravar o retrato novo (obrigatório com --importar)")
+    s = sub.add_parser("preferencias")
+    s.add_argument("--modo", choices=MODOS_DE_TRABALHO)
+    s.add_argument("--calibrar", choices=CALIBRAR)
+    s.add_argument("--arquivo", help="padrão: .higgsfield-director/preferencias.json na pasta atual")
+    s = sub.add_parser("cego")
+    s.add_argument("--com", required=True, help="pedidos da condição COM a skill (JSON)")
+    s.add_argument("--sem", required=True, help="pedidos da condição SEM a skill (JSON)")
+    s.add_argument("--saida", required=True, help="pasta nova para pedidos-cegos.json e chave-cega.json")
+    s = sub.add_parser("resultado")
+    s.add_argument("--chave", required=True)
+    s.add_argument("--voto", required=True, choices=["X", "Y", "empate"])
+    s.add_argument("--categoria", required=True, choices=CATEGORIAS)
+    s.add_argument("--modelo", required=True)
+    s.add_argument("--tomadas", required=True, type=int, help="tomadas por condição")
+    s.add_argument("--custo", required=True, type=float, help="créditos gastos na calibração inteira")
+    s.add_argument("--versao", required=True, help="versão da skill testada, como 5.1.0 ou 5.1.0+<commit>")
+    s.add_argument("--referencia", action="store_true", help="as tomadas usaram imagem de referência")
+    s.add_argument("--motivo", help="o motivo do voto, em poucas palavras, aprovado pela pessoa")
+    s.add_argument("--avaliacao-x")
+    s.add_argument("--avaliacao-y")
+    s.add_argument("--avaliador", choices=["cego-automatico", "pessoa", "nenhum"], help="quem deu as notas")
+    s.add_argument("--primeiro", choices=["X", "Y", "juntos"], help="qual a pessoa viu primeiro")
+    s.add_argument("--data")
+    s.add_argument("--saida", required=True, help="arquivo novo em calibracao/")
     a = ap.parse_args(argv)
     try:
         return _executar(a)
@@ -852,6 +1084,30 @@ def _executar(a):
     elif a.cmd == "pontuar":
         r = pontuar(ler_json(a.arquivo))
         code = 0
+    elif a.cmd == "preferencias":
+        r = preferencias(a.arquivo, a.modo, a.calibrar)
+        code = 0
+    elif a.cmd == "cego":
+        r = cego(ler_json(a.com), ler_json(a.sem), a.saida)
+        code = 1 if r["erros"] else 0
+    elif a.cmd == "resultado":
+        custo = int(a.custo) if a.custo == int(a.custo) else a.custo
+        reg, erros = resultado(ler_json(a.chave), a.voto, a.categoria, a.modelo, a.tomadas, custo, a.versao,
+                               a.referencia, a.motivo, ler_json(a.avaliacao_x) if a.avaliacao_x else None,
+                               ler_json(a.avaliacao_y) if a.avaliacao_y else None, a.avaliador, a.data,
+                               a.primeiro)
+        if not erros:
+            destino = Path(a.saida)
+            if destino.exists():
+                raise Erro(f"{destino} já existe; escolha outro nome")
+            try:
+                destino.parent.mkdir(parents=True, exist_ok=True)
+                destino.write_text(json.dumps(reg, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            except OSError as e:
+                raise Erro(f"não consegui gravar {destino}: {e}")
+        r = {"erros": erros, "registro": reg, "arquivo": None if erros else str(a.saida),
+             "lembrete": "a pessoa lê o registro inteiro antes de qualquer PR"}
+        code = 1 if erros else 0
     else:
         r = _modelos_cli(a)
         code = 0
