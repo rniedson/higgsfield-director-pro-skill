@@ -19,7 +19,8 @@ python3 <skill>/scripts/hfd.py models --id seedance_2_5       # full entry
 | Shot up to 30 s long | `cinematic_studio_video_4_0`, `seedance_2_5`, `kling4_0`, `magi_2`, `wan3_0` | maximum duration 30 s in the catalog |
 | Cinema control (lens, camera, era, light) | `cinematic_studio_video_4_0` | has `camera_model_id`, `camera_lens_id`, `camera_aperture_id`, `era_id`, `genre_id`, `pacing_id`, `light`, `color_palette` |
 | Many references (product, identity, style) | `cinematic_studio_video_4_0`, `seedance_2_5` | up to 30 images, 10 videos, 10 audio files (`omni_reference` mode) |
-| First **and** last frame | `kling3_0`, `seedance_2_5`, `wan3_0`, `minimax_h3`, `veo3_1_lite`, `gemini_omni_flash_1_2` | `end_image` role in the catalog |
+| First **and** last frame | `kling3_0`, `seedance_2_5`, `cinematic_studio_video_4_0` (`omni_reference` mode), `cinematic_studio_video_3_5`, `wan3_0`, `minimax_h3`, `veo3_1_lite`, `gemini_omni_flash_1_2` | `end_image` role in the catalog |
+| Several shots in one generation, each with its own prompt and duration | `cinematic_studio_video_3_5` | `multi_shots` and `multi_prompt` (up to 6 shots) in the 2026-11-25 catalog; `kling3_0` is tagged multi-shot but has no control in the connector |
 | Native audio and speech | `cinematic_studio_video_4_0`, `seedance_2_5`, `kling3_0` (`sound`), `veo3_1`, `wan3_0` | audio parameter or "audio" tag |
 | Edit or extend a video | `cinematic_studio_video_4_0`, `seedance_2_5` (`video_edit`, `video_extension`), `kling4_0` | modes in the catalog |
 | Test composition cheaply | on the same model, at the lowest resolution it accepts (quote the test and the final); `seedance_2_5` has `draft` | a test on another model does not predict the final result |
@@ -39,7 +40,7 @@ use a remembered number.
 | id | name | duration (s) | audio | 1st/last frame | refs | modes |
 |---|---|---|---|---|---|---|
 | `cinematic_studio_video_4_0` | Cinema Studio 4.0 | 4–30 | yes | 1st+last | audio, image, video | t2v, omni_reference, video_edit, video_extension |
-| `cinematic_studio_video_3_5` | Cinematic Studio 3.5 | ? | yes | 1st+last | audio, image, video | — |
+| `cinematic_studio_video_3_5` | Cinematic Studio 3.5 | 4 or more (default 15) | yes (off by default) | 1st+last | audio, image, video | multi-shot (`multi_prompt`), checked live 2026-11-25 |
 | `seedance_2_5` | Seedance 2.5 | 4–30 | yes | 1st+last | audio, image, video | t2v, omni_reference, video_edit, video_extension |
 | `seedance_2_5_flash` | Seedance 2.5 Flash | 4–30 | yes | 1st+last | audio, image, video | same |
 | `seedance_2_0` | Seedance 2.0 | 4–15 | yes | 1st+last | audio, image, video | std, fast |
@@ -66,6 +67,7 @@ use a remembered number.
 - **Sora 2:** it is not in the Higgsfield catalog; the press (CBS, Axios, 2026-03-24) reported it was discontinued.
 - **Veo 3.1 "preview":** Google's documentation says Veo 3.1 Preview was shut down on 2026-10-22; the connector
   still offers the `veo-3-1-preview` variant. Prefer `veo-3-1-fast` or check live.
+- **Cinema Studio 3.5:** `prompt_language` defaults to `zh` and `generate_audio` to off (live catalog, 2026-11-25).
 - **MiniMax:** there is a third-party report that Hailuo 2.3 became legacy and H3 is the current one (not confirmed).
 
 ## Validate against the live limits (studio mode, with connector)

@@ -27,7 +27,7 @@
 
 | Symptom | Likely hypothesis | Change (one thing) | Check |
 |---|---|---|---|
-| Face changes between frames | weak reference, large rotation, a reference sheet with several faces | lock the reference (one face per sheet, the other panels from the neck down), reduce the orbit, shorten | compare the face at the start and at the end |
+| Face changes between frames | weak reference, large rotation, a reference sheet with several faces | lock the reference (one face per sheet, the other panels from the neck down; or edit the face panel with the approved face, `references/workflow.md` §4), reduce the orbit, shorten | compare the face at the start and at the end |
 | Deformed hands/fingers | simultaneous gestures, hand in the foreground | a single gesture, hand smaller in frame | frame by frame on the hand |
 | Sliding feet | walk with no contact described | "each planted foot stays fixed until lifted"; simple path | contact with the ground |
 | Erratic camera | two movements, or none defined | one movement, constant speed | path from start to end |
@@ -37,26 +37,37 @@
 | Odd physics (liquid, fabric) | force and material not described | direction of the force, material, delay | motion consistent with the weight |
 | Poor lip sync | long line, face moving a lot | shorter line, less head movement | mouth on the stressed syllables |
 | Loop with a jump | different ends | align pose, camera, light and speed | first × last frame |
-| Ignores the request | prompt too long or contradictory | shorten; remove what conflicts | does each requested element appear? |
+| Ignores the request | prompt too long or contradictory, or patched many times | shorten; remove what conflicts; after many patches, rewrite it whole from the approved plan | does each requested element appear? |
 | Static camera when the prompt asks for movement | the model rewrites the prompt (Cinema Studio 4.0 has automatic direction) | test the same shot in another model; in one test, Kling 3.0 did the tracking move that Cinema Studio ignored (one sample) | path from start to end |
 | Invented symbol or flag | a "film still" model draws from memory | reference with the real symbol; switch models | compare with the original |
 | Product changes between shots | text only; detail shot without a feature that identifies the product | product reference image in every shot | compare the product shot by shot |
 | Product cropped in the final frame | the movement ends on a tighter framing than the final state needs | make the movement end on a shot that contains the final state | last frame |
-| Cuts inside a shot that nobody asked for | the model edited several shots together on its own (Cinema Studio 4.0: 3 of 11 shots of 4 to 5 s in one test, around the 2 s mark) | one continuous shot with a single movement; "Single continuous shot" | scene change frame by frame (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`); the 0.3 threshold missed a cut to a similar shot, so also look at a sheet of frames every 0.5 s |
+| Cuts inside a shot that nobody asked for | the model edited several shots together on its own (Cinema Studio 4.0: 3 of 11 shots of 4 to 5 s in one test, around the 2 s mark); the prompt split the action into timed beats (Seedance, one tutorial) | one continuous shot with a single movement, the action written as one continuous motion; "Single continuous shot" | scene change frame by frame (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`); the 0.3 threshold missed a cut to a similar shot, so also look at a sheet of frames every 0.5 s |
 | An accessory from the bible disappears (hat, glasses) | hypothesis: in a wide shot the accessory is small and the opening frame weighs more than the bible (one sample) | the accessory visible in the approved storyboard frame; a tighter shot when it matters | compare with the bible, frame by frame |
 | People or objects swap places, or their count changes | positions given only in the text | a top-view layout map as a reference, with the same colors named in the prompt (`references/workflow.md` §4) | count and positions in each frame |
 | Geometry changes between attempts (where something lands, its scale) | words do not fix the geometry | an annotated image as a reference: arrows, marks, positions | compare the attempts frame by frame |
 | A changed state snaps back (torn clothes mend, wet hair dries) | the change is only in the text | a new approved reference in the new state | the state in every frame after the change |
+| Background objects multiply (cars, booths, signs) | clutter in the location image | clean the location image before the video (`references/workflow.md` §4) | count the objects at the start and at the end |
+| Faces break in an image with many people | too many people in one generation | one person per generation, assembled in an image editor | each face against its sheet |
+| Music comes in although the prompt says "No music" | the text is only a request | `generate_audio` off when no sound is needed; otherwise listen and choose | listen |
+| Choppy motion | duplicated frames in the output | count them before editing (below); none of the four models checked on 2026-11-25 (Seedance 2.5, Cinema Studio 4.0 and 3.5, Kling 3.0) has a frame-rate parameter | number of duplicated frames |
+| Generation refused by the content filter, with the references already accepted | the text tripped the filter (one tutorial) | rewrite the text and keep the images (to test) | the job's status |
 | Extras look like clones | the reference shows one person | a group reference with different people | the extras' faces |
 | A generated reference image looks flat | the image model | the same prompt in another image model; compare (one sample) | depth and shadows |
 | Correct but lukewarm shot | only camera and setting, nothing happens | one moment of impact per shot, with sound tied to it | blind vote against an alternative version |
 
 Two failures in a row on the same shot: **replan** (another framing, another model, a shorter shot) instead of
-piling up constraints. A hypothesis is not a cause: record what changed and what happened.
+piling up constraints. A hypothesis is not a cause: record what changed and what happened. When every attempt fails
+the same way, rewrite the prompt; when the shot is nearly right, more attempts of the same prompt may be enough.
 
 Give each defect one short, concrete note (where it is, and how it should look or move) and regenerate only the shot
-it affects. A cut written on purpose, with its timing, on a model whose catalog lists multi-shot, is allowed after a
-test; only a cut nobody asked for is a defect.
+it affects. Notes pile up: after several patches, rewrite the prompt whole from the approved plan, and generate an
+image anew instead of editing it again.
+
+A cut written on purpose is allowed after a test, on a model with a multi-shot control (2026-11-25 catalog: Cinema
+Studio 3.5, `multi_shot_mode: "custom"` with each shot's prompt and duration in `multi_prompt`). Its `auto` mode, in
+which the model plans the cuts, serves to explore angles, with a quote; there the cuts are expected. Only a cut nobody
+asked for is a defect.
 
 ## Look at the result
 
@@ -79,6 +90,9 @@ Checks that spend no credits:
 - **Loop:** compare the first and the last frame (`ffmpeg -i frame_start.png -i frame_end.png -lavfi ssim -f null -`).
   In a test with the same image as the first and the last frame, SSIM came out at 0.97 and a jump was still visible
   at the wrap: plan a short dissolve in the edit.
+- **Duplicated frames:** when the motion looks choppy, count them before editing:
+  `ffmpeg -i video.mp4 -vf mpdecimate -loglevel debug -f null - 2>&1 | grep -c ' drop '`. In a synthetic test, a
+  clean 96-frame clip gave 0 and a 12 fps clip doubled to 24 fps gave 48.
 - **Model that ran:** check the `model` field of `jobs_wait`. In one test, a request for `nano_banana_pro` came back
   as `nano_banana_2`.
 Without the ability to see images, ask the operator for a description and say that the evaluation is the operator's.

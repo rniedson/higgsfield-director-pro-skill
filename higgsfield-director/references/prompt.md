@@ -10,8 +10,12 @@ audio block).
 
 - **One dominant action and one camera movement per shot.** More than one only in explicit phases:
   "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.) A continuous
-  camera path copied from a blocking reference video (§2) counts as one movement; write it phase by phase, with the
-  time of each phase.
+  camera path copied from a blocking reference video (§2) counts as one movement.
+- **A continuous action is written as one continuous motion, not as timed beats.** Splitting the action into time
+  slots ("0–3 s he enters, 3–6 s he turns") made Seedance cut at every slot, in every attempt; the cuts stopped when
+  the same action was written as one continuous motion in a single continuous shot (one tutorial, shown on the
+  timeline). A phase with its time is only for a change in the camera's movement, and only after a test on that
+  model.
 - **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
   product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
   the effect. The camera keeps a single movement; the action carries the emotion, and the sound follows that moment.
@@ -25,13 +29,21 @@ audio block).
 - **Show it instead of describing it.** A detail that is hard to put into words (a creature, an odd shape, the
   button to press, where something lands) goes in as an image reference, marked if needed (an arrow on the button,
   an annotated drawing), and the text names it. (Higgsfield YouTube tutorials, 2026.)
+- **With a reference attached, the text does not describe its look again.** Repeating the appearance of a
+  referenced person or set made the model add new characters. Give each reference a fixed name, the same in the
+  bibles and in every prompt, and write only the action, the camera and what changes.
 - **Name the gestures.** A generic verb ("she dances", "they fight") comes out soft and vague. Write the one action
   as named gestures, one per beat: head turn, shoulder drop, finger snap. In a fight: who stands where, the blow, the
   fall; medium shots for the movement, close shots for the contact.
+- **Anchor the camera to something in the set.** "The camera stands beside the fridge, at the back of the room"
+  placed it; "closer" moved the subject toward the camera instead. Say where the camera stands and what it does
+  ("the camera moves forward to the desk").
 - **English** gives the most predictable result. Dialogue stays in the requested language, with the language written
   out. The Higgsfield guide says Seedance and Kling sometimes respond better to Chinese for subtle motion: test, do not
   assume.
-- **A short clip obeys better.** The longer the shot, the more the model invents; split it into shots.
+- **A short clip obeys better.** The longer the shot, the more the model invents; split it into shots. When an action
+  (a stunt, a chase) and a performance (a look, a line) compete in one prompt, both come out weaker: give each its
+  own shot.
 - **Change one thing at a time** between attempts. Two failures in a row: replan the shot instead of piling on
   constraints.
 
@@ -46,12 +58,13 @@ help.aliyun.com/en/model-studio/text-to-video-prompt; platform.minimax.io/docs/a
 |---|---|
 | Text to video | `[Subject and invariants]. [Setting]. [Chronological action]. [Shot size and angle]. [Camera: path and speed]. [Lens and focus]. [Lighting and color]. [Atmosphere and secondary motion]. [Final state].` + `Audio: ...` |
 | Image to video | `The reference image is the opening frame; preserve [identity, geometry, wardrobe, background]. [One action]. [Camera]. [Secondary motion]. [Final state].` The image already brings the subject and the scene: the text talks about **motion and camera** (Wan). Text and image must agree: do not ask for "calm, still" over a shaky frame (Higgsfield). |
-| Edit | `Change only [target]; preserve everything else exactly as it is. [What the target looks like].` |
+| Edit | `Change only [target]; preserve everything else exactly as it is. [What the target looks like].` One change per edit. After many edits of the same image the layout drifts: generate a new image with the full description and the same references instead of editing again. |
 | Extension | `Continue seamlessly from the final frame of the previous clip. [What happens next].` |
 | Still image | No time, no moving camera, no sound: subject, setting, shot size, angle, lens, lighting, color, style. |
-| Sequence | Generate shot by shot; the **last frame** of one becomes the start image of the next (Higgsfield; Veo first/last frame). On a model whose catalog lists `video_references`, the previous shot itself can be the reference (2026-11-25 catalog: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5 and Cinema Studio 4.0, up to 10). Not yet compared with the last frame here: test it one variable at a time. |
-| Edit real footage | `mode: video_edit` on a model that has it (2026-11-25 catalog: Seedance 2.5 and Cinema Studio 4.0; billed by the length of the input clip). `Change [what], at [the moment: when he snaps his fingers]. Keep exactly: [face, gestures, rings, camera move, background].` The footage is the operator's; a real person in it only with consent. |
-| Motion from a blocking render | A rough 3D blocking render, made in another tool, as a video reference for the camera path and its timing. The text adds what the render does not show (look, materials, acting), phase by phase with times. The render fixes the positions; people's movement is written in the text, or they copy the stiffness of the blocks. |
+| Sequence | Generate shot by shot; the **last frame** of one (or any good frame, cutting the clip there) becomes the start image of the next (Higgsfield; Veo first/last frame). On a model whose catalog lists `video_references`, the previous shot itself can be the reference (2026-11-25 catalog: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5 and Cinema Studio 4.0, up to 10). Not yet compared with the last frame here: test it one variable at a time. |
+| Start and end frames | For a change of state or place inside one shot: generate and approve the opening and the closing image, and ask for the motion between them, on a model with the `end_image` role (`references/models.md`). |
+| Edit real footage | `mode: video_edit` on a model that has it (2026-11-25 catalog: Seedance 2.5 and Cinema Studio 4.0; billed by the length of the input clip). `Change [what], at [the moment: when he snaps his fingers]. Keep exactly: [face, gestures, rings, camera move, background].` Say exactly where the change happens in the frame; tutorials mark the area on a frame of the clip, which the connector's catalog does not show as an input of this mode. The footage is the operator's; a real person in it only with consent. |
+| Motion from a blocking render | A rough 3D blocking render, made in another tool, as a video reference for the camera path and its timing. The text adds what the render does not show (look, materials, acting) as one continuous motion; the render carries the timing. The render fixes the positions; people's movement is written in the text, or they copy the stiffness of the blocks. |
 
 A clip shown as a screen inside the shot (a TV, a phone) sets the shot's length: the shot lasts as long as the clip,
 or the model invents the rest.
@@ -62,7 +75,9 @@ or the model invents the rest.
   puts it all after `Audio:`.
 - **Label who speaks** and repeat the same label in every shot: `Ana says in Brazilian Portuguese: "..."` (Kling, Sora).
 - **The speech fits the duration**: ~2.5 words per second. 4 s fits 1 or 2 short lines (Sora). `validate` warns.
-- For no speech: "No dialogue" (Wan). For no music track: "No music" (Higgsfield practice for Seedance).
+- For no speech: "No dialogue" (Wan). For no music track: "No music" (Higgsfield practice for Seedance). It is a
+  request, not a guarantee: in one tutorial the music came in anyway. If the shot needs no sound at all, turn audio
+  off in the parameters; otherwise listen before approving.
 - **In an ad, each shot has a sound accent tied to the action** (the splash, the creak of the material, a low boom on
   the final frame) over a low ambience. Ambience alone leaves the shot lukewarm.
 - **Generated audio comes out quiet**: between −26 and −28 LUFS integrated in a test with Cinema Studio 4.0. Normalize
@@ -72,13 +87,19 @@ or the model invents the rest.
 - **Music as a beat reference:** on a model that accepts `audio_references`, the track can time the motion to the
   beat (Seedance 2.0 also needs an image or video reference). Music rights are the operator's. One tutorial; not
   tested here.
+- **A melody (to test):** a hummed recording of the melody as an audio reference, so the notes come out as intended;
+  without it the model made up another tune. One tutorial; not tested here.
+- **An accent (to test):** naming the accent was not enough in one tutorial; describing how it sounds (the R, the
+  vowels) helped. Keep the same voice description in every shot of that character and listen to the takes side by
+  side.
 - Real person, someone's voice, a minor: see the hard rules in `SKILL.md`.
 
 ## 4. Notes by model (official fact when there is a manufacturer source)
 
 | Model | What changes in the prompt | Source |
 |---|---|---|
-| Cinema Studio 4.0 (Higgsfield) | Camera, lens, aperture, era, genre, pacing and light exist as **controls** (`camera_model_id`, `camera_lens_id`, `light`...); camera movement goes in the text. Audio on by default. 4–30 s. | connector catalog; Cinema Studio help center (modified 2026-11-19) |
+| Cinema Studio 4.0 (Higgsfield) | Camera, lens, aperture, era, genre, pacing and light exist as **controls** (`camera_model_id`, `camera_lens_id`, `light`...); camera movement goes in the text: the connector has no movement or frame-rate parameter (the movement control on the website is not exposed). Audio on by default. 4–30 s. | connector catalog (2026-11-25); Cinema Studio help center (modified 2026-11-19) |
+| Cinema Studio 3.5 (Higgsfield) | Several shots in one generation: `multi_shots: true` with `multi_shot_mode: "custom"` and `multi_prompt`, up to 6 items, each with its own `prompt` and `duration`; `auto` lets the model plan the shots. Set `prompt_language: "en"` (the default is `zh`) and `generate_audio: true` when sound is wanted (the default is off). `enhance_prompt` rewrites the prompt (off by default). Up to 15 media in all. | connector catalog (2026-11-25) |
 | Seedance 2.5 / 2.0 | References cited in the text as `@Image 1`, `@Video 1`, `@Audio 1`, with the role of each one written out (not inside the image). Order: subject and action; scene; style; camera or cut; audio. | Seedance help center (modified 2026-11-17), Higgsfield blog guide |
 | Kling 3.x / 4.0 | Subject, action, scene, camera, light, mood. Clear labels for who speaks; speech in Chinese, English, Japanese, Korean or Spanish (Portuguese: test first). | kling.ai/blog/kling-ai-prompt-guide |
 | Veo 3.1 | Elements: subject, action, scene, angle, motion, lens, style, time, audio. **Zoom is not dolly.** "Advanced" angles are not officially supported. 4, 6 or 8 s. | Vertex AI video prompt guide; aistudio.google.com/docs/veo |
@@ -131,6 +152,7 @@ is short, remove actions before speeding up.
 | Extras | A group reference with different people (age, build, clothes), each with one small action: one checks a phone, one laughs, one walks off. | One person's sheet for all the extras (they come out as clones), or extras with no action (they freeze). |
 | Reverse shot | Say where the camera is and what must be in frame: the camera stands beside the building, looking down at the valley. | "Reverse shot" alone: the model may put a wall behind the character. |
 | Transition between generated places | Hide the cut in a gesture or in something passing the lens; the camera keeps the same movement and only the place changes. | A hard cut with a different camera move on each side. |
+| Traffic (to test) | One car in a tighter frame, on a straight road with light traffic. | Intersections, traffic lights, dense overtaking: one tutorial reported most of its errors there. |
 | Hands of two people | Four hands of two people: a man's hands on the left, a woman's hands on the right. | "Two hands" (you get a single person with both hands). |
 | Final state | The banner stays raised above the crowd at the end. | A final state that undoes the action (the cloth goes back to folded after being opened). |
 | Emotional gesture | A frontal gesture the model can show: hand on the chest, a slow nod. | "Seen from behind" at a key moment: the model tends to turn the person toward the camera. |
