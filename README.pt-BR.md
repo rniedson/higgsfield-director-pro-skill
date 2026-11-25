@@ -170,7 +170,7 @@ docs/
 tools/check_repo.py             formato da skill, JSON, links, âncoras e língua (rodado pelo CI)
 tools/aggregate_calibration.py  monta o placar nos dois READMEs a partir de calibration/
 .github/                        CI, modelos de issue e de pull request
-CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
+AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ```
 
 </details>
