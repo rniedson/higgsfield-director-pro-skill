@@ -165,6 +165,7 @@ CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 - [Illustrated manual](#illustrated-manual)
 - [Architecture](#architecture)
 - [Overview](#overview)
+- [With and without the skill](#with-and-without-the-skill)
 - [What changed in v5](#what-changed-in-v5)
 - [Capabilities](#capabilities)
 - [Quick start](#quick-start)
@@ -206,6 +207,83 @@ flowchart LR
 
 Without the connector the skill runs in **planning-only mode**: it delivers prompts and parameters ready to paste on the
 Higgsfield site, and says that the cost must be checked there.
+
+## With and without the skill
+
+The Higgsfield connector is **the camera and the studio**: it generates whatever you ask, the way you ask. The skill is
+**the directing crew** beside Claude: it plans the shots, keeps continuity, does the budget and reviews the result.
+The same request, both ways:
+
+| Step | Claude + the connector only | With the skill |
+|---|---|---|
+| 1. Plan | one prompt per request, scene by scene | the request becomes a shot plan with durations, order and total cost, before a single credit is spent (in one test, a 7-minute spoken script became 36 shots) |
+| 2. Write the prompt | free text, in a different order each time | always the same order (who, where, action, camera, light, end state), in English, with the project's rules in every shot, one moment of impact per shot in ads, and [recipes against common defects](higgsfield-director/references/prompt.md) |
+| 3. Check before spending | nothing checks | `hfd.py validar` checks the model's limits, whether the dialogue fits the duration, continuity and camera (in one test it stopped a shot with two camera moves) |
+| 4. Cost | depends on each connector workflow | per-shot cost from the connector, separate test and final versions, and an explicit "ok" before any spending |
+| 5. Continuity | each shot comes out on its own | character, product and location sheets repeated in every shot; a product with no photo first gets a reference image, because text alone does not hold its design ([measured](#what-we-measured)); the last frame of one shot becomes the first of the next |
+| 6. Review | "does it look good?" by eye | frames from the start, middle and end, a score per criterion with evidence, and checks that cost no credits: transcribed speech, the loop seam, the model that actually ran |
+| 7. Learn | the same mistake comes back next time | the mistake becomes a recipe in the skill's references |
+
+**What does not change:**
+
+- **The model and the price.** The skill does not make generation cheaper or the model better: it changes what is
+  asked for, and when.
+- **The connector's ready-made workflows** (product photos, creator videos, dubbing, ads…). There the skill steps
+  aside and lets the connector lead.
+- **The eye of someone who knows the subject.** The score measures whether the video obeyed the prompt, not whether
+  the scene happens that way in real life. The skill asks that before spending, but you answer it.
+
+**When it pays off:** work with several shots (commercial, trailer, corporate video, music clip). For a single image or
+a ready-made connector workflow, you do not need it.
+
+### What we measured
+
+The table above is the promise. To check it, the same requests were made with and without the skill, on 25/11/2026.
+
+**1. Planning: 18 automated Claude Code sessions, 9 with and 9 without the skill, with no credits spent.** There were
+5 requests (a 3-shot commercial, a "go ahead and generate", product photos, a creator video and a single image), with
+the generation tools blocked.
+
+- For product photos and the creator video, both conditions picked the connector's ready-made workflow: the skill
+  does not get in the way of what the connector already does.
+- 17 of the 18 sessions got a quote from the connector before proposing a generation. The other one, without the
+  skill, stopped before quoting when it noticed the generation tools were blocked.
+- With the skill, the work took 34% longer overall (753 s against 564 s), and about 40% longer for a single image.
+- **What could not be measured:** whether the skill prevents "spending without asking for an ok". With the generation
+  tools blocked, no session could spend.
+
+**2. The result: the generated commercial, judged blind (6 shots of 5 s, 90 credits).** It was a 3-shot running shoe
+commercial: material detail, a run on a wet track at night, and the product as the hero at the end. Each condition's
+prompts were generated on Cinema Studio 4.0 at 480p with sound, and the two videos got shuffled labels (X and Y). An
+automated judge that saw only the request and the videos scored them, and a person voted without knowing which was
+which.
+
+| | With the skill | Without the skill |
+|---|---|---|
+| Blind judge score (0–100) | 70.7 | 71.3 |
+| Camera (0–10) | **8.7** | 7.3 |
+| Light (0–10) | **8.7** | 7.0 |
+| Product identity (0–10) | 5.0 | **6.3** |
+| Materials (0–10) | 7.7 | **8.3** |
+| The person's blind vote | | **chosen**: "for the movement, action, emotion, sound" |
+
+**It was a tie, and the person preferred the version made without the skill.**
+
+- **Where the skill helped:** one clean camera move per shot and steady light. Without it, the model cut one shot into
+  three on its own, and the last second came out blurred and blown out.
+- **Where it lost, because of its own rules:**
+  1. **Prompts that were too restrained.** A sliding water drop and a sideways slide looked correct and flat next to a
+     fingertip pressing the knit, slow-motion splashes and a bass hit on the final frame.
+  2. **Camera move against end state.** The text asked for a push-in to a close-up and for the whole product at the
+     end. The model followed the move and cropped the product.
+  3. **Product described in text only.** In a close-up of the knit alone, the model drew a shoe with no laces. Both
+     conditions warned about the risk, but neither proposed generating a product reference image first.
+
+The three points became rules in this version ([prompt](higgsfield-director/references/prompt.md),
+[quality](higgsfield-director/references/qualidade.md)).
+
+**Caution:** this was one round, with one request and one vote, so the sample is small. The rematch, with the fixed
+skill and the same reference image in both conditions, goes here when it is run, whoever wins.
 
 ## What changed in v5
 
@@ -437,8 +515,8 @@ cd .. && python3 tools/checar_repo.py
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |
 | Skill format | frontmatter parsed as YAML; English description, 1013/1024 characters; every path cited in `SKILL.md` and references exists (tested) |
 | Routing in Claude Code (headless, current English description) | 14/14 in each of 3 rounds (42/42), the last two after the connector-first change. Per round: 9 in Portuguese and 5 in English: 8 to this skill (3 quick prompts, 3 diagnostics, 1 studio plan that priced and stopped, 1 character sheet handed to the connector's workflow) and 6 to the skills that own them (render, recorded-footage editing ×2, voice ×2, motion graphics). Each answer came in the language of the request. In the last two rounds the studio plan listed the connector's live workflows before planning. Earlier rounds: the first Portuguese description missed 2 of 3 prompt requests and was fixed; the fixed one scored 9/9 |
-| Spending in tests | 60 sessions (5 routing rounds and a 2-arm pilot), 0 generation calls (generation tools blocked in the test); every session that priced a job stopped and asked for "ok" |
-| Pilot, text only (same 3-shot sneaker ad, Cinema Studio 4.0 480p, with and without the skill) | Both priced 45 credits with live quotes and stopped. With the skill: live workflow list checked, the model's live limits imported and validated, one camera move per shot, the same product description in all three prompts, a planned end frame, an "ok" scoped to those three shots. Without it: two camera moves in one shot and negative phrasing ("no logos, no text"). Whether this changes the generated video is not measured yet: that needs the 6 generations (90 credits at the 24/11/2026 quote) and the operator's ok |
+| Spending in tests | 78 sessions (5 routing rounds, a 2-arm pilot and 18 sessions with and without the skill), 0 generation calls in them (generation tools blocked in the test); every session that priced a job stopped and asked for "ok". The generated round of the comparison (6 shots, 90 credits) was run separately, with the quote and the operator's ok |
+| Pilot, text only (same 3-shot sneaker ad, Cinema Studio 4.0 480p, with and without the skill) | Both priced 45 credits with live quotes and stopped. With the skill: live workflow list checked, the model's live limits imported and validated, one camera move per shot, the same product description in all three prompts, a planned end frame, an "ok" scoped to those three shots. Without it: two camera moves in one shot and negative phrasing ("no logos, no text"). The generated video was measured later, blind: a tie, with the human vote for the version without the skill (see [What we measured](#what-we-measured)) |
 
 Security properties:
 
@@ -460,7 +538,7 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 
 | Priority | Goal | Status |
 |---|---|---|
-| P1 | Real pilot: generate a 3-shot sequence and score it with evidence | Pending (needs an approved budget) |
+| P1 | Rematch with and without the skill, after the fixes, with the same product reference image in both conditions | Pending (92 credits at the 25/11/2026 quote; the first generated pilot ran on 25/11) |
 | P1 | Monthly refresh of the model snapshot | Process documented in `modelos.md` |
 | P2 | Larger trigger evaluation set (more prompts, several runs each) | Planned |
 | P2 | End-to-end run in Codex with the Higgsfield MCP configured | Not scheduled (not in use with Codex) |

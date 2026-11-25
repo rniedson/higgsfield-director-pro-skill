@@ -9,6 +9,11 @@
 - [ ] **A cena acontece assim na vida real?** Quem conhece o assunto confirma. A nota mede se o vídeo obedeceu o
       prompt, não se a cena é plausível: um teste com nota 80 mostrou uma cena que quem é do ramo nunca viu.
 - [ ] O estado final combina com a ação (não a desfaz).
+- [ ] O enquadramento em que o movimento de câmera termina contém o estado final: uma aproximação até close-up não
+      termina com o produto inteiro no quadro.
+- [ ] Produto que aparece em mais de uma tomada tem imagem de referência: a do cliente, ou uma gerada e aprovada antes.
+- [ ] Em anúncio, cada tomada tem um momento de impacto (ação no produto, com som preso a ela), não só um movimento de
+      câmera.
 - [ ] A fala cabe na duração; quem fala está rotulado.
 - [ ] Sem instrução negativa solta ("no X") onde dá para dizer o positivo.
 - [ ] Referências enviadas são do operador ou autorizadas; pessoa real com consentimento.
@@ -31,6 +36,10 @@
 | Ignora o pedido | prompt longo demais ou contraditório | encurte; tire o que conflita | cada elemento pedido aparece? |
 | Câmera parada quando o prompt pede movimento | o modelo reescreve o prompt (o Cinema Studio 4.0 tem direção automática) | teste o mesmo plano em outro modelo; num teste, o Kling 3.0 fez o travelling que o Cinema Studio ignorou (uma amostra) | trajetória do início ao fim |
 | Símbolo ou bandeira inventada | modelo de "still de cinema" desenha de memória | referência com o símbolo real; troque de modelo | compare com o original |
+| Produto muda entre tomadas | só texto; plano de detalhe sem um traço que identifica o produto | imagem de referência do produto em todas as tomadas | compare o produto tomada a tomada |
+| Produto cortado no quadro final | o movimento termina num enquadramento mais fechado do que o estado final pede | faça o movimento terminar num plano que contenha o estado final | último quadro |
+| Cortes dentro de uma tomada | o modelo montou vários planos sozinho (Cinema Studio 4.0, uma amostra) | um plano contínuo com um movimento só; "Single continuous shot" | mudança de cena quadro a quadro (`ffmpeg -vf "select='gt(scene,0.3)',showinfo"`) |
+| Tomada correta, mas morna | só câmera e ambiente, nenhum acontecimento | um momento de impacto por tomada, com som preso a ele | voto às cegas contra uma versão alternativa |
 
 Duas falhas seguidas na mesma tomada: **replaneje** (outro enquadramento, outro modelo, tomada mais curta) em vez
 de acumular restrições. Hipótese não é causa: registre o que mudou e o que aconteceu.
