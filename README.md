@@ -10,7 +10,7 @@
 
 ![Version](https://img.shields.io/badge/version-5.1.0-475569)
 ![Agents](https://img.shields.io/badge/tested%20in-Claude%20Code-bca271)
-![Codex](https://img.shields.io/badge/Codex-format%20only%2C%20untested-6d8b9c)
+![Codex](https://img.shields.io/badge/Codex-local%20workflow%20tested-2f7d68)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Tests](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml)
 ![License](https://img.shields.io/badge/code-MIT-blue)
@@ -205,9 +205,9 @@ AI-generated shots: it picks the model from the live catalog, writes one prompt 
 guides recommend, keeps characters and products consistent across shots, prices the job in credits, waits for approval,
 generates through the Higgsfield connector and reviews the result with evidence.
 
-It is tested in **Claude Code**. The folder uses the Agent Skills format (`SKILL.md` + references + scripts) that
-**Codex** also reads, but it has not been tested there. The skill
-replies in the operator's language and writes prompts in English, which video models follow more predictably.
+It is tested in **Claude Code** and locally in **Codex** for planning and CLI checks. Authenticated Higgsfield
+quoting and generation have not yet been tested from Codex. The skill replies in the operator's language and writes
+prompts in English, which video models follow more predictably.
 
 ```mermaid
 flowchart LR
@@ -611,11 +611,12 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 61/61 passing locally; CI runs on Python 3.9 to 3.13 (no third-party packages) |
+| Unit tests | 83/83 skill tests and 5/5 repository-boundary tests passing locally in Codex on 25/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
-| Repository check | `tools/check_repo.py` in CI: frontmatter read as YAML, every JSON file, links and anchors of the Markdown files |
+| Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |
 | Skill format | frontmatter parsed as YAML; English description, 1013/1024 characters; every path cited in `SKILL.md` and references exists (tested) |
+| Codex local workflow | The current project template validated with zero errors and compiled into 3 shots; the crop suite includes a real `ffmpeg` crop. The Higgsfield connector was configured, but its authenticated quote and generation tools were not available in this Codex session. No Higgsfield credits were spent. |
 | Routing in Claude Code (headless, current English description) | 14/14 in each of 3 rounds (42/42), the last two after the connector-first change. Per round: 9 in Portuguese and 5 in English: 8 to this skill (3 quick prompts, 3 diagnostics, 1 studio plan that priced and stopped, 1 character sheet handed to the connector's workflow) and 6 to the skills that own them (render, recorded-footage editing ×2, voice ×2, motion graphics). Each answer came in the language of the request. In the last two rounds the studio plan listed the connector's live workflows before planning. Earlier rounds: the first Portuguese description missed 2 of 3 prompt requests and was fixed; the fixed one scored 9/9 |
 | Spending in tests | 78 sessions (5 routing rounds, a 2-arm pilot and 18 sessions with and without the skill), 0 generation calls in them (generation tools blocked in the test); every session that priced a job stopped and asked for "ok". The generated round of the comparison (6 shots, 90 credits) was run separately, with the quote and the operator's ok |
 | Pilot, text only (same 3-shot sneaker ad, Cinema Studio 4.0 480p, with and without the skill) | Both priced 45 credits with live quotes and stopped. With the skill: live workflow list checked, the model's live limits imported and validated, one camera move per shot, the same product description in all three prompts, a planned end frame, an "ok" scoped to those three shots. Without it: two camera moves in one shot and negative phrasing ("no logos, no text"). The generated video was measured later, blind: a tie, with the human vote for the version without the skill; in the rematch, after the fixes, the skill won both rounds (see [What we measured](#what-we-measured)) |
@@ -645,7 +646,7 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 | P2 | Blind test of storyboard-before-video against going straight to video | Planned |
 | P1 | Monthly refresh of the model snapshot | Process documented in `models.md` |
 | P2 | Larger trigger evaluation set (more prompts, several runs each) | Planned |
-| P2 | End-to-end run in Codex with the Higgsfield MCP configured | Not scheduled (not in use with Codex) |
+| P2 | End-to-end run in Codex with the Higgsfield MCP configured | Open: local Codex checks passed on 25/11/2026; authenticated Higgsfield quoting and generation remain to be tested |
 
 ## Documentation
 
