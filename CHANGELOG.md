@@ -7,6 +7,10 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
+  *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
+  `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated
+  manual, `agents/openai.yaml`, `hfd.py`, `CONTRIBUTING.md` and `SECURITY.md`.
 - The flow has a cheap pre-production step before the storyboard: idea, script draft as a table, sketch storyboard,
   refinement, a script locked by the operator, and then the question of where to make the audio (the connector, a
   service the operator already uses, a recorded voice, a free local voice for drafts, or none).
