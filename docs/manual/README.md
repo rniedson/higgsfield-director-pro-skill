@@ -1,51 +1,59 @@
 <div align="center">
 
-<img src="../assets/emblema.svg" alt="Higgsfield Director PRO emblem" width="360">
+<img src="../assets/emblem.svg" alt="Higgsfield Director PRO emblem" width="360">
 
 # HIGGSFIELD DIRECTOR PRO
 
-### Manual ilustrado de direção · 11 partes
+### Illustrated direction manual · 11 parts
 
-**Câmera · Enquadramento · Óptica · Luz · Cor · Atuação · Física · Tempo · Áudio · Continuidade · Produção**
+**Camera · Framing · Optics · Light · Color · Acting · Physics · Time · Audio · Continuity · Production**
 
-![Partes](https://img.shields.io/badge/partes-11-475569)
-![Ilustrações](https://img.shields.io/badge/ilustra%C3%A7%C3%B5es-185-bca271)
-![Tipo](https://img.shields.io/badge/imagens-esquem%C3%A1ticas-6d8b9c)
-![Licença](https://img.shields.io/badge/licen%C3%A7a-CC%20BY--SA%204.0-6d8b9c)
+![Parts](https://img.shields.io/badge/parts-11-475569)
+![Illustrations](https://img.shields.io/badge/illustrations-185-bca271)
+![Type](https://img.shields.io/badge/images-schematic-6d8b9c)
+![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-6d8b9c)
 
-[README principal](../../README.md) · [Vocabulário da skill](../../higgsfield-director/references/vocabulario.md) · [Atlas óptico](#atlas-óptico--100-estudos) · [Diagramas de câmera](#diagramas-de-câmera) · [Licença](#licença-e-origem)
+[Main README](../../README.md) · [Skill vocabulary](../../higgsfield-director/references/vocabulary.md) ·
+[Optical atlas](#optical-atlas--100-studies) · [Camera diagrams](#camera-diagrams) ·
+[License](#license-and-origin)
 
 </div>
 
-> **Projeto não oficial.** Este manual faz parte de um projeto independente, sem vínculo com o Higgsfield nem aprovação dele. O nome Higgsfield aparece só para dizer com qual serviço a skill funciona.
+> **Unofficial project.** This manual is part of an independent project, not affiliated with or approved by
+> Higgsfield. The name Higgsfield appears only to say which service the skill works with.
 
-> **Imagens esquemáticas.** Diagramas, esferas, fichas e projeções geométricas feitos para explicar a direção. Não são fotografias nem renders do Higgsfield e não provam o comportamento de nenhum modelo. Texto e imagens sob [CC BY-SA 4.0](LICENSE-DOCS.md).
+> **Schematic images.** Diagrams, spheres, sheets and geometric projections made to explain direction. They are
+> not photographs or Higgsfield renders, and they do not prove how any model behaves. Text and images under
+> [CC BY-SA 4.0](LICENSE-DOCS.md).
 
-## Como ler cada parte
+## How to read each part
 
-Cada parte traz a regra, um **prompt positivo**, o que **evitar** e as ilustrações. A conferência é a mesma em todas: a imagem ou a sequência mantém a intenção, a geometria e a continuidade? Um bom prompt não garante o render. Para escrever o prompt de verdade, a skill usa [`references/prompt.md`](../../higgsfield-director/references/prompt.md).
+Each part gives the rule, a **positive prompt**, what to **avoid** and the illustrations. The check is the same
+in all of them: does the image or the sequence keep the intent, the geometry and the continuity? A good prompt
+does not guarantee the render. To write the actual prompt, the skill uses
+[`references/prompt.md`](../../higgsfield-director/references/prompt.md).
 
-| Parte | Tema | Ilustrações |
+| Part | Topic | Illustrations |
 |:---:|---|:---:|
-| 01 | [Câmera e movimento](#parte-01--câmera-e-movimento) | 21 |
-| 02 | [Enquadramento e composição](#parte-02--enquadramento-e-composição) | — |
-| 03 | [Câmeras, lentes e óptica](#parte-03--câmeras-lentes-e-óptica) | 5 |
-| 04 | [Iluminação cinematográfica](#parte-04--iluminação-cinematográfica) | 9 |
-| 05 | [Cor e estilos visuais](#parte-05--cor-e-estilos-visuais) | 22 |
-| 06 | [Atuação e emoções](#parte-06--atuação-e-emoções) | 2 |
-| 07 | [Física, materiais e VFX](#parte-07--física-materiais-e-vfx) | 2 |
-| 08 | [Tempo, transições e edição](#parte-08--tempo-transições-e-edição) | — |
-| 09 | [Áudio e direção sonora](#parte-09--áudio-e-direção-sonora) | 1 |
-| 10 | [Continuidade e diagnóstico](#parte-10--continuidade-e-diagnóstico) | 2 |
-| 11 | [Engenharia de prompts e produção](#parte-11--engenharia-de-prompts-e-produção) | 3 |
-| — | [Atlas óptico — 100 estudos](#atlas-óptico--100-estudos) | 100 |
-| — | [Diagramas de câmera](#diagramas-de-câmera) | 20 |
+| 01 | [Camera and movement](#part-01--camera-and-movement) | 21 |
+| 02 | [Framing and composition](#part-02--framing-and-composition) | — |
+| 03 | [Cameras, lenses and optics](#part-03--cameras-lenses-and-optics) | 5 |
+| 04 | [Cinematic lighting](#part-04--cinematic-lighting) | 9 |
+| 05 | [Color and visual styles](#part-05--color-and-visual-styles) | 22 |
+| 06 | [Acting and emotions](#part-06--acting-and-emotions) | 2 |
+| 07 | [Physics, materials and VFX](#part-07--physics-materials-and-vfx) | 2 |
+| 08 | [Time, transitions and editing](#part-08--time-transitions-and-editing) | — |
+| 09 | [Audio and sound direction](#part-09--audio-and-sound-direction) | 1 |
+| 10 | [Continuity and diagnostics](#part-10--continuity-and-diagnostics) | 2 |
+| 11 | [Prompt engineering and production](#part-11--prompt-engineering-and-production) | 3 |
+| — | [Optical atlas — 100 studies](#optical-atlas--100-studies) | 100 |
+| — | [Camera diagrams](#camera-diagrams) | 20 |
 
-## Parte 01 — Câmera e movimento
+## Part 01 — Camera and movement
 
-Dolly físico altera posição; zoom altera campo visual. Use um movimento dominante por plano.
+A physical dolly changes position; a zoom changes the field of view. Use one dominant movement per shot.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Slow dolly in, fixed focal length, smooth ease-out.` | `Static camera with continuous physical dolly.` |
 
@@ -57,27 +65,29 @@ Dolly físico altera posição; zoom altera campo visual. Use um movimento domin
 | <img src="visual/assets/GIF013.gif" width="190" alt="Zoom In"><br><b>Zoom In</b> | <img src="visual/assets/GIF014.gif" width="190" alt="Zoom Out"><br><b>Zoom Out</b> | <img src="visual/assets/GIF015.gif" width="190" alt="Static"><br><b>Static</b> | <img src="visual/assets/GIF016.gif" width="190" alt="Arc Left"><br><b>Arc Left</b> |
 | <img src="visual/assets/GIF017.gif" width="190" alt="Arc Right"><br><b>Arc Right</b> | <img src="visual/assets/GIF018.gif" width="190" alt="Pedestal Up"><br><b>Pedestal Up</b> | <img src="visual/assets/GIF019.gif" width="190" alt="Pedestal Down"><br><b>Pedestal Down</b> | <img src="visual/assets/GIF020.gif" width="190" alt="Camera Roll"><br><b>Camera Roll</b> |
 
-<p align="center"><img src="visual/assets/BOARD_camera.png" width="640" alt="Prancha de câmera"><br><b>Prancha de câmera</b></p>
+<p align="center"><img src="visual/assets/BOARD_camera.png" width="640" alt="Camera board"><br><b>Camera board</b></p>
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 02 — Enquadramento e composição
+## Part 02 — Framing and composition
 
-Extreme wide situa; full shot mostra corpo; medium mostra ação; close-up enfatiza emoção; extreme close-up isola detalhe.
+An extreme wide establishes the scene; a full shot shows the body; a medium shows the action; a close-up stresses
+emotion; an extreme close-up isolates a detail.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Medium close-up, eyes on upper third, clean headroom.` | `Extreme close-up showing the entire landscape.` |
 
 
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 03 — Câmeras, lentes e óptica
+## Part 03 — Cameras, lenses and optics
 
-14 mm amplia campo; 35 mm contextualiza; 50 mm equilibra; 85 mm isola; 200 mm estreita campo. Perspectiva depende da posição.
+14 mm widens the field; 35 mm gives context; 50 mm balances; 85 mm isolates; 200 mm narrows the field. Perspective
+depends on position.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `85mm look, shallow depth of field, focus on eyes.` | `Everything sharp with extreme shallow focus.` |
 
@@ -85,15 +95,16 @@ Extreme wide situa; full shot mostra corpo; medium mostra ação; close-up enfat
 |:---:|:---:|:---:|:---:|
 | <img src="visual/assets/OPT001.png" width="190" alt="Deep focus"><br><b>Deep focus</b> | <img src="visual/assets/OPT002.png" width="190" alt="Moderate depth"><br><b>Moderate depth</b> | <img src="visual/assets/OPT003.png" width="190" alt="Shallow depth"><br><b>Shallow depth</b> | <img src="visual/assets/OPT004.png" width="190" alt="Extreme shallow depth"><br><b>Extreme shallow depth</b> |
 
-<p align="center"><img src="visual/assets/BOARD_optics.png" width="640" alt="Prancha de óptica"><br><b>Prancha de óptica</b></p>
+<p align="center"><img src="visual/assets/BOARD_optics.png" width="640" alt="Optics board"><br><b>Optics board</b></p>
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 04 — Iluminação cinematográfica
+## Part 04 — Cinematic lighting
 
-Rembrandt: triângulo iluminado; butterfly: luz frontal alta; split: metade em sombra; rim: contorno; volumetric: dispersão em meio.
+Rembrandt: a lit triangle; butterfly: high front light; split: half in shadow; rim: outline; volumetric: scattering
+in a medium.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Soft key at 45 degrees, controlled rim, stable exposure.` | `Randomly changing light direction every frame.` |
 
@@ -102,15 +113,15 @@ Rembrandt: triângulo iluminado; butterfly: luz frontal alta; split: metade em s
 | <img src="visual/assets/LGT001.png" width="190" alt="Front lighting"><br><b>Front lighting</b> | <img src="visual/assets/LGT002.png" width="190" alt="Side lighting"><br><b>Side lighting</b> | <img src="visual/assets/LGT003.png" width="190" alt="Top lighting"><br><b>Top lighting</b> | <img src="visual/assets/LGT004.png" width="190" alt="Under lighting"><br><b>Under lighting</b> |
 | <img src="visual/assets/LGT005.png" width="190" alt="Cross lighting"><br><b>Cross lighting</b> | <img src="visual/assets/LGT006.png" width="190" alt="Back lighting"><br><b>Back lighting</b> | <img src="visual/assets/LGT007.png" width="190" alt="Soft lighting"><br><b>Soft lighting</b> | <img src="visual/assets/LGT008.png" width="190" alt="Hard lighting"><br><b>Hard lighting</b> |
 
-<p align="center"><img src="visual/assets/BOARD_lighting.png" width="640" alt="Prancha de luz"><br><b>Prancha de luz</b></p>
+<p align="center"><img src="visual/assets/BOARD_lighting.png" width="640" alt="Lighting board"><br><b>Lighting board</b></p>
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 05 — Cor e estilos visuais
+## Part 05 — Color and visual styles
 
-Separe paleta, contraste, textura e estética. LUT não corrige exposição automaticamente.
+Keep palette, contrast, texture and aesthetic separate. A LUT does not fix exposure automatically.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Neo noir, restrained cyan shadows, warm practicals.` | `Unmotivated color shifts between frames.` |
 
@@ -127,13 +138,13 @@ Separe paleta, contraste, textura e estética. LUT não corrige exposição auto
 |:---:|:---:|
 | <img src="visual/assets/SHT007.png" width="400" alt="Warm luxury moodboard"><br><b>Warm luxury moodboard</b> | <img src="visual/assets/SHT008.png" width="400" alt="Cool noir moodboard"><br><b>Cool noir moodboard</b> |
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 06 — Atuação e emoções
+## Part 06 — Acting and emotions
 
-Descreva intenção observável: olhar, respiração, pausa, gesto e transferência de peso.
+Describe observable intent: gaze, breathing, pause, gesture and weight shift.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Subtle inhale, gaze shifts left, relaxed shoulders.` | `Multiple conflicting facial expressions simultaneously.` |
 
@@ -142,13 +153,13 @@ Descreva intenção observável: olhar, respiração, pausa, gesto e transferên
 |:---:|:---:|
 | <img src="visual/assets/SHT001.png" width="400" alt="Character turnaround"><br><b>Character turnaround</b> | <img src="visual/assets/SHT002.png" width="400" alt="Expression sheet"><br><b>Expression sheet</b> |
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 07 — Física, materiais e VFX
+## Part 07 — Physics, materials and VFX
 
-Defina massa, contato, inércia, rigidez, reflexão e estado final.
+Define mass, contact, inertia, rigidity, reflection and end state.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Rigid glass bottle, stable label, realistic reflections.` | `Rigid glass bends randomly without motivation.` |
 
@@ -157,25 +168,25 @@ Defina massa, contato, inércia, rigidez, reflexão e estado final.
 |:---:|:---:|
 | <img src="visual/assets/SHT003.png" width="400" alt="Product orthographic views"><br><b>Product orthographic views</b> | <img src="visual/assets/SHT004.png" width="400" alt="Material and label zones"><br><b>Material and label zones</b> |
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 08 — Tempo, transições e edição
+## Part 08 — Time, transitions and editing
 
-Match cut conecta formas; whip pan usa borrão; bullet time estiliza tempo; speed ramp varia velocidade.
+A match cut connects shapes; a whip pan uses blur; bullet time stylizes time; a speed ramp varies speed.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Match cut between circular silhouettes, preserve screen direction.` | `Unmotivated jump cuts in a continuous single shot.` |
 
 
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 09 — Áudio e direção sonora
+## Part 09 — Audio and sound direction
 
-Separe diálogo, ambiência, foley, efeitos e música; planeje sincronização.
+Keep dialogue, ambience, foley, effects and music separate; plan the sync.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Quiet room tone, synchronized footsteps, no music.` | `Unmotivated loud effects masking dialogue.` |
 
@@ -199,13 +210,13 @@ flowchart LR
 
 ```
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 10 — Continuidade e diagnóstico
+## Part 10 — Continuity and diagnostics
 
-Trave identidade, geometria, figurino, eixo, direção de luz e estados inicial/final.
+Lock identity, geometry, wardrobe, axis, light direction and start/end states.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Preserve facial features, wardrobe and screen direction.` | `Change face and wardrobe between matching shots.` |
 
@@ -214,13 +225,13 @@ Trave identidade, geometria, figurino, eixo, direção de luz e estados inicial/
 |:---:|:---:|
 | <img src="visual/assets/SHT005.png" width="400" alt="World floor plan"><br><b>World floor plan</b> | <img src="visual/assets/SHT006.png" width="400" alt="World day and night"><br><b>World day and night</b> |
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Parte 11 — Engenharia de prompts e produção
+## Part 11 — Prompt engineering and production
 
-Briefing → referências → shot list → prompt → custo e ok → geração pelo conector → QA → pós.
+Briefing → references → shot list → prompt → cost and ok → generation through the connector → QA → post.
 
-| Prompt positivo | Evite |
+| Positive prompt | Avoid |
 |---|---|
 | `Luxury perfume bottle, slow orbit, soft rim, preserve label.` | `Random camera moves, conflicting lighting, changing product.` |
 
@@ -235,11 +246,12 @@ flowchart TD
   Q --> C
 ```
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Atlas óptico — 100 estudos
+## Optical atlas — 100 studies
 
-Projeções geométricas do mesmo objeto, variando lente, distância e paleta: servem para comparar campo de visão e enquadramento, não são fotografias. O cálculo exato de campo e foco está em `hfd.py otica`.
+Geometric projections of the same object, varying lens, distance and palette. They are for comparing field of view
+and framing; they are not photographs. The exact field-of-view and focus calculation is in `hfd.py optics`.
 
 |   |   |   |   |   |
 |:---:|:---:|:---:|:---:|:---:|
@@ -264,11 +276,11 @@ Projeções geométricas do mesmo objeto, variando lente, distância e paleta: s
 | <img src="visual/atlas/AT091.png" width="150" alt="135mm 6m Noir"><br><b>135mm 6m Noir</b> | <img src="visual/atlas/AT092.png" width="150" alt="135mm 6m Amber"><br><b>135mm 6m Amber</b> | <img src="visual/atlas/AT093.png" width="150" alt="135mm 6m Arctic"><br><b>135mm 6m Arctic</b> | <img src="visual/atlas/AT094.png" width="150" alt="135mm 6m Pastel"><br><b>135mm 6m Pastel</b> | <img src="visual/atlas/AT095.png" width="150" alt="135mm 6m Forest"><br><b>135mm 6m Forest</b> |
 | <img src="visual/atlas/AT096.png" width="150" alt="135mm 8m Noir"><br><b>135mm 8m Noir</b> | <img src="visual/atlas/AT097.png" width="150" alt="135mm 8m Amber"><br><b>135mm 8m Amber</b> | <img src="visual/atlas/AT098.png" width="150" alt="135mm 8m Arctic"><br><b>135mm 8m Arctic</b> | <img src="visual/atlas/AT099.png" width="150" alt="135mm 8m Pastel"><br><b>135mm 8m Pastel</b> | <img src="visual/atlas/AT100.png" width="150" alt="135mm 8m Forest"><br><b>135mm 8m Forest</b> |
 
-<p align="right"><a href="#higgsfield-director-pro">voltar ao início ↑</a></p>
+<p align="right"><a href="#higgsfield-director-pro">back to top ↑</a></p>
 
-## Diagramas de câmera
+## Camera diagrams
 
-Versões estáticas, vistas de cima, dos movimentos animados da parte 01.
+Static versions, seen from above, of the animated movements in part 01.
 
 |   |   |   |   |
 |:---:|:---:|:---:|:---:|
@@ -278,14 +290,20 @@ Versões estáticas, vistas de cima, dos movimentos animados da parte 01.
 | <img src="visual/assets/CAM013.png" width="190" alt="Zoom In"><br><b>Zoom In</b> | <img src="visual/assets/CAM014.png" width="190" alt="Zoom Out"><br><b>Zoom Out</b> | <img src="visual/assets/CAM015.png" width="190" alt="Static"><br><b>Static</b> | <img src="visual/assets/CAM016.png" width="190" alt="Arc Left"><br><b>Arc Left</b> |
 | <img src="visual/assets/CAM017.png" width="190" alt="Arc Right"><br><b>Arc Right</b> | <img src="visual/assets/CAM018.png" width="190" alt="Pedestal Up"><br><b>Pedestal Up</b> | <img src="visual/assets/CAM019.png" width="190" alt="Pedestal Down"><br><b>Pedestal Down</b> | <img src="visual/assets/CAM020.png" width="190" alt="Camera Roll"><br><b>Camera Roll</b> |
 
-## Licença e origem
+## License and origin
 
-- **Texto:** adaptado do README ilustrado da v4.1 (edição AAA), que o declara sob [CC BY-SA 4.0](LICENSE-DOCS.md). Modificações desta versão: ilustrações reorganizadas em grades; a linha repetida de "vantagem" e de "QA" de cada parte virou a seção "Como ler cada parte"; o fluxo da parte 11 passou a incluir custo, "ok" e geração pelo conector; ficaram de fora a cópia do README da RC4 e a enciclopédia dos 116 comandos e dos scripts antigos, que não existem na v5.
-- **Imagens** (`visual/`): ilustrações esquemáticas desenhadas por código, sob [CC BY-SA 4.0](LICENSE-DOCS.md), como o texto. Ver [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
-- Projeto independente e não oficial, sem vínculo com o Higgsfield, que não fez, não aprovou e não revisou este manual.
+- **Text:** adapted from the v4.1 illustrated README (AAA edition), which declares it under
+  [CC BY-SA 4.0](LICENSE-DOCS.md). Changes in this version: the illustrations were rearranged into grids; the
+  repeated "advantage" and "QA" line of each part became the section "How to read each part"; the part 11 flow
+  now includes cost, "ok" and generation through the connector; left out are the copy of the RC4 README and the
+  encyclopedia of the 116 commands and of the old scripts, which do not exist in v5.
+- **Images** (`visual/`): schematic illustrations drawn by code, under [CC BY-SA 4.0](LICENSE-DOCS.md), like the
+  text. See [`visual/VISUAL-RIGHTS.md`](visual/VISUAL-RIGHTS.md).
+- An independent, unofficial project, not affiliated with Higgsfield, which did not make, approve or review this
+  manual.
 
 <div align="center">
 
-[Voltar ao início](#higgsfield-director-pro) · [README principal](../../README.md)
+[Back to top](#higgsfield-director-pro) · [Main README](../../README.md)
 
 </div>

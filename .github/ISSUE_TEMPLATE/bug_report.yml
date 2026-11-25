@@ -3,31 +3,31 @@ description: Something in the skill or in hfd.py does not work as documented
 labels: [bug]
 body:
   - type: textarea
-    id: o-que
+    id: what-happened
     attributes:
       label: What happened
       description: What you did, what you expected and what you got.
     validations:
       required: true
   - type: textarea
-    id: reproduzir
+    id: reproduce
     attributes:
       label: How to reproduce
       description: The request to the agent or the hfd.py command, and a minimal project JSON if relevant.
       render: text
   - type: textarea
-    id: saida
+    id: output
     attributes:
       label: Output
       description: The hfd.py JSON or the agent's answer. Remove keys, tokens, signed URLs and private media first.
       render: text
   - type: input
-    id: ambiente
+    id: environment
     attributes:
       label: Environment
       placeholder: "Claude Code or Codex, version; Python 3.x; commit or release of this skill"
   - type: checkboxes
-    id: privacidade
+    id: privacy
     attributes:
       label: Privacy
       options:
