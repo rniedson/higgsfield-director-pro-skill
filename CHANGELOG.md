@@ -56,7 +56,9 @@ All notable changes to this project are listed here. The format follows
   `website-builder-flow`, `short-drama`, `shorts-studio`, `reel-effects`, `manga-engine`, `layer-reveal-hf`,
   `property-studio`, `autobadge`, `color-grade`), and it covers presets, desktop-app commands that install a local
   MCP server (operator approval first) and rented GPUs (billed while running).
-- The READMEs say the skill is tested in Claude Code; Codex reads the same format, but it is untested there.
+- The READMEs now mark the local Codex workflow as tested: 83 skill tests, 5 public/private boundary tests,
+  repository check, project validation and 3-shot compilation passed on 2026-11-25. Authenticated Higgsfield
+  quoting and generation from Codex remain untested.
 - The READMEs record two more routing rounds (14/14 each, 42/42 in total) and a text-only pilot with and without
   the skill.
 

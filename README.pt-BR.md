@@ -10,7 +10,7 @@
 
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-475569)
 ![Agentes](https://img.shields.io/badge/testada%20no-Claude%20Code-bca271)
-![Codex](https://img.shields.io/badge/Codex-s%C3%B3%20o%20formato%2C%20sem%20teste-6d8b9c)
+![Codex](https://img.shields.io/badge/Codex-fluxo%20local%20testado-2f7d68)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
 [![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
@@ -205,9 +205,9 @@ geradas por IA bem dirigidas. Ela escolhe o modelo pelo catálogo ao vivo e escr
 guias oficiais recomendam. Mantém personagem e produto iguais entre as tomadas, calcula o custo em créditos e espera a
 aprovação. Depois gera pelo conector do Higgsfield e revisa o resultado com evidência.
 
-Ela é testada no **Claude Code**. A pasta segue o formato Agent Skills (`SKILL.md` + referências + scripts), que o
-**Codex** também lê, mas não foi testada lá. A
-skill responde no idioma de quem pede e escreve os prompts em inglês, que os modelos de vídeo seguem de forma mais previsível.
+Ela é testada no **Claude Code** e localmente no **Codex** para planejamento e comandos. A cotação e a geração
+autenticadas pelo Higgsfield ainda não foram testadas a partir do Codex. A skill responde no idioma de quem pede e
+escreve os prompts em inglês, que os modelos de vídeo seguem de forma mais previsível.
 
 ```mermaid
 flowchart LR
@@ -612,11 +612,12 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 61/61 passando localmente; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros) |
+| Testes | 83/83 testes da skill e 5/5 testes da fronteira público/privado passando no Codex em 25/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
-| Conferência do repositório | `tools/check_repo.py` no CI: cabeçalho lido como YAML, todo JSON, links e âncoras dos Markdown |
+| Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
 | Formato da skill | cabeçalho lido como YAML; descrição em inglês, com 1013 de 1024 caracteres; todo caminho citado no `SKILL.md` e nas referências existe (testado) |
+| Fluxo local no Codex | O modelo de projeto atual foi validado sem erros e compilado em 3 tomadas; os testes de recorte incluem uma execução real do `ffmpeg`. O conector Higgsfield estava configurado, mas as ferramentas autenticadas de cotação e geração não estavam disponíveis nesta sessão do Codex. Nenhum crédito Higgsfield foi gasto. |
 | Encaminhamento no Claude Code (sem interface, descrição atual, em inglês) | 14 de 14 em cada uma de 3 rodadas (42 de 42), as duas últimas depois da mudança para o conector primeiro. Por rodada: 9 em português e 5 em inglês: 8 para esta skill (3 pedidos de prompt, 3 diagnósticos, 1 plano de estúdio que cotou e parou, 1 ficha de personagem passada ao fluxo do conector) e 6 para as skills donas (render, edição de vídeo gravado ×2, voz ×2, motion graphics). Cada resposta veio no idioma do pedido. Nas duas últimas rodadas, o plano de estúdio listou os fluxos ao vivo do conector antes de planejar. Rodadas anteriores: a primeira descrição em português perdeu 2 de 3 pedidos de prompt e foi corrigida; a corrigida fez 9 de 9 |
 | Gasto nos testes | 78 sessões (5 rodadas de encaminhamento, um piloto de 2 braços e 18 sessões com e sem a skill), 0 chamadas de geração nelas (ferramentas de geração bloqueadas no teste); toda sessão que cotou parou e pediu o "ok". A rodada gerada da comparação (6 tomadas, 90 créditos) foi feita à parte, com a cotação e o ok do operador |
 | Piloto, só texto (o mesmo comercial de tênis em 3 tomadas, Cinema Studio 4.0 480p, com e sem a skill) | Os dois cotaram 45 créditos ao vivo e pararam. Com a skill: conferiu a lista de fluxos ao vivo, importou e validou os limites ao vivo do modelo, um movimento de câmera por tomada, a mesma descrição do produto nos três prompts, quadro final planejado, "ok" restrito às três tomadas. Sem ela: dois movimentos de câmera numa tomada e frases negativas ("no logos, no text"). O vídeo gerado foi medido depois, às cegas: empate, com o voto humano na versão sem a skill; na revanche, depois das correções, a skill ganhou as duas rodadas (veja [O que medimos](#o-que-medimos)) |
@@ -646,7 +647,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | P2 | Teste às cegas do storyboard antes do vídeo contra o vídeo direto | Planejado |
 | P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `models.md` |
 | P2 | Mais casos no teste de gatilho (mais pedidos, várias rodadas cada) | Planejado |
-| P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Sem data (não está em uso no Codex) |
+| P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Aberta: testes locais no Codex passaram em 25/11/2026; falta testar cotação e geração autenticadas pelo Higgsfield |
 
 ## Documentação
 
