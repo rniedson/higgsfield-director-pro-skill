@@ -69,6 +69,11 @@ video stays with the skill that owns it.
 8. **Generate and review** — generate, look at the result (frames from the start, middle and end) and score with
    evidence (`references/quality.md`). In `follow` mode, show each image and each video to the operator and wait for
    their approval. A new attempt changes **one** variable.
+9. **Record and show** — in any work with a sketch storyboard, a storyboard or generated images, create and keep
+   updating a local `review.html` that documents and shows what was done, following `references/preproduction.md`
+   § Review page. As soon as you create or update the page, open the file through the system, without choosing a
+   browser, and give an absolute-path link so the director can open it. Check the images on the opened page; record
+   unfinished steps too.
 
 ## Non-negotiable rules
 
@@ -90,6 +95,9 @@ video stays with the skill that owns it.
   (Higgsfield Terms, sections 4.2 and 5, updated 2026-10-23.)
 - **Two failures in a row on the same shot:** replan instead of piling up constraints.
 - **Language:** answer the operator in the language they use; the skill's own files are in English.
+- **Review page required** in work with a sketch storyboard, a storyboard or generated images. Do not present as
+  done a visual result that does not appear on the page. Open the file after each update, without choosing an
+  application, and give the absolute link; clearly label synthetic tests and steps not yet run.
 
 ## Delivery
 

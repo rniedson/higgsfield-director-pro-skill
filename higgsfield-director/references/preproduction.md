@@ -15,6 +15,27 @@ plus a fraction of a credit for the sketch.
 6. **Audio:** ask where to generate it (below) before any spending on voice.
 7. **Final storyboard** with bibles and references (`references/workflow.md` §4), then the video test and the final.
 
+
+## Review page
+
+In any work with a sketch storyboard, a storyboard or generated images, keep a local `review.html` in the
+production folder. The page is part of the delivery, even when the work stops before generation. As soon as you
+create or update it, open the file through the system (on macOS, `open /absolute/path/review.html`, without `-a`) so
+the director chooses how to open it. Also give the clickable absolute link. Check on the opened page that the images
+load; if you cannot open a graphical interface, say so and give the link. Use relative paths inside the HTML so the
+folder can be moved as a whole.
+
+- Show the sheet and the frames produced side by side, per shot and per version. When there is a Phase A and a
+  Phase B, show the crop used as the reference next to the result. Caption the model, the settings and the exact
+  cost of each generation when known.
+- Record the shot's intent, what was actually seen, the decision (approve, adjust or redo) and the change for the
+  next version. Keep earlier versions available to compare, without silently replacing images.
+- Keep confirmed data apart from plans: do not attribute credits, a model, an approval or a quality to a generation
+  that did not happen. If only the local helper was tested, show the test files and say that they are synthetic.
+- Update the page before handing each round to the operator and give the link to the file. Use the visual
+  comparison format of earlier versions: images side by side, cost and notes per frame; adapt the layout to the
+  work.
+
 ## Spending few tokens
 
 - Ask only what blocks; the rest becomes a stated assumption.

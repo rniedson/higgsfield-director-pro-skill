@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Croqui · teste local do recorte · 25 nov 2026</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #101414; color: #edf1ec; }
+    * { box-sizing: border-box; }
+    body { max-width: 1120px; margin: auto; padding: 28px 20px 72px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 850px; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; letter-spacing: -.04em; }
+    h2 { margin: 42px 0 16px; font-size: 1.35rem; }
+    h3 { margin-bottom: 5px; font-size: 1rem; }
+    p { color: #b8c4bc; }
+    .eyebrow { color: #b5dd83; font-size: .78rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .lead { max-width: 780px; font-size: 1.12rem; }
+    .status { display: inline-block; margin: 8px 0 24px; padding: 6px 12px; border: 1px solid #b5dd83; border-radius: 100px; color: #b5dd83; font-size: .84rem; }
+    .summary, .note { padding: 18px 20px; border-left: 4px solid #b5dd83; background: #1b2320; }
+    .summary strong { color: #edf1ec; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .card { min-width: 0; padding: 16px; border: 1px solid #34433a; border-radius: 10px; background: #18201c; }
+    .card.wide { grid-column: 1 / -1; }
+    figure { margin: 0; }
+    img { display: block; width: 100%; max-height: 420px; object-fit: contain; border-radius: 6px; background: #eef0e9; image-rendering: pixelated; }
+    figcaption { padding-top: 10px; color: #c6d0c6; font-size: .9rem; }
+    .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 26px 0 0; }
+    .fact { padding: 14px; border-top: 1px solid #536b55; }
+    .fact b { display: block; font-size: 1.55rem; font-variant-numeric: tabular-nums; }
+    .fact span { color: #aebcaf; font-size: .84rem; }
+    code { color: #d8f4ac; overflow-wrap: anywhere; }
+    pre { overflow-x: auto; padding: 14px; border-radius: 6px; background: #090d0b; color: #d8f4ac; font-size: .8rem; }
+    ul { padding-left: 1.2em; color: #b8c4bc; }
+    li + li { margin-top: 7px; }
+    a { color: #b5dd83; }
+    @media (max-width: 650px) { .grid, .facts { grid-template-columns: 1fr; } .card.wide { grid-column: auto; } }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">Higgsfield Director · diário de teste</p>
+  <h1>Da folha aos quadros: recorte validado</h1>
+  <p class="lead">Teste local do novo fluxo de croquis em duas fases, em 25 de novembro de 2026. Esta página mostra exatamente o que foi executado; as imagens abaixo são uma folha sintética de duas cores, não gerações do Higgsfield.</p>
+  <span class="status">Fase A/B no Higgsfield: pendente</span>
+  <div class="summary"><strong>Leitura do teste.</strong> O comando <code>hfd.py recortar</code> produziu dois comandos de <code>ffmpeg</code>. Executados, eles salvaram um quadro vermelho e outro azul, cada um com 192 × 196 px. A margem padrão removeu 1% em cada borda da caixa indicada. Os 75 testes automatizados da skill passaram.</div>
+
+  <div class="facts" aria-label="Resumo">
+    <div class="fact"><b>2</b><span>quadros recortados</span></div>
+    <div class="fact"><b>75/75</b><span>testes automatizados aprovados</span></div>
+    <div class="fact"><b>0</b><span>créditos Higgsfield gastos neste teste</span></div>
+  </div>
+
+  <h2>O que foi produzido</h2>
+  <div class="grid">
+    <figure class="card wide"><img src="img/folha-sintetica.png" alt="Folha sintética de teste, com um painel vermelho à esquerda e um azul à direita"><figcaption>Folha de entrada · 400 × 200 px · gerada localmente para testar o recorte.</figcaption></figure>
+    <figure class="card"><img src="img/tomada_1.png" alt="Recorte vermelho da primeira metade da folha"><figcaption>Tomada 1 · caixa 0,0–0,5,1 · saída 192 × 196 px · cor conferida: vermelho.</figcaption></figure>
+    <figure class="card"><img src="img/tomada_2.png" alt="Recorte azul da segunda metade da folha"><figcaption>Tomada 2 · caixa 0,5,0–1,1 · saída 192 × 196 px · cor conferida: azul.</figcaption></figure>
+  </div>
+
+  <h2>Como foi testado</h2>
+  <pre>python3 higgsfield-director/scripts/hfd.py recortar \
+  /tmp/hfd-croqui-folha.png /tmp/hfd-croqui-quadros \
+  tomada_1:0,0,0.5,1 tomada_2:0.5,0,1,1
+
+python3 -m unittest discover -s higgsfield-director/tests</pre>
+  <p>Os comandos emitidos pelo helper foram executados com <code>ffmpeg</code>. As dimensões foram conferidas com <code>sips</code> e as cores centrais com Pillow. Código-fonte atualizado para o <code>main</code> remoto no commit <code>d03e2cf7</code>; a pasta local é um espelho de arquivos, sem histórico Git.</p>
+
+  <h2>Próxima rodada</h2>
+  <div class="note"><h3>Croqui real: ainda não executado</h3><p>Falta consultar o catálogo e a cotação ao vivo pelo conector Higgsfield, aprovar o gasto e gerar a folha da Fase A. Depois, cada painel será mapeado à tomada, recortado e usado como referência para um quadro da Fase B. Esta página deve receber as imagens, os custos exatos, as decisões por tomada e as alterações da próxima versão.</p></div>
+</body>
+</html>
