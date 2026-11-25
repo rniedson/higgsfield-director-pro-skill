@@ -642,3 +642,45 @@ class ModosECalibracao(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Recortar(unittest.TestCase):
+    """Fase B do croqui: o hfd escreve os comandos de recorte; não executa nada."""
+
+    def test_caixa_valida_vira_crop_em_fracao(self):
+        r = hfd.recortar("folha.png", "quadros", ["T01:0.04,0.07,0.33,0.48"])
+        self.assertEqual(r["erros"], [])
+        cmd = r["comandos"][0]["comando"]
+        self.assertEqual(cmd[0], "ffmpeg")
+        self.assertIn("-n", cmd, "nunca sobrescreve um recorte existente")
+        self.assertIn("crop=w=iw*0.2700:h=ih*0.3900:x=iw*0.0500:y=ih*0.0800", cmd)
+        self.assertEqual(cmd[-1], str(Path("quadros") / "T01.png"))
+
+    def test_caixas_invalidas_viram_erro_sem_comando(self):
+        r = hfd.recortar("f.png", "q", ["A:0.5,0.1,0.4,0.9", "B:0,0,1", "C D:0,0,1,1", "E:0,0,0.02,0.02",
+                                        "F:0,0,1,1", "F:0,0,0.5,0.5"])
+        self.assertEqual([c["quadro"] for c in r["comandos"]], ["F"])
+        self.assertEqual(len(r["erros"]), 5)
+
+    def test_cli_sai_com_1_quando_ha_erro(self):
+        code, out, _ = _cli("recortar", "f.png", "q", "A:0,0,0.5,0.5", "B:2,0,3,1")
+        self.assertEqual(code, 1)
+        self.assertEqual(len(json.loads(out)["comandos"]), 1)
+        code, _, err = _cli("recortar", "f.png", "q", "A:0,0,1,1", "--margem", "0.5")
+        self.assertEqual(code, 2)
+        self.assertIn("margem", err)
+
+    @unittest.skipUnless(__import__("shutil").which("ffmpeg"), "sem ffmpeg nesta máquina")
+    def test_recorte_de_verdade(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            folha = Path(d) / "folha.png"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=white:s=400x200", "-frames:v", "1",
+                            str(folha)], check=True)
+            r = hfd.recortar(folha, d, ["Q1:0,0,0.5,1", "Q2:0.5,0,1,1"], margem=0)
+            for c in r["comandos"]:
+                subprocess.run(c["comando"], check=True)
+            for nome in ("Q1", "Q2"):
+                out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=width,height", "-of",
+                                      "csv=p=0", str(Path(d) / f"{nome}.png")], capture_output=True, text=True)
+                self.assertEqual(out.stdout.strip(), "200,200")

@@ -41,6 +41,9 @@ Cada personagem, produto, lugar ou marca que se repete ganha uma ficha em `bibli
   Mudança de propósito vai em `mudancas_aprovadas: ["P01.posicao"]`.
 - Para encadear tomadas, gere a tomada N, extraia o último quadro e use como `start_image` da N+1.
 
+**Pré-produção antes do storyboard.** Enquanto a ideia ainda muda, trabalhe no croqui em blocos e no esboço de
+roteiro (`references/preproducao.md`); o storyboard abaixo vem depois do roteiro oficial.
+
 **Storyboard antes do vídeo (modo estúdio).** Antes de gerar qualquer tomada em vídeo, gere um quadro por tomada em
 imagem, com as mesmas fichas e referências, e mostre a folha com o tempo, a ação, a câmera e o som de cada tomada
 escritos embaixo. A imagem custa uma fração do vídeo e mostra antes o que mais reprova: produto trocado, rosto

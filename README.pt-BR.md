@@ -354,6 +354,13 @@ mostra onde corrigir.
 fração do vídeo, e só parte para o vídeo depois do quadro aprovado
 ([fluxo.md](higgsfield-director/references/fluxo.md)). Esta regra ainda não foi medida às cegas.
 
+**Pré-produção barata.** Antes disso, a ideia amadurece onde errar custa pouco: a ideia numa frase, o esboço de
+roteiro em tabela e um croqui em duas fases. Primeiro o storyboard inteiro numa folha de rabisco, no modelo de imagem
+mais barato; depois cada quadro, recortado (`hfd.py recortar`), vira a referência do seu próprio quadro num modelo
+barato que aceita referência, e todos mantêm os mesmos bonecos de bloco e podem ser refeitos um a um. Só com o roteiro
+travado pelo operador a skill pergunta por onde gerar o áudio
+([preproducao.md](higgsfield-director/references/preproducao.md)). Testado uma vez, ainda não medido às cegas.
+
 ## O que mudou na v5
 
 A v5 reescreve o pacote v4.1 RC3/RC4 gerado no ChatGPT. Cada defeito medido na RC3 virou um teste.
@@ -387,6 +394,7 @@ Avaliação completa: [docs/AVALIACAO-RC3.md](docs/AVALIACAO-RC3.md).
 | Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`qualidade.md`](higgsfield-director/references/qualidade.md), `hfd.py pontuar` |
 | Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py exportar` |
 | Modo de trabalho | acompanhar cada passo, só o preço, ou um teto dito na conversa; perguntado no primeiro uso | [`modos.md`](higgsfield-director/references/modos.md), `hfd.py preferencias` |
+| Pré-produção | ideia, esboço de roteiro, croqui em blocos em duas fases, roteiro travado, por onde gerar o áudio | [`preproducao.md`](higgsfield-director/references/preproducao.md), `hfd.py recortar` |
 | Storyboard | um quadro por tomada em imagem antes do vídeo | [`fluxo.md`](higgsfield-director/references/fluxo.md) |
 | Calibração às cegas | o mesmo pedido com e sem a skill; X, Y e ordem sorteados; registro com lista branca | [`calibracao.md`](higgsfield-director/references/calibracao.md), `hfd.py cego`, `hfd.py resultado` |
 

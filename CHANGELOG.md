@@ -7,6 +7,12 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The flow has a cheap pre-production step before the storyboard: idea, script draft as a table, sketch storyboard,
+  refinement, a script locked by the operator, and then the question of where to make the audio (the connector, a
+  service the operator already uses, a recorded voice, a free local voice for drafts, or none).
+- `references/qualidade.md`: unrequested cuts inside a shot were seen in 3 of 11 shots of 4 to 5 s on Cinema Studio
+  4.0, near the 2 s mark, and the scene detector at 0.3 missed one cut, so also look at a contact sheet; new row for an
+  accessory from the bible that disappears.
 - The skill starts from the connector's live list of workflows (`get_workflow_instructions` with no argument). The
   table in `references/conector.md` is now an offline snapshot, updated with the workflows added since
   (`video-editing`, `katana`, `angles-hf`, `lighting-hf`, `grade-hf`, `narration`, `music-cards`).
@@ -26,6 +32,15 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- `references/preproducao.md`: the sketch storyboard in two phases, tested once. Phase A draws every shot in one
+  sheet with the cheapest image model (same drawing inside the sheet, but count and order are not obeyed); phase B
+  crops each panel and uses it as the reference for its own frame in a cheap model that accepts references (same
+  figures in every frame, each frame redone alone). Drawing rules: block figures, a face only when the expression
+  matters, one identifying trait and the same shape description in every frame, stated scale, only who is in the
+  frame, no numbers in the prompt, camera notes on the sheet instead of the prompt. Token-saving rules for the phase.
+  The displayed quote can be rounded; the charge was `credits_exact`.
+- `hfd.py recortar <sheet> <folder> name:x0,y0,x1,y1 ...` writes the ffmpeg commands that crop a sketch sheet into
+  frames, from boxes noted while looking at the sheet; it runs nothing and never overwrites. 4 new tests (75 in total).
 - Lessons from a 16-piece generated test, written as general rules: recipes for crowds, hands of two people, the
   final state, emotional gestures, official symbols and branded objects (`references/prompt.md`); a plausibility
   check before spending, two new diagnoses and three free checks after generation: speech by local transcription,
