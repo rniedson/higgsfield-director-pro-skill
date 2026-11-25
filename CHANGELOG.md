@@ -27,6 +27,12 @@ All notable changes to this project are listed here. The format follows
   reverse shot, the previous clip as a video reference, edits of the operator's own footage (`video_edit`), a 3D
   blocking render as a camera reference, coverage and attempts in the plan, and one short note per defect. A cut
   written on purpose inside a shot is allowed after a test; one camera movement per shot stays.
+- A second batch from the channel (ten more tutorials), in `lessons-learned/2026-11-higgsfield-channel-2.md`: a
+  continuous action written as one continuous motion, since timed beats made the model cut; Cinema Studio 3.5's
+  multi-shot control and its defaults; start and end frames for a change inside a shot; any good frame as the next
+  start; rewriting instead of piling up patches; no repeated description of a referenced subject; the camera anchored
+  to the set; clean, three-quarter locations built for the action; one change per image edit; a face fixed on the
+  sheet; a free check for duplicated frames. Five more are marked as things to test.
 - The unofficial status is now stated in more places: a notice and a badge at the top of both READMEs, a
   *Disclaimer* / *Aviso* section, a note in the quick start that the connector is Higgsfield's own, a line in
   `SKILL.md` telling the agent not to present itself as Higgsfield or its support, and notes in the illustrated

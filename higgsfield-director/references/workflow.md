@@ -40,17 +40,30 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 - `fixed` are invariants; `validate` flags a state that contradicts the bible.
 - Each shot can record `start` and `end` per entity; `validate` compares the end of one with the start of the next.
   A deliberate change goes in `approved_changes: ["P01.position"]`.
-- To chain shots, generate shot N, extract the last frame and use it as the `start_image` of N+1.
+- To chain shots, generate shot N, extract the last frame (or any good frame, cutting the clip there) and use it as
+  the `start_image` of N+1.
 - **One face per reference sheet.** A character sheet carries one face close-up; the other panels (full body, front
   and back) are cropped from the neck down, so the model has a single face to read. Neutral mid-grey background, soft
   even light, no strong highlights. With several faces on the sheet, the model picks one and drifts. (Higgsfield YouTube tutorials, 2026.)
+- **A face that drifts from the approved one is fixed on the sheet:** edit the face panel with the character's
+  approved face and keep the body panels from the neck down, instead of rewriting the prompt. A real person's face
+  only with the consent the operator declares; swapping faces with another tool is outside this skill.
 - **A change of state is a new reference.** When a character or product changes on purpose (wet, sweaty, torn
   clothes, a dent), generate and approve a reference in the new state and use it from that shot on, together with
-  `approved_changes`. Written only in the prompt, the change tends to snap back. Images are cheap; video is not.
+  `approved_changes`. Written only in the prompt, the change tends to snap back. Images are cheap; video is not. A
+  change planned for the middle of a scene (he takes off a moustache) may work better as a removable prop in the
+  reference (one tutorial; to test).
 - **Positions: a layout map.** When several people or objects must keep their places or their count, generate a
   top-view map first: flat silhouettes with no faces, one muted color per person, the fixed anchors of the set (a
   table, a door, a tree) and the positions in plain words or as percentages of the frame. Pass it as an image
-  reference and name the same colors in the prompt. The map fixes where they are; the text says how they move.
+  reference and name the same colors in the prompt. The map fixes where they are; the text says how they move. When
+  the positions change from shot to shot, draw one map or rough sketch per shot and pass it as that shot's reference.
+- **The location is built for the action.** A three-quarter view of the place (a frontal view leaves the model
+  guessing the rest of the room), free space where the action happens and the clutter at the sides, and a crowd that
+  belongs in the scene already in the location image. Fix the place and the angle before adding the people. Before
+  any video, clean the location image: remove text, background cars and whatever the model tends to multiply.
+- **One change per image edit**, everything else kept: the product's name, an object removed. Many people in one
+  image break the faces: generate them one at a time and assemble the picture in an image editor.
 
 **Pre-production before the storyboard.** While the idea is still changing, work on the block sketch storyboard and
 the script draft (`references/preproduction.md`); the storyboard below comes after the official script.

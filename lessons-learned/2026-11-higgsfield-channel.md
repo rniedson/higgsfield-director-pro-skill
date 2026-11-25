@@ -81,3 +81,5 @@ Times are minute:second in the video.
 - The `SKILL.md` description, which decides when the skill is called, still sends "editing recorded footage"
   elsewhere. Lesson 10 is reached once the skill is running; changing the description needs a routing test first.
 - Lessons 11 and 13 are adopted as things to test. Record the result here when they are tested.
+- [Batch 2](2026-11-higgsfield-channel-2.md#what-batch-2-says-about-batch-1) corroborates lessons 1 to 5, 7, 8 and
+  10, refines lesson 9 and weakens lesson 6.

@@ -17,7 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "higgsfield-director"
 MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md", "AGENTS.md", "CLAUDE.md",
             "docs/RC3-EVALUATION.md", "docs/manual/README.md", "docs/manual/visual/README.md", "calibration/README.md",
-            "docs/MIGRATION-6.md", "lessons-learned/README.md", "lessons-learned/2026-11-higgsfield-channel.md"]
+            "docs/MIGRATION-6.md", "lessons-learned/README.md", "lessons-learned/2026-11-higgsfield-channel.md",
+            "lessons-learned/2026-11-higgsfield-channel-2.md"]
 
 # Language check. README.pt-BR.md is the Portuguese translation of README.md; MIGRATION-6.md lists the old names.
 # Anywhere else, Portuguese is allowed only between the lines "language-check: off" and "language-check: on".

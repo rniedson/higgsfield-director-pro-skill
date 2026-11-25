@@ -7,6 +7,7 @@ here, so a rule can be traced back, and dropped if its evidence turns out to be 
 | File | Source | Date |
 |---|---|---|
 | [2026-11-higgsfield-channel.md](2026-11-higgsfield-channel.md) | the 12 most-viewed tutorials on Higgsfield's YouTube channel | 2026-11-25 |
+| [2026-11-higgsfield-channel-2.md](2026-11-higgsfield-channel-2.md) | ten more tutorials from the same channel | 2026-11-25 |
 
 ## How a lesson is written
 
