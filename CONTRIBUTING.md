@@ -10,13 +10,48 @@ content is in English. The one exception is `README.pt-BR.md`, the Portuguese tr
 `tools/check_repo.py` rejects Portuguese text and file names elsewhere, and CI runs it on every pull request. The
 Portuguese names used before 6.0 are listed in [`docs/MIGRATION-6.md`](docs/MIGRATION-6.md).
 
+## Public code and private productions
+
+This repository is a **public, shared skill**. Commit reusable instructions, offline tools, tests, documentation,
+and anonymized calibration records only. Keep a person's or client's brief, brand, characters, scripts, shot lists,
+sketches, review pages, generated media, quotes, preferences and working files in a separate project folder or
+personal skill outside this repository. Do not turn a local production into a shared example by accident.
+
+Before every commit, inspect both the staged file names (`git diff --cached --name-only`) and the staged diff
+(`git diff --cached`), then run `python3 tools/check_repo.py`. Move private files out and unstage them before
+committing. `.gitignore` is a convenience, not a privacy boundary: `git add -f` can bypass it. The repository
+check rejects project directories, review pages, production media outside the documented manual assets, and
+machine-specific file paths. It cannot recognize every client detail inside otherwise valid prose, so the staged
+diff still needs a human review. The allowlisted calibration records remain the only production-derived data
+accepted here, after the review described below.
+
+## Concurrent work and pull requests
+
+Never push directly to `main`. Start a topic branch from an updated `origin/main`, and submit changes through a
+pull request. A passing CI run and a review of the PR diff are required before merging. **Only the maintainer
+merges, through the GitHub pull request page. Agents stop with the PR ready for review; they never merge their own
+or another PR, use an admin override, or skip hooks with `--no-verify`.**
+
+Before pushing the branch, fetch again: `git fetch origin`. If `origin/main` moved, integrate it into your branch
+and resolve conflicts, then rerun the checks. Rebase a branch that only you own (`git rebase origin/main`); on a
+branch another agent is also editing, coordinate or merge `origin/main` instead of rewriting their commits. A
+commit before this fetch is optional; rebasing needs a clean worktree, which can be achieved by committing or
+stashing. `git pull --rebase` combines fetch and rebase, but the explicit fetch makes the new base visible. If the
+push is rejected because the branch moved, fetch and integrate again; never force-push `main`. Use
+`--force-with-lease` only for an owned PR branch after checking its remote head.
+
+Agents using an API connector instead of a Git checkout follow the same rule: read the current base SHA, create a
+commit on a topic branch, and update the branch only with an expected-head check. If the base advances, rebuild on
+the new base, resolve conflicts and rerun CI before merging the PR.
+
 ## Run the checks
 
 There is nothing to install. The skill uses only the Python standard library (3.9 or later).
 
 ```bash
 cd higgsfield-director && python3 -m unittest discover -s tests -v   # hfd.py and skill format
-cd .. && python3 tools/check_repo.py                                # JSON, links, anchors and language
+cd .. && python3 -m unittest discover -s tools/tests -v           # public/private boundary
+python3 tools/check_repo.py                                        # repository and privacy checks
 ```
 
 CI runs both on every push and pull request.

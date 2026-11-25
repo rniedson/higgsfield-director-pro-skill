@@ -3,3 +3,9 @@ __pycache__/
 .DS_Store
 artifacts/
 .higgsfield-director/
+clients/
+outputs/
+personal/
+private/
+productions/
+projects/

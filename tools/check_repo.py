@@ -11,6 +11,8 @@ import re
 import sys
 from pathlib import Path
 
+from public_boundary import check_public_boundary
+
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "higgsfield-director"
 MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md", "AGENTS.md", "CLAUDE.md",
@@ -169,12 +171,13 @@ def main():
     check_json(problems)
     check_links(problems)
     check_language(problems)
+    problems.extend(check_public_boundary(ROOT))
     sys.path.insert(0, str(ROOT / "tools"))
     import aggregate_calibration
     aggregate_calibration.check(problems)
     for p in problems:
         print(p)
-    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration and language")
+    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, language and public/private boundary")
     return 1 if problems else 0
 
 
