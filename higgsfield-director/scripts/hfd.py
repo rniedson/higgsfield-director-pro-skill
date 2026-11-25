@@ -188,6 +188,14 @@ def _normalizar_modelo(m):
     }
 
 
+def _limites_duracao(d):
+    """Lê limites diretos ou a faixa devolvida por alguns modelos do catálogo."""
+    faixa = d.get("faixa") if isinstance(d.get("faixa"), dict) else {}
+    minimo = d.get("min") if d.get("min") is not None else faixa.get("min")
+    maximo = d.get("max") if d.get("max") is not None else faixa.get("max")
+    return minimo, maximo
+
+
 def importar_modelos(arquivos, saida, base=None):
     """Monta um retrato novo a partir das listas do models_explore e grava em `saida`.
 
@@ -263,16 +271,17 @@ def checar_modelo(p, catalogo):
     if p.get("modo") == "i2v" and m["midias"] and not ({"start_image", "image", "image_references"} & set(m["midias"])):
         erros.append(f"{mid} não recebe imagem inicial; i2v precisa de outro modelo")
     d = m.get("duracao") or {}
+    minimo, maximo = _limites_duracao(d)
     for t in p.get("tomadas") or []:
         if not isinstance(t, dict) or not numero(t.get("duracao")):
             continue
         dur = t["duracao"]
         if d.get("opcoes") and dur not in d["opcoes"]:
             erros.append(f"{t.get('id')}: {dur} s não é opção de {mid} (opções: {d['opcoes']})")
-        if d.get("max") is not None and dur > d["max"]:
-            erros.append(f"{t.get('id')}: {dur} s passa do máximo de {mid} ({d['max']} s)")
-        if d.get("min") is not None and d["min"] > 0 and dur < d["min"]:
-            erros.append(f"{t.get('id')}: {dur} s abaixo do mínimo de {mid} ({d['min']} s)")
+        if maximo is not None and dur > maximo:
+            erros.append(f"{t.get('id')}: {dur} s passa do máximo de {mid} ({maximo} s)")
+        if minimo is not None and minimo > 0 and dur < minimo:
+            erros.append(f"{t.get('id')}: {dur} s abaixo do mínimo de {mid} ({minimo} s)")
         if (t.get("som") or t.get("falas")) and not (m.get("audio") or m.get("audio_nas_tags")):
             avisos.append(f"{t.get('id')}: {mid} não mostra áudio nativo no retrato; som vai para a pós-produção")
     if len(p.get("tomadas") or []) > 1 and "multi_shots" not in m.get("parametros", []):
@@ -732,7 +741,8 @@ def _modelos_cli(a):
     resumo = []
     for m in sorted(ms, key=lambda m: (m["tipo"] or "", m["id"])):
         d = m.get("duracao") or {}
-        dur = (f"{d['min']}-{d['max']} s" if d.get("max") is not None else
+        minimo, maximo = _limites_duracao(d)
+        dur = (f"{minimo}-{maximo} s" if maximo is not None else
                f"{d['opcoes']} s" if d.get("opcoes") else "?")
         resumo.append({"id": m["id"], "nome": m["nome"], "tipo": m["tipo"], "duracao": dur,
                        "audio": bool(m.get("audio") or m.get("audio_nas_tags")),

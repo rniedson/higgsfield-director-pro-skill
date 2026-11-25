@@ -292,6 +292,18 @@ class Arquivos(unittest.TestCase):
             p = json.loads((RAIZ / "templates" / nome).read_text())
             self.assertEqual(hfd.validar(p)["erros"], [], nome)
 
+    def test_faixa_de_duracao_do_retrato_real(self):
+        p = projeto(modelo="cinematic_studio_3_0")
+        for duracao in (3, 16):
+            with self.subTest(duracao=duracao):
+                tomada(p, duracao=duracao)
+                self.assertTrue(hfd.validar(p)["erros"])
+        tomada(p, duracao=4)
+        self.assertEqual(hfd.validar(p)["erros"], [])
+        code, saida, _ = _cli("modelos", "--buscar", "cinematic_studio_3_0")
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(saida)["modelos"][0]["duracao"], "4-15 s")
+
     def test_cli_codigos_de_saida(self):
         with tempfile.TemporaryDirectory() as d:
             ruim = Path(d) / "p.json"
