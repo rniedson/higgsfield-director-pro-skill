@@ -64,6 +64,11 @@ vídeo continua com a skill dona dele.
 8. **Gerar e revisar** — gere, veja o resultado (quadros do início, meio e fim) e pontue com evidência
    (`references/qualidade.md`). No modo `acompanhar`, mostre cada imagem e cada vídeo ao operador e espere a
    aprovação dele. Nova tentativa muda **uma** variável.
+9. **Registrar e mostrar** — em todo trabalho com croqui, storyboard ou imagens geradas, crie e atualize uma
+   `folha.html` local que documente e exiba o que foi feito, seguindo `references/preproducao.md` § Folha de
+   acompanhamento. Assim que criar ou atualizar a folha, acione o arquivo pelo sistema, sem escolher um navegador,
+   e entregue um link com caminho absoluto para que o diretor possa abri-lo. Confira as imagens na página aberta;
+   registre também etapas incompletas.
 
 ## Regras que não se negociam
 
@@ -83,6 +88,10 @@ vídeo continua com a skill dona dele.
   idade em cena sensível; marca de terceiro só a do cliente; nada de imitar pessoa pública. (Termos do Higgsfield,
   seções 4.2 e 5, atualizados em 23/10/2026.)
 - **Duas falhas seguidas na mesma tomada:** replaneje em vez de empilhar restrições.
+- **Página de acompanhamento obrigatória** em trabalhos com croqui, storyboard ou imagens geradas. Não apresente
+  como concluído um resultado visual que não aparece na página. Acione o arquivo após cada atualização, sem
+  selecionar aplicativo, e forneça o link absoluto; identifique claramente testes sintéticos e etapas ainda não
+  executadas.
 
 ## Entrega
 

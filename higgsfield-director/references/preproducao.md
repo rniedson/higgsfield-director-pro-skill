@@ -14,6 +14,25 @@ fração de crédito no croqui.
 6. **Áudio:** pergunte por onde gerar (abaixo) antes de qualquer gasto com voz.
 7. **Storyboard final** com fichas e referências (`references/fluxo.md` §4), depois o teste em vídeo e o final.
 
+## Folha de acompanhamento
+
+Em cada trabalho com croqui, storyboard ou imagens geradas, mantenha uma `folha.html` local na pasta da produção.
+A página é parte da entrega, inclusive quando o trabalho para antes da geração. Assim que criar ou atualizar a
+folha, acione o arquivo pelo sistema (no macOS, `open /caminho/absoluto/folha.html`, sem `-a`) para o diretor
+escolher como abri-lo. Entregue também o link absoluto clicável. Confira na página aberta que as imagens carregam;
+se não puder abrir uma interface gráfica, informe o impedimento e entregue o link. Use caminhos relativos dentro
+do HTML para que a pasta possa ser movida inteira.
+
+- Mostre a folha e os quadros produzidos lado a lado, por tomada e por versão. Quando houver Fase A e Fase B,
+  apresente o recorte usado como referência ao lado do resultado. Legende modelo, configuração e custo exato de
+  cada geração quando conhecidos.
+- Registre a intenção da tomada, o que foi visto de fato, a decisão (aprovar, ajustar ou refazer) e a mudança para
+  a próxima versão. Mantenha versões anteriores acessíveis para comparar, sem substituir silenciosamente as imagens.
+- Separe dados confirmados de planos: não atribua crédito, modelo, aprovação ou qualidade a uma geração que não
+  ocorreu. Se só o helper local foi testado, mostre os arquivos de teste e diga que são sintéticos.
+- Atualize a página antes de entregar cada rodada ao operador e dê o link do arquivo. Use o formato de comparação
+  visual das versões anteriores: imagens lado a lado, custo e notas por quadro; adapte o layout ao trabalho.
+
 ## Gastar poucos tokens
 
 - Pergunte só o que bloqueia; o resto vira premissa declarada.
