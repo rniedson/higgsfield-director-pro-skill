@@ -55,7 +55,10 @@ vídeo continua com a skill dona dele.
 ## Regras que não se negociam
 
 - **Nada é gerado sem custo mostrado e "ok" explícito** do operador para aquele total. Abrir preset, galeria ou
-  widget não autoriza gerar. O "ok" de um pedido não vale para o próximo.
+  widget não autoriza gerar. O "ok" de um pedido não vale para o próximo. Vincule o consentimento à cotação e aos
+  parâmetros exatos; mudanças, expiração ou novas tentativas exigem nova autorização. Em erro ambíguo, consulte
+  o estado antes de repetir. Siga o protocolo de autorização em `references/conector.md`; é uma regra operacional,
+  não uma trava programática do servidor.
 - **Capacidade de modelo só do catálogo** (ao vivo, ou o retrato `data/modelos.json` com a data dita). Nunca de
   memória; desconhecido é desconhecido.
 - **Uma ação dominante e um movimento de câmera por tomada**; mais que isso, em fases explícitas.
