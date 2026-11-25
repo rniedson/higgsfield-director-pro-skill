@@ -19,7 +19,8 @@ plus a fraction of a credit for the sketch.
 ## Review page
 
 In any work with a sketch storyboard, a storyboard or generated images, keep a local `review.html` in the
-production folder. The page is part of the delivery, even when the work stops before generation. As soon as you
+production folder, outside this shared skill's repository. Briefs, images and results stay with the operator's
+project. The page is part of the delivery, even when the work stops before generation. As soon as you
 create or update it, open the file through the system (on macOS, `open /absolute/path/review.html`, without `-a`) so
 the director chooses how to open it. Also give the clickable absolute link. Check on the opened page that the images
 load; if you cannot open a graphical interface, say so and give the link. Use relative paths inside the HTML so the

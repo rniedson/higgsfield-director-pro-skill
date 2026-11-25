@@ -17,6 +17,11 @@ kind.
 Paths below are relative to the folder of this `SKILL.md`. The program is `scripts/hfd.py` (Python 3.9+, standard
 library only, no network): run `python3 <skill-folder>/scripts/hfd.py ...` from the operator's project folder.
 
+This is a shared skill containing reusable methods only. Keep each production's brief, characters, scripts,
+sketches, images, preferences, quotes and results in the operator's project folder, **outside this skill and its
+public repository**. Instructions specific to a brand, channel or project belong with that project or in a
+separate personal skill.
+
 ## Where this skill ends
 
 | The request is… | Who handles it |
@@ -70,7 +75,8 @@ video stays with the skill that owns it.
    evidence (`references/quality.md`). In `follow` mode, show each image and each video to the operator and wait for
    their approval. A new attempt changes **one** variable.
 9. **Record and show** — in any work with a sketch storyboard, a storyboard or generated images, create and keep
-   updating a local `review.html` that documents and shows what was done, following `references/preproduction.md`
+   updating a `review.html` in the operator's project folder, outside this skill, that documents and shows what
+   was done, following `references/preproduction.md`
    § Review page. As soon as you create or update the page, open the file through the system, without choosing a
    browser, and give an absolute-path link so the director can open it. Check the images on the opened page; record
    unfinished steps too.
