@@ -10,6 +10,9 @@ All notable changes to this project are listed here. The format follows
 - Public/private boundary: production files stay in their own project; the repository check and CI reject personal
   directories, review pages, working media and machine-specific paths. Contributions use an updated topic branch
   and PR; direct pushes to `main` are forbidden, and only the maintainer merges through GitHub.
+- `SKILL.md` no longer carries the repository's commit and pull-request rules: it is loaded in every project that
+  uses the skill, and those rules serve only who changes this repository. They stay in `AGENTS.md`, `CLAUDE.md`,
+  `CONTRIBUTING.md` and the pull-request template.
 - **Breaking: everything in the repository is in English.** `SKILL.md`, the references, the docs, `hfd.py`
   (commands, options, JSON fields and values, messages), the templates, the tests, the tools and the calibration
   records now use English names, and the reference files, templates, data files, tools and the calibration folder were
