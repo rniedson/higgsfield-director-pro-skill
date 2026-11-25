@@ -22,7 +22,8 @@ sketches, images, preferences, quotes and results in the operator's project fold
 public repository**. Instructions specific to a brand, channel or project belong with that project or in a
 separate personal skill. Before committing this shared repository, inspect staged paths and content and run
 `python3 tools/check_repo.py`. Sync with the latest `main`, use a topic branch and PR, and never push directly to
-`main`.
+`main`. Only the maintainer merges a PR through GitHub; agents leave it ready for review and never bypass hooks
+or branch protections.
 
 ## Where this skill ends
 

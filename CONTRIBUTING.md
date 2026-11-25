@@ -28,7 +28,9 @@ accepted here, after the review described below.
 ## Concurrent work and pull requests
 
 Never push directly to `main`. Start a topic branch from an updated `origin/main`, and submit changes through a
-pull request. A passing CI run and a review of the PR diff are required before merging.
+pull request. A passing CI run and a review of the PR diff are required before merging. **Only the maintainer
+merges, through the GitHub pull request page. Agents stop with the PR ready for review; they never merge their own
+or another PR, use an admin override, or skip hooks with `--no-verify`.**
 
 Before pushing the branch, fetch again: `git fetch origin`. If `origin/main` moved, integrate it into your branch
 and resolve conflicts, then rerun the checks. Rebase a branch that only you own (`git rebase origin/main`); on a
