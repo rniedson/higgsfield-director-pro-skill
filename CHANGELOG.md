@@ -15,12 +15,21 @@ All notable changes to this project are listed here. The format follows
 - In studio mode, the chosen model's live limits (`models_explore get`) go into the project's snapshot and are used
   for validation.
 - `references/modelos.md` no longer stores prices: always quote.
+- The offline workflow table in `references/conector.md` is refreshed to 25/11/2026 (31 workflows: adds
+  `website-builder-flow`, `short-drama`, `shorts-studio`, `reel-effects`, `manga-engine`, `layer-reveal-hf`,
+  `property-studio`, `autobadge`, `color-grade`), and it covers presets, desktop-app commands that install a local
+  MCP server (operator approval first) and rented GPUs (billed while running).
 - The READMEs say the skill is tested in Claude Code; Codex reads the same format, but it is untested there.
 - The READMEs record two more routing rounds (14/14 each, 42/42 in total) and a text-only pilot with and without
   the skill; the generated-video comparison is still to be run.
 
 ### Added
 
+- Lessons from a 16-piece generated test, written as general rules: recipes for crowds, hands of two people, the
+  final state, emotional gestures, official symbols and branded objects (`references/prompt.md`); a plausibility
+  check before spending, two new diagnoses and three free checks after generation: speech by local transcription,
+  loops by SSIM, and the model that actually ran (`references/qualidade.md`); the one-model, one-mode-per-project
+  limit (`references/fluxo.md`).
 - `modelos --importar` accepts a single-model `get` response and merges it without removing other models.
 - The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulario.md`.
 - 1 test (51 in total).

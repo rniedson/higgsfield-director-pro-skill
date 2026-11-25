@@ -19,7 +19,7 @@ Os nomes das ferramentas abaixo são os mesmos nos dois agentes (muda só o pref
 ## Antes de planejar: existe um fluxo pronto?
 
 Com o conector, **comece pela lista ao vivo**: `get_workflow_instructions` sem argumento (só leitura, não gasta). Os
-fluxos mudam; a tabela abaixo é o retrato de 24/11/2026, para quando o conector não estiver disponível. Se o pedido é
+fluxos mudam; a tabela abaixo é o retrato de 25/11/2026 (31 fluxos), para quando o conector não estiver disponível. Se o pedido é
 um deles, **carregue o fluxo** (`get_workflow_instructions` com o nome) e siga-o; esta skill só ajuda onde o fluxo
 pedir um prompt de tomada. Fluxo marcado "só por /comando" carrega quando o operador usa aquele comando. Os arquivos que um fluxo cita (guias, exemplos) se leem com
 `get_workflow_bundle_file` (só leitura, não gasta). O fluxo manda no formato; a regra de custo e "ok" desta skill
@@ -48,12 +48,29 @@ continua valendo, mesmo que o fluxo diga que a intenção de criar já autoriza 
 | criatura, monstro | `monsters` |
 | modelo 3D a partir de foto | `photo-to-3d-model` |
 | logo, identidade, peças de marca | `brand-asset-creation` |
+| site, app ou jogo de navegador hospedado no Higgsfield | `website-builder-flow` |
+| série curta com elenco fixo e falas | `short-drama` (só por /short-drama) |
+| Reels/Shorts com apresentador gerado ou com o vídeo do operador | `shorts-studio` (só por /shorts) |
+| efeito pronto em vídeo vertical falado (texto atrás da pessoa…) | `reel-effects` (só pelos comandos de efeito) |
+| mangá, quadrinho | `manga-engine` (só por /manga) |
+| cena em camadas com barra de carregamento | `layer-reveal-hf` (só pelos comandos de estilo) |
+| imóveis; crachá de concurso; correção de cor | `property-studio`, `autobadge`, `color-grade` (só pelos comandos) |
 
 Fica com esta skill o que o conector entrega à geração comum, sem fluxo próprio: tomadas cinematográficas,
 comercial ou cena com várias tomadas geradas, trailer, clipe musical, plano de produto em movimento, imagem-para-vídeo
 de uma foto, e todo diagnóstico de prompt. Os próprios fluxos mandam esses casos para a geração comum (o `ugc-video`
 diz isso do comercial de produto sem narração; o `faceless-video`, do vídeo genérico sobre um tema). A skill gera com as
 ferramentas do conector; o que ela acrescenta é o plano, a continuidade, a validação e a trava de custo.
+
+Também prontas, sem ser fluxo: **receitas** de produto em imagem e vídeo (`get_preset_instructions` sem argumento,
+só leitura: `hero-shot`, `product-spin`, `light-sweep`…). Abrir uma receita não autoriza gerar.
+
+**Comandos que ligam programas do computador** (`/use-blender`, `/use-after-effects`, `/use-premiere`,
+`/use-photoshop`, `/use-illustrator`, `/use-touchdesigner`) instalam um servidor MCP local. Isso muda a máquina do
+operador: só com o ok dele, mesmo que a instrução do comando diga que o pedido já autoriza instalar.
+
+**GPU alugada** (`gpu_list_gpus`, só leitura, dá créditos por GPU-hora): o custo corre enquanto a máquina estiver
+ligada. Cote, espere o ok, e desligue ao terminar (`gpu_rental_stop`).
 
 ## A ordem das chamadas
 
