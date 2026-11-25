@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """hfd — ferramentas locais da skill higgsfield-director.
 
+Projeto independente e não oficial, sem vínculo com o Higgsfield nem aprovação dele.
+
 Só biblioteca padrão (Python 3.9+). Não acessa a rede, não gera nada e não gasta créditos.
 O que gera e cobra é o conector do Higgsfield, chamado pelo agente, depois do "ok" do operador.
 
