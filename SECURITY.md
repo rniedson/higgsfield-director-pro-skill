@@ -5,7 +5,7 @@
 Report privately through GitHub: open the **Security** tab and choose **Report a vulnerability**. Please do not
 open a public issue for a vulnerability.
 
-This is an independent project maintained on a best-effort basis. Reports are read and answered as soon as
+This is an independent, unofficial project, not affiliated with Higgsfield, maintained on a best-effort basis. Reports are read and answered as soon as
 possible.
 
 ## In scope
@@ -19,4 +19,5 @@ possible.
 
 ## Out of scope
 
-The Higgsfield service and its MCP connector belong to Higgsfield. Report problems with them to Higgsfield.
+The Higgsfield service, website, account system and MCP connector belong to Higgsfield, not to this project.
+Report problems with them, including vulnerabilities, directly to Higgsfield.
