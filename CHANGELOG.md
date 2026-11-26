@@ -7,6 +7,11 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Lessons from Higgsfield's official skills repository, checked against the connector's live catalog: the list of
+  connector workflows (34, with `musical-cards`, `video-redub`, `playable` and `playable-ad`); `draw_to_video` for
+  marking a change on a frame of the footage; the first citation form the connector's catalog writes (`@Audio 1`,
+  Seed Audio only); the brief asks who appears; frozen frames found with `freezedetect`; uneven frames for a loop.
+  The repository check fails on a references file that `SKILL.md` never cites. New `docs/behavior-scenarios.md`.
 - Public/private boundary: production files stay in their own project; the repository check and CI reject personal
   directories, review pages, working media and machine-specific paths. Contributions use an updated topic branch
   and PR; direct pushes to `main` are forbidden, and only the maintainer merges through GitHub.

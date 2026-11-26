@@ -20,7 +20,7 @@ The tool names below are the same in both agents (only the prefix changes).
 ## Before planning: is there a ready-made workflow?
 
 With the connector, **start from the live list**: `get_workflow_instructions` with no argument (read-only, costs
-nothing). Workflows change; the table below is the 2026-11-24 snapshot (31 workflows), for when the connector is not
+nothing). Workflows change; the table below is the 2026-11-25 snapshot (34 workflows), for when the connector is not
 available. If the request is one of them, **load the workflow** (`get_workflow_instructions` with the name) and follow
 it; this skill only helps where the workflow asks for a shot prompt. A workflow marked "only via /command" loads when
 the operator uses that command. The files a workflow cites (guides, examples) are read with `get_workflow_bundle_file`
@@ -38,19 +38,21 @@ workflow says the intent to create already authorizes spending.
 | micro-drama with talking characters | `drama-ads` (only via `/drama-ads`) |
 | narrated faceless video (explainer, story, kids) | `faceless-video` |
 | dub a creator's video | `creator-dub` |
+| redub a short video in its own language: new voices on the same picture, its music and effects kept | `video-redub` |
 | assemble clips, music track, burned-in subtitles | `video-montage` |
 | edit a video with cuts, animated titles, motion graphics (Higgsedit) | `video-editing` |
 | remix a reference video with new scenes | `katana` (only via /katana) |
 | redo a single shot as a multi-camera edit | `angles-hf` (only via /angles) |
 | relight or change the color of a finished video | `lighting-hf`, `grade-hf` (only via the lighting and color commands) |
 | narration fitted into windows of the video, or the person in the photo as narrator | `narration` |
-| musical tribute video for a person | `music-cards` (only via /music-cards) |
+| musical greeting card: an original song about one named person, as a vertical cartoon | `musical-cards` (only via /musical-cards) |
 | sound effects on an existing video | `video-sound-design` |
 | enhance/upscale 1:1 with Kling | `higgsfield-enhance-video` |
 | creature, monster | `monsters` |
 | 3D model from a photo | `photo-to-3d-model` |
 | logo, identity, brand assets | `brand-asset-creation` |
 | website, app or browser game hosted on Higgsfield | `website-builder-flow` |
+| playable game or playable ad | `playable`, `playable-ad` (only via /playable and /playable-ad) |
 | short series with a fixed cast and dialogue | `short-drama` (only via /short-drama) |
 | Reels/Shorts with a generated presenter or with the operator's video | `shorts-studio` (only via /shorts) |
 | ready-made effect on a vertical talking video (text behind the person…) | `reel-effects` (only via the effect commands) |

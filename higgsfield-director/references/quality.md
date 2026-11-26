@@ -95,12 +95,19 @@ Checks that spend no credits:
   generated the speech; Whisper only checks it.
 - **Loop:** compare the first and the last frame (`ffmpeg -i frame_start.png -i frame_end.png -lavfi ssim -f null -`).
   In a test with the same image as the first and the last frame, SSIM came out at 0.97 and a jump was still visible
-  at the wrap: plan a short dissolve in the edit.
+  at the wrap: plan a short dissolve in the edit. For a motion that repeats, take the frames at uneven fractions of
+  its period (0, 0.23, 0.41, 0.68, 0.87): frames taken at a step that divides the period land on the same phase and
+  look identical, so a working loop looks stuck.
+- **Frozen frames:** a generated clip can start or end on a still frame.
+  `ffmpeg -i video.mp4 -vf freezedetect=n=0.003:d=0.5 -map 0:v -f null - 2>&1 | grep freeze_` lists each still
+  stretch; one that lasts to the end prints only `freeze_start`. On synthetic clips here, a still first second came
+  out as 0 to 1.04 s, and a clip that kept moving printed nothing.
 - **Duplicated frames:** when the motion looks choppy, count them before editing:
   `ffmpeg -i video.mp4 -vf mpdecimate -loglevel debug -f null - 2>&1 | grep -c ' drop '`. In a synthetic test, a
   clean 96-frame clip gave 0 and a 12 fps clip doubled to 24 fps gave 48.
 - **Model that ran:** check the `model` field of `jobs_wait`. In one test, a request for `nano_banana_pro` came back
-  as `nano_banana_2`.
+  as `nano_banana_2`. In the connector these are two models (2026-11-25), even though a command-line catalog calls
+  `nano_banana_2` an alias of the Pro.
 - **Parameters that ran:** the submission result lists the `params` the server will use, and `adjustments` when it
   changed a value (an unsupported value becomes the nearest allowed one). Compare the aspect ratio, duration,
   resolution, audio and count with the plan before waiting. In two tutorials the prompt text asked for 9:16 or 21:9

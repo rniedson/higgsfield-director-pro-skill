@@ -3,7 +3,8 @@
 ## 1. Brief (ask only what blocks; the rest becomes a stated assumption)
 
 Goal and audience · format and destination (aspect ratio) · total duration · subject and what must not change in it ·
-references the operator has (and the right to use them) · tone and intent · audio (generated, post or none) ·
+who appears (the operator, another person whose consent the operator declares, or a generated character; never
+chosen silently) · references the operator has (and the right to use them) · tone and intent · audio (generated, post or none) ·
 budget in credits · preferred model (if any).
 
 ## 2. Mode
