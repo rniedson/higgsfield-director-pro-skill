@@ -1,0 +1,42 @@
+{
+ "format": 1,
+ "date": "2026-11-26",
+ "skill_version": "5.1.0+0717197",
+ "category": "corporate",
+ "model": "cinematic_studio_video_4_0",
+ "shots": 3,
+ "cost_credits": 90,
+ "image_reference": false,
+ "vote": "with",
+ "rater": "blind-auto",
+ "seen_first": "without",
+ "reason": "The most natural: no errors, hallucinations or artificial gestures; could pass for real footage.",
+ "scores": {
+  "without": {
+   "total": 73.5,
+   "criteria": {
+    "identity": 7,
+    "motion": 6,
+    "camera": 8,
+    "lighting": 8,
+    "materials": 8,
+    "continuity": 7,
+    "briefing": 9,
+    "audio": 4
+   }
+  },
+  "with": {
+   "total": 70.5,
+   "criteria": {
+    "identity": 8,
+    "motion": 8,
+    "camera": 5,
+    "lighting": 8,
+    "materials": 8,
+    "continuity": 6,
+    "briefing": 7,
+    "audio": 5
+   }
+  }
+ }
+}

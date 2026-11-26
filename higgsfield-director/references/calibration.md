@@ -30,7 +30,11 @@ credits (the shots of both conditions), quoted first and with their "ok".
    record keeps the order (`--first`) so the scoreboard can measure it. The person chooses X, Y or tie and gives the
    reason in a few words. Record the vote **before** opening the key.
 6. **Scores (optional).** A rater who sees only the request and the videos (a subagent, with no access to the key or
-   the prompts) fills in one `templates/evaluation.json` for X and another for Y.
+   the prompts) fills in one `templates/evaluation.json` for X and another for Y. The scores are a second opinion.
+   In the third and fourth rounds the blind judge's score chose the version the person rejected in all four rounds,
+   once for the skill and once against it: its criteria weigh control (identity, camera and continuity are 45% of
+   the score), and none asks whether the video could pass for real footage, which is what the person judged on.
+   The person's vote decides; a disagreement is reported, not averaged away.
 7. **Record.** `hfd.py result --key <folder>/blind/blind-key.json --vote X --category product-ad
    --model <id> --shots 3 --cost 90 --version <version>+<commit> [--reference] [--reason "..."]
    [--first X] [--evaluation-x x.json --evaluation-y y.json] --out calibration/YYYY-MM-DD-<category>-<suffix>.json`.

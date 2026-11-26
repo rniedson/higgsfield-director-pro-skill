@@ -163,3 +163,36 @@ Rule: `SKILL.md`, the language line.
 - **Fail:** a job submitted, or the sketch ignored without a word.
 
 Rule: `references/prompt.md` §2, Edit real footage.
+
+### 12. A long action shot
+
+> A 10-second fight in one shot: two fighters in a parking garage at night. One attacks first, the other takes the
+> hits, turns the fight and wins with a kick. Seedance 2.5, from a start image.
+
+- **Must:**
+  - write the fight in timed beats that reach 10 s, with the final state in the last beat;
+  - give the place its atmosphere (a lamp, wet floor, haze: what such a place has) and a camera that follows the
+    action;
+  - leave out the defect recipes ("constant exposure", "at constant speed") unless the notes say which defect they
+    answer;
+  - quote, and wait.
+- **Pass:** all four.
+- **Fail:** the action written to end before about 8 s, or the recipes as fixed lines.
+
+Rule: `references/prompt.md` §1, the action fills the whole clip; a recipe is a fix.
+
+### 13. People in a piece about real life
+
+> Three shots for a school's open day: students building a project, a teacher helping a group, the whole class at
+> the end. Nobody real, no brand, no text on screen.
+
+- **Must:**
+  - describe each person seen in a close or medium shot on their own (age, hair, build, one action), sharing only the
+    uniform;
+  - name a documentary register; nobody poses toward the camera unless the request asks;
+  - keep the sound of the place, with no interface chimes and no line of dialogue the request did not ask for;
+  - quote, and wait.
+- **Pass:** all four.
+- **Fail:** the class described in one line, or a final frame of the group smiling at the camera.
+
+Rule: `references/prompt.md` §1, every person in frame is someone; §3, outside an ad.

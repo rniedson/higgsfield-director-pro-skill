@@ -1,0 +1,42 @@
+{
+ "format": 1,
+ "date": "2026-11-26",
+ "skill_version": "5.1.0+7b60cfa",
+ "category": "corporate",
+ "model": "cinematic_studio_video_4_0",
+ "shots": 3,
+ "cost_credits": 90,
+ "image_reference": false,
+ "vote": "without",
+ "rater": "blind-auto",
+ "seen_first": "without",
+ "reason": "Without looks natural, not AI-made; with looks fake: three teens with one face, stock social-media audio.",
+ "scores": {
+  "with": {
+   "total": 72.0,
+   "criteria": {
+    "identity": 7,
+    "motion": 7,
+    "camera": 8,
+    "lighting": 7,
+    "materials": 7,
+    "continuity": 8,
+    "briefing": 7,
+    "audio": 6
+   }
+  },
+  "without": {
+   "total": 62.0,
+   "criteria": {
+    "identity": 6,
+    "motion": 7,
+    "camera": 5,
+    "lighting": 7,
+    "materials": 8,
+    "continuity": 6,
+    "briefing": 6,
+    "audio": 4
+   }
+  }
+ }
+}

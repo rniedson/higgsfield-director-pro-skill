@@ -7,6 +7,16 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Calibration: a fourth blind round ran the same two requests again with the fix below (`5.1.0+0717197`), with new
+  videos on both sides. The person chose the version with the skill in 2 of 2 ("could pass for real footage"); the
+  blind judge's score chose the other in both, so it is now a second opinion only. The READMEs' lead starts there.
+- Calibration: a third blind round with the current skill (`5.1.0+7b60cfa`), on two request types not measured
+  before (a fight scene, a corporate video). The person chose the version without the skill in 2 of 2; the blind
+  judge chose the version with it in both. The READMEs' lead now says so. What changed because of it: a recipe
+  against a defect goes in after the defect is seen, not into every prompt; a shot of 8 s or more is written in
+  timed beats up to its end; each person in frame gets a line of their own, and a group bible holds only what the
+  members share; a piece about real life keeps a documentary register and the place's own sound, without interface
+  chimes or a line nobody asked for; the blind judge's score is a second opinion. Two new behavior scenarios.
 - The READMEs' results start from where the skill stands: the latest blind rounds (2 of 2 with the skill) first; the
   first round kept as it came out, now with its skill version; and what changed since, which no blind round has
   measured yet. `references/calibration.md` says what is not a round (a video the voter has seen, one side only,
