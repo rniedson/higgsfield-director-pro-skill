@@ -99,6 +99,19 @@ Estudos geométricos de um mesmo objeto em lentes, distâncias e paletas diferen
 
 </details>
 
+## Imagens de referência
+
+Como é uma boa referência. Estas três foram geradas para um dos testes da skill (GPT Image 2.6 pelo Higgsfield,
+25/11/2026); os prompts que as fizeram, e como um prompt de vídeo as nomeia, estão em
+[`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="higgsfield-director/examples/references/character-sheet.jpg" width="260" alt="Ficha de personagem"><br>**Ficha de personagem**<br>um rosto; o corpo cortado no pescoço | <img src="higgsfield-director/examples/references/two-view-location.jpg" width="260" alt="Locação em duas vistas"><br>**Locação em duas vistas**<br>a sala e a entrada, sem pessoas | <img src="higgsfield-director/examples/references/photo-wall.jpg" width="260" alt="Um detalhe do cenário"><br>**Um detalhe do cenário**<br>o detalhe em que a ação termina |
+
+Cada referência diz o que traz e o que fica fora do plano: a ficha dá a identidade, e o fundo cinza dela nunca
+entra na cena.
+
 ## Arquitetura
 
 Como as peças conversam. O agente lê só o `SKILL.md` de início; o resto entra quando um passo pede. O `hfd.py`
@@ -178,6 +191,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ## Sumário
 
 - [Manual ilustrado](#manual-ilustrado)
+- [Imagens de referência](#imagens-de-referência)
 - [Arquitetura](#arquitetura)
 - [Visão geral](#visão-geral)
 - [Com e sem a skill](#com-e-sem-a-skill)
@@ -687,6 +701,8 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 - Manual ilustrado (`docs/manual/`, texto e imagens) e o emblema (`docs/assets/`):
   [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md). O texto é adaptado do pacote ilustrado v4.1, com as mudanças listadas
   no fim do manual; as imagens são desenhos esquemáticos feitos por código.
+- As três imagens de referência em `higgsfield-director/examples/references/`: a licença é decisão do mantenedor, registrada
+  [nessa pasta](higgsfield-director/examples/references/README.md) quando tomada.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão
   direito de usá-los. Este projeto é independente e não tem vínculo com nenhum deles nem aprovação deles.
 

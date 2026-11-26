@@ -3,8 +3,8 @@
 What each source showed and said, and a minimal reproduction. None of these has been run. Before running one, quote
 it, get the operator's ok, and give it a card of its own, as in [2026-11-25-timed-beats.md](2026-11-25-timed-beats.md).
 
-In none of these sources does the generation panel appear with the settings. Each rests on what the presenter
-says and on a judgment made by watching or listening, so each is a hypothesis.
+In the six from batches 1 and 2, the generation panel never appears with the settings; in batch 3 two of them show
+a prompt or a panel. Each rests on a judgment made by watching or listening, so each is a hypothesis.
 
 ## The previous clip as a video reference
 
@@ -93,3 +93,71 @@ says and on a judgment made by watching or listening, so each is a hypothesis.
 - **Reproduction:** a reference image of a generic person with a mustache, and a shot where he peels it off. Only
   the reference's description varies: a stick-on mustache, or a mustache. Three attempts per version. Measure, at
   the start, middle and end of each clip, whether it comes off and whether the face stays the same without it.
+
+## A critical detail in words, even when the reference shows it
+
+[Batch 3, lesson 2](../2026-11-higgsfield-channel-3.md#adopted). Videos 30, 06:10, and 33, 03:47.
+
+- **Shown:** a written rule for prompts (keep the character's description short; state small text, logos and color in
+  words, because the model can drop them), and a prompt that follows it with a one-line identity next to each
+  reference.
+- **Unknown:** any comparison with and without the detail in words.
+- **Reproduction:** an image of a generic product with a short word on its label, as a reference for a still or a
+  short clip. Only one thing varies: the word written in the prompt, or not. Four attempts per version. Measure
+  whether the word comes out right, letter by letter.
+
+## A video as a reference for motion and identity
+
+[Batch 3, lesson 6](../2026-11-higgsfield-channel-3.md#adopted). Videos 25, 09:23–10:06; 33, 03:47; 29, 05:28.
+
+- **Shown:** a prompt on Seedance 2.5 in References mode, 16:9, 1080p, in which a source clip supplies framing, lens,
+  light, grade and the stand-in's timing, and a video of a head turning serves as the identity reference.
+- **Said:** a movement the presenter could not get with words came out when he filmed himself doing it.
+- **Unknown:** the attempts, and any result without the clip.
+- **Reproduction:** a generic figure doing one distinct movement (a high-knee step). Only the filmed clip as a video
+  reference varies. Three attempts per version. Measure, frame by frame, whether the movement matches the clip.
+
+## A measure instead of an adjective
+
+[Batch 3, lesson 7](../2026-11-higgsfield-channel-3.md#adopted). Videos 28, 37:55; 26, 12:39; 30, 19:53.
+
+- **Shown:** prompts that give speed in km/h, field of view and tilt in degrees, white balance in kelvin, the grade as
+  colors with shares or hex values, and one constant-radius orbit.
+- **Unknown:** any comparison with adjectives.
+- **Reproduction:** one walking shot. Only how the motion and look are written varies: "walks quickly, slightly
+  tilted camera, warm light", or the same with numbers (6 km/h, a 10° tilt, 3200 K). Four attempts per version.
+  Measure the tilt and the color temperature in a frame, and the speed against a known distance in the set.
+
+## A location image against a big camera move
+
+[Batch 3, lesson 11](../2026-11-higgsfield-channel-3.md#adopted). Video 34, 15:41–17:25.
+
+- **Said:** with the staircase's image the camera move went wrong; with the staircase described in the text, it came
+  out. The cast changed in the same attempt.
+- **Unknown:** the model and the attempts.
+- **Reproduction:** a generic couple running down a spiral staircase, with a crane move over the railing. Only the
+  location image varies (attached, or described in the text), the same people in both. Four attempts per version.
+  Measure whether the camera follows the written path.
+
+## The voice after the performance
+
+[Batch 3, lesson 12](../2026-11-higgsfield-channel-3.md#adopted). Video 26, 08:48.
+
+- **Said:** direct the performance first, then try several voices over the same line and keep the one that fits the
+  gesture.
+- **Unknown:** the tool and how many voices were tried.
+- **Reproduction:** one clip of a generic animated character saying a line, with no lips in close-up. Three voices
+  through `voice_change`. Measure whether the timing survives (the line starts and ends on the same frames) and which
+  voice listeners pick without knowing the order.
+
+## Locked parts in an image edit
+
+[Batch 3, lesson 13](../2026-11-higgsfield-channel-3.md#adopted). Video 24, 13:28.
+
+- **Shown:** an edit of a three-panel sheet on Seedream 5.5, 4:3, 2K: one change asked for (the clothes), then a
+  block of locked parts with the highest priority (the framing, the three panels, the face), then the one change
+  again.
+- **Unknown:** the result next to a plain "change only" prompt.
+- **Reproduction:** a generic three-panel sheet. Only the locked block varies (present, or a plain "change only
+  [target]; preserve everything else"). Four attempts per version. Measure the changes nobody asked for, panel by
+  panel.

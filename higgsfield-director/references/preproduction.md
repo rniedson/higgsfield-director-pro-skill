@@ -127,4 +127,5 @@ With the official script locked, and before any spending on voice, ask where to 
 
 At the idea stage, the free draft is enough. Narration or voice-over comes before the video, because the timing of
 the voice decides the timing of the shots. Dialogue in the scene comes from the video model with sound or from a
-lip-sync step: ask which is the case before generating. Note the choice in the project's assumptions.
+lip-sync step: ask which is the case before generating. A character's voice with no lips in view can also be chosen
+after the performance, with `voice_change` over the clip (one tutorial; to test). Note the choice in the project's assumptions.

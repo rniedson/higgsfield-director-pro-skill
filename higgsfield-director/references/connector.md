@@ -128,5 +128,8 @@ Do not claim programmatic spending protection without an integration that actual
 ## Useful tools beyond generation
 
 `upscale_video`/`upscale_image`, `remove_background`, `reframe` (change aspect ratio), `outpaint_image`,
-`voice_change`, `separate_stems`, `video_analysis_create` (analysis of a video), `balance` (credit balance),
+`voice_change` (another voice over a clip, keeping its timing), `separate_stems`, `video_analysis_create` (analysis of a video), `balance` (credit balance),
 `transactions`. Every tool that produces a file spends credits: same cost and "ok" rule.
+
+Elements (`elements_create`, `elements_search`) keep approved references under a name for reuse
+(`references/workflow.md` §4).

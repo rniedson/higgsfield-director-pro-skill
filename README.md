@@ -99,6 +99,19 @@ Geometric studies of one object across lenses, distances and palettes; the full 
 
 </details>
 
+## Reference images
+
+What a good reference looks like. These three were generated for one of the skill's tests (GPT Image 2.6 through
+Higgsfield, 2026-11-25); the prompts that made them, and how a video prompt names them, are in
+[`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="higgsfield-director/examples/references/character-sheet.jpg" width="260" alt="Character sheet"><br>**Character sheet**<br>one face; the body cropped at the neck | <img src="higgsfield-director/examples/references/two-view-location.jpg" width="260" alt="Location in two views"><br>**Location in two views**<br>the room and the way in, no people | <img src="higgsfield-director/examples/references/photo-wall.jpg" width="260" alt="A set detail"><br>**A set detail**<br>the detail the action ends on |
+
+Each reference says what it brings and what stays out of the shot: the sheet gives the identity, and its grey
+background never enters the scene.
+
 ## Architecture
 
 How the pieces talk to each other. The agent reads only `SKILL.md` up front; everything else is loaded when a step
@@ -178,6 +191,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ## Contents
 
 - [Illustrated manual](#illustrated-manual)
+- [Reference images](#reference-images)
 - [Architecture](#architecture)
 - [Overview](#overview)
 - [With and without the skill](#with-and-without-the-skill)
@@ -686,6 +700,8 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 - Illustrated manual (`docs/manual/`, text and images) and the emblem (`docs/assets/`):
   [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md). The text is adapted from the v4.1 illustrated package, with the changes
   listed at the end of the manual; the images are schematic drawings made by code.
+- The three reference images in `higgsfield-director/examples/references/`: their license is the maintainer's decision, recorded in
+  [that folder](higgsfield-director/examples/references/README.md) when made.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. The licenses above
   give no right to use them. This project is independent and not affiliated with or endorsed by any of them.
 
