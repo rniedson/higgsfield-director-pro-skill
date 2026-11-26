@@ -92,6 +92,9 @@ video stays with the skill that owns it.
 - **Model capabilities only from the catalog** (live, or the `data/models.json` snapshot with its date stated). Never
   from memory; unknown is unknown.
 - **One dominant action and one camera move per shot**; more than that, in explicit phases.
+- **A recipe against a defect goes in after the defect is seen**, never into every prompt as prevention; a long shot
+  is written in timed beats up to its end; every person in frame gets a line of their own (`references/prompt.md`
+  §1). The opposite of all three lost both rounds of a blind test (2026-11-26).
 - **Duration, aspect ratio, resolution and audio go in the parameters**, not in the prompt text.
 - **Describe what should appear**, not what should not; a negative field only if the model has one.
 - **Do not score what you have not seen.** A score requires evidence per criterion; without vision, the evaluation

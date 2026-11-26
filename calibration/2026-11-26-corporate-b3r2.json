@@ -10,6 +10,7 @@
  "vote": "without",
  "rater": "blind-auto",
  "seen_first": "without",
+ "reason": "Without looks natural, not AI-made; with looks fake: three teens with one face, stock social-media audio.",
  "scores": {
   "with": {
    "total": 72.0,

@@ -274,7 +274,8 @@ A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem 
 tudo o que está em *Unreleased* no [CHANGELOG](CHANGELOG.md)) foram **contra a skill**: a pessoa escolheu a versão
 feita sem ela nas **2 de 2 rodadas**, enquanto o avaliador cego escolheu a versão com ela nas duas (77,5 × 60,0 e
 72,0 × 62,0). A rodada anterior (`5.1.0+e4dee7b`) escolheu a skill nas 2 de 2, e a primeira (`5.1.0+982e7fa`), não.
-Todas estão abaixo como saíram. A amostra é pequena: cinco rodadas, uma pessoa votando.
+Todas estão abaixo como saíram, com o que a pessoa disse e o que a skill mudou por causa disso; essa mudança ainda
+não passou por uma rodada às cegas. A amostra é pequena: cinco rodadas, uma pessoa votando.
 
 **1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
 pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
@@ -347,9 +348,9 @@ o placar medi-la. A amostra ainda é pequena: três rodadas e uma pessoa votando
 
 **4. A terceira rodada, com a skill atual `5.1.0+7b60cfa` (2 rodadas, 150,24 créditos).** Dois tipos de pedido ainda
 não medidos, com a ordem de exibição sorteada à parte: a versão com a skill apareceu primeiro na rodada 1, e a sem
-ela, na rodada 2. Rodada 1: uma cena de luta de 10 s num plano só, um lutador de kung-fu contra um robô cromado que
-copiou o rosto dele, a partir de uma imagem inicial que cada condição desenhou (Seedance 2.5, 480p, com som). Rodada 2:
-um vídeo institucional de 3 tomadas para uma escola técnica (Cinema Studio 4.0, 480p, 5 s por tomada, com som).
+ela, na rodada 2. Rodada 1: uma cena de luta de 10 s num plano só, um lutador contra um robô, a partir de uma
+imagem inicial que cada condição desenhou (Seedance 2.5, 480p, com som). Rodada 2:
+um vídeo institucional de 3 tomadas para uma escola (Cinema Studio 4.0, 480p, 5 s por tomada, com som).
 
 | Rodada | Nota do avaliador cego, com a skill | Sem a skill | Voto da pessoa, às cegas |
 |---|---|---|---|
@@ -359,11 +360,28 @@ um vídeo institucional de 3 tomadas para uma escola técnica (Cinema Studio 4.0
 **A pessoa escolheu a versão feita sem a skill nas duas rodadas; o avaliador cego escolheu a versão com ela nas
 duas.** O voto da pessoa é o critério, então a rodada conta contra a skill.
 
+- **O que a pessoa disse.** Rodada 1: a versão sem a skill estava muito melhor em movimento, atmosfera, sincronia e
+  personagens. Rodada 2: a versão sem a skill parecia natural, "que nem parece que foi criado com IA"; a com ela
+  parecia falsa, com três adolescentes do mesmo rosto e um som igual ao áudio padrão das redes sociais.
 - **O que o avaliador viu.** Na rodada 1, com a skill o robô continuou o mesmo robô e cada golpe se leu com clareza,
   mas a luta acabou por volta de 6,5 s e os últimos 3,5 s ficaram parados; sem ela, o lutador apanhou mais e por mais
   tempo, enquanto o robô mudou de desenho várias vezes. Na rodada 2, com a skill a roupa seguiu igual nas três
   tomadas e não houve corte que ninguém pediu, mas três alunos saíram com o mesmo rosto e a professora quase não
   orienta ninguém; sem ela, a primeira tomada foi a mais viva da rodada, com dois cortes que ninguém pediu.
+- **Por quê, lido nos prompts depois do voto.** A versão com a skill tinha transformado receitas contra defeito em
+  linhas fixas de todo prompt (luz e exposição constantes, câmera em velocidade constante, um movimento contínuo
+  só): a luta acabou aos 6,5 s de 10, e o lugar ficou sem a lâmpada piscando, sem chuva e sem névoa. Ela descreveu a
+  turma numa linha só, pôs o grupo posando para a câmera e pediu bipes de interface e uma fala que ninguém pediu. A
+  versão sem a skill deu a luta em tempos marcados até os 10 s, moveu a câmera com a ação, deu a cada aluno uma
+  linha própria e manteve o som do lugar. A maioria dessas regras entrou na skill depois da `5.1.0+e4dee7b`, vinda
+  de lições de tutoriais.
+- **O que mudou.** Receita contra defeito agora só entra depois que o defeito aparece; plano longo é escrito em
+  tempos marcados até o fim; cada pessoa em cena ganha uma linha própria; peça sobre a vida real fica em registro
+  documental e com o som do próprio lugar ([lições](lessons-learned/2026-11-own-runs.md)). Uma rodada por tipo de
+  pedido diz qual vídeo ganhou, não qual linha fez a diferença: a próxima rodada às cegas mede a mudança.
+- **O avaliador cego discordou da pessoa nas duas rodadas.** Os critérios dele pesam o controle (identidade, câmera
+  e continuidade somam 45% da nota), e nenhum pergunta se o vídeo parece natural. As notas dele ficam nos registros
+  como segunda opinião; quem decide é o voto da pessoa.
 
 ### Placar da calibração
 

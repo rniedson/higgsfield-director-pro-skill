@@ -10,21 +10,44 @@ audio block).
 
 - **One dominant action and one camera movement per shot.** More than one only in explicit phases:
   "Static for two seconds, then a slow push-in". (Sora cookbook; Higgsfield, "shot list" per block.) A continuous
-  camera path copied from a blocking reference video (§2) counts as one movement.
-- **A shot that must not cut: write the action as one continuous motion, not as beats.** In one tutorial on
-  Seedance 2.0, with three references and a long prompt that already asked for no cuts, the shot cut when the action
-  was split into timed phases, and again when the phases became paragraphs without times; one continuous motion
-  fixed it, in a rewrite that also slowed the walk. Two tests here did not reproduce the cut (2026-11-25): three
-  short timed beats with no references on Seedance 2.5 (0 of 2), and the original's structure on Seedance 2.0,
-  with three references, five timed phases in Chinese and the no-cuts block (0 of 4, at 480p without audio). So
-  beats are one suspect when an unwanted cut appears, not a rule against them, and in the tutorial a "no cuts"
-  line did not prevent the cut. The same form is how cuts are asked for on
-  purpose: tutorial prompts write `CUT 1 (0–4s)`, and Wan documents `Shot 1 [0-3s]` for multi-shot (§4).
+  camera path copied from a blocking reference video (§2) counts as one movement. So does a camera that follows the
+  action in an action shot (handheld at chest height, tracking the fighters, a short push-in on the decisive blow):
+  in a blind round it beat a slow truck at constant speed (one round, 2026-11-26).
+- **The action fills the whole clip.** In a blind round (2026-11-26, Seedance 2.5, a 10 s fight in one shot), the
+  prompt that wrote the fight as one continuous motion, with a described final frame, ended the fight at about 6.5 s
+  and held still for the rest; the prompt that gave the fight in timed beats up to the end (`0–2 s: … 7–10 s: …`)
+  had a longer fight, no cut, and won the person's vote. For a shot of 8 s or more, write timed beats that end at
+  the clip's end, and put the final state in the last beat.
+- **One continuous motion is the fix for a shot that cut, not the default.** In one tutorial on Seedance 2.0, with
+  three references and a long prompt that already asked for no cuts, the shot cut when the action was split into
+  timed phases, and again when the phases became paragraphs without times; one continuous motion fixed it, in a
+  rewrite that also slowed the walk. Here beats have not caused a cut: three short timed beats with no references
+  on Seedance 2.5 (0 of 2), the original's structure on Seedance 2.0 with three references, five timed phases in
+  Chinese and the no-cuts block (0 of 4, at 480p without audio), and the winning take above (0 of 1). So beats are
+  one suspect when an unwanted cut appears, and in the tutorial a "no cuts" line did not prevent the cut. The same
+  form is how cuts are asked for on purpose: tutorial prompts write `CUT 1 (0–4s)`, and Wan documents
+  `Shot 1 [0-3s]` for multi-shot (§4).
 - **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
   product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
   the effect. The camera keeps a single movement; the action carries the emotion, and the sound follows that moment.
   In a blind test, the restrained prompts (a drop running down, a lateral slide) gave better camera and lighting and
   lost to the prompts with action, emotion and sound.
+- **A recipe against a defect is a fix, not a default.** The lines in §6 and in `references/quality.md` ("constant
+  key light and exposure throughout", "at constant speed", "each planted foot stays fixed", "Single continuous
+  shot") answer a defect seen in a take. Written into every prompt as prevention, they flattened both videos that
+  lost a blind round (2026-11-26): no flickering lamp, no haze, a camera that crawled. The versions that won asked
+  for a flickering lamp, rain and haze, and a camera that moved with the action. Add a recipe after a take shows the
+  defect, or when the shot is known to provoke it, and write in the shot's notes which defect it answers.
+- **Every person in frame is someone.** A group written as one line ("a diverse mix of faces and builds") came out
+  as three boys with the same face. The version that gave each visible person a line of their own (one solders, one
+  plugs in a wire, one grins and leans in, each with their own hair) looked natural to the person voting, "as if it
+  was not made with AI". Give each person in a close or medium shot an age, hair, build and one action of their
+  own, and share only what is really shared, such as a uniform. A group bible holds that shared part, not the
+  people (`references/workflow.md` §4).
+- **Observed, not posed.** In a piece about real life (corporate, school, family, documentary), name the register
+  ("documentary-style, natural skin tones") and let people act among themselves. In the same round, the version
+  that lost ended on the group smiling toward the camera; the one that won wrote what the people did among
+  themselves.
 - **Duration, aspect ratio, resolution and audio on/off go in the PARAMETERS**, never in the text. "Make it longer"
   in the prompt does not change the duration. (Sora, Veo, MiniMax.)
 - **Describe what you want to see, not what you don't want.** "The label stays flat and readable", not
@@ -104,6 +127,10 @@ or the model invents the rest.
   off in the parameters; otherwise listen before approving.
 - **In an ad, each shot has a sound accent tied to the action** (the splash, the creak of the material, a low boom on
   the final frame) over a low ambience. Ambience alone leaves the shot lukewarm.
+- **Outside an ad, the sound is the place and what people do in it** (a soldering iron's hiss, the click of a wire,
+  a voice too low to make out). Interface chimes, rising beeps and a line of dialogue the request did not ask for
+  made one corporate video sound, to the person voting, like the stock audio of social media (one blind round,
+  2026-11-26). Do not add a spoken line the request did not ask for.
 - **Generated audio comes out quiet**: between −26 and −28 LUFS integrated in a test with Cinema Studio 4.0. Normalize
   in post for the target platform, or use the connector's `video-sound-design` workflow.
 - Seedance (convention copied by Higgsfield from a ByteDance document, secondary source): music inside `( )`, effects

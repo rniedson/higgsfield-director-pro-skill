@@ -275,7 +275,8 @@ The table above is the promise. To check it, the same requests were made with an
 change under *Unreleased* in the [CHANGELOG](CHANGELOG.md)) went **against the skill**: the person chose the version
 made without it in **2 of 2 rounds**, while the blind judge chose the version with it in both (77.5 × 60.0 and 72.0 ×
 62.0). The round before (`5.1.0+e4dee7b`) chose the skill in 2 of 2, and the first one (`5.1.0+982e7fa`) did not.
-Every round is below as it came out. The sample is small: five rounds, one voter.
+Every round is below as it came out, with what the person said and what the skill changed because of it; that
+change has not been through a blind round yet. The sample is small: five rounds, one voter.
 
 **1. Planning: 18 automated Claude Code sessions, 9 with and 9 without the skill, with no credits spent.** There were
 5 requests (a 3-shot commercial, a "go ahead and generate", product photos, a creator video and a single image), with
@@ -348,9 +349,9 @@ measure it. The sample is still small: three rounds and one voter.
 
 **4. The third round, with the current skill `5.1.0+7b60cfa` (2 rounds, 150.24 credits).** Two request types not
 measured before, with the order of showing drawn on its own: the version with the skill was shown first in round 1,
-the one without it in round 2. Round 1: a 10 s fight scene in one shot, a kung-fu fighter against a chrome robot that
-copied his face, from a start image each condition designed (Seedance 2.5, 480p, with sound). Round 2: a 3-shot
-corporate video for a technical school (Cinema Studio 4.0, 480p, 5 s per shot, with sound).
+the one without it in round 2. Round 1: a 10 s fight scene in one shot, a fighter against a robot, from a start image
+each condition designed (Seedance 2.5, 480p, with sound). Round 2: a 3-shot
+corporate video for a school (Cinema Studio 4.0, 480p, 5 s per shot, with sound).
 
 | Round | Blind judge score, with the skill | Without the skill | The person's blind vote |
 |---|---|---|---|
@@ -360,11 +361,28 @@ corporate video for a technical school (Cinema Studio 4.0, 480p, 5 s per shot, w
 **The person chose the version made without the skill in both rounds; the blind judge chose the version with it in
 both.** The person's vote is the criterion, so the round counts against the skill.
 
+- **What the person said.** Round 1: the version without the skill was much better in movement, atmosphere, sync
+  and characters. Round 2: the version without the skill looked natural, "as if it was not made with AI"; the one
+  with it looked fake, with three teenagers sharing one face and sound like the stock audio of social media.
 - **What the judge saw.** In round 1, with the skill the robot stayed the same robot and every blow read clearly, but
   the fight was over at about 6.5 s and the last 3.5 s held still; without it, the fighter took a longer, heavier
   beating, while the robot changed design several times. In round 2, with the skill the clothes carried across the
   three shots and nothing was cut that nobody asked for, but three students shared one face and the teacher barely
   guided anyone; without it, the first shot was the liveliest of the round, with two cuts nobody asked for.
+- **Why, read in the prompts after the vote.** The version with the skill had turned recipes against defects into
+  lines in every prompt (constant light and exposure, a camera at constant speed, one continuous motion): the fight
+  was over at 6.5 s of 10, and the place had no flickering lamp, rain or haze. It described the class in one line,
+  posed the group toward the camera, and asked for interface chimes and a line of dialogue nobody requested. The
+  version without it gave the fight in timed beats up to 10 s, moved the camera with the action, gave each student
+  a line of their own and kept the sound of the place. Most of those rules entered the skill after
+  `5.1.0+e4dee7b`, from tutorial lessons.
+- **What changed.** A recipe against a defect now goes in after the defect is seen; a long shot is written in timed
+  beats up to its end; each person in frame gets a line of their own; a piece about real life keeps a documentary
+  register and the place's own sound ([lessons](lessons-learned/2026-11-own-runs.md)). One round per request type
+  says which video won, not which line made the difference: the next blind round measures the change.
+- **The blind judge disagreed with the person in both rounds.** Its criteria weigh control (identity, camera and
+  continuity are 45% of the score), and none asks whether the video looks natural. Its scores stay in the records
+  as a second opinion; the person's vote decides.
 
 ### Calibration scoreboard
 

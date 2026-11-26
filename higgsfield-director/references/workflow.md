@@ -38,6 +38,9 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 
 - `description` is copied **verbatim** at the start of the prompt of every shot that lists the entity in `entities`:
   the same sentence in all of them is what best holds identity across generations.
+- A bible for a group (a class, a team, a crowd) holds only what the members share: the uniform, the age range, how
+  many. Each member seen in a close or medium shot is described on their own, in the shot's action or in a bible of
+  their own. One line for the whole group made three boys with one face in a blind round (`references/prompt.md` §1).
 - `fixed` are invariants; `validate` flags a state that contradicts the bible.
 - Each shot can record `start` and `end` per entity; `validate` compares the end of one with the start of the next.
   A deliberate change goes in `approved_changes: ["P01.position"]`.
