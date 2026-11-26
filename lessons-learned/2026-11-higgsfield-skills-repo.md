@@ -8,7 +8,8 @@ Read on 2026-11-25: [github.com/higgsfield-ai/skills](https://github.com/higgsfi
   - four readers covered the faceless-video, websites, brandkit, thumbnail and soul-id skills;
   - `higgsfield-generate` and the repository's top level were read here;
   - every line cited below was opened here;
-  - the catalog claims were checked in the connector's live catalog, at no cost.
+  - the catalog claims were checked in the connector's live catalog, at no cost;
+  - the connector's own `character-sheet` (2.0) and `narration` (1.1) workflows were read in full, for comparison.
 - **Nothing from the repository was run or installed.**
 
 ## What it is
@@ -46,6 +47,9 @@ Read on 2026-11-25: [github.com/higgsfield-ai/skills](https://github.com/higgsfi
 | 6 | A motion that repeats is sampled at uneven fractions of its period: frames taken at a step that divides the period land on the same phase and look identical | `higgsfield-websites/references/game-procedural-animation.md`, lines 73–77 | stated; sound reasoning | medium | `references/quality.md`, Loop |
 | 7 | A references file that `SKILL.md` never cites is never loaded: the repository check now fails on it | the repository's CI (`validate-skills.yml`, orphan check) | — | low-medium | `tools/check_repo.py` |
 | 8 | Behavior scenarios: one request, what the skill must do, and pass, partial or fail, run in a fresh session | `evals/scenarios.md` there (no runner there either) | — | medium | [docs/behavior-scenarios.md](../docs/behavior-scenarios.md) |
+| 9 | The connector's `character-sheet` workflow: face, outfit flat-lay, then a three-panel sheet, with approval after each; one face per sheet; the same person at another age keeps the base's identity fields | `get_preset_instructions /character-sheet`, 2026-11-25 | the vendor's workflow, stated | medium-high | `references/workflow.md` §4 |
+| 10 | The connector's `narration` workflow: 20 to 23 words per 10 s, a take above 2.9 words per second fails; rewrite, never stretch; keep the takes that passed; one voice, from a file; 2048 characters per prompt | `get_preset_instructions /narration`, 2026-11-25 | the vendor's workflow, stated | medium | `references/prompt.md`, audio |
+| 11 | When `get_workflow_instructions` fails by name, `get_preset_instructions` with `/<name>` loads the workflow and lists its files | the calls made here, 2026-11-25 | measured here, two workflows | medium | `references/connector.md` |
 
 ## Confirmations
 
@@ -58,7 +62,10 @@ These were already in the skill:
 - one face per reference sheet;
 - each reference says what it brings and what stays out;
 - approval is never read from silence;
-- a description that says when to use the skill and when not to, within 1024 characters.
+- a description that says when to use the skill and when not to, within 1024 characters;
+- about 2.5 words per second of speech: the connector's `narration` workflow fits 20 to 23 words into 7.8 to 9.5 s
+  of speech, 2.1 to 2.9 per second. (The 20 to 23 words count the whole 10 s block, pauses included; read as words
+  per second of the block they look like 2.0 to 2.3, which is not a different rate.)
 
 The repository is weaker on one point: its Soul ID skill trains a face model from photos without asking whose face
 it is. This skill keeps its rule: a real person's face or voice only with the consent the operator declares.
@@ -78,6 +85,5 @@ it is. This skill keeps its rule: a real person's face or voice only with the co
 - **Soul Location** (`soul_location`) for the first image of a place: text only in the connector, so it takes no
   layout map and no approved reference. To test.
 - **Seed Audio as the source of recorded dialogue** (batch 3, lesson 16), against Eleven v4. It has speech rate,
-  pitch, preset voices and voice Elements. To test.
-- **Speech rate.** This skill fits speech at ~2.5 words per second; the repository's narration rules fit 2.0 to 2.3.
-  Measure a real line in the target language before changing either.
+  pitch, preset voices and voice Elements; the connector's `narration` workflow already uses it for one continuous
+  read. To test.

@@ -56,6 +56,15 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
   fit the approved head onto a body from another batch in an image edit (`Fit the head from IMAGE 1 onto the body
   from IMAGE 2`, matching scale, neck, perspective, skin tone and light); an outfit goes on the same way, the outfit
   and the sheet as two references (two tutorials, shown on screen).
+- **The connector's `character-sheet` workflow** (v2.0, read 2026-11-25) builds a live-action character in three
+  pictures and stops for approval after each: a face with no reference, an outfit flat-lay, then a three-panel sheet
+  (front, back, and the portrait in the right panel) with the face and the outfit attached, in that order. It fixes
+  the models: faces `soul_2` (Realism, 90s, Coming of Age), Realism sheets `gpt_image_2_6` (16:9, 2K), the rest
+  `seedream_5_5`. It keeps one face per sheet too: a sheet with a face in another panel is made again once. A look
+  whose face changes (an injury, another age) starts from an edit of the approved face. For the same person at
+  another age it keeps the base's origin, skin tone, hair colour and texture and eye colour, each written as "as in
+  the base look", and leaves out the base's age, clothes and role. Inside a production planned here, the workflow
+  makes only the sheet; the bible keeps the description it approved, word for word.
 - **A change of state is a new reference.** When a character or product changes on purpose (wet, sweaty, torn
   clothes, a dent, the same person as a child), generate and approve a reference in the new state and use it from
   that shot on, together with `approved_changes`; note which shots each state covers. Written only in the prompt, the change tends to snap back. Images are cheap; video is not. A

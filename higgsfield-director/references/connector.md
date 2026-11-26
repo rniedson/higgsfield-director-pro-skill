@@ -27,6 +27,11 @@ the operator uses that command. The files a workflow cites (guides, examples) ar
 (read-only, costs nothing). The workflow rules the format; this skill's cost and "ok" rule still applies, even if the
 workflow says the intent to create already authorizes spending.
 
+If loading by name fails, load the workflow as a command. On 2026-11-25, `get_workflow_instructions` with a name
+returned a schema error (`character-sheet`, `narration`) and `get_workflow_bundle_file` refused their files;
+`get_preset_instructions` with `/character-sheet` returned the workflow, at the version the live list gives, and listed
+its files as `/character-sheet/references/<file>`, read with the same tool.
+
 | The request is… | Connector workflow |
 |---|---|
 | UGC video (creator talking, unboxing, try-on, tutorial, website tour) | `ugc-video` |

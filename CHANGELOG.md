@@ -12,6 +12,9 @@ All notable changes to this project are listed here. The format follows
   marking a change on a frame of the footage; the first citation form the connector's catalog writes (`@Audio 1`,
   Seed Audio only); the brief asks who appears; frozen frames found with `freezedetect`; uneven frames for a loop.
   The repository check fails on a references file that `SKILL.md` never cites. New `docs/behavior-scenarios.md`.
+  The connector's `character-sheet` and `narration` workflows, read in full: how a sheet is built and approved, and
+  the narration rules that hold for any recorded line; `get_preset_instructions` loads a workflow when loading it by
+  name fails.
 - Public/private boundary: production files stay in their own project; the repository check and CI reject personal
   directories, review pages, working media and machine-specific paths. Contributions use an updated topic branch
   and PR; direct pushes to `main` are forbidden, and only the maintainer merges through GitHub.

@@ -97,6 +97,8 @@ or the model invents the rest.
   puts it all after `Audio:`.
 - **Label who speaks** and repeat the same label in every shot: `Ana says in Brazilian Portuguese: "..."` (Kling, Sora).
 - **The speech fits the duration**: ~2.5 words per second. 4 s fits 1 or 2 short lines (Sora). `validate` warns.
+  The connector's `narration` workflow agrees: 20 to 23 words for a 10 s block, 7.8 to 9.5 s of speech, and a take
+  above 2.9 words per second fails; each period adds ~0.7 s of silence and each comma ~0.5 s (stated there, 2026-11-25).
 - For no speech: "No dialogue" (Wan). For no music track: "No music" (Higgsfield practice for Seedance). It is a
   request, not a guarantee: in one tutorial the music came in anyway. If the shot needs no sound at all, turn audio
   off in the parameters; otherwise listen before approving.
@@ -119,6 +121,15 @@ or the model invents the rest.
   `audio_references` on a model that has them. Name each one, say which shot uses it and which words it carries, and
   ask that the acting and the lips follow the recording, with no new lines and no rushing. In one tutorial the model
   still added a pause or sped up a line now and then: transcribe and check.
+- **Narration from text** goes to the connector's `narration` workflow (v1.1, read 2026-11-25; library voices only,
+  never a clone; stated there, not measured here). Its rules hold for any recorded line:
+  - a take that does not fit is rewritten, never sped up or stretched; a take that passed is kept, and only the
+    failing lines are redone, at most three attempts each;
+  - measure the speech, not the file: an inner pause of 0.8 s or more fails the take;
+  - one voice for the whole job: write its id and type in a file once and copy them from there into every call; a
+    take in another voice fails, however well it fits;
+  - a text-to-speech prompt takes at most 2048 characters: split a long script at paragraphs (~1800 characters),
+    with the same voice and the same delivery phrase in every part.
 - **An invented name, written as it sounds (to test):** `Gan-del-FEE-nah`, not `Gandelfina`, in the spoken line.
 - Real person, someone's voice, a minor: see the hard rules in `SKILL.md`.
 

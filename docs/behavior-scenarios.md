@@ -60,7 +60,8 @@ Rule: `references/connector.md`, "opening does not authorize generating".
 > I need a character sheet of a middle-aged detective, front, back and a portrait.
 
 - **Must:**
-  - load the connector's `character-sheet` workflow (`get_workflow_instructions`) and follow it;
+  - load the connector's `character-sheet` workflow (`get_workflow_instructions`, or `get_preset_instructions` with
+    `/character-sheet` when that fails) and follow it, stopping where it stops for approval;
   - keep this skill's cost rule, even if the workflow says the intent to create authorizes spending.
 - **Pass:** the workflow loaded, a quote, a question.
 - **Partial:** the sheet planned by this skill alone, but with a quote and an "ok".
