@@ -38,6 +38,15 @@ credits (the shots of both conditions), quoted first and with their "ok".
    `rater` says who gave the scores (`blind-auto`, `person` or `none`); the vote is always the person's.
 8. **Show the whole record** to the person. Only with their "go ahead" does it become a contribution.
 
+## What is not a round
+
+- **A video the voter has already seen.** The person would recognize it, so the vote is not blind. A production of
+  their own, followed step by step, can be shown as an example; it is never scored.
+- **One side only.** A good result made with the skill, with nothing made without it from the same request, shows the
+  process, not the difference. It does not enter the scoreboard.
+- **Work done outside the skill.** If the sound, the edit or the grade was added with another tool after the
+  generation, the round also compares those tools: do the same post-production on both sides, or none.
+
 ## Contributing to the repository
 
 The record goes into the repository's `calibration/` folder by pull request (see CONTRIBUTING). CI checks each file

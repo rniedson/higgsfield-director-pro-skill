@@ -23,7 +23,7 @@ python3 <skill>/scripts/hfd.py models --id seedance_2_5       # full entry
 | Several shots in one generation, each with its own prompt and duration | `cinematic_studio_video_3_5` | `multi_shots` and `multi_prompt` (up to 6 shots) in the 2026-11-25 catalog; `kling3_0` is tagged multi-shot and has a per-shot mode on the website (one tutorial, shown), but no control in the connector |
 | Native audio and speech | `cinematic_studio_video_4_0`, `seedance_2_5`, `kling3_0` (`sound`), `veo3_1`, `wan3_0` | audio parameter or "audio" tag |
 | Edit or extend a video | `cinematic_studio_video_4_0`, `seedance_2_5` (`video_edit`, `video_extension`), `kling4_0` | modes in the catalog |
-| Test composition cheaply | on the same model, at the lowest resolution it accepts (quote the test and the final); `seedance_2_5` has `draft` | a test on another model does not predict the final result |
+| Test composition cheaply | on the same model, at the lowest resolution it accepts (quote the test and the final); `seedance_2_5` has `draft` (480p) and `draft_job_id`, which finalizes a draft at a higher resolution within seven days, billed for the draft's whole duration (2026-11-25 catalog). The final repeats the draft's motion; in one run here it also kept the draft's silence although sound was asked, so make the draft with sound when the final needs it | a test on another model does not predict the final result |
 | Realistic image of a person/fashion/UGC | `soul_2` | "Realistic UGC, fashion editorial and character" |
 | Cinema still / concept art | `soul_cinematic`, `cinematic_studio_image` | "Cinema-grade stills and concept art" |
 | Readable text in the image, diagram | `nano_banana_pro`, `ideogram_4_6` | "text and diagrams"; masked editing |
