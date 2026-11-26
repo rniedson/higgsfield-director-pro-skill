@@ -3,8 +3,8 @@
 What each source showed and said, and a minimal reproduction. None of these has been run. Before running one, quote
 it, get the operator's ok, and give it a card of its own, as in [2026-11-25-timed-beats.md](2026-11-25-timed-beats.md).
 
-In the six from batches 1 and 2, the generation panel never appears with the settings; in batch 3 two of them show
-a prompt or a panel. Each rests on a judgment made by watching or listening, so each is a hypothesis.
+In the six from batches 1 and 2, the generation panel never appears with the settings; in batch 3, two of the six
+from part 1 show a prompt or a panel, and all six from part 2 show a prompt, a panel or a slide. Each rests on a judgment made by watching or listening, so each is a hypothesis.
 
 ## The previous clip as a video reference
 
@@ -161,3 +161,72 @@ a prompt or a panel. Each rests on a judgment made by watching or listening, so 
 - **Reproduction:** a generic three-panel sheet. Only the locked block varies (present, or a plain "change only
   [target]; preserve everything else"). Four attempts per version. Measure the changes nobody asked for, panel by
   panel.
+
+## The location's views: one file or one file per view
+
+[Batch 3, part 2](../2026-11-higgsfield-channel-3.md#part-2-what-it-says-about-earlier-lessons). Video 36 [21:56](https://www.youtube.com/watch?v=6aJ2BneDB5M&t=1316s);
+video 14 and the [faithful card](2026-11-25-timed-beats-faithful.md).
+
+- **Shown:** a slide that splits a location into one file per view, next to one image with "front view" and "back
+  view" written on it as the thing not to do (36 [21:56](https://www.youtube.com/watch?v=6aJ2BneDB5M&t=1316s)). Video 14 and our faithful run used both views stacked in
+  one file, and the layout was followed.
+- **Said:** for each cut, the reference with the view that cut needs.
+- **Unknown:** whether the written labels or the stacking caused trouble, and on which model.
+- **Reproduction:** the same two views of a generic room, as one stacked file against two files; the same prompt,
+  the same model. Four attempts per version. Count layout errors, and which view each shot follows.
+
+## Dialogue from recordings
+
+[Batch 3, lesson 16](../2026-11-higgsfield-channel-3.md#part-2-adopted). Video 41 [27:52](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1672s) to [37:46](https://www.youtube.com/watch?v=mu_8D93Dkik&t=2266s).
+
+- **Shown:** the text-to-speech panel with Eleven v4 and four takes per line (41 [27:52](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1672s)); the request that names each
+  recording, says which shot uses it, and asks the acting and the lips to follow it without new or rushed lines
+  (41 [32:00](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1920s)); three audio clips among the references and "The spoken line comes from the attached voice recording"
+  (41 [34:58](https://www.youtube.com/watch?v=mu_8D93Dkik&t=2098s)).
+- **Said:** the model sometimes added a pause or sped up a line (41 [37:46](https://www.youtube.com/watch?v=mu_8D93Dkik&t=2266s)).
+- **Unknown:** how many attempts per shot, and how close the lips were.
+- **Reproduction:** a generic character, two short lines; the same lines as audio references against the same
+  lines written in the prompt. Four attempts per version, on a model with `audio_references`. Transcribe locally
+  and compare word by word with the text; check the lips at the start, middle and end of each line. A generated or
+  consented voice only.
+
+## An invented name, written as it sounds
+
+[Batch 3, lesson 22](../2026-11-higgsfield-channel-3.md#part-2-adopted). Video 36 [17:06](https://www.youtube.com/watch?v=6aJ2BneDB5M&t=1026s).
+
+- **Shown:** a slide: "Gandelfina" against "Gan-del-FEE-nah" (36 [17:06](https://www.youtube.com/watch?v=6aJ2BneDB5M&t=1026s)).
+- **Unknown:** any generated result with each spelling.
+- **Reproduction:** an invented name in one line, spelled normally and spelled as it sounds; five takes each, with
+  sound. Listen blind and note which takes say it as intended.
+
+## An override against the reference
+
+[Batch 3, lesson 14](../2026-11-higgsfield-channel-3.md#part-2-adopted). Video 41 [34:58](https://www.youtube.com/watch?v=mu_8D93Dkik&t=2098s).
+
+- **Shown:** "IMPORTANT OVERRIDE: she sits inside the mecha WITHOUT A HELMET", with a reference of her in a helmet
+  (41 [34:58](https://www.youtube.com/watch?v=mu_8D93Dkik&t=2098s)).
+- **Unknown:** what came out without the override line.
+- **Reproduction:** a generic character whose reference wears a hat, in a scene without it; with the override line
+  and without it. Four attempts per version. Look for the hat at the start, middle and end.
+
+## A whip pan with a length
+
+[Batch 3, lesson 25](../2026-11-higgsfield-channel-3.md#part-2-adopted). Video 19 [21:59](https://www.youtube.com/watch?v=0HIRIT7px9Y&t=1319s) to [22:42](https://www.youtube.com/watch?v=0HIRIT7px9Y&t=1362s).
+
+- **Shown:** the request "Make the whip pan 0.5 seconds long, from Subject A … to Subject B settle" (19 [22:13](https://www.youtube.com/watch?v=0HIRIT7px9Y&t=1333s)).
+- **Said:** give it a length and label the subjects (19 [21:59](https://www.youtube.com/watch?v=0HIRIT7px9Y&t=1319s)); a whip from a medium shot to a close-up is a
+  mistake, because it must end on the shot size it started on (19 [22:42](https://www.youtube.com/watch?v=0HIRIT7px9Y&t=1362s)).
+- **Unknown:** the blur's actual length in the result.
+- **Reproduction:** two people facing each other, a whip pan from A to B; with and without "0.5 seconds". Four
+  attempts per version. Count the frames of blur, and compare the shot size before and after.
+
+## How the connector reads a reference's name
+
+[Batch 3, part 2, decisions](../2026-11-higgsfield-channel-3.md#part-2-decisions). Videos 41 [20:29](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1229s) and 42 [17:32](https://www.youtube.com/watch?v=reFzEtCG_m8&t=1052s).
+
+- **Shown:** on the website, the prompt cites references as `<<<image_1>>>` (41 [20:29](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1229s); 42 [17:32](https://www.youtube.com/watch?v=reFzEtCG_m8&t=1052s)). The Seedance help
+  center writes `@Image 1`. The connector's catalog says neither.
+- **Unknown:** which form binds a name to a reference through the connector.
+- **Reproduction:** two references that cannot be confused (a red mug, a blue mug); the prompt asks for the mug of
+  the second image only, once with `@Image 2` and once with `<<<image_2>>>`, then with the two references swapped.
+  A cheap model with `image_references`, four attempts per version. Count which mug appears.

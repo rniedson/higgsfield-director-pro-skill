@@ -36,6 +36,13 @@ All notable changes to this project are listed here. The format follows
 - Three example references in `higgsfield-director/examples/references/` (a character sheet, a location in two
   views, a set detail), with the prompts that made them, shown in both READMEs; the boundary check accepts still
   images in that folder.
+- The second part of batch 3 of the channel's lessons (videos 36 to 43, and 19): a reference's line also says what
+  it does not bring, with an override when the scene differs; the parameters that came back are compared with the
+  plan; dialogue from recordings passed as audio references (to test); when to use a blocking render and how to frame
+  it; what no reference shows, the model invents; a grabbed frame carries its take's defects; one sheet per state;
+  where to split a long piece; a whip pan with a length (to test); the sheet's light. How references are cited on
+  the website (`<<<image_1>>>`) and in the help center (`@Image 1`) is recorded, the connector's form not confirmed.
+  Six new entries in `lessons-learned/tests/to-test.md`.
 - A closer reproduction of the timed-beats lesson (Seedance 2.0, three references, the tutorial's prompt
   structure, 21:9, 15 s): 0 of 4 cut, 0 of 7 with the first test, so timed beats are one suspect among others.
   Cut detection gains a positive control and a spike measure, because scene detection missed a hard cut between

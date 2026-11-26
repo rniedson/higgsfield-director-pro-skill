@@ -47,12 +47,17 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 - **One face per reference sheet.** A character sheet carries one face close-up; the other panels (full body, front
   and back) are cropped from the neck down, so the model has a single face to read. Neutral mid-grey background, soft
   even light, no strong highlights. With several faces on the sheet, the model picks one and drifts. (Higgsfield YouTube tutorials, 2026.)
+  The sheet's light travels into every shot: one tutorial picked the sheet with no hard shadow on the face and no
+  glare on the hair.
 - **A face that drifts from the approved one is fixed on the sheet:** edit the face panel with the character's
   approved face and keep the body panels from the neck down, instead of rewriting the prompt. A real person's face
-  only with the consent the operator declares; swapping faces with another tool is outside this skill.
+  only with the consent the operator declares; swapping faces with another tool is outside this skill. Another way:
+  fit the approved head onto a body from another batch in an image edit (`Fit the head from IMAGE 1 onto the body
+  from IMAGE 2`, matching scale, neck, perspective, skin tone and light); an outfit goes on the same way, the outfit
+  and the sheet as two references (two tutorials, shown on screen).
 - **A change of state is a new reference.** When a character or product changes on purpose (wet, sweaty, torn
-  clothes, a dent), generate and approve a reference in the new state and use it from that shot on, together with
-  `approved_changes`. Written only in the prompt, the change tends to snap back. Images are cheap; video is not. A
+  clothes, a dent, the same person as a child), generate and approve a reference in the new state and use it from
+  that shot on, together with `approved_changes`; note which shots each state covers. Written only in the prompt, the change tends to snap back. Images are cheap; video is not. A
   change planned for the middle of a scene (he takes off a moustache) may work better as a removable prop in the
   reference (one tutorial; to test).
 - **Positions: a layout map.** When several people or objects must keep their places or their count, generate a
@@ -67,7 +72,11 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
   belongs in the scene already in the location image. Fix the place and the angle before adding the people. Before
   any video, clean the location image: remove text, background cars and whatever the model tends to multiply.
   Cover every side the camera will face: in a test here, the camera turned toward a wall that no reference showed
-  from that side, and the model added a second window there in four of four attempts (2026-11-25).
+  from that side, and the model added a second window there in four of four attempts (2026-11-25). The same holds
+  for every part the shot reveals: what no reference shows, the model invents (the hair under a helmet that comes
+  off, in one tutorial). A prop whose shape is hard to read (a blade that is part of the hand) gets its own sheet,
+  outside and inside, or the model gives it the usual shape; an empty vehicle filled with invented people until the
+  characters were in the references.
 - **One change per image edit**, everything else kept: the product's name, an object removed. Many people in one
   image break the faces: generate them one at a time and assemble the picture in an image editor.
 - **An approved sheet can become an Element.** The connector's `elements_create` saves it under a name; a prompt

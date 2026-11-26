@@ -100,6 +100,10 @@ hard cut, match cut, match on action, jump cut, smash cut, cross dissolve, fade 
 occlusion transition, light flash, seamless loop, J-cut, L-cut. The transition is made in the edit; in the prompt,
 describe the final frame of one shot and the opening frame of the next.
 
+A whip pan inside one shot, from one subject to another: give its length (`0.5 seconds`), label the subjects
+(`from Subject A … to Subject B`), and end on the same shot size it started on; a whip from a medium shot to a
+close-up read as a mistake (one tutorial; to test).
+
 ## Audio
 
 ambient sound, room tone, foley, diegetic sound, atmospheric drone, sub bass impact, whoosh, rising tension,

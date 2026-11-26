@@ -90,7 +90,9 @@ Quote, wait for the ok, and shut it down when done (`gpu_rental_stop`).
 5. **Generate:** `generate_video` / `generate_image` (or `_batch` for independent shots), preferably with
    `params: {"ref": "<quote_ref>"}` from the estimate, to generate exactly what was quoted. Before the first
    generation without a folder, `get_preferences` (the connector decides whether to create a project).
-6. **Wait and show:** `jobs_wait` (timeout ≤ 15 s per call, repeat) and `show_generation_by_ids` once.
+6. **Wait and show:** first compare the `params` and any `adjustments` in the submission result with the plan
+   (`references/quality.md`, "Parameters that ran"); then `jobs_wait` (timeout ≤ 15 s per call, repeat) and
+   `show_generation_by_ids` once.
 7. **Review:** look at the result (frames from the start, middle and end of each shot) and score it with
    `hfd.py score` (`references/quality.md`). The next attempt changes **one** variable and goes back to step 3.
 
