@@ -42,7 +42,11 @@ audio block).
   and hair; the room's walls, materials and light; the clip's framing and timing) and what stays out of the shot (the
   sheet's grey background and clothes, the photo's sunlight); for a place or a still, add that it is a reference, not
   the first frame. Without a role, an input came back as a still picture filling the screen. (Higgsfield YouTube
-  tutorials, 2026: written out in three prompts shown on screen.)
+  tutorials, 2026: written out in three prompts shown on screen.) A video reference says whether it gives the motion
+  or only the camera path; an audio reference, whether it gives the words and their delivery or only the rhythm.
+  When the scene must differ from a reference (the helmet comes off, the roof has been torn away), write it in that
+  reference's line as an override, `IMPORTANT OVERRIDE: she sits in the cabin WITHOUT A HELMET`, or the reference
+  wins. (Four more prompts shown on screen in later tutorials.)
 - **A measure instead of an adjective** (to test). Tutorial prompts on screen give the speed (8 km/h), the field of
   view and the tilt in degrees, the white balance in kelvin, the grade as colors with their shares (60/30/10) or as
   hex values, and the camera path as one constant-radius orbit rather than an orbit plus a push-in. Not compared with
@@ -58,7 +62,9 @@ audio block).
   assume.
 - **A short clip obeys better.** The longer the shot, the more the model invents; split it into shots. When an action
   (a stunt, a chase) and a performance (a look, a line) compete in one prompt, both come out weaker: give each its
-  own shot.
+  own shot. Before generating, count what one shot asks for: strong actions, camera movements, important characters,
+  complex effects, changes of place. Each one beyond the first is a reason to consider a split (tutorials give
+  thresholds; none was measured, so none is given here).
 - **Change one thing at a time** between attempts. Two failures in a row: replan the shot instead of piling on
   constraints.
 
@@ -76,10 +82,10 @@ help.aliyun.com/en/model-studio/text-to-video-prompt; platform.minimax.io/docs/a
 | Edit | `Change only [target]; preserve everything else exactly as it is. [What the target looks like].` One change per edit. After many edits of the same image the layout drifts: generate a new image with the full description and the same references instead of editing again. For a sheet or a frame whose layout must stay, list the locked parts with their priority, then the one change: `Locked, highest priority: [the framing, the panels, the face]. The only change: [target].` (one tutorial, shown on screen) |
 | Extension | `Continue seamlessly from the final frame of the previous clip. [What happens next].` |
 | Still image | No time, no moving camera, no sound: subject, setting, shot size, angle, lens, lighting, color, style. |
-| Sequence | Generate shot by shot; the **last frame** of one (or any good frame, cutting the clip there) becomes the start image of the next (Higgsfield; Veo first/last frame). On a model whose catalog lists `video_references`, the previous shot itself can be the reference (2026-11-25 catalog: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5 and Cinema Studio 4.0, up to 10). Not yet compared with the last frame here: test it one variable at a time. |
+| Sequence | Generate shot by shot; the **last frame** of one (or any good frame, cutting the clip there) becomes the start image of the next (Higgsfield; Veo first/last frame). On a model whose catalog lists `video_references`, the previous shot itself can be the reference (2026-11-25 catalog: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5 and Cinema Studio 4.0, up to 10). Not yet compared with the last frame here: test it one variable at a time. A piece longer than the model's maximum is split at a natural seam (a hard cut, a whip, a defocus), never in the middle of a slow motion or a transformation, and every part repeats the palette, the main object and the identity anchor (a written rule shown in one tutorial). |
 | Start and end frames | For a change of state or place inside one shot: generate and approve the opening and the closing image, and ask for the motion between them, on a model with the `end_image` role (`references/models.md`). |
 | Edit real footage | `mode: video_edit` on a model that has it (2026-11-25 catalog: Seedance 2.5 and Cinema Studio 4.0; billed by the length of the input clip). `Change [what], at [the moment: when he snaps his fingers]. Keep exactly: [face, gestures, rings, camera move, background].` Say exactly where the change happens in the frame; tutorials mark the area on a frame of the clip, which the connector's catalog does not show as an input of this mode. Cut the footage into pieces of at least 4 s (one tutorial padded a shorter piece with its frozen last frame); the output takes the input's length (`duration` is ignored in this mode, 2026-11-25 catalog). The footage is the operator's; a real person in it only with consent. |
-| Motion from a blocking render | A rough 3D blocking render, made in another tool, as a video reference for the camera path and its timing. The text adds what the render does not show (look, materials, acting) as one continuous motion; the render carries the timing. The render fixes the positions; people's movement is written in the text, or they copy the stiffness of the blocks. |
+| Motion from a blocking render | A rough 3D blocking render, made in another tool, as a video reference for the camera path and its timing. The text adds what the render does not show (look, materials, acting) as one continuous motion; the render carries the timing. The render fixes the positions; people's movement is written in the text, or they copy the stiffness of the blocks. Use it for a shot whose camera path is specific or easier to animate than to describe; simple shots go from text. Frame the render wide: with the camera too close, the model could not read the positions, and pulling back fixed it. It carries camera and timing, not acting: with a plain grey figure, faces and hands did not come through, and with more detail the model copied the render's shapes instead of the sheet (one team's tutorial). |
 | Motion from filmed footage | Film the movement yourself (a knee lift, a turn of the head) and pass the clip as a video reference, on a model whose catalog lists `video_references` (2026-11-25: Seedance 2.0, up to 3 clips of 2–15 s; Seedance 2.5, up to 10). Write what the clip supplies (timing, path, blocking) and what is replaced (the face, the clothes). One tutorial made an identity reference from a video of the head turning. To test. |
 
 A clip shown as a screen inside the shot (a TV, a phone) sets the shot's length: the shot lasts as long as the clip,
@@ -108,6 +114,12 @@ or the model invents the rest.
 - **An accent (to test):** naming the accent was not enough in one tutorial; describing how it sounds (the R, the
   vowels) helped. Keep the same voice description in every shot of that character and listen to the takes side by
   side.
+- **Dialogue from recordings (to test):** generate each line first (the connector's `elevenlabs_v4` takes ordered
+  turns with a voice per turn and up to four variations), choose a take per line, and pass the takes as
+  `audio_references` on a model that has them. Name each one, say which shot uses it and which words it carries, and
+  ask that the acting and the lips follow the recording, with no new lines and no rushing. In one tutorial the model
+  still added a pause or sped up a line now and then: transcribe and check.
+- **An invented name, written as it sounds (to test):** `Gan-del-FEE-nah`, not `Gandelfina`, in the spoken line.
 - Real person, someone's voice, a minor: see the hard rules in `SKILL.md`.
 
 ## 4. Notes by model (official fact when there is a manufacturer source)
@@ -116,7 +128,7 @@ or the model invents the rest.
 |---|---|---|
 | Cinema Studio 4.0 (Higgsfield) | Camera, lens, aperture, era, genre, pacing and light exist as **controls** (`camera_model_id`, `camera_lens_id`, `light`...); camera movement goes in the text: the connector has no movement or frame-rate parameter (the movement control on the website is not exposed). Audio on by default. 4–30 s. | connector catalog (2026-11-25); Cinema Studio help center (modified 2026-11-19) |
 | Cinema Studio 3.5 (Higgsfield) | Several shots in one generation: `multi_shots: true` with `multi_shot_mode: "custom"` and `multi_prompt`, up to 6 items, each with its own `prompt` and `duration`; `auto` lets the model plan the shots. Set `prompt_language: "en"` (the default is `zh`) and `generate_audio: true` when sound is wanted (the default is off). `enhance_prompt` rewrites the prompt (off by default). Up to 15 media in all. | connector catalog (2026-11-25) |
-| Seedance 2.5 / 2.0 | References cited in the text as `@Image 1`, `@Video 1`, `@Audio 1`, with the role of each one written out (not inside the image): what it brings and what stays out (§1). Order: subject and action; scene; style; camera or cut; audio. | Seedance help center (modified 2026-11-17), Higgsfield blog guide |
+| Seedance 2.5 / 2.0 | References cited in the text as `@Image 1`, `@Video 1`, `@Audio 1`, with the role of each one written out (not inside the image): what it brings and what stays out (§1). The Higgsfield website writes them as `<<<image_1>>>`, `<<<video_1>>>`, the same form as Elements (two tutorials, on screen). Through the connector the references are numbered in the order of `medias`; which form binds there is not confirmed: name each reference by number and by what it shows. Order: subject and action; scene; style; camera or cut; audio. | Seedance help center (modified 2026-11-17), Higgsfield blog guide; Higgsfield YouTube tutorials, 2026 |
 | Kling 3.x / 4.0 | Subject, action, scene, camera, light, mood. Clear labels for who speaks; speech in Chinese, English, Japanese, Korean or Spanish (Portuguese: test first). | kling.ai/blog/kling-ai-prompt-guide |
 | Veo 3.1 | Elements: subject, action, scene, angle, motion, lens, style, time, audio. **Zoom is not dolly.** "Advanced" angles are not officially supported. 4, 6 or 8 s. | Vertex AI video prompt guide; aistudio.google.com/docs/veo |
 | Wan 2.6–3.0 | T2V = entity + scene + motion; I2V = motion + camera. Multi-shot in the text: `Shot 1 [0-3s] ...`; single shot: "Generate single shot." | help.aliyun.com/en/model-studio/text-to-video-prompt |

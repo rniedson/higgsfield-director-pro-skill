@@ -47,6 +47,7 @@
 | People or objects swap places, or their count changes | positions given only in the text | a top-view layout map as a reference, with the same colors named in the prompt (`references/workflow.md` §4) | count and positions in each frame |
 | Geometry changes between attempts (where something lands, its scale) | words do not fix the geometry | an annotated image as a reference: arrows, marks, positions | compare the attempts frame by frame |
 | A reference comes back as a still picture filling the screen | its role is not written, or nothing anchors it | write what it brings and that it is a reference, not the first frame (`references/prompt.md` §1); for a place, a layout map | the first second of each attempt |
+| Something no reference shows is invented (a second window, hair under a helmet) | the camera turned to a side, or the shot revealed a part, that no reference covers | a reference for that side or part (`references/workflow.md` §4) | the frames after the turn or the reveal |
 | A changed state snaps back (torn clothes mend, wet hair dries) | the change is only in the text | a new approved reference in the new state | the state in every frame after the change |
 | Background objects multiply (cars, booths, signs) | clutter in the location image | clean the location image before the video (`references/workflow.md` §4) | count the objects at the start and at the end |
 | Faces break in an image with many people | too many people in one generation | one person per generation, assembled in an image editor | each face against its sheet |
@@ -60,10 +61,13 @@
 Two failures in a row on the same shot: **replan** (another framing, another model, a shorter shot) instead of
 piling up constraints. A hypothesis is not a cause: record what changed and what happened. When every attempt fails
 the same way, look upstream first: a reference can carry the defect (in one tutorial, the car's reference had the
-steering wheel on the wrong side), so fix the reference before rewriting the prompt; when the shot is nearly right, more attempts of the same prompt may be enough.
+steering wheel on the wrong side; in another, a frame grabbed from a good take for its framing had lost the
+character's headphones, and every new take lost them too until they were painted back), so fix the reference before
+rewriting the prompt, and check a grabbed frame against the sheet before it becomes a reference; when the shot is nearly right, more attempts of the same prompt may be enough.
 
 Give each defect one short, concrete note (where it is, and how it should look or move) and regenerate only the shot
-it affects. Notes pile up: after several patches, rewrite the prompt whole from the approved plan, and generate an
+it affects. Before paying for another attempt, look for a usable piece: one or two seconds of a failed generation
+may be enough for the edit. Notes pile up: after several patches, rewrite the prompt whole from the approved plan, and generate an
 image anew instead of editing it again.
 
 A cut written on purpose is allowed after a test, on a model with a multi-shot control (2026-11-25 catalog: Cinema
@@ -97,6 +101,10 @@ Checks that spend no credits:
   clean 96-frame clip gave 0 and a 12 fps clip doubled to 24 fps gave 48.
 - **Model that ran:** check the `model` field of `jobs_wait`. In one test, a request for `nano_banana_pro` came back
   as `nano_banana_2`.
+- **Parameters that ran:** the submission result lists the `params` the server will use, and `adjustments` when it
+  changed a value (an unsupported value becomes the nearest allowed one). Compare the aspect ratio, duration,
+  resolution, audio and count with the plan before waiting. In two tutorials the prompt text asked for 9:16 or 21:9
+  while the panel sent 16:9, and nobody noticed.
 Without the ability to see images, ask the operator for a description and say that the evaluation is the operator's.
 
 ## Score with evidence
