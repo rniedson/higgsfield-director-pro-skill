@@ -7,6 +7,11 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The READMEs' results start from where the skill stands: the latest blind rounds (2 of 2 with the skill) first; the
+  first round kept as it came out, now with its skill version; and what changed since, which no blind round has
+  measured yet. `references/calibration.md` says what is not a round (a video the voter has seen, one side only,
+  post-production on one side). `references/models.md`: a Seedance 2.5 final made from a draft repeats the draft's
+  motion and, in one run, kept its silence; new `lessons-learned/2026-11-own-runs.md`.
 - Lessons from Higgsfield's official skills repository, checked against the connector's live catalog: the list of
   connector workflows (34, with `musical-cards`, `video-redub`, `playable` and `playable-ad`); `draw_to_video` for
   marking a change on a frame of the footage; the first citation form the connector's catalog writes (`@Audio 1`,

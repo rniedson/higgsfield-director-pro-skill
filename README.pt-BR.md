@@ -28,7 +28,7 @@
 > dizer com qual serviço a skill funciona. Para conta, créditos, cobrança ou o conector, fale com o Higgsfield; este
 > repositório não resolve isso. Veja o [Aviso](#aviso).
 
-> **Estado:** versão 5.1.0.
+> **Estado:** versão 5.1.0, mais as mudanças do `main` listadas em *Unreleased* no [CHANGELOG](CHANGELOG.md).
 > Sozinha, a skill só *planeja*: vídeo e imagem são gerados pelo conector oficial do Higgsfield (MCP), com créditos da
 > sua conta, e **só depois que o custo é mostrado e o operador diz "ok"**.
 
@@ -270,6 +270,16 @@ imagem solta ou um fluxo pronto do conector, ela é dispensável.
 
 A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 24/11/2026.
 
+**Onde a skill está.** Nas rodadas às cegas mais recentes, com a skill já corrigida depois da primeira
+(`5.1.0+e4dee7b`), a pessoa escolheu a versão feita com a skill nas **2 de 2 rodadas**, e o avaliador cego concordou
+(82,5 × 73,8 e 78,0 × 69,8). A primeira rodada, com a versão anterior `5.1.0+982e7fa`, deu o contrário: ela fica abaixo
+como saiu, com o que mudou por causa dela. A amostra é pequena: três rodadas, uma pessoa votando.
+
+**Mudou depois da última rodada às cegas, e ainda não foi medido:** a pré-produção barata com storyboard em croqui,
+as lições dos tutoriais da Higgsfield (três lotes) e do repositório oficial de skills dela, e as regras dos próprios
+fluxos de narração e de folha de personagem do conector ([CHANGELOG](CHANGELOG.md), *Unreleased*). Nada disso passou
+por uma rodada às cegas; até passar, é promessa, como a tabela acima.
+
 **1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
 pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
 ferramentas de gerar bloqueadas.
@@ -282,7 +292,7 @@ ferramentas de gerar bloqueadas.
 - **O que não deu para medir:** se a skill evita "gastar sem pedir ok". Com as ferramentas de gerar bloqueadas, nenhuma
   sessão podia gastar.
 
-**2. O resultado: o comercial gerado e julgado às cegas (6 tomadas de 5 s, 90 créditos).** Foi um comercial de tênis
+**2. A primeira rodada, com a skill `5.1.0+982e7fa`: o comercial gerado e julgado às cegas (6 tomadas de 5 s, 90 créditos).** Foi um comercial de tênis
 de corrida em 3 tomadas: detalhe do material, corrida na pista molhada à noite e o produto como herói no fim. Os
 prompts de cada condição foram gerados no Cinema Studio 4.0 em 480p, com som, e os dois vídeos ganharam rótulos
 sorteados (X e Y). Um avaliador automático, que só via o pedido e os vídeos, deu as notas, e uma pessoa votou sem saber
@@ -312,7 +322,7 @@ qual era qual.
 Os três pontos viraram regras nesta versão ([prompt](higgsfield-director/references/prompt.md),
 [qualidade](higgsfield-director/references/quality.md)).
 
-**3. A revanche, com a skill corrigida (2 rodadas, 152 créditos).** Com as três correções, o mesmo método rodou de
+**3. A revanche, com a skill corrigida `5.1.0+e4dee7b` (2 rodadas, 152 créditos).** Com as três correções, o mesmo método rodou de
 novo, com um sorteio de X e Y por rodada. Na rodada 1, o mesmo comercial de tênis, agora com a mesma foto do produto
 nas duas condições (gerada antes, por 2 créditos). Na rodada 2, um trailer de 3 tomadas em 16:9: um faroleiro numa
 noite de tempestade. A tomada do meio foi recusada pelo filtro de direitos autorais do conector nas duas condições,
