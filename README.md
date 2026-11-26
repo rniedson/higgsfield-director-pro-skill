@@ -271,12 +271,12 @@ a ready-made connector workflow, you do not need it.
 
 The table above is the promise. To check it, the same requests were made with and without the skill, on 24/11/2026.
 
-**Where it stands.** The latest blind rounds (26/11/2026, with the current skill `5.1.0+7b60cfa`, which carries every
-change under *Unreleased* in the [CHANGELOG](CHANGELOG.md)) went **against the skill**: the person chose the version
-made without it in **2 of 2 rounds**, while the blind judge chose the version with it in both (77.5 × 60.0 and 72.0 ×
-62.0). The round before (`5.1.0+e4dee7b`) chose the skill in 2 of 2, and the first one (`5.1.0+982e7fa`) did not.
-Every round is below as it came out, with what the person said and what the skill changed because of it; that
-change has not been through a blind round yet. The sample is small: five rounds, one voter.
+**Where it stands.** In the latest blind rounds (26/11/2026, `5.1.0+0717197`), the person chose the version made with
+the skill in **2 of 2 rounds**: "the most natural", videos that "could pass for real footage". They were the same two
+requests on which the version before (`5.1.0+7b60cfa`) had lost 2 of 2 a few hours earlier, run again with new videos
+on both sides after the fix described in section 4. The blind judge's score went against the person in all four of
+those rounds, in both directions, so it is kept as a second opinion only. Every round is below as it came out, the
+losses included. The sample is small: seven rounds, one voter.
 
 **1. Planning: 18 automated Claude Code sessions, 9 with and 9 without the skill, with no credits spent.** There were
 5 requests (a 3-shot commercial, a "go ahead and generate", product photos, a creator video and a single image), with
@@ -347,7 +347,7 @@ the left, and "having seen it first may also affect the choice". Two rounds cann
 blind` now draws, separately, which version is shown first, and the record keeps the order so the scoreboard can
 measure it. The sample is still small: three rounds and one voter.
 
-**4. The third round, with the current skill `5.1.0+7b60cfa` (2 rounds, 150.24 credits).** Two request types not
+**4. The third round, with `5.1.0+7b60cfa` (2 rounds, 150.24 credits).** Two request types not
 measured before, with the order of showing drawn on its own: the version with the skill was shown first in round 1,
 the one without it in round 2. Round 1: a 10 s fight scene in one shot, a fighter against a robot, from a start image
 each condition designed (Seedance 2.5, 480p, with sound). Round 2: a 3-shot
@@ -384,6 +384,33 @@ both.** The person's vote is the criterion, so the round counts against the skil
   continuity are 45% of the score), and none asks whether the video looks natural. Its scores stay in the records
   as a second opinion; the person's vote decides.
 
+**5. The fourth round: the retest with the fixed skill `5.1.0+0717197` (2 rounds, 150.24 credits).** The same two
+requests as section 4, with new videos and new draws on both sides; the version without the skill was planned again
+too. The version shown first was the one with the skill in round 1 and the one without it in round 2.
+
+| Round | Blind judge score, with the skill | Without the skill | The person's blind vote |
+|---|---|---|---|
+| 1 · fight scene, one 10 s shot | 58.0 | **76.5** | **with the skill** |
+| 2 · corporate video, 3 shots | 70.5 | **73.5** | **with the skill** |
+
+**The person chose the version made with the skill in both rounds**, in round 2 against the order of showing: "The
+most natural: no errors, hallucinations or artificial gestures; could pass for real footage."
+
+- **What the fix did.** The prompts with the skill carried no defect recipe. The fight was written in timed beats up
+  to 10 s, with a camera that followed it, a flickering lamp, rain and haze. Each student and the teacher had a line
+  of their own, in a documentary register, with the sound of the place.
+- **What it did not fix.** In round 1 the start image made with the skill lost the premise: the robot came out with
+  a blank chrome head instead of the fighter's face. A production would catch that on the review page; a blind round
+  generates what comes. In round 2 the model stitched two cuts nobody asked for into the first shot, at about 2.2 and
+  3.7 s (the other side had the same in section 4), and small white crests appeared on some shirts in the last shot,
+  although the request said no brand.
+- **The blind judge chose against the person again, in both rounds**, this time for the version without the skill:
+  it weighed the blank robot head and the extra cuts. Asked separately which version looked more natural, it agreed
+  with the person in round 2 and not in round 1. In the last four rounds its score never picked what the person
+  picked; its criteria do not ask whether the video could pass for real footage, which is what the person judged on.
+- **What it does not show.** One round per request type says which video won, not which rule made the difference.
+  The version seen first was chosen in 4 of 6 rounds with the order recorded.
+
 ### Calibration scoreboard
 
 Every blind round, ours or from anyone who uses the skill, comes in here by pull request
@@ -393,16 +420,16 @@ Every blind round, ours or from anyone who uses the skill, comes in here by pull
 | Request type | Rounds | Chose with the skill | Chose without | Tie | Blind reviewer score, with × without |
 |---|---:|---:|---:|---:|---|
 | Product ad | 2 | 1 | 1 | 0 | 76.6 × 72.5 (2) |
-| Character scene | 1 | 0 | 1 | 0 | 77.5 × 60.0 (1) |
+| Character scene | 2 | 1 | 1 | 0 | 67.8 × 68.2 (2) |
 | Trailer | 1 | 1 | 0 | 0 | 78.0 × 69.8 (1) |
-| Corporate | 1 | 0 | 1 | 0 | 72.0 × 62.0 (1) |
-| **Total** | 5 | 2 | 3 | 0 | |
+| Corporate | 2 | 1 | 1 | 0 | 71.2 × 67.8 (2) |
+| **Total** | 7 | 4 | 3 | 0 | |
 
-By skill version (with × without): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2.
+By skill version (with × without): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2; `5.1.0+0717197`: 2 × 0.
 
-The version seen first was chosen in 3 of 4 round(s) with the order recorded.
+The version seen first was chosen in 4 of 6 round(s) with the order recorded.
 
-Generated by `tools/aggregate_calibration.py` from 5 record(s) in `calibration/`.
+Generated by `tools/aggregate_calibration.py` from 7 record(s) in `calibration/`.
 <!-- calibration:end -->
 
 ## Your way: modes and calibration

@@ -270,12 +270,12 @@ imagem solta ou um fluxo pronto do conector, ela é dispensável.
 
 A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 24/11/2026.
 
-**Onde a skill está.** As rodadas às cegas mais recentes (26/11/2026, com a skill atual `5.1.0+7b60cfa`, que já tem
-tudo o que está em *Unreleased* no [CHANGELOG](CHANGELOG.md)) foram **contra a skill**: a pessoa escolheu a versão
-feita sem ela nas **2 de 2 rodadas**, enquanto o avaliador cego escolheu a versão com ela nas duas (77,5 × 60,0 e
-72,0 × 62,0). A rodada anterior (`5.1.0+e4dee7b`) escolheu a skill nas 2 de 2, e a primeira (`5.1.0+982e7fa`), não.
-Todas estão abaixo como saíram, com o que a pessoa disse e o que a skill mudou por causa disso; essa mudança ainda
-não passou por uma rodada às cegas. A amostra é pequena: cinco rodadas, uma pessoa votando.
+**Onde a skill está.** Nas rodadas às cegas mais recentes (26/11/2026, `5.1.0+0717197`), a pessoa escolheu a versão
+feita com a skill nas **2 de 2 rodadas**: "as mais naturais", vídeos que "poderiam ter sido uma cena verdadeira". Eram
+os mesmos dois pedidos em que a versão anterior (`5.1.0+7b60cfa`) tinha perdido por 2 de 2 poucas horas antes,
+refeitos com vídeos novos dos dois lados depois da correção descrita na seção 4. A nota do avaliador cego foi contra a
+pessoa nessas quatro rodadas, nos dois sentidos, e por isso fica só como segunda opinião. Todas as rodadas estão
+abaixo como saíram, as derrotas também. A amostra é pequena: sete rodadas, uma pessoa votando.
 
 **1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
 pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
@@ -346,7 +346,7 @@ esquerda, e "a percepção de ter visto primeiro também pode afetar a escolha".
 efeito. Por isso o `hfd.py blind` agora sorteia, à parte, qual versão aparece primeiro, e o registro guarda a ordem para
 o placar medi-la. A amostra ainda é pequena: três rodadas e uma pessoa votando.
 
-**4. A terceira rodada, com a skill atual `5.1.0+7b60cfa` (2 rodadas, 150,24 créditos).** Dois tipos de pedido ainda
+**4. A terceira rodada, com a `5.1.0+7b60cfa` (2 rodadas, 150,24 créditos).** Dois tipos de pedido ainda
 não medidos, com a ordem de exibição sorteada à parte: a versão com a skill apareceu primeiro na rodada 1, e a sem
 ela, na rodada 2. Rodada 1: uma cena de luta de 10 s num plano só, um lutador contra um robô, a partir de uma
 imagem inicial que cada condição desenhou (Seedance 2.5, 480p, com som). Rodada 2:
@@ -383,6 +383,34 @@ duas.** O voto da pessoa é o critério, então a rodada conta contra a skill.
   e continuidade somam 45% da nota), e nenhum pergunta se o vídeo parece natural. As notas dele ficam nos registros
   como segunda opinião; quem decide é o voto da pessoa.
 
+**5. A quarta rodada: o reteste com a skill corrigida `5.1.0+0717197` (2 rodadas, 150,24 créditos).** Os mesmos dois
+pedidos da seção 4, com vídeos e sorteios novos dos dois lados; a versão sem a skill também foi planejada de novo. A
+versão mostrada primeiro foi a com a skill na rodada 1 e a sem ela na rodada 2.
+
+| Rodada | Nota do avaliador cego, com a skill | Sem a skill | Voto da pessoa, às cegas |
+|---|---|---|---|
+| 1 · cena de luta, um plano de 10 s | 58,0 | **76,5** | **com a skill** |
+| 2 · vídeo institucional, 3 tomadas | 70,5 | **73,5** | **com a skill** |
+
+**A pessoa escolheu a versão feita com a skill nas duas rodadas**, na rodada 2 contra a ordem de exibição: "foram os
+mais naturais, sem erros e alucinações, ou gestos artificiais. Os que escolhi poderiam ter sido uma cena verdadeira
+que ninguém saberia."
+
+- **O que a correção fez.** Os prompts com a skill não levaram nenhuma receita contra defeito. A luta foi escrita em
+  tempos marcados até os 10 s, com a câmera seguindo a ação, lâmpada piscando, chuva e névoa. Cada aluno e a
+  professora tiveram uma linha própria, em registro documental, com o som do lugar.
+- **O que ela não resolveu.** Na rodada 1, a imagem inicial feita com a skill perdeu a premissa: o robô saiu com a
+  cabeça cromada lisa, sem o rosto do lutador. Numa produção, a página de revisão pegaria isso; a rodada às cegas gera
+  o que vier. Na rodada 2, o modelo emendou dois cortes que ninguém pediu na primeira tomada, por volta de 2,2 e 3,7 s
+  (o outro lado teve o mesmo na seção 4), e pequenos brasões brancos apareceram em algumas camisas na última tomada,
+  embora o pedido dissesse nenhuma marca.
+- **O avaliador cego escolheu contra a pessoa de novo, nas duas rodadas**, desta vez a versão sem a skill: pesou a
+  cabeça lisa do robô e os cortes a mais. Perguntado à parte qual versão parecia mais natural, concordou com a pessoa
+  na rodada 2 e não na 1. Nas últimas quatro rodadas, a nota dele nunca escolheu o que a pessoa escolheu; os critérios
+  dele não perguntam se o vídeo passaria por uma cena verdadeira, que foi o que a pessoa julgou.
+- **O que isso não mostra.** Uma rodada por tipo de pedido diz qual vídeo ganhou, não qual regra fez a diferença. A
+  versão vista primeiro foi a escolhida em 4 de 6 rodadas com a ordem registrada.
+
 ### Placar da calibração
 
 Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
@@ -392,16 +420,16 @@ Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
 | Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |
 |---|---:|---:|---:|---:|---|
 | Anúncio de produto | 2 | 1 | 1 | 0 | 76,6 × 72,5 (2) |
-| Cena com personagem | 1 | 0 | 1 | 0 | 77,5 × 60,0 (1) |
+| Cena com personagem | 2 | 1 | 1 | 0 | 67,8 × 68,2 (2) |
 | Trailer | 1 | 1 | 0 | 0 | 78,0 × 69,8 (1) |
-| Institucional | 1 | 0 | 1 | 0 | 72,0 × 62,0 (1) |
-| **Total** | 5 | 2 | 3 | 0 | |
+| Institucional | 2 | 1 | 1 | 0 | 71,2 × 67,8 (2) |
+| **Total** | 7 | 4 | 3 | 0 | |
 
-Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2.
+Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2; `5.1.0+0717197`: 2 × 0.
 
-A versão vista primeiro foi a escolhida em 3 de 4 rodada(s) com a ordem registrada.
+A versão vista primeiro foi a escolhida em 4 de 6 rodada(s) com a ordem registrada.
 
-Gerado por `tools/aggregate_calibration.py` a partir de 5 registro(s) em `calibration/`.
+Gerado por `tools/aggregate_calibration.py` a partir de 7 registro(s) em `calibration/`.
 <!-- calibration:end -->
 
 ## Do seu jeito: modos e calibração

@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Calibration: a fourth blind round ran the same two requests again with the fix below (`5.1.0+0717197`), with new
+  videos on both sides. The person chose the version with the skill in 2 of 2 ("could pass for real footage"); the
+  blind judge's score chose the other in both, so it is now a second opinion only. The READMEs' lead starts there.
 - Calibration: a third blind round with the current skill (`5.1.0+7b60cfa`), on two request types not measured
   before (a fight scene, a corporate video). The person chose the version without the skill in 2 of 2; the blind
   judge chose the version with it in both. The READMEs' lead now says so. What changed because of it: a recipe
