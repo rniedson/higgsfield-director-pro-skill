@@ -98,6 +98,9 @@ def check_skill(problems, require_yaml):
         problems.append(f"SKILL.md: 'description' with {len(desc)} characters (at most 1024)")
     elif re.search(r"[<>]", desc):
         problems.append("SKILL.md: 'description' cannot have < or >")
+    for ref in sorted((SKILL / "references").glob("*.md")):
+        if f"references/{ref.name}" not in txt:
+            problems.append(f"SKILL.md: references/{ref.name} is never cited, so it is never loaded")
 
 
 def check_json(problems):

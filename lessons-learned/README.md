@@ -9,6 +9,7 @@ here, so a rule can be traced back, and dropped if its evidence turns out to be 
 | [2026-11-higgsfield-channel.md](2026-11-higgsfield-channel.md) | the 12 most-viewed tutorials on Higgsfield's YouTube channel | 2026-11-25 |
 | [2026-11-higgsfield-channel-2.md](2026-11-higgsfield-channel-2.md) | ten more tutorials from the same channel | 2026-11-25 |
 | [2026-11-higgsfield-channel-3.md](2026-11-higgsfield-channel-3.md) | the channel's next tutorials, read for what the screen shows (videos 24 to 43, and 19) | 2026-11-25 |
+| [2026-11-higgsfield-skills-repo.md](2026-11-higgsfield-skills-repo.md) | Higgsfield's official skills repository (version 0.14.0), checked against the connector's live catalog | 2026-11-25 |
 | [tests/](tests/README.md) | reproduction cards: the original conditions of each testable lesson, and the tests run here | from 2026-11-25 |
 
 ## How a lesson is written

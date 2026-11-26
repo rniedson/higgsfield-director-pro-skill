@@ -79,6 +79,12 @@ CI runs both on every push and pull request.
 - **Never commit** generated media, API keys, tokens, signed URLs, or prompts and images that belong to a client.
 - Add a line to `CHANGELOG.md` under *Unreleased*.
 
+## Run the behavior scenarios
+
+[docs/behavior-scenarios.md](docs/behavior-scenarios.md) lists requests with what the skill must do: the cost rule,
+routing to a connector workflow, consent, the live catalog. Run them in a fresh session after changing `SKILL.md` or
+a reference, and never give the "ok" a scenario stops at.
+
 ## Contribute a calibration result
 
 A blind round, with and without the skill, on a request of your own, is the most useful contribution: it shows where

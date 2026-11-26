@@ -225,8 +225,9 @@ video 14 and the [faithful card](2026-11-25-timed-beats-faithful.md).
 [Batch 3, part 2, decisions](../2026-11-higgsfield-channel-3.md#part-2-decisions). Videos 41 [20:29](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1229s) and 42 [17:32](https://www.youtube.com/watch?v=reFzEtCG_m8&t=1052s).
 
 - **Shown:** on the website, the prompt cites references as `<<<image_1>>>` (41 [20:29](https://www.youtube.com/watch?v=mu_8D93Dkik&t=1229s); 42 [17:32](https://www.youtube.com/watch?v=reFzEtCG_m8&t=1052s)). The Seedance help
-  center writes `@Image 1`. The connector's catalog says neither.
-- **Unknown:** which form binds a name to a reference through the connector.
+  center writes `@Image 1`. For Seedance, the connector's catalog says neither; for Seed Audio it writes
+  `@Audio 1` to `@Audio 3` ([official repository lessons](../2026-11-higgsfield-skills-repo.md), 2026-11-25).
+- **Unknown:** which form binds a name to a reference through the connector, for Seedance.
 - **Reproduction:** two references that cannot be confused (a red mug, a blue mug); the prompt asks for the mug of
   the second image only, once with `@Image 2` and once with `<<<image_2>>>`, then with the two references swapped.
   A cheap model with `image_references`, four attempts per version. Count which mug appears.
