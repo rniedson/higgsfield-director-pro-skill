@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Calibration: a third blind round with the current skill (`5.1.0+7b60cfa`), on two request types not measured
+  before (a fight scene, a corporate video). The person chose the version without the skill in 2 of 2; the blind
+  judge chose the version with it in both. The READMEs' lead now says so.
 - The READMEs' results start from where the skill stands: the latest blind rounds (2 of 2 with the skill) first; the
   first round kept as it came out, now with its skill version; and what changed since, which no blind round has
   measured yet. `references/calibration.md` says what is not a round (a video the voter has seen, one side only,

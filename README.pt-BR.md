@@ -270,15 +270,11 @@ imagem solta ou um fluxo pronto do conector, ela é dispensável.
 
 A tabela acima é a promessa. Para conferir, o mesmo pedido foi feito com e sem a skill, em 24/11/2026.
 
-**Onde a skill está.** Nas rodadas às cegas mais recentes, com a skill já corrigida depois da primeira
-(`5.1.0+e4dee7b`), a pessoa escolheu a versão feita com a skill nas **2 de 2 rodadas**, e o avaliador cego concordou
-(82,5 × 73,8 e 78,0 × 69,8). A primeira rodada, com a versão anterior `5.1.0+982e7fa`, deu o contrário: ela fica abaixo
-como saiu, com o que mudou por causa dela. A amostra é pequena: três rodadas, uma pessoa votando.
-
-**Mudou depois da última rodada às cegas, e ainda não foi medido:** a pré-produção barata com storyboard em croqui,
-as lições dos tutoriais da Higgsfield (três lotes) e do repositório oficial de skills dela, e as regras dos próprios
-fluxos de narração e de folha de personagem do conector ([CHANGELOG](CHANGELOG.md), *Unreleased*). Nada disso passou
-por uma rodada às cegas; até passar, é promessa, como a tabela acima.
+**Onde a skill está.** As rodadas às cegas mais recentes (26/11/2026, com a skill atual `5.1.0+7b60cfa`, que já tem
+tudo o que está em *Unreleased* no [CHANGELOG](CHANGELOG.md)) foram **contra a skill**: a pessoa escolheu a versão
+feita sem ela nas **2 de 2 rodadas**, enquanto o avaliador cego escolheu a versão com ela nas duas (77,5 × 60,0 e
+72,0 × 62,0). A rodada anterior (`5.1.0+e4dee7b`) escolheu a skill nas 2 de 2, e a primeira (`5.1.0+982e7fa`), não.
+Todas estão abaixo como saíram. A amostra é pequena: cinco rodadas, uma pessoa votando.
 
 **1. O planejamento: 18 sessões automáticas do Claude Code, 9 com e 9 sem a skill, sem gastar crédito.** Foram 5
 pedidos (um comercial de 3 tomadas, um "pode gerar", fotos de produto, um vídeo de criador e uma imagem solta), com as
@@ -349,6 +345,26 @@ esquerda, e "a percepção de ter visto primeiro também pode afetar a escolha".
 efeito. Por isso o `hfd.py blind` agora sorteia, à parte, qual versão aparece primeiro, e o registro guarda a ordem para
 o placar medi-la. A amostra ainda é pequena: três rodadas e uma pessoa votando.
 
+**4. A terceira rodada, com a skill atual `5.1.0+7b60cfa` (2 rodadas, 150,24 créditos).** Dois tipos de pedido ainda
+não medidos, com a ordem de exibição sorteada à parte: a versão com a skill apareceu primeiro na rodada 1, e a sem
+ela, na rodada 2. Rodada 1: uma cena de luta de 10 s num plano só, um lutador de kung-fu contra um robô cromado que
+copiou o rosto dele, a partir de uma imagem inicial que cada condição desenhou (Seedance 2.5, 480p, com som). Rodada 2:
+um vídeo institucional de 3 tomadas para uma escola técnica (Cinema Studio 4.0, 480p, 5 s por tomada, com som).
+
+| Rodada | Nota do avaliador cego, com a skill | Sem a skill | Voto da pessoa, às cegas |
+|---|---|---|---|
+| 1 · cena de luta, um plano de 10 s | **77,5** | 60,0 | sem a skill |
+| 2 · vídeo institucional, 3 tomadas | **72,0** | 62,0 | sem a skill |
+
+**A pessoa escolheu a versão feita sem a skill nas duas rodadas; o avaliador cego escolheu a versão com ela nas
+duas.** O voto da pessoa é o critério, então a rodada conta contra a skill.
+
+- **O que o avaliador viu.** Na rodada 1, com a skill o robô continuou o mesmo robô e cada golpe se leu com clareza,
+  mas a luta acabou por volta de 6,5 s e os últimos 3,5 s ficaram parados; sem ela, o lutador apanhou mais e por mais
+  tempo, enquanto o robô mudou de desenho várias vezes. Na rodada 2, com a skill a roupa seguiu igual nas três
+  tomadas e não houve corte que ninguém pediu, mas três alunos saíram com o mesmo rosto e a professora quase não
+  orienta ninguém; sem ela, a primeira tomada foi a mais viva da rodada, com dois cortes que ninguém pediu.
+
 ### Placar da calibração
 
 Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
@@ -358,14 +374,16 @@ Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
 | Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |
 |---|---:|---:|---:|---:|---|
 | Anúncio de produto | 2 | 1 | 1 | 0 | 76,6 × 72,5 (2) |
+| Cena com personagem | 1 | 0 | 1 | 0 | 77,5 × 60,0 (1) |
 | Trailer | 1 | 1 | 0 | 0 | 78,0 × 69,8 (1) |
-| **Total** | 3 | 2 | 1 | 0 | |
+| Institucional | 1 | 0 | 1 | 0 | 72,0 × 62,0 (1) |
+| **Total** | 5 | 2 | 3 | 0 | |
 
-Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0.
+Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2.
 
-A versão vista primeiro foi a escolhida em 2 de 2 rodada(s) com a ordem registrada.
+A versão vista primeiro foi a escolhida em 3 de 4 rodada(s) com a ordem registrada.
 
-Gerado por `tools/aggregate_calibration.py` a partir de 3 registro(s) em `calibration/`.
+Gerado por `tools/aggregate_calibration.py` a partir de 5 registro(s) em `calibration/`.
 <!-- calibration:end -->
 
 ## Do seu jeito: modos e calibração

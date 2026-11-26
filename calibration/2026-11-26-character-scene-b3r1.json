@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "date": "2026-11-26",
+ "skill_version": "5.1.0+7b60cfa",
+ "category": "character-scene",
+ "model": "seedance_2_5",
+ "shots": 1,
+ "cost_credits": 60.24,
+ "image_reference": true,
+ "vote": "without",
+ "rater": "blind-auto",
+ "seen_first": "with",
+ "scores": {
+  "without": {
+   "total": 60.0,
+   "criteria": {
+    "identity": 6,
+    "motion": 5,
+    "camera": 6,
+    "lighting": 7,
+    "materials": 6,
+    "continuity": 5,
+    "briefing": 7,
+    "audio": 6
+   }
+  },
+  "with": {
+   "total": 77.5,
+   "criteria": {
+    "identity": 8,
+    "motion": 7,
+    "camera": 8,
+    "lighting": 8,
+    "materials": 8,
+    "continuity": 8,
+    "briefing": 8,
+    "audio": 6
+   }
+  }
+ }
+}
