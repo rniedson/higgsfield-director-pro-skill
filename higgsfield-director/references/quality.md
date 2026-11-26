@@ -46,6 +46,7 @@
 | An accessory from the bible disappears (hat, glasses) | hypothesis: in a wide shot the accessory is small and the opening frame weighs more than the bible (one sample) | the accessory visible in the approved storyboard frame; a tighter shot when it matters | compare with the bible, frame by frame |
 | People or objects swap places, or their count changes | positions given only in the text | a top-view layout map as a reference, with the same colors named in the prompt (`references/workflow.md` §4) | count and positions in each frame |
 | Geometry changes between attempts (where something lands, its scale) | words do not fix the geometry | an annotated image as a reference: arrows, marks, positions | compare the attempts frame by frame |
+| A reference comes back as a still picture filling the screen | its role is not written, or nothing anchors it | write what it brings and that it is a reference, not the first frame (`references/prompt.md` §1); for a place, a layout map | the first second of each attempt |
 | A changed state snaps back (torn clothes mend, wet hair dries) | the change is only in the text | a new approved reference in the new state | the state in every frame after the change |
 | Background objects multiply (cars, booths, signs) | clutter in the location image | clean the location image before the video (`references/workflow.md` §4) | count the objects at the start and at the end |
 | Faces break in an image with many people | too many people in one generation | one person per generation, assembled in an image editor | each face against its sheet |
@@ -58,7 +59,8 @@
 
 Two failures in a row on the same shot: **replan** (another framing, another model, a shorter shot) instead of
 piling up constraints. A hypothesis is not a cause: record what changed and what happened. When every attempt fails
-the same way, rewrite the prompt; when the shot is nearly right, more attempts of the same prompt may be enough.
+the same way, look upstream first: a reference can carry the defect (in one tutorial, the car's reference had the
+steering wheel on the wrong side), so fix the reference before rewriting the prompt; when the shot is nearly right, more attempts of the same prompt may be enough.
 
 Give each defect one short, concrete note (where it is, and how it should look or move) and regenerate only the shot
 it affects. Notes pile up: after several patches, rewrite the prompt whole from the approved plan, and generate an

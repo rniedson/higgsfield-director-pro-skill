@@ -33,6 +33,13 @@ All notable changes to this project are listed here. The format follows
   start; rewriting instead of piling up patches; no repeated description of a referenced subject; the camera anchored
   to the set; clean, three-quarter locations built for the action; one change per image edit; a face fixed on the
   sheet; a free check for duplicated frames. Five more are marked as things to test.
+- A third batch of lessons from Higgsfield's channel, part 1 (videos 24 to 35), read for what the screen shows.
+  Each reference now says what it brings and what stays out; a small critical detail goes in words even when the
+  reference shows it (to test); approved sheets can become Elements (not on Seedance 2.5); layout maps carry
+  distances and orientation; a defect that repeats in every attempt is looked for in the references first; filmed
+  footage as a motion reference and a measure instead of an adjective (both to test); real footage edited in pieces
+  of at least 4 s; locked parts in an image edit; Kling 3.0's per-shot mode exists on the website only. Six new
+  entries in `lessons-learned/tests/to-test.md`.
 - Reproduction cards in `lessons-learned/tests/`: what each testable lesson's source showed (model, mode, references,
   prompt structure, attempts), how to run the test, the difference from the original, and the result. The first test
   (timed beats, Seedance 2.5) did not reproduce the cut in a simpler form, so timed beats became the first suspect

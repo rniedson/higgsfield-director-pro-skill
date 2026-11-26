@@ -58,12 +58,19 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
   table, a door, a tree) and the positions in plain words or as percentages of the frame. Pass it as an image
   reference and name the same colors in the prompt. The map fixes where they are; the text says how they move. When
   the positions change from shot to shot, draw one map or rough sketch per shot and pass it as that shot's reference.
+  Give the distances that matter and the orientation (a street's width and the gap between two marks in metres, a
+  compass, where the camera starts): in one tutorial, without such an anchor, a goal moved at every generation.
 - **The location is built for the action.** A three-quarter view of the place (a frontal view leaves the model
   guessing the rest of the room), free space where the action happens and the clutter at the sides, and a crowd that
   belongs in the scene already in the location image. Fix the place and the angle before adding the people. Before
   any video, clean the location image: remove text, background cars and whatever the model tends to multiply.
 - **One change per image edit**, everything else kept: the product's name, an object removed. Many people in one
   image break the faces: generate them one at a time and assemble the picture in an image editor.
+- **An approved sheet can become an Element.** The connector's `elements_create` saves it under a name; a prompt
+  calls it with `<<<element_id>>>` and the server inserts the image. Only completed Elements work, and only on the
+  models `elements_search` lists (2026-11-25: Seedance 2.0, Cinema Studio Video 2 and 3.0, Kling 3.0 with a start
+  image; **not Seedance 2.5**). The tutorials save every sheet this way and call it by its `@` name on the website.
+  Creating one writes to the operator's library: ask first.
 
 **Pre-production before the storyboard.** While the idea is still changing, work on the block sketch storyboard and
 the script draft (`references/preproduction.md`); the storyboard below comes after the official script.

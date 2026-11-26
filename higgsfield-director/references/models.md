@@ -20,7 +20,7 @@ python3 <skill>/scripts/hfd.py models --id seedance_2_5       # full entry
 | Cinema control (lens, camera, era, light) | `cinematic_studio_video_4_0` | has `camera_model_id`, `camera_lens_id`, `camera_aperture_id`, `era_id`, `genre_id`, `pacing_id`, `light`, `color_palette` |
 | Many references (product, identity, style) | `cinematic_studio_video_4_0`, `seedance_2_5` | up to 30 images, 10 videos, 10 audio files (`omni_reference` mode) |
 | First **and** last frame | `kling3_0`, `seedance_2_5`, `cinematic_studio_video_4_0` (`omni_reference` mode), `cinematic_studio_video_3_5`, `wan3_0`, `minimax_h3`, `veo3_1_lite`, `gemini_omni_flash_1_2` | `end_image` role in the catalog |
-| Several shots in one generation, each with its own prompt and duration | `cinematic_studio_video_3_5` | `multi_shots` and `multi_prompt` (up to 6 shots) in the 2026-11-25 catalog; `kling3_0` is tagged multi-shot but has no control in the connector |
+| Several shots in one generation, each with its own prompt and duration | `cinematic_studio_video_3_5` | `multi_shots` and `multi_prompt` (up to 6 shots) in the 2026-11-25 catalog; `kling3_0` is tagged multi-shot and has a per-shot mode on the website (one tutorial, shown), but no control in the connector |
 | Native audio and speech | `cinematic_studio_video_4_0`, `seedance_2_5`, `kling3_0` (`sound`), `veo3_1`, `wan3_0` | audio parameter or "audio" tag |
 | Edit or extend a video | `cinematic_studio_video_4_0`, `seedance_2_5` (`video_edit`, `video_extension`), `kling4_0` | modes in the catalog |
 | Test composition cheaply | on the same model, at the lowest resolution it accepts (quote the test and the final); `seedance_2_5` has `draft` | a test on another model does not predict the final result |
