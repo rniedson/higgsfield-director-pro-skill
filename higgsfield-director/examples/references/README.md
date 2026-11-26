@@ -1,8 +1,8 @@
 # Reference images: three examples
 
 Three references made the way the skill asks (`references/workflow.md` §4 and `references/prompt.md` §1), with the
-prompt that made each one. They were generated on 2026-11-26 with GPT Image 2.6 through the Higgsfield connector, for
-the reproduction of a lesson about unwanted cuts (`lessons-learned/tests/` in the repository). The person is
+prompt that made each one. They were generated on 2026-11-25 with GPT Image 2.6 through the Higgsfield connector, for
+the reproduction of a lesson about unwanted cuts (`lessons-learned/tests/2026-11-25-timed-beats-faithful.md` in the repository). The person is
 fictional; the scene has no brand. Show them to the operator when a sheet, a location or a prop has to be explained.
 
 The license of these three images is the maintainer's decision; until it is recorded here, no license is granted

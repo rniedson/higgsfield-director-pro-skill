@@ -102,7 +102,7 @@ Geometric studies of one object across lenses, distances and palettes; the full 
 ## Reference images
 
 What a good reference looks like. These three were generated for one of the skill's tests (GPT Image 2.6 through
-Higgsfield, 2026-11-26); the prompts that made them, and how a video prompt names them, are in
+Higgsfield, 2026-11-25); the prompts that made them, and how a video prompt names them, are in
 [`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
 
 | | | |

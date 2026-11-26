@@ -66,6 +66,8 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
   guessing the rest of the room), free space where the action happens and the clutter at the sides, and a crowd that
   belongs in the scene already in the location image. Fix the place and the angle before adding the people. Before
   any video, clean the location image: remove text, background cars and whatever the model tends to multiply.
+  Cover every side the camera will face: in a test here, the camera turned toward a wall that no reference showed
+  from that side, and the model added a second window there in four of four attempts (2026-11-25).
 - **One change per image edit**, everything else kept: the product's name, an object removed. Many people in one
   image break the faces: generate them one at a time and assemble the picture in an image editor.
 - **An approved sheet can become an Element.** The connector's `elements_create` saves it under a name; a prompt

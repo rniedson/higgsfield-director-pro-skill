@@ -102,7 +102,7 @@ Estudos geométricos de um mesmo objeto em lentes, distâncias e paletas diferen
 ## Imagens de referência
 
 Como é uma boa referência. Estas três foram geradas para um dos testes da skill (GPT Image 2.6 pelo Higgsfield,
-26/11/2026); os prompts que as fizeram, e como um prompt de vídeo as nomeia, estão em
+25/11/2026); os prompts que as fizeram, e como um prompt de vídeo as nomeia, estão em
 [`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
 
 | | | |

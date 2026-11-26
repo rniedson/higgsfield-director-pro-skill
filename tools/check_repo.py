@@ -21,7 +21,8 @@ MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "
             "lessons-learned/2026-11-higgsfield-channel-2.md", "lessons-learned/2026-11-higgsfield-channel-3.md",
             "higgsfield-director/examples/references/README.md",
             "lessons-learned/tests/README.md",
-            "lessons-learned/tests/2026-11-25-timed-beats.md", "lessons-learned/tests/to-test.md"]
+            "lessons-learned/tests/2026-11-25-timed-beats.md", "lessons-learned/tests/to-test.md",
+            "lessons-learned/tests/2026-11-25-timed-beats-faithful.md"]
 
 # Language check. README.pt-BR.md is the Portuguese translation of README.md; MIGRATION-6.md lists the old names.
 # Anywhere else, Portuguese is allowed only between the lines "language-check: off" and "language-check: on".

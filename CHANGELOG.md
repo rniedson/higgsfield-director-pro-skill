@@ -36,6 +36,11 @@ All notable changes to this project are listed here. The format follows
 - Three example references in `higgsfield-director/examples/references/` (a character sheet, a location in two
   views, a set detail), with the prompts that made them, shown in both READMEs; the boundary check accepts still
   images in that folder.
+- A closer reproduction of the timed-beats lesson (Seedance 2.0, three references, the tutorial's prompt
+  structure, 21:9, 15 s): 0 of 4 cut, 0 of 7 with the first test, so timed beats are one suspect among others.
+  Cut detection gains a positive control and a spike measure, because scene detection missed a hard cut between
+  two similar dark shots even at 0.15. A location reference covers every side the camera faces: a wall that no
+  reference showed got an invented window in four of four attempts.
 - A third batch of lessons from Higgsfield's channel, part 1 (videos 24 to 35), read for what the screen shows.
   Each reference now says what it brings and what stays out; a small critical detail goes in words even when the
   reference shows it (to test); approved sheets can become Elements (not on Seedance 2.5); layout maps carry

@@ -107,6 +107,10 @@ keeps beats as the first suspect for an unwanted cut, not as a rule. The content
 identical, neutral requests) differs from the tutorial's (every attempt refused, for a reason in the text); the
 skill now tells the two apart.
 
+**Run since:** [a closer reproduction](2026-11-25-timed-beats-faithful.md) on Seedance 2.0, with three references
+and the original's prompt structure: 0 of 4 cut. Its spike measure, applied to the three videos above, finds no
+cut either (highest ×2.2). The plan as written before it:
+
 **Still to run:** a faithful reproduction. Three references generated first (a character, a two-view room, a wall);
 21:9, 1080p, 15 s; the same long prompt with a layout block and a no-cuts block in three forms (five timed phases,
 the same phases as untimed paragraphs, one continuous motion), with the walk and the reveal written the same in all

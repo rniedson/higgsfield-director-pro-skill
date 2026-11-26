@@ -14,9 +14,11 @@ audio block).
 - **A shot that must not cut: write the action as one continuous motion, not as beats.** In one tutorial on
   Seedance 2.0, with three references and a long prompt that already asked for no cuts, the shot cut when the action
   was split into timed phases, and again when the phases became paragraphs without times; one continuous motion
-  fixed it, in a rewrite that also slowed the walk. A test here with three short timed beats and no references did
-  not cut on Seedance 2.5 (0 of 2, 2026-11-25). So beats are the first suspect when an unwanted cut appears, not a
-  rule against them, and a "no cuts" line did not prevent the cut. The same form is how cuts are asked for on
+  fixed it, in a rewrite that also slowed the walk. Two tests here did not reproduce the cut (2026-11-25): three
+  short timed beats with no references on Seedance 2.5 (0 of 2), and the original's structure on Seedance 2.0,
+  with three references, five timed phases in Chinese and the no-cuts block (0 of 4, at 480p without audio). So
+  beats are one suspect when an unwanted cut appears, not a rule against them, and in the tutorial a "no cuts"
+  line did not prevent the cut. The same form is how cuts are asked for on
   purpose: tutorial prompts write `CUT 1 (0–4s)`, and Wan documents `Shot 1 [0-3s]` for multi-shot (§4).
 - **Simple camera work is not a shot where nothing happens.** In an ad, each shot needs a moment of impact on the
   product or on the person using it: a touch that deforms the material, a splash in slow motion, a gesture that shows
