@@ -33,6 +33,9 @@ All notable changes to this project are listed here. The format follows
   start; rewriting instead of piling up patches; no repeated description of a referenced subject; the camera anchored
   to the set; clean, three-quarter locations built for the action; one change per image edit; a face fixed on the
   sheet; a free check for duplicated frames. Five more are marked as things to test.
+- Three example references in `higgsfield-director/examples/references/` (a character sheet, a location in two
+  views, a set detail), with the prompts that made them, shown in both READMEs; the boundary check accepts still
+  images in that folder.
 - A third batch of lessons from Higgsfield's channel, part 1 (videos 24 to 35), read for what the screen shows.
   Each reference now says what it brings and what stays out; a small critical detail goes in words even when the
   reference shows it (to test); approved sheets can become Elements (not on Seedance 2.5); layout maps carry
