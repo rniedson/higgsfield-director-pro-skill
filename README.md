@@ -16,7 +16,7 @@
 ![License](https://img.shields.io/badge/code-MIT-blue)
 ![Unofficial](https://img.shields.io/badge/unofficial-not%20affiliated%20with%20Higgsfield-b45309)
 
-[How it works](#how-it-works) · [Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Quick start](#quick-start) · [Examples](#examples) · [Disclaimer](#disclaimer) · [License](#licensing)
+[How it works](#how-it-works) · [Why use it](#why-use-it) · [Illustrated manual](#illustrated-manual) · [Architecture](#architecture) · [Quick start](#quick-start) · [Examples](#examples) · [Disclaimer](#disclaimer) · [License](#licensing)
 
 **English** · [Português](README.pt-BR.md)
 
@@ -69,6 +69,49 @@ A 10 s fight between the maintainer's own character and a robot clone of himself
 stills to choose the look (0.48 credits, as quoted on 2026-11-26), the whole shot as a draft (30), then the final at 1080p from
 the approved draft (160). The idea of splitting into copies came in before the draft, while changing the plan was still free.
 [How it was made](docs/demo/README.md), with the prompt and the sound.
+
+## Why use it
+
+1. **Nothing is spent by surprise.** Every generation is quoted first and waits for your "ok"; after each one you see
+   what it cost and the total so far.
+2. **Mistakes are caught where they cost least.** One still per shot, then one test shot at the lowest resolution,
+   before the rest. In the demo above, four stills (0.48 credits) came before a final of 160.
+3. **Your request stays yours.** Every fact and limit you give goes into the prompt as you said it. Camera, light and
+   recipes come in only when you ask for them, or to fix a defect a preview showed.
+4. **Errors are found before any credit.** `hfd.py validate`, offline and free, checks the model's limits (duration,
+   aspect ratio, resolution, audio), dialogue that does not fit the shot, continuity between shots and the 180° axis.
+5. **Today's models and prices, never stale ones.** No price is written in the skill. On each day of use it makes a
+   table of that day's free quotes and says what changed; it reads the catalog again each week, or on request, and
+   new models join the table for 30 days.
+6. **A budget that does not guess.** `hfd.py budget` adds real quotes, retries and a reserve, and refuses to run
+   without the prices; `--prices` plans from the day's table, marked as planning.
+7. **Fewer tokens.** What a script can do, a script does: the checks, the prompts, the budget and the day's quotes
+   run in Python, not in the model. `connector.py` makes the day's quotes with no model at all (below).
+8. **Your way of working.** Approve every step, give one "ok" for the total, or set a ceiling for the session. The
+   preferences file never holds a spending limit ([modes](#your-way-modes)).
+9. **It steps aside when it should.** For the connector's ready-made workflows (product photos, creator videos,
+   dubbing, ads) it keeps only the cost-and-ok rule. Without the connector it still delivers the prompts and the
+   parameters to paste on the Higgsfield site.
+10. **Light, and checked.** Python's standard library only, nothing to install. 162 tests with no network and no
+    credits run on Python 3.9 to 3.13 for every change, and they caught all 75 defects that a review planted on
+    purpose and that still apply ([tests](higgsfield-director/tests/README.md)). What real runs taught is kept in
+    [`lessons-learned/`](lessons-learned/README.md).
+
+### What a price check costs in tokens
+
+The day's price table was 29 free quotes on 2026-11-27. They cost no credits, but whoever makes them spends tokens.
+Measured that day in a long Claude Code session, with the same 29 prices each way:
+
+| Who makes the 29 quotes | Model tokens | Time | At that day's API list prices |
+|---|---|---|---|
+| The main conversation (Claude Opus 5.5) | 5,276 written and 550,485 re-read, in two turns | — | about US$ 0.28 |
+| A subagent on Claude Haiku 5.5 | 5,088 written and 250,714 read by the small model; 1,029 written and 180,280 re-read by the main conversation to send it, plus one turn to read its summary | 23.5 s | about US$ 0.11, plus that turn |
+| `connector.py prices` | none for the quotes: the agent writes one command and reads a summary of about 600 characters | 43.2 s | nothing for the quotes |
+
+Most of the main conversation's cost is re-reading itself: each turn re-reads the whole conversation, about 275,000
+tokens in that session. A new session re-reads far less, but the quotes still go through the large model. On a
+Claude subscription these figures come out of the usage limits instead of dollars. How each way works:
+[`models.md`](higgsfield-director/references/models.md#who-makes-the-quotes).
 
 ## Illustrated manual
 
@@ -198,7 +241,7 @@ Each folder has its own guide, with a diagram: [the skill](higgsfield-director/R
 
 ```text
 higgsfield-director/            the skill: install THIS folder
-  SKILL.md                      entry point: scope, flow, hard rules, routing (165 lines)
+  SKILL.md                      entry point: scope, flow, hard rules, routing
   agents/openai.yaml            display name and default prompt for the Codex UI
   references/
     workflow.md                 brief, studio mode, bibles, project fields, delivery
@@ -236,6 +279,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ## Contents
 
 - [How it works](#how-it-works)
+- [Why use it](#why-use-it)
 - [Illustrated manual](#illustrated-manual)
 - [Reference images](#reference-images)
 - [Architecture](#architecture)

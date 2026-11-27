@@ -16,7 +16,7 @@
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
 ![Não oficial](https://img.shields.io/badge/n%C3%A3o%20oficial-sem%20v%C3%ADnculo%20com%20o%20Higgsfield-b45309)
 
-[Como funciona](#como-funciona) · [Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Aviso](#aviso) · [Licenças](#licenças)
+[Como funciona](#como-funciona) · [Por que usar](#por-que-usar) · [Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Aviso](#aviso) · [Licenças](#licenças)
 
 [English](README.md) · **Português**
 
@@ -70,6 +70,50 @@ Uma luta de 10 s entre o personagem do próprio mantenedor e um clone robô dele
 imagens para escolher o visual (0,48 crédito, cotado em 26/11/2026), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
 partir do rascunho aprovado (160). A ideia de se dividir em cópias entrou antes do rascunho, enquanto mudar o plano
 ainda era de graça. [Como foi feito](docs/demo/README.md) (em inglês), com o prompt e o som.
+
+## Por que usar
+
+1. **Nada é gasto de surpresa.** Toda geração é cotada antes e espera o seu "ok"; depois de cada uma, você vê quanto
+   custou e o total até ali.
+2. **O erro é pego onde custa menos.** Uma imagem por tomada, depois uma tomada de teste na menor resolução, antes do
+   resto. No demo acima, quatro imagens (0,48 crédito) vieram antes de uma versão final de 160.
+3. **O seu pedido continua seu.** Cada fato e cada limite que você dá entram no prompt do jeito que você disse.
+   Câmera, luz e receitas só entram quando você pede, ou para corrigir um defeito que uma prévia mostrou.
+4. **Erros aparecem antes de qualquer crédito.** O `hfd.py validate`, sem rede e de graça, confere os limites do
+   modelo (duração, proporção, resolução, áudio), fala que não cabe na tomada, continuidade entre tomadas e o eixo de
+   180°.
+5. **Modelos e preços de hoje, nunca os velhos.** Nenhum preço fica escrito na skill. Em cada dia de uso ela monta uma
+   tabela com as cotações grátis do dia e diz o que mudou; relê o catálogo toda semana, ou quando você pede, e os
+   modelos novos entram na tabela por 30 dias.
+6. **Um orçamento que não chuta.** O `hfd.py budget` soma cotações reais, tentativas e uma reserva, e se recusa a rodar
+   sem os preços; o `--prices` planeja pela tabela do dia, marcado como planejamento.
+7. **Menos tokens.** O que um script faz, o script faz: as checagens, os prompts, o orçamento e as cotações do dia
+   rodam em Python, não no modelo. O `connector.py` faz as cotações do dia sem modelo nenhum (abaixo).
+8. **Do seu jeito.** Aprovar cada passo, dar um "ok" para o total ou dar um teto para a sessão. O arquivo de
+   preferências nunca guarda limite de gasto ([modos](#do-seu-jeito-modos)).
+9. **Ela sai da frente quando deve.** Nos fluxos prontos do conector (fotos de produto, vídeos de criador, dublagem,
+   anúncios), ela mantém só a regra de custo e "ok". Sem o conector, ainda entrega os prompts e os parâmetros para
+   colar no site do Higgsfield.
+10. **Leve, e conferida.** Só a biblioteca padrão do Python, nada para instalar. 162 testes, sem rede e sem créditos,
+    rodam no Python 3.9 a 3.13 a cada mudança, e pegaram todos os 75 defeitos que uma revisão plantou de propósito e
+    que ainda se aplicam ([testes](higgsfield-director/tests/README.md)). O que as rodadas reais ensinaram fica em
+    [`lessons-learned/`](lessons-learned/README.md).
+
+### Tokens gastos na tabela do dia
+
+A tabela de preços do dia foi de 29 cotações grátis em 27/11/2026. Elas não custam crédito, mas quem as faz gasta
+tokens. Medido nesse dia, numa sessão longa do Claude Code, com os mesmos 29 preços nos três jeitos:
+
+| Quem faz as 29 cotações | Tokens de modelo | Tempo | No preço de lista da API do dia |
+|---|---|---|---|
+| A conversa principal (Claude Opus 5.5) | 5.276 escritos e 550.485 relidos, em dois turnos | — | cerca de US$ 0,28 |
+| Um subagente no Claude Haiku 5.5 | 5.088 escritos e 250.714 lidos pelo modelo pequeno; 1.029 escritos e 180.280 relidos pela conversa principal para mandá-lo, mais um turno para ler o resumo | 23,5 s | cerca de US$ 0,11, mais esse turno |
+| `connector.py prices` | nenhum nas cotações: o agente escreve um comando e lê um resumo de uns 600 caracteres | 43,2 s | nada nas cotações |
+
+A maior parte do custo da conversa principal é reler a si mesma: cada turno relê a conversa inteira, uns 275 mil
+tokens naquela sessão. Uma sessão nova relê bem menos, mas as cotações continuam passando pelo modelo grande. Numa
+assinatura do Claude, esses números saem do limite de uso, não em dólar. Como funciona cada jeito:
+[`models.md`](higgsfield-director/references/models.md#who-makes-the-quotes) (em inglês).
 
 ## Manual ilustrado
 
@@ -180,7 +224,7 @@ flowchart TD
 
 | | Peça | O que guarda | Quando entra |
 |:---:|---|---|---|
-| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | escopo, o fluxo em 9 passos, regras duras, quem cuida do quê (165 linhas) | em todo pedido: o agente lê primeiro |
+| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | escopo, o fluxo em 9 passos, regras duras, quem cuida do quê | em todo pedido: o agente lê primeiro |
 | **2** | [`references/`](higgsfield-director/references/README.md) | 9 guias: fluxo · pré-produção · prompt · vocabulário · modelos · conector · qualidade · modos · calibração | só o guia que o passo atual pede |
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
@@ -199,7 +243,7 @@ Cada pasta tem o próprio guia, com diagrama (em inglês): [a skill](higgsfield-
 
 ```text
 higgsfield-director/            a skill: é ESTA pasta que se instala
-  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento (165 linhas)
+  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento
   agents/openai.yaml            nome e prompt padrão na interface do Codex
   references/
     workflow.md                 briefing, modo estúdio, fichas, campos do projeto, entrega
@@ -237,6 +281,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ## Sumário
 
 - [Como funciona](#como-funciona)
+- [Por que usar](#por-que-usar)
 - [Manual ilustrado](#manual-ilustrado)
 - [Imagens de referência](#imagens-de-referência)
 - [Arquitetura](#arquitetura)
