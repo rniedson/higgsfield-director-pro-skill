@@ -24,7 +24,8 @@ MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "
             "higgsfield-director/references/README.md", "higgsfield-director/scripts/README.md",
             "higgsfield-director/templates/README.md", "higgsfield-director/data/README.md",
             "higgsfield-director/tests/README.md",
-            "lessons-learned/tests/README.md",
+            "lessons-learned/tests/README.md", "lessons-learned/2026-11-own-runs.md",
+            "lessons-learned/2026-11-higgsfield-skills-repo.md",
             "lessons-learned/tests/2026-11-25-timed-beats.md", "lessons-learned/tests/to-test.md",
             "lessons-learned/tests/2026-11-25-timed-beats-faithful.md"]
 

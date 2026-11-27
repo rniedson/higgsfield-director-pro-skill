@@ -12,6 +12,16 @@ full size here. Five of the readers' details were wrong and are corrected below:
 video, a word read that is not on screen, a counter misread, and a title misread. This is still the vendor's own
 channel: no tip was measured, and "it worked" is the presenter's eye.
 
+```mermaid
+flowchart LR
+    P1["Part 1<br/>videos 24 to 35"] --> R1["3 readers in parallel,<br/>for what the screen shows"]
+    P2["Part 2<br/>videos 36 to 43, and 19"] --> R2["5 readers,<br/>the same method"]
+    R1 --> V["every frame cited<br/>as evidence opened here"]
+    R2 --> V
+    V --> K["8 readings corrected<br/>5 in part 1, 3 in part 2"]
+    K --> L["26 lessons, 13 per part;<br/>8 of them to test"]
+```
+
 Strength: **high** when several videos agree or the catalog confirms it; **medium** when one video explains or shows
 it; **low** when it is a single claim, adopted as something to test.
 

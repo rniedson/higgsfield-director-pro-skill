@@ -7,7 +7,10 @@ original.
 
 A card exists for every lesson that is adopted as something to test, and for every lesson of medium strength that
 changes a rule of the skill. Sources are linked at the exact second; frames of a source are never copied here. The
-images in each test's folder are frame sheets of this project's own generations, made from generic scenes.
+images in each test's folder are frame sheets of this project's own generations, made from generic scenes. The
+comparison images of the [own-run lessons](../2026-11-own-runs.md#cards), each with the version made with the skill
+beside the one made without it, are in [2026-11-blind-rounds/](2026-11-blind-rounds/): frames of the skill's blind
+rounds.
 
 ## Cards
 

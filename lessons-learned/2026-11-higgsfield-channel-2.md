@@ -7,6 +7,16 @@ extracted, each tip compared with the skill and with batch 1. This is the vendor
 rests on one example, and none was measured here. One video of this range failed to download and moves to the next
 batch.
 
+```mermaid
+flowchart LR
+    A["10 tutorials read<br/>(1 more failed to download)"] --> B["audio transcribed locally,<br/>keyframes extracted"]
+    B --> C["each tip compared with<br/>the skill and with batch 1"]
+    C --> D["22 adopted,<br/>4 of them to test"]
+    C --> E["3 decisions"]
+    C --> F["11 not adopted"]
+    C --> G["batch 1 read again:<br/>corroborated, refined, weakened"]
+```
+
 Strength: **high** when several videos agree or the catalog confirms it; **medium** when one video explains or shows
 it; **low** when it is a single claim, adopted as something to test.
 
