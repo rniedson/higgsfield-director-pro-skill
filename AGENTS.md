@@ -34,4 +34,5 @@ the plan, the prompt, reading a result.
 - Everything in the repository is in English, file names included
   ([CONTRIBUTING.md](CONTRIBUTING.md#everything-in-the-repository-is-in-english)).
 - A production's material (briefs, characters, images, quotes, results) stays in the operator's project folder,
-  outside this repository.
+  outside this repository. The blocking studio's shared characters (`blocking-studio/assets/`) are not a production's
+  material: one enters there only by the maintainer's decision.

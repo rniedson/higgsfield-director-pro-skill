@@ -13,8 +13,8 @@ ROOT_FILES = {
     ".gitignore", "AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "CONTRIBUTING.md", "LICENSE",
     "README.md", "README.pt-BR.md", "SECURITY.md",
 }
-TOP_LEVEL = {".github", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned", "price-history",
-             "tools"}
+TOP_LEVEL = {".github", "blocking-studio", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned",
+             "price-history", "tools"}
 SKILL_AREAS = {"agents", "data", "references", "scripts", "templates", "tests"}
 PERSONAL_AREAS = {
     "artifact", "artifacts", "client", "clients", "customer", "customers",
@@ -43,6 +43,9 @@ DEMO_MEDIA = {"docs/demo/kung-fu-vs-robot-clone.mp4", "docs/demo/kung-fu-vs-robo
 SHARED_VISUALS = ("docs/manual/visual/assets/", "docs/manual/visual/atlas/", "docs/manual/visual/style/",
                   "docs/assets/")
 TEST_EVIDENCE = ("lessons-learned/tests/", "examples/")
+# The blocking studio's own pictures, by the maintainer's decision (2026-11-27): each character's design sheets and the
+# images of the studio's guide. Still images only. Its models (.glb) are not media for this check.
+BLOCKING_VISUALS = re.compile(r"blocking-studio/(?:assets/characters/[a-z0-9-]+/sheets|docs)/[^/]+$")
 # A path of someone's machine: a home folder, a mounted volume, a temporary folder, a file:// link. A home folder
 # written with a placeholder name in angle brackets, and a URL that happens to contain such a folder, pass.
 LOCAL_PATH = re.compile(
@@ -109,6 +112,8 @@ def check_public_path(path):
 def _media_allowed(path, suffix):
     if path in DEMO_MEDIA:
         return True
+    if BLOCKING_VISUALS.match(path):
+        return suffix in {".png", ".webp"}
     # The manual's own schematic images.
     if path.startswith(SHARED_VISUALS):
         return suffix in {".gif", ".png", ".svg"}

@@ -235,7 +235,8 @@ flowchart TD
 
 Cada pasta tem o próprio guia, com diagrama (em inglês): [a skill](higgsfield-director/README.md) ·
 [docs](docs/README.md) · [tools](tools/README.md) · [examples](examples/README.md) ·
-[lições aprendidas](lessons-learned/README.md) · [calibração](calibration/README.md).
+[lições aprendidas](lessons-learned/README.md) · [calibração](calibration/README.md) ·
+[estúdio de blocking](blocking-studio/README.md).
 
 <details>
 <summary><b>Árvore completa de arquivos</b></summary>
@@ -266,6 +267,7 @@ examples/references/            três imagens de referência e os prompts que as
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
 price-history/                  as cotações do conector, um registro por semana, com o gráfico da evolução
+blocking-studio/                storyboards 3D animados antes de gastar créditos: o manequim (GLB), scripts do Blender, um visualizador em Three.js
 docs/
   MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
   RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou
@@ -603,6 +605,7 @@ A skill foi feita para conviver com outras skills de vídeo sem roubar os pedido
 |---|---|
 | prompt, tomada ou sequência **gerada por IA**; escolha de modelo; custo de geração; diagnóstico de resultado gerado | **esta skill** |
 | UGC, ficha de personagem, foto de produto, miniatura, anúncio estático, microdrama, vídeo sem rosto, dublagem | o fluxo próprio do conector Higgsfield; esta skill só acrescenta a regra de custo e "ok" |
+| storyboard 3D animado (bonecos cinza, câmera, tempo) para planejar o vídeo antes de gastar créditos | o [`blocking-studio/`](blocking-studio/README.md), neste repositório; os quadros dele voltam para esta skill como referência de câmera ou posição |
 | editar vídeo gravado (cortes, legendas, cor, trilha) | uma skill de edição de vídeo ou o fluxo `video-montage` do conector |
 | voz, narração, música, efeitos sonoros | uma skill de áudio |
 | títulos, descrições, publicação | uma skill de publicação |
@@ -667,6 +670,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Manual ilustrado | [docs/manual/README.md](docs/manual/README.md) |
 | Avaliação da v4.1 | [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md) |
 | Lições aprendidas | [lessons-learned/README.md](lessons-learned/README.md) |
+| Estúdio de blocking | [blocking-studio/README.md](blocking-studio/README.md) |
 | Histórico de mudanças | [CHANGELOG.md](CHANGELOG.md) |
 | Como contribuir | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Política de segurança | [SECURITY.md](SECURITY.md) |
@@ -695,6 +699,9 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
   [nessa pasta](docs/demo/README.md) quando tomada; o homem neles é o mantenedor, que concordou em publicá-los.
 - As três imagens de referência em `examples/references/`: a licença é decisão do mantenedor, registrada
   [nessa pasta](examples/references/README.md) quando tomada.
+- O manequim em `blocking-studio/assets/` (o modelo, a fonte e as folhas de design): a licença é decisão do
+  mantenedor, registrada [nessa pasta](blocking-studio/assets/characters/mannequin/README.md#license) quando tomada. Os
+  scripts e o visualizador do estúdio de blocking são código, sob a licença MIT.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão
   direito de usá-los. Este projeto é independente e não tem vínculo com nenhum deles nem aprovação deles.
 

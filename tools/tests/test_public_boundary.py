@@ -59,6 +59,24 @@ class PublicBoundaryTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertTrue(check_public_path(path))
 
+    def test_blocking_studio_sheets_and_guide_images_pass_but_not_video(self):
+        for path in (
+            "blocking-studio/assets/characters/mannequin/mannequin.glb",
+            "blocking-studio/assets/characters/mannequin/sheets/turnaround.webp",
+            "blocking-studio/docs/mannequin-approved.png",
+            "blocking-studio/tools/blender/convert_meshy_mannequin.py",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual([], check_public_path(path))
+        for path in (
+            "blocking-studio/assets/characters/mannequin/sheets/take.mp4",
+            "blocking-studio/assets/characters/mannequin/photo.png",
+            "blocking-studio/renders/shot-01.png",
+            "blocking-studio/projects/client/sheets/turnaround.webp",
+        ):
+            with self.subTest(path=path):
+                self.assertTrue(check_public_path(path))
+
     def test_agent_instruction_files_pass(self):
         for path in ("AGENTS.md", "CLAUDE.md"):
             with self.subTest(path=path):

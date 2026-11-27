@@ -87,6 +87,9 @@ as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check r
   `description` has at most 1024 characters and is a quoted YAML string.
 - **The two READMEs move together.** A change to `README.md` needs the same change in `README.pt-BR.md`.
 - **Never commit** generated media, API keys, tokens, signed URLs, or prompts and images that belong to a client.
+  The one exception is the blocking studio's shared assets in `blocking-studio/assets/`: a character enters there only
+  by the maintainer's decision, and `tools/public_boundary.py` allows still images only in each character's `sheets/`
+  and in `blocking-studio/docs/`.
 - Add a line to `CHANGELOG.md` under *Unreleased*.
 
 ## Run the behavior scenarios
