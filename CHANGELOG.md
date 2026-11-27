@@ -5,6 +5,13 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+Nothing yet.
+
+## [6.0.0] — 2026-11-27
+
+Everything is in English now, which breaks the old Portuguese names: they still work through 6.x with a warning,
+and every one is in [`docs/MIGRATION-6.md`](docs/MIGRATION-6.md).
+
 ### Added
 
 - The day's price table (`hfd.py prices`, `references/models.md`). On each day of use, or on request, the agent asks
@@ -313,5 +320,6 @@ Generated in ChatGPT and kept out of this repository.
 | v4.0 | master modules and illustrated manual |
 | v4.1 RC1 – RC4 | packaging, hardening, public/private split, AAA illustrated README |
 
+[6.0.0]: https://github.com/rniedson/higgsfield-director-pro-skill/compare/v5.1.0...v6.0.0
 [5.1.0]: https://github.com/rniedson/higgsfield-director-pro-skill/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/rniedson/higgsfield-director-pro-skill/tree/v5.0.0
