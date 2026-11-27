@@ -4,8 +4,10 @@ The question that matters is "**for me**, does the skill make a difference?". Th
 test: the same request, made with and without the skill, and the person chooses without knowing which is which. If
 they do not choose the skill, the skill needs to improve, and the result shows where.
 
-Calibration is **optional**: offer it on first use (`references/modes.md`) and when the operator asks. It spends
-credits (the shots of both conditions), quoted first and with their "ok".
+Calibration is **optional** and runs **only when the operator asks** for it: it pays for the shots of both
+conditions, quoted first and with their "ok". The skill does not offer it on its own. On 2026-11-26, after the
+fifth round, the maintainer decided that the skill's work is the process (steps, cheap previews, the credits in
+view), not winning against what the models give a plain request.
 
 ## Step by step
 
@@ -57,8 +59,8 @@ credits (the shots of both conditions), quoted first and with their "ok".
 ## Contributing to the repository
 
 The record goes into the repository's `calibration/` folder by pull request (see CONTRIBUTING). CI checks each file
-against the same allowlist, and `tools/aggregate_calibration.py` adds everything up into the README table. That way
-the scoreboard shows, per request type, where the skill wins and where it loses, and each loss becomes a fix.
+against the same allowlist, and `tools/aggregate_calibration.py` adds everything up into the scoreboard in
+`calibration/README.md`, per request type.
 
 | Goes into the record | Never goes in |
 |---|---|

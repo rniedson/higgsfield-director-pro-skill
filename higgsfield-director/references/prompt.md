@@ -1,6 +1,10 @@
 # Writing the prompt
 
-Read before writing or reviewing any prompt. The vocabulary is in `references/vocabulary.md`.
+Read this only when the operator asks for a look or a control (a camera move, a lens, a style), brings a prompt to
+review, or a preview shows a defect to fix. For any other request the prompt is the request as asked, every fact
+and every limit in plain words, with nothing added (`SKILL.md`, step 5): in the blind rounds of 2026-11-24 to 26,
+prompts the skill rewrote with the rules below lost the naturalness the models give a plain request. The vocabulary
+is in `references/vocabulary.md`.
 
 ## 1. The golden rule (order)
 

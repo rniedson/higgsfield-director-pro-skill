@@ -87,8 +87,8 @@ a reference, and never give the "ok" a scenario stops at.
 
 ## Contribute a calibration result
 
-A blind round, with and without the skill, on a request of your own, is the most useful contribution: it shows where
-the skill wins and where it loses. The steps are in
+A blind round, with and without the skill, on a request of your own, is kept as a record in
+[`calibration/`](calibration/README.md). The steps are in
 [`references/calibration.md`](higgsfield-director/references/calibration.md).
 
 1. Build the record with `hfd.py result`. It writes only allowlisted fields: date, skill version, request type,
@@ -97,9 +97,8 @@ the skill wins and where it loses. The steps are in
 2. **Read the whole record before you share it.** Never add the request text, prompts, images, videos, names,
    clients, brands, links, e-mail addresses or file paths. CI rejects any field outside the allowlist.
 3. Put it in `calibration/` as `YYYY-MM-DD-<category>-<suffix>.json`, run `python3 tools/aggregate_calibration.py
-   --write` to refresh the scoreboard in both READMEs, and run the checks above.
-4. Open a pull request with the record and the two README changes. A round where the skill lost is just as welcome:
-   it is how the next fix gets found.
+   --write` to refresh the scoreboard in `calibration/README.md`, and run the checks above.
+4. Open a pull request with the record and the scoreboard change. A round where the skill lost is just as welcome.
 
 ## License
 

@@ -5,7 +5,10 @@
 - [ ] The format is not a ready-made connector workflow (`references/connector.md`).
 - [ ] Model confirmed in the live catalog; duration, aspect ratio, resolution and audio within the limits.
 - [ ] `hfd.py validate` with no errors; warnings read and accepted or resolved.
-- [ ] Each shot has **one** dominant action and **one** main movement (or explicit phases).
+- [ ] Every fact and every limit of the request is in the prompts it covers. What it rules out (no text, no brand,
+      nobody real) is written as asked, in every image and video prompt, with the surfaces that would show it.
+- [ ] Nothing the request did not ask for was added: a camera move, a lens, a light, a style, a recipe against a
+      defect not yet seen. Two camera moves at once asked for: say the risk and let the operator choose.
 - [ ] **Does the scene happen like this in real life?** Someone who knows the subject confirms it. The score measures
       whether the video obeyed the prompt, not whether the scene is plausible: a test scored 80 showed a scene that
       people in the trade have never seen.
@@ -16,14 +19,12 @@
       beforehand.
 - [ ] A character sheet has one face; a scene with several people, or a count that matters, has a layout map
       (`references/workflow.md` §4).
-- [ ] In an ad, each shot has a moment of impact (an action on the product, with sound tied to it), not just a camera
-      movement.
 - [ ] The speech fits the duration; the speaker is labeled.
-- [ ] No loose negative instruction ("no X") where the positive can be said, except the request's own limits (no
-      text, no brand, nobody real): those go into every image and video prompt in plain words, with the surfaces
-      that stay blank (`references/prompt.md` §1).
 - [ ] Uploaded references belong to the operator or are authorized; a real person only with consent.
-- [ ] Cost estimated by the connector and an explicit "ok" from the operator with the total.
+- [ ] The step comes after the cheaper one: stills before video, one test shot before the rest, unless the operator
+      skipped it.
+- [ ] Cost estimated by the connector and an explicit "ok" from the operator with the total, and the credits already
+      spent in this session shown beside it.
 
 ## Diagnosis (symptom → hypothesis → change → how to check)
 

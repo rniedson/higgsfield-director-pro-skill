@@ -7,6 +7,16 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The skill's work is now the process, not a better prompt. After five blind rounds, where what the skill added to
+  the prompts took away the naturalness the models give a plain request, the prompt is the request as asked: every
+  fact and every limit, with no camera, lens, light, style or recipe the request did not ask for;
+  `references/prompt.md` comes in only on request or to fix a defect a preview showed. Before each expensive step
+  the skill shows a cheaper one (the plan in words, one still per shot, one test shot at the lowest resolution, then
+  the rest), each quoted and approved, and after each generation it shows what it cost and the running total, in
+  every mode. The first-use question asks only the working mode; a blind test runs only when the operator asks. The
+  READMEs no longer report the blind rounds: their records and the scoreboard moved to `calibration/README.md`,
+  which `tools/aggregate_calibration.py` now builds. A new behavior scenario, and scenario 13 no longer asks for a
+  documentary register.
 - Calibration: a fifth blind round, on two new requests (a bakery commercial, a fishing teaser), with
   `5.1.0+0f8bcfb`. The person chose the version without the skill in 2 of 2; in round 1 the blind vote was for the
   skill and changed after the key showed a shop sign with a name the request had ruled out. What changed because of

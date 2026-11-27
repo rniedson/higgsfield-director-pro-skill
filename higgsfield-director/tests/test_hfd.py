@@ -545,6 +545,14 @@ class ModesAndCalibration(unittest.TestCase):
             self.assertFalse(r["defined"])
             self.assertIn("question", r)
 
+    def test_first_use_question_asks_only_the_working_mode(self):
+        """A blind test pays for both sides, so the skill runs one only when the operator asks for it."""
+        with tempfile.TemporaryDirectory() as d:
+            question = hfd.preferences(Path(d) / "p.json")["question"]
+            self.assertNotIn("calibrat", question.lower())
+            self.assertNotIn("blind", question.lower())
+            self.assertIn("ceiling", question)
+
     def test_preferences_write_and_read(self):
         with tempfile.TemporaryDirectory() as d:
             f = Path(d) / "sub" / "p.json"

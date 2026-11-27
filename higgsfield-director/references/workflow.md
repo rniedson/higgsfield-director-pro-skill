@@ -9,12 +9,16 @@ budget in credits · preferred model (if any).
 
 ## 2. Mode
 
-- **Quick** (one shot, one image, reviewing a prompt): no project.json. Write the prompt following
-  `references/prompt.md`, check the limits in the catalog and deliver.
+- **Quick** (one shot, one image, reviewing a prompt): no project.json. Write the prompt from the request as asked
+  (`SKILL.md`, step 5), check the limits in the catalog and deliver; `references/prompt.md` only when the operator
+  asks for a look or a control, or brings a prompt to review.
 - **Studio** (2+ shots, a character/product that repeats, campaign, budget): build the project from
   `templates/project.json` (or `templates/i2v.json`), validate and compile with `scripts/hfd.py`.
 
 ## 3. Structure by format
+
+A starting point when the operator asks for a structure or the request gives none. A request that lists its shots
+keeps them as asked.
 
 | Format | Skeleton |
 |---|---|
@@ -139,8 +143,8 @@ folder.
 ## 7. Delivery
 
 **Direction** (intent and approach, 2–4 lines) · **Assumptions** · **Model and parameters** (with the date/source of
-the limits) · **Prompt(s)** in a copyable block · **Shot plan** (studio) · **Cost** (studio, or whenever generating) ·
-**Risks and next test**. Simple request: only the prompt, parameters and one risk.
+the limits) · **Prompt(s)** in a copyable block · **Shot plan** (studio) · **Cost** (studio, or whenever generating:
+each preview step, the total and what was already spent) · **Risks and next test**. Simple request: only the prompt, parameters and one risk.
 
 The cost counts the expected attempts per shot (`attempts`): an ad is often cut from the best part of several takes,
 and a quote prices one take.

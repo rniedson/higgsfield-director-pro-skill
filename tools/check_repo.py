@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Checks the repository before publishing: skill format, JSON, links and anchors of the Markdown files, the
-calibration records with the README scoreboard (tools/aggregate_calibration.py), and that everything is in English
+calibration records with their scoreboard in calibration/README.md (tools/aggregate_calibration.py), and that everything is in English
 (file names and text; see "Everything in the repository is in English" in CONTRIBUTING.md).
 
 Usage: python3 tools/check_repo.py [--require-yaml]

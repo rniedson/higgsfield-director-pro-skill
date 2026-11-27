@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Adds up the blind calibration records (calibration/*.json) into the scoreboard of both READMEs.
+"""Adds up the blind calibration records (calibration/*.json) into the scoreboard of calibration/README.md.
 
-Usage: python3 tools/aggregate_calibration.py           # prints the scoreboard in English
-       python3 tools/aggregate_calibration.py --write   # updates README.md and README.pt-BR.md between the markers
-       python3 tools/aggregate_calibration.py --check   # exits with 1 if a record is invalid or a README is stale
+Usage: python3 tools/aggregate_calibration.py           # prints the scoreboard
+       python3 tools/aggregate_calibration.py --write   # updates calibration/README.md between the markers
+       python3 tools/aggregate_calibration.py --check   # exits with 1 if a record is invalid or the page is stale
 It only reads and writes files of the repository; it does not touch the network.
 Records with the old 5.x field names or values still load in 6.x, with a warning on stderr.
 """
@@ -18,24 +18,15 @@ sys.path.insert(0, str(ROOT / "higgsfield-director" / "scripts"))
 import hfd  # noqa: E402
 
 START, END = "<!-- calibration:start -->", "<!-- calibration:end -->"
+# The page that carries the scoreboard. Until 2026-11-26 it was both READMEs; they no longer report the rounds.
+TARGETS = (("calibration/README.md", "en"),)
 NAME = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+)-([a-z0-9]{1,12})\.json$")
-# "pt" is the text of the scoreboard in README.pt-BR.md, the Portuguese translation of README.md.
-# language-check: off
 LABELS = {
-    "pt": {"product-ad": "Anúncio de produto", "character-scene": "Cena com personagem", "trailer": "Trailer",
-           "corporate": "Institucional", "music-video": "Clipe musical", "loop": "Loop", "image": "Imagem",
-           "other": "Outro"},
     "en": {"product-ad": "Product ad", "character-scene": "Character scene", "trailer": "Trailer",
            "corporate": "Corporate", "music-video": "Music video", "loop": "Loop", "image": "Image",
            "other": "Other"},
 }
 TEXT = {
-    "pt": {"header": "| Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |",
-           "total": "**Total**", "empty": "Nenhum registro ainda.",
-           "version": "Por versão da skill", "rounds": "rodada(s)",
-           "order": "A versão vista primeiro foi a escolhida em {g} de {n} rodada(s) com a ordem registrada.",
-           "source": "Gerado por `tools/aggregate_calibration.py` a partir de {n} registro(s) em `calibration/`."},
-# language-check: on
     "en": {"header": "| Request type | Rounds | Chose with the skill | Chose without | Tie | Blind reviewer score, with × without |",
            "total": "**Total**", "empty": "No records yet.",
            "version": "By skill version", "rounds": "round(s)",
@@ -86,8 +77,7 @@ def load():
 
 
 def _num(v, language):
-    s = f"{v:.1f}"
-    return s.replace(".", ",") if language == "pt" else s
+    return f"{v:.1f}"
 
 
 def scoreboard(records, language):
@@ -119,10 +109,7 @@ def scoreboard(records, language):
     for v, votes in versions.items():
         w, wo = votes.count("with"), votes.count("without")
         parts.append(f"`{v}`: {w} × {wo}" + (f" ({votes.count('tie')} =)" if "tie" in votes else ""))
-    # language-check: off
-    lines += ["", f"{t['version']} ({'com × sem' if language == 'pt' else 'with × without'}): " + "; ".join(parts)
-              + "."]
-    # language-check: on
+    lines += ["", f"{t['version']} (with × without): " + "; ".join(parts) + "."]
     order = [r for r in records if r.get("seen_first") in ("with", "without") and r["vote"] != "tie"]
     if order:
         g = sum(r["seen_first"] == r["vote"] for r in order)
@@ -144,7 +131,7 @@ def check(problems):
     """Also used by tools/check_repo.py."""
     records, errors = load()
     problems += errors
-    for name, language in (("README.md", "en"), ("README.pt-BR.md", "pt")):
+    for name, language in TARGETS:
         new, current = updated_readme(ROOT / name, language, records)
         if new is None:
             problems.append(f"{name}: the markers {START} and {END} are missing, in this order")
@@ -168,7 +155,7 @@ def main(argv):
     if problems:
         return 1
     if "--write" in argv:
-        for name, language in (("README.md", "en"), ("README.pt-BR.md", "pt")):
+        for name, language in TARGETS:
             new, current = updated_readme(ROOT / name, language, records)
             if new is None:
                 print(f"{name}: the markers {START} and {END} are missing", file=sys.stderr)
