@@ -11,7 +11,7 @@ Subcommands:
   compile   <project.json> [--text]   one prompt per shot + parameters ready for the connector
   budget    <project.json> | --shots N --test-cost X --final-cost Y
   optics    <mm> <distance_m> [aperture]
-  export    <project.json> <folder>   script.md, shots.csv and subtitles.srt
+  export    <project.json> <folder>   script.md, shots.csv and (with dialogue) subtitles.srt
   score     <evaluation.json>         score 0-100 with mandatory evidence
   models    [--type video|image] [--search term] [--id ID]
   models    --import list.json [more.json ...] --out snapshot.json
@@ -85,11 +85,13 @@ def is_text(v):
 
 
 def sentence(s):
-    """A whole sentence: capital first letter and a final period."""
+    """A whole sentence: a capital first letter (unless the first word has its own capitals) and a final period."""
     s = " ".join(str(s).split())
     if not s:
         return ""
-    s = s[0].upper() + s[1:]
+    first = s.split(" ", 1)[0]
+    if first.islower() and first.isalpha():  # "a glass bottle" -> "A glass bottle"; "iPhone" and "eBay" stay
+        s = s[0].upper() + s[1:]
     return s if s[-1] in ".!?\"'”" else s + "."
 
 
@@ -372,7 +374,7 @@ _MOVES = {
 _MOVE_RE = {k: re.compile(r"\b(?:" + v + r")\b", re.I) for k, v in _MOVES.items()}
 _NEGATION = re.compile(r"\b(no|not|without|never|avoid|zero|nor)\b|\bdon'?t\b", re.I)
 _PHASE = re.compile(r"\bthen\b|\bafter that\b|\bfollowed by\b|\bfinally\b|\bbefore\b|->|→|;", re.I)
-_SIMULTANEOUS = re.compile(r"\bwhile\b|\bas it\b|\bat the same time\b|\bsimultaneously\b", re.I)
+_SIMULTANEOUS = re.compile(r"\bwhile\b|\bas it\b|\bat the same time\b|\bsimultaneously\b|\band\b", re.I)
 
 
 def _clause_moves(c):
@@ -509,7 +511,8 @@ def import_models(files, out, base=None):
     for n in new.values():
         n["generated_at"] = today
     models.update(new)
-    snapshot = {"generated_at": today, "models": models,
+    dates = [m.get("generated_at") for m in models.values() if isinstance(m, dict) and m.get("generated_at")]
+    snapshot = {"generated_at": min(dates) if dates else today, "models": models,
                 "source": "Higgsfield connector, models_explore list/get (imported by hfd.py models --import)"}
     dest = Path(out)
     try:
@@ -534,7 +537,9 @@ def check_model(p, catalog):
         return errors, warnings, None
     m = catalog.get("models", {}).get(mid)
     if not m:
-        warnings.append(f"model '{mid}' is not in the snapshot of {date}; check the id live (models_explore get)")
+        warnings.append(f"model '{mid}' is not in the snapshot of {date}; check the id live (models_explore get). "
+                        "Until it is imported, only model, duration and aspect ratio are sent: no resolution, no "
+                        "audio, no mode")
         return errors, warnings, None
     date = m.get("generated_at") or date
     if p.get("mode") == "image" and m["type"] != "image":
@@ -548,8 +553,15 @@ def check_model(p, catalog):
     if res and m.get("resolution") and m["resolution"].get("options") and res not in m["resolution"]["options"]:
         errors.append(f"resolution {res} not accepted by {mid} "
                       f"(accepts: {', '.join(map(str, m['resolution']['options']))})")
+    if res and not m.get("resolution"):
+        warnings.append(f"{mid} has no resolution parameter in the snapshot, so resolution {res} is not sent; its "
+                        f"quality may be another parameter ({', '.join(m.get('parameters') or []) or 'none listed'}): "
+                        "check models_explore get")
     if p.get("mode") == "i2v" and m["media"] and not ({"start_image", "image", "image_references"} & set(m["media"])):
         errors.append(f"{mid} does not take a start image; i2v needs another model")
+    if p.get("mode") in ("edit", "extend") and not _mode_name(p["mode"], m):
+        errors.append(f"{mid} has no {p['mode']} mode in the snapshot (modes: "
+                      f"{', '.join(m.get('modes') or []) or 'none listed'}); {p['mode']} needs another model")
     d = m.get("duration") or {}
     minimum, maximum = _duration_limits(d)
     for t in p.get("shots") or []:
@@ -562,7 +574,7 @@ def check_model(p, catalog):
             errors.append(f"{t.get('id')}: {dur} s is above the maximum of {mid} ({maximum} s)")
         if minimum is not None and minimum > 0 and dur < minimum:
             errors.append(f"{t.get('id')}: {dur} s is below the minimum of {mid} ({minimum} s)")
-        if (t.get("sound") or t.get("dialogue")) and not (m.get("audio") or m.get("audio_in_tags")):
+        if _wants_audio(t) and not (m.get("audio") or m.get("audio_in_tags")):
             warnings.append(f"{t.get('id')}: {mid} shows no native audio in the snapshot; sound goes to "
                             "post-production")
     if len(p.get("shots") or []) > 1 and "multi_shots" not in m.get("parameters", []):
@@ -713,18 +725,26 @@ def validate(p, catalog=None):
             errors.append(f"shot without an id or with a repeated id: {tid!r}")
         else:
             ids.add(tid)
-        subject = is_text(t.get("subject")) or is_text(p.get("subject")) or _entities(t)
+        subject = is_text(t.get("subject")) or is_text(p.get("subject")) or _entity_descriptions(p, t) or \
+            (mode == "i2v" and _entities(t))
         if not subject:
-            errors.append(f"{tid}: missing subject ('subject' field or 'entities' with a bible entry)")
+            errors.append(f"{tid}: missing subject ('subject' field, or 'entities' whose bible entry has a "
+                          "'description')")
+        if mode == "edit" and not (is_text(t.get("target")) or is_text(p.get("target"))):
+            errors.append(f"{tid}: edit mode needs a 'target': what changes in the clip")
         if mode != "image":
             if not is_number(t.get("duration")) or t["duration"] <= 0:
                 errors.append(f"{tid}: 'duration' in seconds is required")
             if not is_text(t.get("action")):
                 errors.append(f"{tid}: missing 'action' (one dominant action)")
         else:
-            for k in ("camera", "sound", "dialogue", "timeline"):
+            for k in ("duration", "camera", "sound", "dialogue", "timeline"):
                 if t.get(k):
                     warnings.append(f"{tid}: '{k}' does not apply to a still image; it will be ignored")
+            for k in ("action", "micro_action", "secondary", "final"):
+                if is_text(t.get(k)):
+                    warnings.append(f"{tid}: '{k}' is not used for a still image; write what the image shows in "
+                                    "'subject' or 'setting'")
         cw, _ = check_camera(t.get("camera", ""))
         warnings += [f"{tid}: {w}" for w in cw]
         dialogue = t.get("dialogue") or []
@@ -770,6 +790,21 @@ def _entity_descriptions(p, t):
     return out
 
 
+MODE_NAMES = {"i2v": ("omni_reference", "image-to-video", "i2v"), "edit": ("video_edit", "video-edit", "edit"),
+              "extend": ("video_extension", "extend")}
+
+
+def _mode_name(mode, model):
+    """The model's own name for a mode (it changes from model to model); the first one that exists wins."""
+    return next((n for n in MODE_NAMES[mode] if n in (model.get("modes") or [])), None)
+
+
+def _wants_audio(t):
+    """Sound or a dialogue line with real text: a blank field turns no audio on."""
+    return is_text(t.get("sound")) or any(isinstance(d, dict) and is_text(d.get("text"))
+                                          for d in (t.get("dialogue") or []))
+
+
 def compile_shot(p, t, model=None):
     mode = p.get("mode", "t2v")
     parts = []
@@ -786,8 +821,9 @@ def compile_shot(p, t, model=None):
         # in image to video the image already brings subject and scene: the text focuses on motion and camera
         scene_fields = []
     else:
-        scene_fields = _entity_descriptions(p, t) + [t.get("subject") or ("" if _entities(t) else p.get("subject", "")),
-                                                     t.get("setting") or p.get("setting", "")]
+        described = _entity_descriptions(p, t)
+        scene_fields = described + [t.get("subject") or ("" if described else p.get("subject", "")),
+                                    t.get("setting") or p.get("setting", "")]
     temporal = ["action", "micro_action"] if mode != "image" else []
     order = scene_fields + [t.get(k, "") for k in temporal] + [t.get("framing", "")]
     if mode != "image":
@@ -818,19 +854,13 @@ def compile_shot(p, t, model=None):
             params["aspect_ratio"] = p["aspect_ratio"]
         if p.get("resolution") and model.get("resolution"):
             params[model["resolution"]["parameter"]] = p["resolution"]
-        wants_audio = bool(t.get("sound") or t.get("dialogue"))
+        wants_audio = _wants_audio(t)
         if model.get("audio") and mode != "image":
             a = model["audio"]
             params[a["parameter"]] = (("on" if wants_audio else "off") if a.get("options") == ["on", "off"]
                                       else wants_audio)
-        if mode in ("i2v", "edit", "extend") and model.get("modes"):
-            # the mode name changes from model to model; the first one that exists wins
-            names = {"i2v": ("omni_reference", "image-to-video", "i2v"),
-                     "edit": ("video_edit", "video-edit", "edit"),
-                     "extend": ("video_extension", "extend")}[mode]
-            target = next((n for n in names if n in model["modes"]), None)
-            if target:
-                params["mode"] = target
+        if mode in ("i2v", "edit", "extend") and _mode_name(mode, model):
+            params["mode"] = _mode_name(mode, model)
     elif p.get("model"):
         params = {"model": p["model"], "aspect_ratio": p.get("aspect_ratio")}
         if mode != "image":
@@ -874,8 +904,9 @@ def budget(shots, reserve=20.0, attempts=None):
         lines.append({"id": t.get("id"), "attempts": n, "test_cost": tc, "final_cost": fc, "subtotal": sub})
         base += sub
     base = round(base, 2)
-    return {"shots": lines, "base": base, "reserve_pct": reserve, "reserve": round(base * reserve / 100, 2),
-            "total": round(base * (1 + reserve / 100), 2), "warnings": warnings,
+    kept = round(base * reserve / 100, 2)
+    return {"shots": lines, "base": base, "reserve_pct": reserve, "reserve": kept,
+            "total": round(base + kept, 2), "warnings": warnings,
             "reminder": "the cost is the connector's estimate; generate only after the operator's ok with this total"}
 
 
@@ -889,7 +920,7 @@ def optics(f, d, n=2.8, sensor=36.0, coc=0.03):
     near = s * h / (h + (s - f))
     far = s * h / (h - (s - f)) if h > (s - f) else None
     return {"horizontal_fov_degrees": round(math.degrees(2 * math.atan(sensor / (2 * f))), 2),
-            "frame_width_m": round(d * sensor / f, 3),
+            "frame_width_m": round((s - f) * sensor / f / 1000, 3),
             "focus_from_m": round(near / 1000, 3),
             "focus_to_m": round(far / 1000, 3) if far else "infinity",
             "hyperfocal_m": round((h + f) / 1000, 2),
@@ -907,6 +938,9 @@ def score(x):
     crit = x.get("criteria") or {}
     if not isinstance(crit, dict):
         raise Error("'criteria' must be an object {criterion: {score, evidence}}")
+    unknown = sorted(set(crit) - set(weights))
+    if unknown:
+        raise Error(f"unknown criteria {unknown} (criteria: {', '.join(weights)})")
     total = den = 0.0
     missing = []
     for k, w in weights.items():
@@ -947,7 +981,7 @@ CALIBRATE = ("yes", "no", "later")
 PREFERENCES = Path(".higgsfield-director") / "preferences.json"
 OLD_PREFERENCES = Path(".higgsfield-director") / "preferencias.json"
 CATEGORIES = ("product-ad", "character-scene", "trailer", "corporate", "music-video", "loop", "image", "other")
-FORMAT_FIELDS = ("model", "duration", "aspect_ratio", "resolution", "generate_audio")
+FORMAT_FIELDS = ("model", "duration", "aspect_ratio", "resolution", "quality", "mode", "generate_audio", "sound")
 QUESTION = ("Before we start: how do you prefer to work? (a) follow and approve each step, seeing every preview, "
             "image and video; (b) see only the total price and give one ok; (c) give me a credit ceiling per session "
             "and not be asked. In every mode I show what each step costs and the total spent so far.")
@@ -956,6 +990,14 @@ REMINDER = ("the file stores how to work, never how much to spend: authorization
 RECORD_FIELDS = {"format", "date", "skill_version", "category", "model", "shots", "cost_credits",
                  "image_reference", "vote", "rater", "reason", "scores", "seen_first"}
 OPTIONAL_RECORD_FIELDS = {"reason", "scores", "seen_first"}
+
+
+def _real_date(s):
+    try:
+        _dt.date.fromisoformat(s)
+        return True
+    except ValueError:
+        return False
 
 
 def preferences(file=None, mode=None, calibrate=None):
@@ -975,6 +1017,11 @@ def preferences(file=None, mode=None, calibrate=None):
         if extras:
             raise Error(f"{source}: unknown fields {extras}; the file stores only how to work, "
                         "never how much to spend")
+        if "calibrate" in current and current["calibrate"] not in CALIBRATE:
+            raise Error(f"{source}: 'calibrate' must be one of {', '.join(CALIBRATE)}")
+        if "updated_at" in current and not (isinstance(current["updated_at"], str)
+                                            and re.fullmatch(r"\d{4}-\d{2}-\d{2}", current["updated_at"])):
+            raise Error(f"{source}: 'updated_at' must be a date, YYYY-MM-DD")
     if mode is None and calibrate is None:
         defined = current.get("mode") in WORK_MODES
         r = {"defined": defined, "file": str(source)}
@@ -1033,6 +1080,10 @@ def blind(with_requests, without_requests, folder, draw=None, order=None):
         return {"errors": errors}
     folder = Path(folder)
     key_file = folder / "blind-key.json"
+    # language-check: off  (the key's name before 6.0)
+    if (folder / "chave-cega.json").exists():
+        raise Error(f"{folder / 'chave-cega.json'} already exists (the key's name before 6.0): one draw per round")
+    # language-check: on
     if key_file.exists():
         raise Error(f"{key_file} already exists: one draw per round; use another folder")
     with_is_x = (secrets.randbelow(2) if draw is None else draw) == 0
@@ -1072,8 +1123,8 @@ def check_record(d):
         e.append(f"required fields missing: {missing}")
     if d.get("format") != 1:
         e.append("'format' must be 1")
-    if not (isinstance(d.get("date"), str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d["date"])):
-        e.append("'date' in the format YYYY-MM-DD")
+    if not (isinstance(d.get("date"), str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d["date"]) and _real_date(d["date"])):
+        e.append("'date' in the format YYYY-MM-DD, a real date")
     if not (isinstance(d.get("skill_version"), str)
             and re.fullmatch(r"\d+\.\d+\.\d+(\+[0-9a-f]{7,12})?", d["skill_version"])):
         e.append("'skill_version' like 5.1.0 or 5.1.0+<commit>")
@@ -1181,7 +1232,7 @@ def export(p, folder, catalog=None):
         w.writerow(["id", "start_s", "end_s", "duration_s", "prompt", "parameters"])
         for tc in c["shots"]:
             t = by_id[tc["id"]]
-            dur = float(t.get("duration") or 0)
+            dur = float(t["duration"]) if is_number(t.get("duration")) else 0.0
             end = start + dur
             w.writerow([_csv_safe(tc["id"]), start, end, dur, _csv_safe(tc["prompt"]),
                         _csv_safe(json.dumps(tc["parameters"], ensure_ascii=False))])
@@ -1293,7 +1344,7 @@ def crop(sheet, folder, boxes, margin=0.01):
 
 def main(argv=None):
     argv = translate_argv(list(sys.argv[1:] if argv is None else argv))
-    ap = argparse.ArgumentParser(prog="hfd", description=__doc__.split("\n")[0])
+    ap = _Parser(prog="hfd", description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--snapshot", help="models snapshot to use instead of data/models.json")
@@ -1364,6 +1415,14 @@ def main(argv=None):
                                    f"{e}); run it again with HFD_DEBUG=1 to see the traceback"}, ensure_ascii=False),
               file=sys.stderr)
         return 2
+
+
+class _Parser(argparse.ArgumentParser):
+    """Usage errors come out as JSON on stderr with exit 2, like every other error."""
+
+    def error(self, message):
+        print(json.dumps({"error": f"{self.prog}: {message}"}, ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 
 def _run(a):

@@ -87,7 +87,7 @@ Top left: <action>. Top right: <action>. Bottom left: <action>. Bottom right: <a
 ### Phase B: separate frames (work)
 
 1. **Crop** the sheet with the boxes noted during the look (fractions from 0 to 1):
-   `python3 scripts/hfd.py crop sheet.png panels/ T01:0.04,0.07,0.33,0.48 T02:0.35,0.07,0.65,0.48`.
+   `python3 <skill-folder>/scripts/hfd.py crop sheet.png panels/ T01:0.04,0.07,0.33,0.48 T02:0.35,0.07,0.65,0.48`.
    The command only writes the ffmpeg commands; run them. Automatic detection of the borders was tested and
    discarded: the drawn border is crooked and broken.
 2. **Upload** each crop to the connector (`media_upload`, PUT, `media_confirm`). Uploading costs no credits; a 5xx

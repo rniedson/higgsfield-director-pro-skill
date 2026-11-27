@@ -22,7 +22,7 @@ view), not winning against what the models give a plain request.
    - In another environment: open two new conversations, one where the skill is not installed, paste the same
      request and ask for the parameters in JSON, without generating.
 3. **Random draw.** `hfd.py blind --with with/params.json --without without/params.json --out <folder>/blind`. The
-   command checks that both conditions ask for the same format (model, duration, aspect ratio, resolution, sound),
+   command checks that both conditions ask for the same format (model, duration, aspect ratio, resolution or quality, mode, sound),
    draws who is X and who is Y, saves `blind-requests.json` and the key (`blind-key.json`, which only the file's owner
    can read) **without showing it**. Separately, it draws which of the two appears first (`show_first`).
 4. **Generate.** If either condition asked for a reference image, generate it first, with its quote included. Quote

@@ -137,7 +137,7 @@ video stays with the skill that owns it.
   test.
 - **Studio:** direction (2–4 lines), assumptions, model and parameters with the source of the limits, shot table,
   prompts, the preview steps with the cost of each, the total and the request for "ok". `hfd.py export project.json <folder>` generates `script.md`,
-  `shots.csv` and `subtitles.srt`.
+  `shots.csv` and, when a shot has dialogue, `subtitles.srt`.
 - After generating: what was generated (ids), where it is, what it cost, the running total, the score with evidence
   and what to change.
 

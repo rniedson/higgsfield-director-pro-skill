@@ -30,8 +30,16 @@ holds the product's identity across generations.
         "variable": {"position": "can change"}}
 ```
 
-`validate` warns when a shot contradicts what the bible fixes, for example a red bottle in shot 2, unless the change
-is declared in the shot's `approved_changes`. What `variable` lists may change freely.
+`validate` stops with an error when a shot contradicts what the bible fixes, for example a red bottle in shot 2; a
+fixed attribute has no exception. What `variable` lists may change, and a change between shots (the bottle ends on
+the plinth, the next shot starts it in a hand) is an error too unless the next shot declares it in
+`approved_changes`, as `"P01.position"`.
+
+## No price in a template
+
+The templates carry no `test_cost` or `final_cost`, on purpose: prices change at any time, and a number written in a
+file goes stale without anyone noticing. The agent quotes each shot live with the connector's estimate (free) and
+writes what came back into the shot; until then `budget` refuses to run.
 
 ## Fill only what the request gives
 

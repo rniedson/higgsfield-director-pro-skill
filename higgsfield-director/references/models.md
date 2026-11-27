@@ -8,7 +8,7 @@ file's overall date records when the snapshot was saved. The old-snapshot warnin
 
 ```bash
 python3 <skill>/scripts/hfd.py models --type video            # summary of all
-python3 <skill>/scripts/hfd.py models --search "first-last"   # search the snapshot
+python3 <skill>/scripts/hfd.py models --search end_image      # every word must appear in the entry: here, a last frame
 python3 <skill>/scripts/hfd.py models --id seedance_2_5       # full entry
 ```
 

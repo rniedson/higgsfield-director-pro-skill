@@ -4,6 +4,7 @@ Each test marked "RC3" reproduces a defect measured in the ChatGPT version (docs
 """
 import copy
 import csv
+import datetime
 import io
 import json
 import os
@@ -13,6 +14,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -485,7 +487,9 @@ class Review(unittest.TestCase):
             hfd.import_models([Path(d) / "get.json"], Path(d) / "new.json", Path(d) / "base.json")
             snapshot = hfd.load_models(Path(d) / "new.json")
             self.assertEqual(snapshot["models"]["silent"]["generated_at"], "2020-01-01")
-            self.assertEqual(snapshot["models"]["cs4"]["generated_at"], snapshot["generated_at"])
+            self.assertEqual(snapshot["models"]["cs4"]["generated_at"], datetime.date.today().isoformat())
+            # one model brought up to date does not make the whole list today's: the header keeps the oldest date
+            self.assertEqual(snapshot["generated_at"], "2020-01-01")
             old = hfd.validate(project(model="silent"), snapshot)
             self.assertTrue(any("models snapshot is" in w for w in old["warnings"]))
             self.assertEqual(hfd.compile_project(project(model="silent"), snapshot)["models_snapshot"], "2020-01-01")
@@ -899,8 +903,18 @@ class OldNames(unittest.TestCase):
         self.assertIn("anuncio-produto", found)
 
 
-if __name__ == "__main__":
-    unittest.main()
+
+class MutationKillersOldNames(unittest.TestCase):
+    """Mutants of the old-name translation that the first suite let live."""
+
+    def test_old_budget_command_and_reserve_option_still_work(self):  # OLD03, OLD04
+        old = _cli("orcamento", "--tomadas", "1", "--custo-teste", "10", "--custo-final", "35", "--reserva", "30")
+        new = _cli("budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35", "--reserve", "30")
+        self.assertEqual(old[:2], new[:2])
+
+    def test_old_image_mode_translates(self):  # OLD05
+        self.assertEqual(hfd.translate_project({"modo": "imagem"})[0]["mode"], "image")
+
 
 # language-check: on
 
@@ -944,3 +958,336 @@ class Crop(unittest.TestCase):
                 out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=width,height", "-of",
                                       "csv=p=0", str(Path(d) / f"{name}.png")], capture_output=True, text=True)
                 self.assertEqual(out.stdout.strip(), "200,200")
+
+
+class MutationKillers(unittest.TestCase):
+    """One test per mutant that lived through the suite: each pins a line that a review changed without a test
+    failing (the comment names the mutant)."""
+
+    # ----- money
+    def test_budget_reports_the_reserve_in_credits(self):  # BUD03
+        r = hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=20)
+        self.assertEqual(r["reserve"], 11.0)
+
+    def test_cli_budget_applies_default_reserve_and_attempts(self):  # BUD04, BUD07
+        args = ["budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35"]
+        self.assertEqual(json.loads(_cli(*args)[1])["total"], 66.0)
+        self.assertEqual(json.loads(_cli(*args, "--attempts", "0")[1])["total"], 42.0)
+
+    def test_budget_refuses_a_negative_reserve(self):  # BUD05
+        with self.assertRaises(hfd.Error):
+            hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=-20)
+
+    def test_budget_refuses_a_partial_or_negative_price(self):  # BUD09, BUD10
+        for t in ({"id": "T01", "test_cost": 10}, {"id": "T01", "test_cost": -10, "final_cost": 35}):
+            with self.subTest(t=t), self.assertRaises(hfd.Error):
+                hfd.budget([t])
+
+    def test_blind_refuses_a_different_duration(self):  # BLD08
+        base = {"model": "cs4", "duration": 5, "aspect_ratio": "9:16"}
+        with tempfile.TemporaryDirectory() as d:
+            r = hfd.blind([base], [{**base, "duration": 10}], Path(d) / "r")
+        self.assertTrue(any("'duration'" in e for e in r["errors"]))
+
+    def test_compile_sends_the_duration(self):  # CMP09
+        self.assertEqual(hfd.compile_project(project(), CATALOG)["shots"][0]["parameters"]["duration"], 5)
+
+    def test_image_mode_refuses_a_video_model(self):  # VAL17
+        r = hfd.validate(project(mode="image"), CATALOG)
+        self.assertTrue(any("image mode with a video model" in e for e in r["errors"]))
+
+    def test_reference_mode_without_a_reference_warns(self):  # VAL16
+        r = hfd.validate(project(mode="i2v"), CATALOG)
+        self.assertTrue(any("needs a reference" in w for w in r["warnings"]))
+
+    def test_an_old_model_warns_in_a_new_snapshot(self):  # IMP04
+        cat = copy.deepcopy(CATALOG)
+        cat["generated_at"] = datetime.date.today().isoformat()
+        cat["models"]["cs4"]["generated_at"] = (datetime.date.today() - datetime.timedelta(days=60)).isoformat()
+        self.assertTrue(any("60 days old" in w for w in hfd.validate(project(), cat)["warnings"]))
+
+    def test_snapshot_older_than_30_days_warns(self):  # IMP06
+        cat = copy.deepcopy(CATALOG)
+        cat["generated_at"] = (datetime.date.today() - datetime.timedelta(days=45)).isoformat()
+        self.assertTrue(any("45 days old" in w for w in hfd.validate(project(), cat)["warnings"]))
+
+    # ----- preferences: how to work, never how much to spend
+    def test_preferences_refuse_every_spending_key(self):  # PRF02
+        for key in ("max_credits", "budget", "ceiling"):
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as d:
+                f = Path(d) / "p.json"
+                f.write_text(json.dumps({"mode": "ceiling", key: 500}), encoding="utf-8")
+                with self.assertRaises(hfd.Error):
+                    hfd.preferences(f)
+
+    def test_preferences_write_refuses_a_spending_field(self):  # PRF03
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "p.json"
+            f.write_text('{"mode": "ceiling", "ceiling_credits": 500}', encoding="utf-8")
+            with self.assertRaises(hfd.Error):
+                hfd.preferences(f, mode="price")
+
+    def test_preferences_with_an_unknown_mode_ask_again(self):  # PRF04
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "p.json"
+            f.write_text('{"mode": "free"}', encoding="utf-8")
+            r = hfd.preferences(f)
+            self.assertFalse(r["defined"])
+            self.assertIn("question", r)
+
+    # ----- privacy: blind key, records, exports
+    def _blind_pair(self):
+        base = {"model": "cs4", "duration": 5, "aspect_ratio": "9:16", "resolution": "480p", "generate_audio": True}
+        return [{**base, "prompt": "a"}], [{**base, "prompt": "b"}]
+
+    def test_blind_requests_do_not_name_the_condition(self):  # BLD01
+        w, wo = self._blind_pair()
+        with tempfile.TemporaryDirectory() as d:
+            hfd.blind(w, wo, Path(d) / "r", 0, 0)
+            text = (Path(d) / "r" / "blind-requests.json").read_text(encoding="utf-8")
+        self.assertNotIn('"with"', text)
+        self.assertNotIn('"without"', text)
+
+    def test_blind_draws_when_nothing_is_injected(self):  # BLD03, BLD04
+        w, wo = self._blind_pair()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(hfd.secrets, "randbelow", return_value=1):
+            r = hfd.blind(w, wo, Path(d) / "r")
+            key = json.loads((Path(d) / "r" / "blind-key.json").read_text(encoding="utf-8"))
+        self.assertEqual((key["with"], r["show_first"]), ("Y", "Y"))
+
+    def test_second_draw_leaves_the_round_untouched(self):  # BLD07
+        w, wo = self._blind_pair()
+        with tempfile.TemporaryDirectory() as d:
+            hfd.blind(w, wo, Path(d) / "r", 0, 0)
+            before = (Path(d) / "r" / "blind-requests.json").read_bytes()
+            with self.assertRaises(hfd.Error):
+                hfd.blind(w, wo, Path(d) / "r", 1, 1)
+            self.assertEqual((Path(d) / "r" / "blind-requests.json").read_bytes(), before)
+
+    def test_record_reason_refuses_a_long_number(self):  # PRV01
+        rec, _ = hfd.result({"with": "X", "without": "Y"}, "tie", "loop", "cs4", 1, 10, "5.1.0")
+        self.assertTrue(hfd.check_record({**rec, "reason": "call 5562999998888"}))
+
+    def test_csv_cells_neutralize_every_formula_prefix(self):  # PRV02
+        for s in ("+1", "-1", "@SUM(A1)"):
+            self.assertTrue(hfd._csv_safe(s).startswith("'"), s)
+
+    # ----- correctness: validate
+    def test_fixed_attribute_contradicted_at_the_start(self):  # VAL02
+        p = shot(project(bibles={"P01": {"fixed": {"color": "black"}}}), entities=["P01"],
+                 start={"P01": {"color": "red"}})
+        self.assertTrue(any("the bible fixes" in e for e in hfd.validate(p, CATALOG)["errors"]))
+
+    def test_dialogue_just_over_the_speech_rate_warns(self):  # VAL06
+        p = shot(project(), dialogue=[{"speaker": "A", "text": " ".join(["word"] * 13)}])  # 13 > 2.5 * 5
+        self.assertTrue(any("do not fit" in w for w in hfd.validate(p, CATALOG)["warnings"]))
+
+    def test_overlap_when_the_second_event_starts_first(self):  # VAL08
+        p = shot(project(), timeline=[{"track": "camera", "from": 2, "to": 5},
+                                      {"track": "camera", "from": 0, "to": 3}])
+        self.assertTrue(any("overlapping" in e for e in hfd.validate(p, CATALOG)["errors"]))
+
+    def test_timeline_event_past_the_end_of_the_shot(self):  # VAL09
+        p = shot(project(), timeline=[{"track": "camera", "from": 0, "to": 6}])
+        self.assertTrue(any("invalid timeline event" in e for e in hfd.validate(p, CATALOG)["errors"]))
+
+    def test_invalid_project_mode(self):  # VAL15
+        self.assertTrue(any("is invalid" in e for e in hfd.validate(project(mode="video"), CATALOG)["errors"]))
+
+    # ----- correctness: compile
+    def test_empty_camera_and_style_add_no_line(self):  # CMP01, CMP02
+        p = project()
+        del p["shots"][0]["camera"]
+        self.assertEqual(hfd.compile_project(p, CATALOG)["shots"][0]["prompt"], "A glass bottle. It rests on a plinth.")
+
+    def test_project_and_shot_constraints_both_reach_the_prompt(self):  # CMP03, CMP04
+        p = shot(project(constraints=["Keep the label readable"]), constraints=["No text on screen"])
+        prompt = hfd.compile_project(p, CATALOG)["shots"][0]["prompt"]
+        self.assertIn("Keep the label readable.", prompt)
+        self.assertIn("No text on screen.", prompt)
+
+    def test_prompt_keeps_the_field_order(self):  # CMP05, CMP06
+        p = shot(project(bibles={"P01": {"description": "A black bottle with a gold cap"}}), entities=["P01"],
+                 setting="A dark studio", framing="Close-up")
+        self.assertEqual(hfd.compile_project(p, CATALOG)["shots"][0]["prompt"],
+                         "A black bottle with a gold cap. A glass bottle. A dark studio. It rests on a plinth. "
+                         "Close-up. Slow orbit.")
+
+    def test_edit_targets_the_shot_first(self):  # CMP10
+        p = shot(project(mode="edit", target="the cap", references=["clip"]), target="the label")
+        self.assertTrue(hfd.compile_project(p, CATALOG)["shots"][0]["prompt"].startswith("Change only the label;"))
+
+    # ----- correctness: score
+    def test_verdict_boundaries(self):  # SCR02, SCR03
+        for value, verdict in ((9, "excellent"), (8.9, "approved with adjustments"), (8, "approved with adjustments"),
+                               (7.9, "revise"), (6.5, "revise"), (6.4, "rejected")):
+            with self.subTest(value=value):
+                self.assertEqual(hfd.score(_evaluation(value))["verdict"], verdict)
+
+    def test_score_refuses_blank_evidence(self):  # SCR05
+        x = _evaluation(8)
+        x["criteria"]["camera"]["evidence"] = "   "
+        with self.assertRaises(hfd.Error):
+            hfd.score(x)
+
+    def test_score_refuses_a_score_above_10(self):  # SCR06
+        x = _evaluation(8)
+        x["criteria"]["camera"]["score"] = 11
+        with self.assertRaises(hfd.Error):
+            hfd.score(x)
+
+    def test_score_refuses_a_missing_criterion(self):  # SCR07
+        x = _evaluation(8)
+        del x["criteria"]["audio"]
+        with self.assertRaises(hfd.Error):
+            hfd.score(x)
+
+    # ----- exit codes
+    def test_cli_export_exits_1_with_errors(self):  # EXT03
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "p.json"
+            f.write_text(json.dumps({"shots": []}), encoding="utf-8")
+            self.assertEqual(_cli("export", f, Path(d) / "out")[0], 1)
+
+    def test_cli_result_exits_1_when_the_record_breaks_the_allowlist(self):  # EXT04
+        with tempfile.TemporaryDirectory() as d:
+            key = Path(d) / "key.json"
+            key.write_text('{"with": "X", "without": "Y"}', encoding="utf-8")
+            out = Path(d) / "r.json"
+            code = _cli("result", "--key", key, "--vote", "X", "--category", "trailer", "--model", "cs4",
+                        "--shots", "99", "--cost", "90", "--version", "5.1.0", "--out", out)[0]
+            self.assertEqual(code, 1)
+            self.assertFalse(out.exists())
+
+    def test_cli_blind_exits_1_when_the_formats_differ(self):  # EXT05
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "w.json").write_text('[{"model": "cs4"}]', encoding="utf-8")
+            (Path(d) / "wo.json").write_text('[{"model": "veo"}]', encoding="utf-8")
+            code = _cli("blind", "--with", Path(d) / "w.json", "--without", Path(d) / "wo.json", "--out", Path(d) / "r")[0]
+            self.assertEqual(code, 1)
+
+
+class ReviewFixes(unittest.TestCase):
+    """A skeptical review reproduced each of these against 6.0; every test fails on that version."""
+
+    def test_operator_capitals_survive_the_sentence(self):
+        self.assertEqual(hfd.sentence("iPhone 17 on a desk"), "iPhone 17 on a desk.")
+        self.assertEqual(hfd.sentence("eBay seller"), "eBay seller.")
+        self.assertEqual(hfd.sentence("a glass bottle"), "A glass bottle.")
+        self.assertEqual(hfd.sentence("4K render"), "4K render.")
+
+    def test_a_resolution_the_model_cannot_take_warns(self):
+        r = hfd.validate(project(model="kling", aspect_ratio="16:9", resolution="4k"), CATALOG)
+        self.assertTrue(any("resolution 4k is not sent" in w for w in r["warnings"]))
+        unknown = hfd.validate(project(model="nobody"), CATALOG)
+        self.assertTrue(any("no resolution, no audio, no mode" in w for w in unknown["warnings"]))
+
+    def test_edit_and_extend_need_a_model_with_that_mode(self):
+        for mode in ("edit", "extend"):
+            with self.subTest(mode=mode):
+                p = project(model="kling", aspect_ratio="16:9", mode=mode, target="the cap", references=["clip"])
+                self.assertTrue(any(f"no {mode} mode" in e for e in hfd.validate(p, CATALOG)["errors"]))
+                ok = project(mode=mode, target="the cap", references=["clip"])
+                self.assertEqual(hfd.validate(ok, CATALOG)["errors"], [])
+
+    def test_edit_without_a_target_is_an_error(self):
+        p = project(mode="edit", references=["clip"])
+        self.assertTrue(any("needs a 'target'" in e for e in hfd.validate(p, CATALOG)["errors"]))
+
+    def test_blank_sound_or_dialogue_turns_no_audio_on(self):
+        p = shot(project(), sound="  ", dialogue=[{"speaker": "A", "text": " "}])
+        self.assertIs(hfd.compile_project(p, CATALOG)["shots"][0]["parameters"]["generate_audio"], False)
+        k = shot(project(model="kling", aspect_ratio="16:9"), dialogue=[{"speaker": "A", "text": ""}])
+        self.assertEqual(hfd.compile_project(k, CATALOG)["shots"][0]["parameters"]["sound"], "off")
+
+    def test_image_mode_names_the_fields_it_drops(self):
+        p = project(model="photo", mode="image", aspect_ratio="1:1",
+                    shots=[{"id": "I1", "subject": "A bottle", "action": "it spins", "final": "it stops"}])
+        warnings = hfd.validate(p, CATALOG)["warnings"]
+        for k in ("action", "final"):
+            with self.subTest(k=k):
+                self.assertTrue(any(f"'{k}' is not used for a still image" in w for w in warnings))
+
+    def test_an_entity_without_a_description_keeps_the_project_subject(self):
+        p = project(subject="A grey cat", bibles={"C01": {"fixed": {"fur": "grey"}}})
+        del p["shots"][0]["subject"]
+        p["shots"][0]["entities"] = ["C01"]
+        self.assertTrue(hfd.compile_project(p, CATALOG)["shots"][0]["prompt"].startswith("A grey cat."))
+        alone = copy.deepcopy(p)
+        del alone["subject"]
+        self.assertTrue(any("missing subject" in e for e in hfd.validate(alone, CATALOG)["errors"]))
+
+    def test_two_moves_joined_by_and_warn_even_with_a_later_phase(self):
+        w, _ = hfd.check_camera("dolly in and pan left, then static")
+        self.assertTrue(any("more than one movement" in x for x in w))
+
+    def test_blind_compares_every_format_field_the_compiler_sends(self):
+        base = {"model": "kling", "duration": 5, "aspect_ratio": "16:9"}
+        for k, a, b in (("sound", "on", "off"), ("mode", "pro", "std"), ("quality", "high", "basic")):
+            with self.subTest(k=k), tempfile.TemporaryDirectory() as d:
+                r = hfd.blind([{**base, k: a}], [{**base, k: b}], Path(d) / "r")
+                self.assertTrue(any(f"'{k}' differs" in e for e in r["errors"]))
+                self.assertFalse((Path(d) / "r").exists())
+
+    def test_blind_refuses_a_round_that_has_the_old_key(self):
+        base = {"model": "cs4", "duration": 5}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "r").mkdir()
+            (Path(d) / "r" / ("chave" + "-cega.json")).write_text("{}", encoding="utf-8")
+            with self.assertRaises(hfd.Error):
+                hfd.blind([base], [base], Path(d) / "r")
+
+    def test_preferences_refuse_a_value_outside_the_choices(self):
+        for content in ({"mode": "follow", "calibrate": {"max_credits": 500}},
+                        {"mode": "follow", "updated_at": {"budget": 9}}, {"mode": "follow", "updated_at": "soon"}):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as d:
+                f = Path(d) / "p.json"
+                f.write_text(json.dumps(content), encoding="utf-8")
+                with self.assertRaises(hfd.Error):
+                    hfd.preferences(f)
+
+    def test_score_refuses_an_unknown_criterion(self):
+        x = _evaluation(8)
+        x["criteria"]["pacing"] = {"score": 2, "evidence": "slow"}
+        with self.assertRaises(hfd.Error):
+            hfd.score(x)
+
+    def test_budget_figures_add_up(self):
+        r = hfd.budget([{"id": "T01", "test_cost": 0, "final_cost": 12.5, "attempts": 0}], reserve=15)
+        self.assertEqual((r["base"], r["reserve"], r["total"]), (12.5, 1.88, 14.38))
+
+    def test_frame_width_uses_the_same_thin_lens_as_the_focus(self):
+        self.assertAlmostEqual(hfd.optics(85, 2, 1.8)["frame_width_m"], 0.811, places=3)
+        self.assertAlmostEqual(hfd.optics(50, 4)["frame_width_m"], 2.844, places=3)
+
+    def test_a_record_date_must_exist(self):
+        rec, _ = hfd.result({"with": "X", "without": "Y"}, "tie", "loop", "cs4", 1, 10, "5.1.0")
+        self.assertTrue(any("real date" in e for e in hfd.check_record({**rec, "date": "2026-02-30"})))
+
+    def test_usage_errors_are_json_with_exit_2(self):
+        for args in (["validate"], ["optics", "abc", "2"], ["nothing"]):
+            with self.subTest(args=args):
+                code, out, err = _usage(args)
+                self.assertEqual(code, 2)
+                self.assertIn("error", json.loads(err))
+
+
+class ThisFile(unittest.TestCase):
+    def test_running_the_file_directly_runs_every_class(self):
+        text = Path(__file__).read_text(encoding="utf-8")
+        self.assertEqual(len(re.findall(r"^if __name__ ==", text, re.M)), 1)
+        self.assertTrue(text.rstrip().endswith("unittest.main()"))
+
+
+def _usage(args):
+    out, err = io.StringIO(), io.StringIO()
+    with redirect_stdout(out), redirect_stderr(err):
+        try:
+            code = hfd.main(args)
+        except SystemExit as e:
+            code = e.code
+    return code, out.getvalue(), err.getvalue()
+
+
+if __name__ == "__main__":
+    unittest.main()

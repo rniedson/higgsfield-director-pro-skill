@@ -40,8 +40,10 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
         "fixed": {"color": "black", "cap": "gold"}, "variable": {"position": "can change"}}
 ```
 
-- `description` is copied **verbatim** at the start of the prompt of every shot that lists the entity in `entities`:
-  the same sentence in all of them is what best holds identity across generations.
+- `description` is copied **verbatim** at the start of the prompt of every shot that lists the entity in `entities`
+  (after the opening sentence of an edit or an extension): the same sentence in all of them is what best holds
+  identity across generations. In `i2v` it is left out, because the start image already shows the subject; there the
+  prompt is about motion and camera.
 - A bible for a group (a class, a team, a crowd) holds only what the members share: the uniform, the age range, how
   many. Each member seen in a close or medium shot is described on their own, in the shot's action or in a bible of
   their own. One line for the whole group made three boys with one face in a blind round (`references/prompt.md` §1).
@@ -51,8 +53,7 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 - To chain shots, generate shot N, extract the last frame (or any good frame, cutting the clip there) and use it as
   the `start_image` of N+1.
 - **Examples** of a character sheet, a location in two views and a set detail, with the prompts that made them,
-  are in the repository's `examples/references/` folder, beside this skill's folder (`../examples/references/` from
-  here, in a clone; online at https://github.com/rniedson/higgsfield-director-pro-skill/tree/main/examples/references); show them when the operator asks what a reference should look
+  are in the repository's `examples/references/` folder, at the top of a clone, beside this skill's folder; online at https://github.com/rniedson/higgsfield-director-pro-skill/tree/main/examples/references); show them when the operator asks what a reference should look
   like.
 - **One face per reference sheet.** A character sheet carries one face close-up; the other panels (full body, front
   and back) are cropped from the neck down, so the model has a single face to read. Neutral mid-grey background, soft
