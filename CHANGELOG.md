@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- `price-history/README.md`, "Before the first record": the prices Higgsfield's blog published on 2026-08-03,
+  2026-10-24 and 2026-10-30, next to the same requests quoted through the connector on 2026-11-27. They stay out of
+  the chart (10-second website prices, not the weekly 5-second table). Only Kling 4.0 differs, 2.5 credits lower.
 - `price-history/`: the connector's quotes, one record a week, so a chart shows how prices move. Each record is the
   day's table from `connector.py prices`, added with `tools/aggregate_prices.py --add`, which refuses a second record
   in the same week and redraws the folder's page: a price index (100 = the first week) and a table of every row by
