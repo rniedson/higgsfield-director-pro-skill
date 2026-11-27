@@ -5,7 +5,19 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
-Nothing yet.
+### Added
+
+- Lessons from batch 4 of Higgsfield's channel (`lessons-learned/2026-11-higgsfield-channel-4.md`): four videos in
+  which an AI agent drives the connector. In three of them, the agent asks before spending, but the question carries
+  no price; the cheap check is offered but is not the default; and the agent adds camera, light and style the request
+  did not have. Three lessons go to the test list.
+
+### Changed
+
+- `references/connector.md`: checking the balance is not quoting; the question that asks for the "ok" states the
+  quoted credits.
+- `references/quality.md`: for a batch of many similar generations, a few of them come first; the first speaking clip
+  is checked for face, voice, eyes, lip sync and pronunciation, and its words against the script, before the rest.
 
 ## [6.0.0] — 2026-11-27
 

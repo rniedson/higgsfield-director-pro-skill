@@ -22,7 +22,7 @@
 - [ ] The speech fits the duration; the speaker is labeled.
 - [ ] Uploaded references belong to the operator or are authorized; a real person only with consent.
 - [ ] The step comes after the cheaper one: stills before video, one test shot before the rest, unless the operator
-      skipped it.
+      skipped it. For a batch of many similar generations, a few of them come first.
 - [ ] Cost estimated by the connector and an explicit "ok" from the operator with the total, and the credits already
       spent in this session shown beside it.
 
@@ -99,7 +99,9 @@ Checks that spend no credits:
 
 - **Speech:** transcribe the audio locally and compare it with the requested speech
   (`ffmpeg -i video.mp4 -vn -ac 1 -ar 16000 a.wav` and `whisper a.wav --language pt --model small`). The video model
-  generated the speech; Whisper only checks it.
+  generated the speech; Whisper only checks it. Check the first speaking clip before the rest: face, voice, eyes, lip
+  sync and pronunciation. A clip can look right and still drop words, add a phrase or end early, so compare the
+  transcript with the script and listen at normal speed (one tutorial, to test).
 - **Loop:** compare the first and the last frame (`ffmpeg -i frame_start.png -i frame_end.png -lavfi ssim -f null -`).
   In a test with the same image as the first and the last frame, SSIM came out at 0.97 and a jump was still visible
   at the wrap: plan a short dissolve in the edit. For a motion that repeats, take the frames at uneven fractions of
