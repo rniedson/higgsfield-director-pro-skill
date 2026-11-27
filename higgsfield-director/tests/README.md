@@ -1,6 +1,6 @@
 # Tests: `tests/`
 
-137 `unittest` cases, standard library only, with no network and no credits. CI runs them on every pull request, on
+151 `unittest` cases, standard library only, with no network and no credits. CI runs them on every pull request, on
 Python 3.9 to 3.13.
 
 ```bash
@@ -11,7 +11,7 @@ cd higgsfield-director && python3 -m unittest discover -s tests -v
 flowchart LR
     PR([pull request]) --> CI[GitHub Actions]
     CI --> P39[Python 3.9] & P310[3.10] & P311[3.11] & P312[3.12] & P313[3.13]
-    P39 & P310 & P311 & P312 & P313 --> OK{137 tests pass?}
+    P39 & P310 & P311 & P312 & P313 --> OK{151 tests pass?}
     OK -- yes --> M([ready for review])
     OK -- no --> F([the pull request shows the failure])
 ```
@@ -32,6 +32,7 @@ flowchart LR
 | Crop | 4 | a valid box becomes a crop command; an invalid one is an error with no command |
 | Mutation killers | 34 | one test per planted defect that the suite used to let through (below) |
 | Review fixes | 16 | one test per defect a review reproduced in 6.0; each one fails on that version |
+| Prices | 14 | the day's price table: one quote per model and tier; a model new in the catalog joins it; the import says what changed or that nothing did; `budget --prices` plans only from today's table |
 | This file | 1 | running `python3 tests/test_hfd.py` directly runs every class, not only the ones above a stray `unittest.main()` |
 | Security regressions | 6 | huge numbers, non-finite JSON and oversized files are refused before they cost memory |
 

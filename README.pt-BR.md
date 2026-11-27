@@ -185,7 +185,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 137 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 151 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -216,7 +216,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/models.json              retrato datado do catálogo do conector (122 modelos)
   data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/                        137 testes (unittest)
+  tests/                        151 testes (unittest)
 examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
@@ -333,7 +333,7 @@ Avaliação completa: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 | Continuidade | fichas (personagem, produto, lugar) com atributos fixos; conferência na passagem entre tomadas | `hfd.py validate` |
 | Regra dos 180° | posições de câmera contra o eixo da ação | `hfd.py validate` |
 | Limites do modelo | duração, proporção, resolução, áudio, entradas de imagem-para-vídeo | `hfd.py validate` + retrato |
-| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço | `hfd.py budget` |
+| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço; planeja pela tabela de preços do dia, a pedido | `hfd.py budget` |
 | Geração | ordem das chamadas do conector, fluxos prontos, envio de mídia, espera | [`connector.md`](higgsfield-director/references/connector.md) |
 | Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`quality.md`](higgsfield-director/references/quality.md), `hfd.py score` |
 | Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py export` |
@@ -444,6 +444,8 @@ O modelo não traz preço, de propósito: o preço muda a qualquer momento, e um
 sem ninguém perceber. Antes do orçamento, o agente cota cada passo ao vivo com o `estimate_video_cost` do conector
 (que não cobra e devolve um `quote_ref`), escreve o que voltou no `test_cost` e no `final_cost` de cada tomada, e só
 então o `budget` soma as tentativas e uma reserva de 20 %. Sem os preços, ele se recusa a rodar em vez de chutar.
+Para planejar antes de cotar cada tomada, o `budget --prices` os preenche pela tabela de preços do dia, marcado
+`"planning": true`.
 
 ### 03 — O validador pega uma quebra de continuidade
 
@@ -493,6 +495,7 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 | `score AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
 | `models [--type] [--search] [--id]` | ler o retrato dos modelos |
 | `models --import LISTA... --out ARQUIVO` | montar um retrato novo com as listas do `models_explore`, gravado só no `--out` |
+| `prices [--plan] [--import RESPOSTAS]` | a tabela de preços do dia na pasta do projeto: as cotações grátis a pedir, a importação delas (com o que mudou desde a última tabela) ou a leitura; o `budget --prices` planeja por ela |
 | `preferences [--mode M] [--calibrate C]` | ler ou gravar como o operador quer trabalhar (`follow`, `price`, `ceiling`); nunca guarda teto de gasto |
 | `blind --with A --without B --out PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la (para um teste com e sem a skill, só a pedido) |
 | `result --key C --vote X ... --out ARQUIVO` | montar o registro de calibração com lista branca, pronto para `calibration/` |
@@ -517,8 +520,10 @@ A fonte de verdade é o **catálogo ao vivo** (`models_explore`). O retrato que 
 | Áudio e fala nativos | Cinema Studio 4.0, Seedance 2.5, Kling 3.0, Veo 3.1, Wan 3.0 |
 | Texto legível numa imagem | Nano Banana Pro, Ideogram 4.6 |
 
-Sem preços aqui: eles mudam com o modelo, a duração, a resolução, o som e o plano, e mudam com o tempo. A skill cota
-cada geração ao vivo, toda vez ([`models.md`](higgsfield-director/references/models.md)).
+Sem preços aqui: eles mudam com o modelo, a duração, a resolução, o som e o plano, e mudam com o tempo. Em cada dia
+de uso a skill faz, na pasta do projeto, uma tabela com os preços do dia, a partir das cotações grátis do conector, e
+diz o que mudou desde a última; um catálogo com uma semana é lido de novo, e os modelos novos entram na tabela
+([`models.md`](higgsfield-director/references/models.md#price-of-the-day)).
 
 ## Escopo e convivência
 
@@ -544,7 +549,7 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 137 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
+| Testes | 151 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |

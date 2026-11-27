@@ -184,7 +184,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 137 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 151 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -215,7 +215,7 @@ higgsfield-director/            the skill: install THIS folder
   data/models.json              dated snapshot of the connector catalog (122 models)
   data/weights.json             scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/                        137 unittest cases
+  tests/                        151 unittest cases
 examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
@@ -331,7 +331,7 @@ Full evaluation: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 | Continuity | bibles (character, product, place) with fixed attributes; boundary check between shots | `hfd.py validate` |
 | 180° rule | camera positions against the action axis | `hfd.py validate` |
 | Model limits | duration, aspect ratio, resolution, audio, image-to-video inputs | `hfd.py validate` + snapshot |
-| Budget | real quotes from the connector + retries + reserve; refuses to invent prices | `hfd.py budget` |
+| Budget | real quotes from the connector + retries + reserve; refuses to invent prices; plans from the day's price table on request | `hfd.py budget` |
 | Generation | connector call order, bundled workflows, uploads, waiting | [`connector.md`](higgsfield-director/references/connector.md) |
 | Review | pre-spend checklist, symptom → cause table, frames, weighted score with evidence | [`quality.md`](higgsfield-director/references/quality.md), `hfd.py score` |
 | Delivery | script, shot list CSV, subtitles | `hfd.py export` |
@@ -440,7 +440,8 @@ python3 higgsfield-director/scripts/hfd.py budget higgsfield-director/templates/
 The template has no price, on purpose: prices change at any time, and a number written in a file would go stale
 without anyone noticing. Before the budget, the agent quotes each step live with the connector's `estimate_video_cost`
 (free; it returns a `quote_ref`), writes what came back into each shot's `test_cost` and `final_cost`, and only then
-`budget` adds the attempts and a 20 % reserve. Without the prices it refuses to run instead of guessing.
+`budget` adds the attempts and a 20 % reserve. Without the prices it refuses to run instead of guessing. To plan
+before quoting each shot, `budget --prices` fills them from the day's price table, marked `"planning": true`.
 
 ### 03 — The validator catches a continuity break
 
@@ -490,6 +491,7 @@ Thin-lens model on a 36 mm full-frame sensor: it describes the *look* to ask for
 | `score EVALUATION` | weighted score with evidence per criterion; critical failure blocks |
 | `models [--type] [--search] [--id]` | read the model snapshot |
 | `models --import LIST... --out FILE` | build a fresh snapshot from `models_explore` lists, written only to `--out` |
+| `prices [--plan] [--import ANSWERS]` | the day's price table in the project folder: the free quotes to ask for, their import (with what changed since the last table), or reading it; `budget --prices` plans from it |
 | `preferences [--mode M] [--calibrate C]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); never stores a spending ceiling |
 | `blind --with A --without B --out FOLDER` | check both conditions have the same format and draw X, Y and the order; writes the key without showing it (for a test with and without the skill, only on request) |
 | `result --key K --vote X ... --out FILE` | build the allowlisted calibration record, ready for `calibration/` |
@@ -514,8 +516,10 @@ Source of truth is the **live catalog** (`models_explore`). The bundled snapshot
 | Native audio and dialogue | Cinema Studio 4.0, Seedance 2.5, Kling 3.0, Veo 3.1, Wan 3.0 |
 | Readable text in an image | Nano Banana Pro, Ideogram 4.6 |
 
-No prices here: they change with the model, duration, resolution, sound and plan, and over time. The skill quotes
-each generation live, every time ([`models.md`](higgsfield-director/references/models.md)).
+No prices here: they change with the model, duration, resolution, sound and plan, and over time. On each day of
+use the skill makes a table of that day's prices in the project folder, from the connector's free quotes, and says
+what changed since the last one; a week-old catalog is read again, and new models join the table
+([`models.md`](higgsfield-director/references/models.md#price-of-the-day)).
 
 ## Scope and coexistence
 
@@ -541,7 +545,7 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 137 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
+| Unit tests | 151 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |

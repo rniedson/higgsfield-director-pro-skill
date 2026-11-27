@@ -29,6 +29,7 @@ flowchart LR
 | `score EVALUATION` | a weighted score with evidence per criterion; a critical failure blocks |
 | `models [--type T] [--search S] [--id ID]` | read the model snapshot |
 | `models --import LIST... --out FILE` | build a fresh snapshot from the connector's lists, written only to `--out` |
+| `prices [--plan] [--import ANSWERS]` | the day's price table in `.higgsfield-director/prices.json`: the free quotes to ask for, their import with what changed since the last table, or reading it; `budget --prices` plans the shots without a quote from it |
 | `preferences [--mode M]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); refuses a spending field |
 | `crop SHEET DIR NAME:x0,y0,x1,y1...` | write the ffmpeg commands that cut a sketch sheet into frames; runs nothing |
 | `blind`, `result` | draw X, Y and the order for a blind test, and build its record; only when the operator asks for one |

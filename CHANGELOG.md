@@ -7,6 +7,17 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- The day's price table (`hfd.py prices`, `references/models.md`). On each day of use, or on request, the agent asks
+  the connector for free quotes of the recommended models (29 for video; images on request), one per model and
+  price tier, and imports them into `.higgsfield-director/prices.json` in the project folder, never into this
+  repository. The import says what changed since the previous table, or that nothing did. `budget --prices` plans
+  the shots without a quote from today's table (price per second times the duration, the draft at the model's
+  cheapest tier) and marks the result `"planning": true`; the ok still waits for the exact quote.
+- New models: `models --import` dates each model that was not in the previous snapshot (`added_at`), lists the
+  models that appeared and disappeared, or says that none did, and a new model joins the day's price table for 30
+  days. `hfd.py prices` says when the project's catalog is more than 7 days old.
+- A rule for every contributor and agent (`AGENTS.md`, `CONTRIBUTING.md`): question every piece of hard-coded data;
+  what can go stale becomes a routine that refreshes it and reports what changed.
 - A guide in each main folder (`higgsfield-director/` and its `references/`, `scripts/`, `templates/`, `data/` and
   `tests/`; `docs/`, `tools/`, `examples/`): what the folder is for, with a diagram and, where it helps, pictures.
   The skill never loads them; `check_repo.py` and the public boundary allow a `README.md` there.
