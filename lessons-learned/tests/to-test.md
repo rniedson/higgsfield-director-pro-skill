@@ -4,7 +4,8 @@ What each source showed and said, and a minimal reproduction. None of these has 
 it, get the operator's ok, and give it a card of its own, as in [2026-11-25-timed-beats.md](2026-11-25-timed-beats.md).
 
 In the six from batches 1 and 2, the generation panel never appears with the settings; in batch 3, two of the six
-from part 1 show a prompt or a panel, and all six from part 2 show a prompt, a panel or a slide. Each rests on a judgment made by watching or listening, so each is a hypothesis.
+from part 1 show a prompt or a panel, and all six from part 2 show a prompt, a panel or a slide; in batch 4, one of
+the three shows a frame, and two rest on a slide or on what was said. Each rests on a judgment made by watching or listening, so each is a hypothesis.
 
 ## The previous clip as a video reference
 
@@ -231,3 +232,48 @@ video 14 and the [faithful card](2026-11-25-timed-beats-faithful.md).
 - **Reproduction:** two references that cannot be confused (a red mug, a blue mug); the prompt asks for the mug of
   the second image only, once with `@Image 2` and once with `<<<image_2>>>`, then with the two references swapped.
   A cheap model with `image_references`, four attempts per version. Count which mug appears.
+
+## A speaking clip that drops words
+
+[Batch 4, lessons 3 and 11](../2026-11-higgsfield-channel-4.md#adopted). Video 46, from
+[5:47](https://www.youtube.com/watch?v=NuvA32_dmtg&t=347s) to [6:29](https://www.youtube.com/watch?v=NuvA32_dmtg&t=389s).
+
+- **Shown:** two slides. One checks a sample of the generated presenter for face, voice, eyes, lip sync and
+  pronunciation; the other says to compare the script with the speech, listen at normal speed and regenerate.
+- **Said:** a clip can look good while dropping words, adding a phrase or ending too early
+  ([6:11](https://www.youtube.com/watch?v=NuvA32_dmtg&t=371s)); short shots that each end at the end of a sentence let
+  only the failing line be generated again ([3:42](https://www.youtube.com/watch?v=NuvA32_dmtg&t=222s)).
+- **Unknown:** the model, how often it happened, and whether the presenter used his own clip as the reference (said,
+  not shown).
+- **Reproduction:** a generated character with no real face, one reference, a script of three sentences. Once as one
+  clip of about 12 s and once as three clips of about 4 s, each ending at a sentence; three attempts per version.
+  Transcribe each clip locally and count the words dropped, added or cut off against the script. Someone who does
+  not know which version is which scores lip sync.
+
+## Two sections for a speaking presenter
+
+[Batch 4, lesson 9](../2026-11-higgsfield-channel-4.md#to-test). Video 46,
+[4:45](https://www.youtube.com/watch?v=NuvA32_dmtg&t=285s).
+
+- **Shown:** nothing: the video never shows a prompt.
+- **Said:** each request in two sections: first how the presenter looks and sounds (clothes, desk, background, camera
+  angle), then only the words to say; the separation helps the model tell the two apart.
+- **Unknown:** the model, the prompt's length, and any comparison with one block.
+- **Reproduction:** the same generated character and reference; only the prompt's shape varies (two sections, or the
+  same content in one block). Three attempts per version. Score the five points of the sample check above and the
+  words against the script, by someone who does not know which version is which.
+
+## One storyboard sheet or one still per shot
+
+[Batch 4, lesson 10](../2026-11-higgsfield-channel-4.md#to-test). Video 44,
+[4:40](https://www.youtube.com/watch?v=B6wbbz8UOvA&t=280s) to [5:51](https://www.youtube.com/watch?v=B6wbbz8UOvA&t=351s).
+
+- **Shown:** the agent sends one image request for a storyboard sheet of eight panels in a grid, each labeled
+  "Frame 1" to "Frame 8"; an earlier sheet was approved before the video was asked for.
+- **Said:** the video follows the storyboard; the result "holds in every frame" is the presenter's eye.
+- **Unknown:** how the sheet entered the video generation (as a reference or only as text), and any comparison with
+  separate stills.
+- **Reproduction:** one generic product spot of eight beats. Version A: one sheet of eight panels, used as the
+  video's reference. Version B: eight separate stills, the same descriptions. The same video model and prompt; two
+  attempts per version. Count how many of the eight beats appear in the video in their order, and price each version.
+

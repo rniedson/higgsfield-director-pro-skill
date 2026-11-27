@@ -30,9 +30,10 @@ suspect among others; and a blind round later found that timed beats up to the e
 | [2026-11-higgsfield-channel.md](2026-11-higgsfield-channel.md) | the 12 most-viewed tutorials on Higgsfield's YouTube channel | 2026-11-25 | 13 |
 | [2026-11-higgsfield-channel-2.md](2026-11-higgsfield-channel-2.md) | ten more tutorials from the same channel | 2026-11-25 | 22 |
 | [2026-11-higgsfield-channel-3.md](2026-11-higgsfield-channel-3.md) | the channel's next tutorials, read for what the screen shows (videos 24 to 43, and 19) | 2026-11-25 | 26 (13 per part) |
+| [2026-11-higgsfield-channel-4.md](2026-11-higgsfield-channel-4.md) | four videos from the same channel in which an AI agent drives the Higgsfield connector | 2026-11-27 | 11 |
 | [2026-11-higgsfield-skills-repo.md](2026-11-higgsfield-skills-repo.md) | Higgsfield's official skills repository (version 0.14.0), checked against the connector's live catalog | 2026-11-25 | 11 |
 | [2026-11-own-runs.md](2026-11-own-runs.md) | the skill's own generations: the generic lesson only, with frames of its blind rounds | from 2026-11-25 | 17 (8 with a picture) |
-| [tests/](tests/README.md) | reproduction cards: the original conditions of each testable lesson, and the tests run here | from 2026-11-25 | 2 cards run; 18 lessons waiting for a test |
+| [tests/](tests/README.md) | reproduction cards: the original conditions of each testable lesson, and the tests run here | from 2026-11-25 | 2 cards run; 21 lessons waiting for a test |
 
 ## Lessons that changed the skill most
 
