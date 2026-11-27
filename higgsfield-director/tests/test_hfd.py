@@ -1332,6 +1332,20 @@ class Prices(unittest.TestCase):
         self.assertEqual(plan["new_in_catalog"], ["kling"])
         self.assertEqual({r["params"]["model"] for r in plan["requests"]}, {"kling"})
 
+    def test_the_connectors_shortlist_joins_the_plan(self):
+        page = {"items": [{"id": "brand_new", "name": "Brand New", "output_type": "video", "parameters": [],
+                           "purpose": "Default video model"}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+            cat = hfd.load_models(Path(d) / "new.json")
+        self.assertEqual(cat["models"]["brand_new"]["purpose"], "Default video model")
+        cat["models"]["brand_new"].pop("added_at")
+        plan = hfd.price_plan(cat, "video")
+        self.assertEqual(plan["connector_shortlist"], ["brand_new"])
+        self.assertIn("brand_new", {r["params"]["model"] for r in plan["requests"]})
+
     def test_the_import_keeps_prices_with_the_date_and_the_price_per_second(self):
         with tempfile.TemporaryDirectory() as d:
             f = self._table(d)

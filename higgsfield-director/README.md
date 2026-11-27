@@ -24,7 +24,7 @@ flowchart TD
 | [`scripts/`](scripts/README.md) | `hfd.py`, the offline helper, and the blind-test runner | the agent, in studio mode |
 | [`data/`](data/README.md) | the dated model snapshot and the scoring weights | `hfd.py` |
 | [`templates/`](templates/README.md) | projects to copy and fill in | the agent, at the start of a studio job |
-| [`tests/`](tests/README.md) | 151 unit tests, standard library only | CI and contributors |
+| [`tests/`](tests/README.md) | 152 unit tests, standard library only | CI and contributors |
 | [`agents/openai.yaml`](agents/openai.yaml) | the name and default prompt Codex shows | Codex only |
 
 ## What happens on a request, for example

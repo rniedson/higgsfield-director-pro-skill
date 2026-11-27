@@ -8,8 +8,8 @@ All notable changes to this project are listed here. The format follows
 ### Added
 
 - The day's price table (`hfd.py prices`, `references/models.md`). On each day of use, or on request, the agent asks
-  the connector for free quotes of the recommended models (29 for video; images on request), one per model and
-  price tier, and imports them into `.higgsfield-director/prices.json` in the project folder, never into this
+  the connector for free quotes of the models the live catalog recommends (its shortlist and the models new in it)
+  and of the skill's starting list, one per model and price tier (video by default; images on request), and imports them into `.higgsfield-director/prices.json` in the project folder, never into this
   repository. The import says what changed since the previous table, or that nothing did. `budget --prices` plans
   the shots without a quote from today's table (price per second times the duration, the draft at the model's
   cheapest tier) and marks the result `"planning": true`; the ok still waits for the exact quote.

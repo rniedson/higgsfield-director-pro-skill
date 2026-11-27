@@ -460,6 +460,8 @@ def _normalize_model(m):
         "media": roles,
         "parameters": sorted(k for k in ps if k),
         "tags": m.get("tags") or [],
+        # the connector's own shortlist: the default model of the type and the models for specific tasks
+        **({"purpose": m["purpose"]} if is_text(m.get("purpose")) else {}),
     }
 
 
@@ -1064,8 +1066,9 @@ def preferences(file=None, mode=None, calibrate=None):
 # --------------------------------------------------------------------------- the day's price table
 
 PRICES = Path(".higgsfield-director") / "prices.json"
-# The models the daily table quotes by default: the "start with" column of references/models.md. Any other model is
-# quoted on request (--models).
+# The starting list of the daily table: the "start with" column of references/models.md, as of 2026-11-24. The plan
+# adds to it what the live catalog says today: the connector's shortlist (`purpose`) and the models new in the
+# catalog, both brought in by the weekly import. Any other model is quoted on request (--models).
 PRICE_MODELS = {
     "video": ("cinematic_studio_video_4_0", "seedance_2_5", "kling4_0", "kling3_0", "magi_2", "wan3_0",
               "cinematic_studio_video_3_5", "minimax_h3", "veo3_1", "veo3_1_lite", "gemini_omni_flash_1_2"),
@@ -1133,7 +1136,10 @@ def price_plan(catalog, kind="video", models=None, duration=5):
     new_models = sorted(k for k, m in catalog.get("models", {}).items() if isinstance(m, dict)
                         and m.get("type") in kinds and _days_since(m.get("added_at")) is not None
                         and _days_since(m["added_at"]) <= NEW_MODEL_DAYS)
-    ids = list(models) if models else list(dict.fromkeys([i for k in kinds for i in PRICE_MODELS[k]] + new_models))
+    shortlist = sorted(k for k, m in catalog.get("models", {}).items() if isinstance(m, dict)
+                       and m.get("type") in kinds and is_text(m.get("purpose")))
+    ids = list(models) if models else list(dict.fromkeys(
+        shortlist + new_models + [i for k in kinds for i in PRICE_MODELS[k]]))
     requests, missing = [], []
     for mid in ids:
         m = catalog.get("models", {}).get(mid)
@@ -1156,7 +1162,7 @@ def price_plan(catalog, kind="video", models=None, duration=5):
                 params[param] = option
             requests.append({"tool": f"estimate_{m['type']}_cost", "params": params})
     return {"requests": requests, "count": len(requests), "not_in_snapshot": missing,
-            "new_in_catalog": [] if models else new_models,
+            "new_in_catalog": [] if models else new_models, "connector_shortlist": [] if models else shortlist,
             "next": "send each params to its tool (free), save [{\"params\": ..., \"credits\": <credits_exact>}] in "
                     "a file and run: hfd.py prices --import <file>",
             "reminder": PRICE_REMINDER}

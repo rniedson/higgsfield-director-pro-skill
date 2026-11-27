@@ -106,8 +106,10 @@ python3 <skill>/scripts/hfd.py prices --import answers.json
 python3 <skill>/scripts/hfd.py budget project.json --prices  # a shot with no quote is planned from the table
 ```
 
-- The default list is the "start with" models of the table above: 29 quotes for video, at 5 s (the nearest option
-  when the model has fixed durations), with sound on where the model has it. `--type image` or `--type all` adds the
+- The default list is what the live catalog recommends today, the connector's shortlist (`purpose`) and the models
+  new in the catalog, plus the "start with" models of the table above: one quote per model and price tier (the count
+  is in `prices --plan`), for video at 5 s (the nearest option when the model has fixed durations), with sound on
+  where the model has it. `--type image` or `--type all` adds the
   image models; `--models a,b` quotes only those, on request.
 - Each row keeps the credits and, for video, the credits per second. In the quotes checked on 2026-11-27, 10 s cost
   twice 5 s (Cinema Studio 4.0 and Kling 3.0) and sound off cost the same, so `budget --prices` multiplies the price

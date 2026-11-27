@@ -184,7 +184,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 151 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 152 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -215,7 +215,7 @@ higgsfield-director/            the skill: install THIS folder
   data/models.json              dated snapshot of the connector catalog (122 models)
   data/weights.json             scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/                        151 unittest cases
+  tests/                        152 unittest cases
 examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
@@ -545,7 +545,7 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 151 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
+| Unit tests | 152 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |
