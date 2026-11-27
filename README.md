@@ -184,7 +184,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 155 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 162 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -211,11 +211,12 @@ higgsfield-director/            the skill: install THIS folder
     modes.md                    first use; follow, price and ceiling modes
     calibration.md              blind test with and without the skill, only on request
   scripts/hfd.py                validate, compile, budget, export, optics, score, models, crop, blind, result
+  scripts/connector.py          the day's quotes with no model, on the operator's own sign-in
   scripts/calibrate_claude_code.sh  runs both calibration conditions in Claude Code
   data/models.json              dated snapshot of the connector catalog (122 models)
   data/weights.json             scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/                        155 unittest cases
+  tests/                        162 unittest cases
 examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
@@ -492,6 +493,7 @@ Thin-lens model on a 36 mm full-frame sensor: it describes the *look* to ask for
 | `models [--type] [--search] [--id]` | read the model snapshot |
 | `models --import LIST... --out FILE` | build a fresh snapshot from `models_explore` lists, written only to `--out` |
 | `prices [--plan] [--import ANSWERS]` | the day's price table in the project folder: the free quotes to ask for, their import (with what changed since the last table), or reading it; `budget --prices` plans from it |
+| `connector.py login`, `prices`, `status`, `logout` | the day's quotes with no model and no tokens: the operator signs in to Higgsfield once, and the script plans, quotes and imports |
 | `preferences [--mode M] [--calibrate C]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); never stores a spending ceiling |
 | `blind --with A --without B --out FOLDER` | check both conditions have the same format and draw X, Y and the order; writes the key without showing it (for a test with and without the skill, only on request) |
 | `result --key K --vote X ... --out FILE` | build the allowlisted calibration record, ready for `calibration/` |
@@ -545,7 +547,7 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 155 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
+| Unit tests | 162 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |

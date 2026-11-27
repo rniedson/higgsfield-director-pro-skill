@@ -121,19 +121,35 @@ python3 <skill>/scripts/hfd.py budget project.json --prices  # a shot with no qu
 ### Who makes the quotes
 
 Each quote is a small tool call. In the main conversation, though, the large model writes every request and re-reads
-the whole conversation on each turn. When the harness has subagents, give the quotes to one on a small model (in
-Claude Code, the Agent tool with `model: haiku`), with this brief:
+the whole conversation on each turn. Take the cheapest way available:
 
-1. In the project folder, run `hfd.py prices --plan > plan.json`.
-2. Call the connector's estimate once per request, with that request's `params` unchanged, all in one message. Call
-   no other tool of the connector: no generation, no upload.
-3. Write the credits in the order of the requests, as a JSON list of numbers, `null` where an answer has no price,
-   in `credits.json`.
-4. Run `hfd.py prices --import credits.json --plan-file plan.json` and return only its `summary` and `changes`.
+1. **The script, with no model** ([`scripts/connector.py`](../scripts/README.md#the-connector-script)). It talks to
+   the connector's server itself, with the operator's own sign-in, and runs the whole routine: the plan, one quote per
+   request, the import.
 
-Measured on 2026-11-27: a subagent on the small model made that day's 29 quotes in 23.5 s and 5 turns, and brought
-the same 29 prices as the main conversation. The main conversation then spends one turn to send the brief and one to
-read the summary.
+   ```bash
+   python3 <skill>/scripts/connector.py status    # signed in? does the server still have the tools it uses?
+   python3 <skill>/scripts/connector.py prices    # in the project folder: the summary and what changed
+   ```
+
+   The first time, ask the operator, then run `connector.py login`: the browser opens on Higgsfield's sign-in page
+   and the operator signs in and approves, once; the agent types nothing there. The sign-in can do whatever the
+   connector can, so it stays on that computer, in a file only the operator can read, and `connector.py logout`
+   revokes it. The script itself calls only free tools; any other is refused in code.
+2. **A subagent on a small model**, when there is no sign-in and the harness has subagents (in Claude Code, the Agent
+   tool with `model: haiku`), with this brief:
+   1. In the project folder, run `hfd.py prices --plan > plan.json`.
+   2. Call the connector's estimate once per request, with that request's `params` unchanged, all in one message.
+      Call no other tool of the connector: no generation, no upload.
+   3. Write the credits in the order of the requests, as a JSON list of numbers, `null` where an answer has no
+      price, in `credits.json`.
+   4. Run `hfd.py prices --import credits.json --plan-file plan.json` and return only its `summary` and `changes`.
+3. **The main conversation**, when neither is available.
+
+Measured on 2026-11-27, with that day's 29 quotes, which came back with the same 29 prices each way: the script took
+43.2 s and no tokens; the subagent took 23.5 s and 5 turns of the small model, plus one turn of the main conversation
+to send the brief and one to read the summary; the main conversation alone took two turns of the large model, each
+re-reading the whole conversation.
 
 ### New models
 

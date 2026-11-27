@@ -185,7 +185,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 155 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 162 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -212,11 +212,12 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
     modes.md                    primeiro uso; modos follow, price e ceiling
     calibration.md              teste às cegas com e sem a skill, só a pedido
   scripts/hfd.py                validate, compile, budget, export, optics, score, models, crop, blind, result
+  scripts/connector.py          as cotações do dia sem modelo, com o login do próprio operador
   scripts/calibrate_claude_code.sh  roda as duas condições da calibração no Claude Code
   data/models.json              retrato datado do catálogo do conector (122 modelos)
   data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/                        155 testes (unittest)
+  tests/                        162 testes (unittest)
 examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
@@ -496,6 +497,7 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 | `models [--type] [--search] [--id]` | ler o retrato dos modelos |
 | `models --import LISTA... --out ARQUIVO` | montar um retrato novo com as listas do `models_explore`, gravado só no `--out` |
 | `prices [--plan] [--import RESPOSTAS]` | a tabela de preços do dia na pasta do projeto: as cotações grátis a pedir, a importação delas (com o que mudou desde a última tabela) ou a leitura; o `budget --prices` planeja por ela |
+| `connector.py login`, `prices`, `status`, `logout` | as cotações do dia sem modelo e sem tokens: o operador entra no Higgsfield uma vez, e o script planeja, cota e importa |
 | `preferences [--mode M] [--calibrate C]` | ler ou gravar como o operador quer trabalhar (`follow`, `price`, `ceiling`); nunca guarda teto de gasto |
 | `blind --with A --without B --out PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la (para um teste com e sem a skill, só a pedido) |
 | `result --key C --vote X ... --out ARQUIVO` | montar o registro de calibração com lista branca, pronto para `calibration/` |
@@ -549,7 +551,7 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 155 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
+| Testes | 162 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
