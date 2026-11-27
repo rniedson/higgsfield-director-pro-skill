@@ -61,6 +61,15 @@ não deveria estar lá custa cerca de 2 créditos para refazer numa imagem, e 15
 
 Para um prompt rápido ou uma imagem só, o plano é o trabalho inteiro: não há passos para subir.
 
+### Na prática
+
+<a href="docs/demo/kung-fu-vs-robot-clone.mp4"><img src="docs/demo/kung-fu-vs-robot-clone.jpg" width="720" alt="O mantenedor num chute voador contra um robô cromado com o rosto dele, cercado de cópias dele mesmo"></a>
+
+Uma luta de 10 s entre o personagem do próprio mantenedor e um clone robô dele, feita um passo de cada vez: quatro
+imagens para escolher o visual (0,48 crédito), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
+partir do rascunho aprovado (160). A ideia de se dividir em cópias entrou antes do rascunho, enquanto mudar o plano
+ainda era de graça. [Como foi feito](docs/demo/README.md) (em inglês), com o prompt e o som.
+
 ## Manual ilustrado
 
 O [manual ilustrado de direção](docs/manual/README.md) tem **11 partes e 185 imagens esquemáticas**: movimento de
@@ -598,6 +607,8 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 - Manual ilustrado (`docs/manual/`, texto e imagens) e o emblema (`docs/assets/`):
   [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md). O texto é adaptado do pacote ilustrado v4.1, com as mudanças listadas
   no fim do manual; as imagens são desenhos esquemáticos feitos por código.
+- O vídeo de demonstração e as imagens dele em `docs/demo/`: a licença é decisão do mantenedor, registrada
+  [nessa pasta](docs/demo/README.md) quando tomada; o homem neles é o mantenedor, que concordou em publicá-los.
 - As três imagens de referência em `higgsfield-director/examples/references/`: a licença é decisão do mantenedor, registrada
   [nessa pasta](higgsfield-director/examples/references/README.md) quando tomada.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão

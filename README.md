@@ -60,6 +60,15 @@ sign that should not be there costs about 2 credits to redo on a still, and 15 o
 
 For one quick prompt or one image, the plan is the whole job: there are no steps to climb.
 
+### In practice
+
+<a href="docs/demo/kung-fu-vs-robot-clone.mp4"><img src="docs/demo/kung-fu-vs-robot-clone.jpg" width="720" alt="The maintainer in a flying kick against a chrome robot with his face, surrounded by copies of himself"></a>
+
+A 10 s fight between the maintainer's own character and a robot clone of himself, made one step at a time: four
+stills to choose the look (0.48 credits), the whole shot as a draft (30), then the final at 1080p from the approved
+draft (160). The idea of splitting into copies came in before the draft, while changing the plan was still free.
+[How it was made](docs/demo/README.md), with the prompt and the sound.
+
 ## Illustrated manual
 
 The [illustrated direction manual](docs/manual/README.md) has **11 parts and 185 schematic images**: camera movement,
@@ -595,6 +604,8 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 - Illustrated manual (`docs/manual/`, text and images) and the emblem (`docs/assets/`):
   [CC BY-SA 4.0](docs/manual/LICENSE-DOCS.md). The text is adapted from the v4.1 illustrated package, with the changes
   listed at the end of the manual; the images are schematic drawings made by code.
+- The demo video and its images in `docs/demo/`: their license is the maintainer's decision, recorded in
+  [that folder](docs/demo/README.md) when made; the man in them is the maintainer, who agreed to publish them.
 - The three reference images in `higgsfield-director/examples/references/`: their license is the maintainer's decision, recorded in
   [that folder](higgsfield-director/examples/references/README.md) when made.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. The licenses above

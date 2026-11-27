@@ -25,6 +25,9 @@ TEXT_SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".sh", ".txt",
                  ".svg", ".toml", ".cfg", ".html", ".css", ".js"}
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "node_modules"}
 PATH_FIXTURES = {"tools/public_boundary.py", "tools/tests/test_public_boundary.py"}
+# The README's demo, published by the maintainer's decision (2026-11-26): exactly these files, nothing beside them.
+DEMO_MEDIA = {"docs/demo/kung-fu-vs-robot-clone.mp4", "docs/demo/kung-fu-vs-robot-clone.jpg",
+              "docs/demo/how-it-was-made.jpg"}
 LOCAL_PATH = re.compile(r"(?:file://|/Users/[^/\s]+/|/home/[^/\s]+/|[A-Za-z]:\\Users\\)")
 
 
@@ -47,7 +50,7 @@ def check_public_path(path):
         problems.append(f"{path}: unreviewed top-level directory; project files stay outside this repository")
     elif parts[0] == "higgsfield-director" and parts[1] not in SKILL_AREAS and path != "higgsfield-director/SKILL.md":
         problems.append(f"{path}: outside the shared skill's source areas")
-    if rel.suffix.lower() in MEDIA_SUFFIXES:
+    if rel.suffix.lower() in MEDIA_SUFFIXES and path not in DEMO_MEDIA:
         shared_visual = path.startswith(("docs/manual/visual/assets/", "docs/manual/visual/atlas/",
                                          "docs/manual/visual/style/", "docs/assets/"))
         # Frame sheets of the skill's own tests: generic scenes, still images only, never video.
