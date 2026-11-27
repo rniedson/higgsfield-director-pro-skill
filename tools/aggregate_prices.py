@@ -137,6 +137,7 @@ def page(records):
     points = [(r["date"], v) for r, v in zip(records, index) if v is not None]
     low = math.floor(min(v for _, v in points) - 5)
     high = math.ceil(max(v for _, v in points) + 5)
+    # One point draws no line: GitHub showed an empty chart for the first record, so the chart waits for the second.
     lines = [
         "```mermaid",
         "xychart-beta",
@@ -145,6 +146,9 @@ def page(records):
         f'    y-axis "index" {low} --> {high}',
         "    line [" + ", ".join(f"{v:g}" for _, v in points) + "]",
         "```",
+    ] if len(points) > 1 else [f"The chart starts with the second weekly record: one week ({first['date']}) has "
+                               "no line yet."]
+    lines += [
         "",
         f"The index is the mean, over the rows quoted in both, of each row's credits against its credits on "
         f"{first['date']}: 100 means no change, 110 means 10% more on average.",

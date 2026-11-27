@@ -72,6 +72,9 @@ class PriceHistory(unittest.TestCase):
 
     def test_the_index_and_the_table_follow_the_records(self):
         self._add(_table("2026-11-23", _row("cs4", "480p", 1000), _row("cs4", "720p", 2000)))
+        page = (self.root / ap.FOLDER / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn("xychart", page)  # one point draws no line: GitHub showed an empty chart
+        self.assertIn("The chart starts with the second weekly record", page)
         self._add(_table("2026-11-30", _row("cs4", "480p", 1100), _row("cs4", "720p", 2000),
                          _row("kling", "std", 1000, audio=None)))
         page = (self.root / ap.FOLDER / "README.md").read_text(encoding="utf-8")

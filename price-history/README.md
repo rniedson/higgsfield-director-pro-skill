@@ -27,13 +27,7 @@ quoted them: a series mixing plans shows a change that did not happen.
 ## The record
 
 <!-- prices:start -->
-```mermaid
-xychart-beta
-    title "Price index, 100 = 2026-11-27"
-    x-axis ["2026-11-27"]
-    y-axis "index" 95 --> 105
-    line [100]
-```
+The chart starts with the second weekly record: one week (2026-11-27) has no line yet.
 
 The index is the mean, over the rows quoted in both, of each row's credits against its credits on 2026-11-27: 100 means no change, 110 means 10% more on average.
 
