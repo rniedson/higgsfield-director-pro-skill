@@ -27,9 +27,7 @@
       "final": "The cap fills the upper third of the frame",
       "sound": "Low airy hum, a soft glass chime as the mist clears",
       "start": {"P01": {"position": "plinth"}},
-      "end": {"P01": {"position": "plinth"}},
-      "test_cost": 35,
-      "final_cost": 35
+      "end": {"P01": {"position": "plinth"}}
     },
     {
       "id": "T02",
@@ -45,9 +43,7 @@
       "sound": "Low airy hum continues",
       "start": {"P01": {"position": "plinth"}},
       "end": {"P01": {"position": "plinth"}},
-      "camera_xy": [1, -2],
-      "test_cost": 35,
-      "final_cost": 35
+      "camera_xy": [1, -2]
     },
     {
       "id": "T03",
@@ -64,9 +60,7 @@
       "dialogue": [{"speaker": "Narrator", "language": "English", "text": "Noir. For the whole night."}],
       "start": {"P01": {"position": "plinth"}},
       "end": {"P01": {"position": "in hand"}},
-      "camera_xy": [2, -2],
-      "test_cost": 35,
-      "final_cost": 35
+      "camera_xy": [2, -2]
     }
   ],
   "axis": [[0, 0], [4, 0]]

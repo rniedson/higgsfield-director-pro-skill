@@ -48,7 +48,8 @@ expecting and nothing is spent by surprise.
 
 Before each step the skill shows its price from the connector and waits for your "ok"; after each one it shows what
 it cost and the total so far ("17 of the 75 approved credits spent"). A change of plan costs least where it is found: a shop
-sign that should not be there costs about 2 credits to redo on a still, and 15 or more on a video.
+sign that should not be there costs one still to redo when it is caught on the still, and a whole video when it is
+caught on the video.
 
 - **The prompt is your request.** Every fact you give and every limit you set ("nobody real, no brand, no text")
   goes into each prompt as you said it, naming where a ruled-out thing would show. Camera moves, lenses, light,
@@ -65,8 +66,8 @@ For one quick prompt or one image, the plan is the whole job: there are no steps
 https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
 A 10 s fight between the maintainer's own character and a robot clone of himself, made one step at a time: four
-stills to choose the look (0.48 credits), the whole shot as a draft (30), then the final at 1080p from the approved
-draft (160). The idea of splitting into copies came in before the draft, while changing the plan was still free.
+stills to choose the look (0.48 credits on the day), the whole shot as a draft (30), then the final at 1080p from
+the approved draft (160). The idea of splitting into copies came in before the draft, while changing the plan was still free.
 [How it was made](docs/demo/README.md), with the prompt and the sound.
 
 ## Illustrated manual
@@ -183,7 +184,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 84 cases, no dependencies, run in CI | before publishing a change |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 137 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
 
@@ -214,7 +215,7 @@ higgsfield-director/            the skill: install THIS folder
   data/models.json              dated snapshot of the connector catalog (122 models)
   data/weights.json             scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
-  tests/                        83 unittest cases
+  tests/                        137 unittest cases
 examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
@@ -283,7 +284,7 @@ Higgsfield site, and says that the cost must be checked there.
 ## Your way: modes
 
 People work differently. The first time in a project, the skill asks how you want to work and stores the answer in
-`.higgsfield-director/preferences.json`, in the project folder ([modos.md](higgsfield-director/references/modes.md)).
+`.higgsfield-director/preferences.json`, in the project folder ([modes.md](higgsfield-director/references/modes.md)).
 
 | Mode | For whom | What happens |
 |---|---|---|
@@ -300,7 +301,7 @@ sentence, a script draft as a table, then a sketch storyboard in two phases. Fir
 sheet from the cheapest image model; then each panel, cropped (`hfd.py crop`), becomes the reference for its own frame
 in a cheap model that accepts references, so every frame keeps the same block figures and can be redone alone. Only
 after the operator locks the script does the skill ask where to make the audio
-([preproducao.md](higgsfield-director/references/preproduction.md)). Tested once.
+([preproduction.md](higgsfield-director/references/preproduction.md)). Tested once.
 
 ## What changed in v5
 
@@ -309,34 +310,34 @@ Full evaluation: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 
 | | v4.1 RC3 / RC4 | v5.1.0 |
 |---|---|---|
-| Skill | 328 files, 121 MB, 116 "commands" | 16 files, `SKILL.md` of 91 lines + 6 references read on demand |
+| Skill | 328 files, 121 MB, 116 "commands" | 15 files, `SKILL.md` of 93 lines + 6 references read on demand |
 | Code | 3 compilers, 2 optics, 3 budgets; SDK, REST, Docker | one `hfd.py`, Python standard library only |
 | Models | 9 profiles, 7 with every field `null` | dated snapshot of **122 models** from the connector catalog, refreshable by command |
 | Camera check | rejected *"static camera, no orbit"* | understands negation and phases; warns, does not block |
 | Audio | moved Cinema Studio audio to post-production | reads native audio from the catalog (Cinema Studio 4.0 generates audio by default) |
 | Generation | none | official Higgsfield MCP, after cost and explicit "ok" |
 | Conflicts | generic "video" description | trigger anchored on *AI-generated / Higgsfield*, with named exclusions |
-| Tests | 67 (2 needed OpenCV) | 61, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
+| Tests | 67 (2 needed OpenCV) | 50, no dependencies, CI on Python 3.9 to 3.13; 4 planted bugs, 4 caught |
 
 ## Capabilities
 
 | Capability | How | Where |
 |---|---|---|
-| Brief and premises | asks only what blocks; the rest becomes a stated premise | [`fluxo.md`](higgsfield-director/references/workflow.md) |
+| Brief and premises | asks only what blocks; the rest becomes a stated premise | [`workflow.md`](higgsfield-director/references/workflow.md) |
 | Model choice | by need (length, references, first/last frame, audio, cost), confirmed in the live catalog | [`models.md`](higgsfield-director/references/models.md) |
-| Prompt writing | your request as you said it, every fact and limit kept; on request, golden order, per-model notes and 18 recipes against common defects | [`prompt.md`](higgsfield-director/references/prompt.md) |
-| Vocabulary | camera, framing, lens, light, color, physics, acting, audio | [`vocabulario.md`](higgsfield-director/references/vocabulary.md) |
+| Prompt writing | your request as you said it, every fact and limit kept; on request, golden order, per-model notes and 32 recipes against common defects | [`prompt.md`](higgsfield-director/references/prompt.md) |
+| Vocabulary | camera, framing, lens, light, color, physics, acting, audio | [`vocabulary.md`](higgsfield-director/references/vocabulary.md) |
 | Illustrated manual | 11 parts, 185 schematic images: movement, lighting, styles, sheets, optical atlas | [`docs/manual`](docs/manual/README.md) |
 | Continuity | bibles (character, product, place) with fixed attributes; boundary check between shots | `hfd.py validate` |
 | 180° rule | camera positions against the action axis | `hfd.py validate` |
 | Model limits | duration, aspect ratio, resolution, audio, image-to-video inputs | `hfd.py validate` + snapshot |
-| Budget | real quotes from the connector + retries + reserve; refuses to invent prices; the total spent so far after each generation | `hfd.py budget` |
-| Generation | connector call order, bundled workflows, uploads, waiting | [`conector.md`](higgsfield-director/references/connector.md) |
-| Review | pre-spend checklist, symptom → cause table, frames, weighted score with evidence | [`qualidade.md`](higgsfield-director/references/quality.md), `hfd.py score` |
+| Budget | real quotes from the connector + retries + reserve; refuses to invent prices | `hfd.py budget` |
+| Generation | connector call order, bundled workflows, uploads, waiting | [`connector.md`](higgsfield-director/references/connector.md) |
+| Review | pre-spend checklist, symptom → cause table, frames, weighted score with evidence | [`quality.md`](higgsfield-director/references/quality.md), `hfd.py score` |
 | Delivery | script, shot list CSV, subtitles | `hfd.py export` |
 | Working mode | follow every step, price only, or a ceiling said in the conversation; asked on first use | [`modes.md`](higgsfield-director/references/modes.md), `hfd.py preferences` |
-| Pre-production | idea, script draft, two-phase sketch storyboard in block figures, locked script, where to make the audio | [`preproducao.md`](higgsfield-director/references/preproduction.md), `hfd.py crop` |
-| Previews | one still per shot, then one test shot, before the rest | [`fluxo.md`](higgsfield-director/references/workflow.md) |
+| Pre-production | idea, script draft, two-phase sketch storyboard in block figures, locked script, where to make the audio | [`preproduction.md`](higgsfield-director/references/preproduction.md), `hfd.py crop` |
+| Previews | one still per shot, then one test shot, before the rest | [`workflow.md`](higgsfield-director/references/workflow.md) |
 
 ## Quick start
 
@@ -420,7 +421,8 @@ Audio: Low airy hum, a soft glass chime as the mist clears.
 parameters: {"model": "cinematic_studio_video_4_0", "duration": 5, "aspect_ratio": "9:16", "resolution": "720p", "generate_audio": true}
 ```
 
-The bible description opens every shot word for word, which is what holds the product's identity across generations.
+The bible description opens every shot that lists it, word for word, which is what holds the product's identity across
+generations. In image-to-video it is left out: the start image already shows the subject.
 Duration, aspect ratio, resolution and audio go to the **parameters**, not the prompt text. The camera, lens and light
 are in this template because its request asked for that look; for a plain request those fields stay empty, and
 `compile` joins only what the request gives.
@@ -432,12 +434,13 @@ python3 higgsfield-director/scripts/hfd.py budget higgsfield-director/templates/
 ```
 
 ```json
-{"base": 210.0, "reserve_pct": 20.0, "reserve": 42.0, "total": 252.0,
- "reminder": "the cost is the connector's estimate; generate only after the operator's ok with this total"}
+{"error": "T01: no test_cost/final_cost. Run the connector's estimate (estimate_video_cost / estimate_image_cost) and fill them in; do not invent a price"}
 ```
 
-Prices come from the connector's `estimate_video_cost` (free). Without them, `budget` refuses to run instead of
-guessing.
+The template has no price, on purpose: prices change at any time, and a number written in a file would go stale
+without anyone noticing. Before the budget, the agent quotes each step live with the connector's `estimate_video_cost`
+(free; it returns a `quote_ref`), writes what came back into each shot's `test_cost` and `final_cost`, and only then
+`budget` adds the attempts and a 20 % reserve. Without the prices it refuses to run instead of guessing.
 
 ### 03 — The validator catches a continuity break
 
@@ -450,7 +453,8 @@ Shot T02 starts with the bottle in red, but the bible fixes it as black:
 }
 ```
 
-Exit code 1. Intentional changes are declared per shot in `approved_changes: ["P01.color"]`.
+Exit code 1. A fixed attribute has no exception. A change of state between shots (the bottle ends on the plinth,
+the next shot starts it in a hand) is declared in that shot's `approved_changes: ["P01.position"]`.
 
 ### 04 — Camera direction check
 
@@ -481,11 +485,11 @@ Thin-lens model on a 36 mm full-frame sensor: it describes the *look* to ask for
 | `validate PROJECT` | structure, camera, dialogue length, timeline, continuity, 180° axis, model limits |
 | `compile PROJECT [--text]` | one prompt per shot + connector-ready `parameters` |
 | `budget PROJECT [--reserve N]` | total credits from real quotes, retries and reserve |
-| `export PROJECT DIR` | `script.md`, `shots.csv`, `subtitles.srt` |
+| `export PROJECT DIR` | `script.md`, `shots.csv`, and `subtitles.srt` when a shot has dialogue |
 | `optics F D N` | field of view, frame width, depth of field, hyperfocal |
 | `score EVALUATION` | weighted score with evidence per criterion; critical failure blocks |
 | `models [--type] [--search] [--id]` | read the model snapshot |
-| `models --import LIST... --out FILE` | build a fresh snapshot from `models_explore` lists, outside the skill folder |
+| `models --import LIST... --out FILE` | build a fresh snapshot from `models_explore` lists, written only to `--out` |
 | `preferences [--mode M] [--calibrate C]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); never stores a spending ceiling |
 | `blind --with A --without B --out FOLDER` | check both conditions have the same format and draw X, Y and the order; writes the key without showing it (for a test with and without the skill, only on request) |
 | `result --key K --vote X ... --out FILE` | build the allowlisted calibration record, ready for `calibration/` |
@@ -510,8 +514,8 @@ Source of truth is the **live catalog** (`models_explore`). The bundled snapshot
 | Native audio and dialogue | Cinema Studio 4.0, Seedance 2.5, Kling 3.0, Veo 3.1, Wan 3.0 |
 | Readable text in an image | Nano Banana Pro, Ideogram 4.6 |
 
-Measured quotes (5 s, 24/11/2026): Cinema Studio 4.0 = 15 / 35 / 80 credits at 480p / 720p / 1080p; Seedance 2.5 720p
-= 35; Kling 3.0 = 7.5 to 10. Always re-quote. Full table: [`models.md`](higgsfield-director/references/models.md).
+No prices here: they change with the model, duration, resolution, sound and plan, and over time. The skill quotes
+each generation live, every time ([`models.md`](higgsfield-director/references/models.md)).
 
 ## Scope and coexistence
 
@@ -537,7 +541,7 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 83/83 skill tests and 5/5 repository-boundary tests passing locally in Codex on 25/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
+| Unit tests | 137 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |

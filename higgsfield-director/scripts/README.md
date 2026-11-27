@@ -24,11 +24,11 @@ flowchart LR
 | `validate PROJECT` | structure, camera text, dialogue length, timeline, continuity, the 180° axis, model limits |
 | `compile PROJECT [--text]` | one prompt per shot, joined only from the fields filled in, plus connector-ready `parameters` |
 | `budget [PROJECT] [--reserve N]` | total credits from real quotes, attempts and a reserve (20% unless given); refuses to guess a price |
-| `export PROJECT DIR` | `script.md`, `shots.csv`, `subtitles.srt` |
+| `export PROJECT DIR` | `script.md`, `shots.csv`, and `subtitles.srt` when a shot has dialogue |
 | `optics F D N` | field of view, frame width, depth of field, hyperfocal distance |
 | `score EVALUATION` | a weighted score with evidence per criterion; a critical failure blocks |
 | `models [--type T] [--search S] [--id ID]` | read the model snapshot |
-| `models --import LIST... --out FILE` | build a fresh snapshot from the connector's lists, outside the skill folder |
+| `models --import LIST... --out FILE` | build a fresh snapshot from the connector's lists, written only to `--out` |
 | `preferences [--mode M]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); refuses a spending field |
 | `crop SHEET DIR NAME:x0,y0,x1,y1...` | write the ffmpeg commands that cut a sketch sheet into frames; runs nothing |
 | `blind`, `result` | draw X, Y and the order for a blind test, and build its record; only when the operator asks for one |

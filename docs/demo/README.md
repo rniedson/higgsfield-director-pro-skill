@@ -31,7 +31,8 @@ flowchart LR
 | 4. The final | the same shot at 1080p, made from the approved draft: it repeats the draft's motion, frame by frame, as the image above shows | 160 |
 | 5. The sound | the final came back silent (below), so the sound was made apart | — |
 
-Total on Higgsfield: 190.48 credits, as quoted.
+Total on Higgsfield: 190.48 credits, as quoted on 2026-11-26. These are a record of that day, not a price list:
+prices change, and the skill quotes every step again.
 
 **The sound.** A final made from a draft keeps the draft's motion, and here it also kept the draft's silence, although
 the final asked for sound ([lesson 1](../../lessons-learned/2026-11-own-runs.md)). The sound was added afterwards on

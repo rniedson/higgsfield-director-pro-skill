@@ -54,7 +54,8 @@ cd .. && python3 -m unittest discover -s tools/tests -v           # public/priva
 python3 tools/check_repo.py                                        # repository and privacy checks
 ```
 
-CI runs both on every push and pull request.
+CI runs them on every pull request and on every push to `main`, with PyYAML installed so that the frontmatter is read
+as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check reads it by pattern and says so.
 
 ## Rules for changes
 

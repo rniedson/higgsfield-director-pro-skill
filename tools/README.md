@@ -1,7 +1,7 @@
 # Repository checks: `tools/`
 
-The scripts that keep the repository publishable. They only read files and never touch the network; none of them is
-part of the skill. Run them before every pull request ([CONTRIBUTING.md](../CONTRIBUTING.md#run-the-checks)); CI runs
+The scripts that keep the repository publishable. They read files and never touch the network; the one that writes is
+`aggregate_calibration.py --write`, which rewrites the scoreboard. None of them is part of the skill. Run them before every pull request ([CONTRIBUTING.md](../CONTRIBUTING.md#run-the-checks)); CI runs
 them again.
 
 ```mermaid
@@ -20,10 +20,10 @@ flowchart LR
 
 | Script | What it does |
 |---|---|
-| [check_repo.py](check_repo.py) | the skill's frontmatter; every guide cited by `SKILL.md`; valid JSON; links and anchors of the listed Markdown files; the calibration records; English names and text; and the public boundary below |
-| [public_boundary.py](public_boundary.py) | the guard: decides by path and content which files may be in a public repository |
+| [check_repo.py](check_repo.py) | the skill's frontmatter; every guide cited by `SKILL.md`; valid JSON; links and anchors of every published Markdown file; the calibration records; English names and text; and the public boundary below |
+| [public_boundary.py](public_boundary.py) | the guard: decides by path, by content and by a file's first bytes which files may be in a public repository |
 | [aggregate_calibration.py](aggregate_calibration.py) | adds up the blind-round records of [`calibration/`](../calibration/README.md) into its scoreboard; `check_repo` fails if the scoreboard is out of date |
-| [tests/](tests/) | the guard's own tests: what must pass and what must be refused |
+| [tests/](tests/) | 19 tests of the guard: what must pass and what must be refused, one test per hole a review found |
 
 ```bash
 python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, language and public/private boundary
@@ -35,12 +35,14 @@ python3 tools/aggregate_calibration.py --write   # rewrite the scoreboard after 
 
 ```mermaid
 flowchart TD
-    F[a file in the repository] --> L{top-level folder<br/>reviewed?}
-    L -- no --> X([refused])
+    F["a file git would publish<br/>(tracked, or new and not ignored)"] --> SL{a symbolic link?}
+    SL -- yes --> X([refused])
+    SL -- no --> L{top-level folder<br/>reviewed?}
+    L -- no --> X
     L -- yes --> P{"a project, client or<br/>personal folder in the path?"}
     P -- yes --> X
-    P -- no --> MD{media file?<br/>image, video, audio, PDF, zip}
-    MD -- no --> TX{"a path of this machine<br/>in the text?"}
+    P -- no --> MD{"media?<br/>by its name or by its first bytes"}
+    MD -- no --> TX{"a path of this machine<br/>in the text or the metadata?"}
     MD -- yes --> AL{in an allowed place?}
     AL -- no --> X
     AL -- yes --> TX
@@ -54,6 +56,7 @@ flowchart TD
 | `.jpg`, `.png` | `lessons-learned/tests/` and `examples/` | frames of the skill's own tests and the example references: generic scenes, stills only |
 | exactly three files | `docs/demo/` | the README's demo, by the maintainer's decision |
 
-Anything else that looks like a production is refused: a video outside the demo, a `review.html`, a folder named
-`project` or `client`, a path from someone's machine. A production's material stays in the operator's project
+Anything else that looks like a production is refused: a video outside the demo, even renamed `.jpg` or saved with no
+extension; a `review.html`; a folder named `project`, `client` or `projetos`, at any depth and as one word of a longer
+name; a path from someone's machine, in a text file or inside an image. A production's material stays in the operator's project
 folder ([AGENTS.md](../AGENTS.md)).

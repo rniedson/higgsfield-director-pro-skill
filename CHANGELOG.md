@@ -19,6 +19,56 @@ All notable changes to this project are listed here. The format follows
   The video plays in the page from a GitHub attachment of the same file; a link to the `.mp4` in the repository
   only opened a download.
 
+- `references/preproduction.md`: the sketch storyboard in two phases, tested once. Phase A draws every shot in one
+  sheet with the cheapest image model (same drawing inside the sheet, but count and order are not obeyed); phase B
+  crops each panel and uses it as the reference for its own frame in a cheap model that accepts references (same
+  figures in every frame, each frame redone alone). Drawing rules: block figures, a face only when the expression
+  matters, one identifying trait and the same shape description in every frame, stated scale, only who is in the
+  frame, no numbers in the prompt, camera notes on the sheet instead of the prompt. Token-saving rules for the phase.
+  The displayed quote can be rounded; the charge was `credits_exact`.
+- `hfd.py crop <sheet> <folder> name:x0,y0,x1,y1 ...` writes the ffmpeg commands that crop a sketch sheet into
+  frames, from boxes noted while looking at the sheet; it runs nothing and never overwrites. 4 new tests.
+- Lessons from a 16-piece generated test, written as general rules: recipes for crowds, hands of two people, the
+  final state, emotional gestures, official symbols and branded objects (`references/prompt.md`); a plausibility
+  check before spending, two new diagnoses and three free checks after generation: speech by local transcription,
+  loops by SSIM, and the model that actually ran (`references/quality.md`); the one-model, one-mode-per-project
+  limit (`references/workflow.md`).
+- Lessons from a blind with/without comparison (6 generated shots, scored by a blind judge and voted on by a person
+  who did not know which was which): one moment of impact per ad shot, with sound tied to it; the end framing of the
+  camera move must contain the final state; a product reference image before any multi-shot product work; generated
+  audio comes out quiet, so normalize it in post. Four recipes in `references/prompt.md`, three checks and four
+  diagnoses in `references/quality.md`, and the product-ad outline in `references/workflow.md`.
+- READMEs: a "With and without the skill" section, with what was measured (18 automated sessions and one blind
+  generated round). The round was a tie, and the blind human vote went to the version made without the skill.
+- `models --import` accepts a single-model `get` response and merges it without removing other models.
+- The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulary.md`.
+- Working modes (`references/modes.md`, `hfd.py preferences`). On first use in a project the skill asks whether the
+  operator wants to approve every step (`follow`), see only the total price (`price`), or give a spending ceiling
+  for the session in the conversation (`ceiling`). The preference file stores how to work, never how much to spend:
+  `hfd.py` rejects any other field, and the cost protocol in `references/connector.md` covers the ceiling.
+- Blind calibration with and without the skill (`references/calibration.md`). `scripts/calibrate_claude_code.sh` runs
+  both conditions in fresh Claude Code sessions with generation blocked. `hfd.py blind` checks that both ask for the
+  same format, draws X and Y and, separately, which one is shown first, and writes the key (mode 600) without showing
+  it. `hfd.py result` turns the vote into an allowlisted record.
+- `calibration/` with the first three records, `tools/aggregate_calibration.py`, and a calibration scoreboard in both
+  READMEs. `tools/check_repo.py` checks every record against the allowlist and fails when the scoreboard is stale.
+  CONTRIBUTING explains how to send a record.
+- Storyboard before video in studio mode (`references/workflow.md`, `SKILL.md`): one still per shot, approved before
+  any video is generated. Not yet measured blind.
+- READMEs: the rematch after the fixes (2 rounds, 152 credits). The blind vote and the blind judge both chose the
+  version with the skill in both rounds; the voter noted that it was also shown first both times.
+- 21 tests.
+- A price is never written in the repository. The templates carry no `test_cost` or `final_cost`, and the READMEs no
+  table of quotes: prices change at any time, so the agent quotes each step with the connector and `budget` refuses a
+  shot without a price.
+- `hfd.py` warns when a resolution cannot be sent (the model has no resolution parameter, or is not in the snapshot)
+  and when image mode drops `action`, `micro_action`, `secondary` or `final`; it stops on edit or extend with a model
+  that has no such mode, on edit without a `target`, on an unknown score criterion, and on a calibration record whose
+  date does not exist.
+- Usage errors come out as JSON with exit 2, like every other error.
+- 53 skill tests (one per mutant that lived through the suite, one per defect a review reproduced) and 10 tests of the
+  public boundary, one per hole a review found.
+
 ### Changed
 
 - The example references moved from `higgsfield-director/examples/references/` to `examples/references/`, at the
@@ -134,64 +184,51 @@ All notable changes to this project are listed here. The format follows
   accessory from the bible that disappears.
 - The skill starts from the connector's live list of workflows (`get_workflow_instructions` with no argument). The
   table in `references/connector.md` is now an offline snapshot, updated with the workflows added since
-  (`video-editing`, `katana`, `angles-hf`, `lighting-hf`, `grade-hf`, `narration`, `music-cards`).
+  (`video-editing`, `katana`, `angles-hf`, `lighting-hf`, `grade-hf`, `narration`, `musical-cards`).
 - `references/connector.md` states where the skill works: the connector has no workflow for multi-shot cinematic
   generation and sends it to ordinary generation, which the skill plans, checks and gates.
 - In studio mode, the chosen model's live limits (`models_explore get`) go into the project's snapshot and are used
   for validation.
 - `references/models.md` no longer stores prices: always quote.
 - The tests and the offline workflow snapshot are dated 24/11/2026, Brasília time (they had been written as 25/11).
-- The offline workflow table in `references/connector.md` is refreshed to 24/11/2026 (31 workflows: adds
+- The offline workflow table in `references/connector.md` is refreshed (34 workflows by 2026-11-25; adds
   `website-builder-flow`, `short-drama`, `shorts-studio`, `reel-effects`, `manga-engine`, `layer-reveal-hf`,
   `property-studio`, `autobadge`, `color-grade`), and it covers presets, desktop-app commands that install a local
   MCP server (operator approval first) and rented GPUs (billed while running).
-- The READMEs now mark the local Codex workflow as tested: 83 skill tests, 5 public/private boundary tests,
-  repository check, project validation and 3-shot compilation passed on 2026-11-25. Authenticated Higgsfield
+- The READMEs now mark the local Codex workflow as tested: the skill tests, the public/private boundary tests, the
+  repository check, project validation and 3-shot compilation passed there on 2026-11-25. Authenticated Higgsfield
   quoting and generation from Codex remain untested.
 - The READMEs record two more routing rounds (14/14 each, 42/42 in total) and a text-only pilot with and without
   the skill.
 
-### Added
+### Fixed
 
-- `references/preproduction.md`: the sketch storyboard in two phases, tested once. Phase A draws every shot in one
-  sheet with the cheapest image model (same drawing inside the sheet, but count and order are not obeyed); phase B
-  crops each panel and uses it as the reference for its own frame in a cheap model that accepts references (same
-  figures in every frame, each frame redone alone). Drawing rules: block figures, a face only when the expression
-  matters, one identifying trait and the same shape description in every frame, stated scale, only who is in the
-  frame, no numbers in the prompt, camera notes on the sheet instead of the prompt. Token-saving rules for the phase.
-  The displayed quote can be rounded; the charge was `credits_exact`.
-- `hfd.py crop <sheet> <folder> name:x0,y0,x1,y1 ...` writes the ffmpeg commands that crop a sketch sheet into
-  frames, from boxes noted while looking at the sheet; it runs nothing and never overwrites. 4 new tests (75 in total).
-- Lessons from a 16-piece generated test, written as general rules: recipes for crowds, hands of two people, the
-  final state, emotional gestures, official symbols and branded objects (`references/prompt.md`); a plausibility
-  check before spending, two new diagnoses and three free checks after generation: speech by local transcription,
-  loops by SSIM, and the model that actually ran (`references/quality.md`); the one-model, one-mode-per-project
-  limit (`references/workflow.md`).
-- Lessons from a blind with/without comparison (6 generated shots, scored by a blind judge and voted on by a person
-  who did not know which was which): one moment of impact per ad shot, with sound tied to it; the end framing of the
-  camera move must contain the final state; a product reference image before any multi-shot product work; generated
-  audio comes out quiet, so normalize it in post. Four recipes in `references/prompt.md`, three checks and four
-  diagnoses in `references/quality.md`, and the product-ad outline in `references/workflow.md`.
-- READMEs: a "With and without the skill" section, with what was measured (18 automated sessions and one blind
-  generated round). The round was a tie, and the blind human vote went to the version made without the skill.
-- `models --import` accepts a single-model `get` response and merges it without removing other models.
-- The 20 visual styles of the illustrated manual, with their descriptors, in `references/vocabulary.md`.
-- Working modes (`references/modes.md`, `hfd.py preferences`). On first use in a project the skill asks whether the
-  operator wants to approve every step (`follow`), see only the total price (`price`), or give a spending ceiling
-  for the session in the conversation (`ceiling`). The preference file stores how to work, never how much to spend:
-  `hfd.py` rejects any other field, and the cost protocol in `references/connector.md` covers the ceiling.
-- Blind calibration with and without the skill (`references/calibration.md`). `scripts/calibrate_claude_code.sh` runs
-  both conditions in fresh Claude Code sessions with generation blocked. `hfd.py blind` checks that both ask for the
-  same format, draws X and Y and, separately, which one is shown first, and writes the key (mode 600) without showing
-  it. `hfd.py result` turns the vote into an allowlisted record.
-- `calibracao/` with the first three records, `tools/aggregate_calibration.py`, and a calibration scoreboard in both
-  READMEs. `tools/check_repo.py` checks every record against the allowlist and fails when the scoreboard is stale.
-  CONTRIBUTING explains how to send a record.
-- Storyboard before video in studio mode (`references/workflow.md`, `SKILL.md`): one still per shot, approved before
-  any video is generated. Not yet measured blind.
-- READMEs: the rematch after the fixes (2 rounds, 152 credits). The blind vote and the blind judge both chose the
-  version with the skill in both rounds; the voter noted that it was also shown first both times.
-- 21 tests (71 in total).
+- `compile` keeps the project subject when a shot's entity has no description, no longer turns audio on for an
+  empty `sound` or dialogue line, and keeps the capitals of a first word such as iPhone or eBay.
+- `blind` compares every format and price field the compiler sends (`quality`, `mode`, `sound` too), and refuses a
+  round folder that already holds the key under its old name.
+- Two camera moves joined by "and" warn as simultaneous, also when a later phase follows.
+- The preferences file refuses a `calibrate` or `updated_at` that is not one of the allowed values, not only an
+  unknown key.
+- `budget` totals add up to the figures it shows (the total is the base plus the rounded reserve); `optics` computes
+  the frame width with the same thin lens as the focus range; an import of one model keeps the snapshot's oldest
+  date in its header.
+- `python3 tests/test_hfd.py` run directly used to skip the 4 crop tests: `unittest.main()` sat in the middle of the
+  file.
+- The public boundary knows media by its first bytes (a video renamed `.jpg` or saved with no extension), refuses a
+  symbolic link, follows git (an ignored `.DS_Store` no longer fails the check; a `node_modules` below the top is no
+  longer skipped), reads every file's text and a binary file's metadata for machine paths, catches more forms of
+  them, and catches project folders in Portuguese and inside longer names.
+- `check_repo.py` checks the links and anchors of every published Markdown file (14 had been left out), reads more
+  link forms and refuses a link that leaves the repository or differs in case; the language check reads more text
+  files and no longer flags loanwords such as café.
+- `scripts/calibrate_claude_code.sh` runs each session with `--permission-mode dontAsk` in its own new folder, lets
+  the session with the skill run only the skill's helper, finds a user-wide install in more places, and exits 1 when
+  a condition wrote no `params.json`.
+- Docs that had drifted from the code: how a bible's description enters an image-to-video prompt, a fixed attribute
+  versus `approved_changes`, `export` writing subtitles only when there is dialogue, where an import writes, the
+  search for first-and-last-frame models, the v5.1.0 figures, the recipe count, and the old Portuguese file names
+  still used as link labels.
 
 ## [5.1.0] — 2026-11-24
 
