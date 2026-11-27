@@ -30,7 +30,7 @@ separate personal skill.
 |---|---|
 | AI-generated prompt, shot or sequence; choosing a model; generation cost; diagnosing a generated result; a generative change to the operator's own footage on a model with a video-edit mode | **this skill** |
 | UGC, character sheet, product photo, thumbnail, static ad, micro-drama, faceless narrated video, dubbing | the Higgsfield connector's own workflow (`references/connector.md`); from here only the cost and "ok" rule applies |
-| 3D-rendered or code-made video (Blender, character animation, motion graphics) and its render | that project's skill or tool; a rough 3D blocking render made there can come back here as a camera or position reference |
+| 3D-rendered or code-made video (Blender, character animation, motion graphics) and its render | that project's skill or tool; an animated 3D storyboard made before spending credits belongs to the repository's `blocking-studio/` (outside this skill folder), and its frames can come back here as camera or position references |
 | editing recorded video (cuts, subtitles, color, music) | a video skill or editor, or the connector's `video-montage` workflow |
 | video built from HTML pages or slides (presentation, proposal) | that format's skill or tool |
 | voice, narration, music, sound effects | an audio skill or tool |

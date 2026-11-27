@@ -25,7 +25,7 @@ flowchart LR
 | [public_boundary.py](public_boundary.py) | the guard: decides by path, by content and by a file's first bytes which files may be in a public repository |
 | [aggregate_calibration.py](aggregate_calibration.py) | adds up the blind-round records of [`calibration/`](../calibration/README.md) into its scoreboard; `check_repo` fails if the scoreboard is out of date |
 | [aggregate_prices.py](aggregate_prices.py) | adds a week's price table to [`price-history/`](../price-history/README.md) and redraws its page (the index chart and the table); refuses a second record in the same week; `check_repo` fails if the page is out of date |
-| [tests/](tests/) | 25 tests: 19 of the guard (what must pass and what must be refused, one test per hole a review found) and 6 of the price record |
+| [tests/](tests/) | 26 tests: 20 of the guard (what must pass and what must be refused, one test per hole a review found) and 6 of the price record |
 
 ```bash
 python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, prices, language and public/private boundary

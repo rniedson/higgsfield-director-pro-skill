@@ -7,6 +7,15 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- `blocking-studio/`: the engine for animated 3D storyboards in Three.js, to plan a video before generating it on
+  Higgsfield, so no credits go to a shot that was not thought through. It belongs to the first step of the pipeline,
+  pre-production and storyboard. It starts with an articulated male mannequin
+  built from four design sheets: a GLB with 23 bones, rigid pieces bound one to a bone, ball joints and 5,630
+  triangles, made from a Meshy model with a Blender script that rebuilds it, a second script that renders it piece by
+  piece, and a one-page Three.js viewer to pose it. The engine that animates the storyboard comes next.
+  `tools/public_boundary.py` accepts the folder and allows still images only in each character's `sheets/` and in
+  `blocking-studio/docs/`. The skill still renders no 3D: `SKILL.md` sends a 3D storyboard there, and its frames come
+  back as camera or position references.
 - `price-history/README.md`, "Before the first record": the prices Higgsfield's blog published on 2026-08-03,
   2026-10-24 and 2026-10-30, next to the same requests quoted through the connector on 2026-11-27. They stay out of
   the chart (10-second website prices, not the weekly 5-second table). Only Kling 4.0 differs, 2.5 credits lower.
