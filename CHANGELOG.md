@@ -16,6 +16,8 @@ All notable changes to this project are listed here. The format follows
 - A demo in the README: a 10 s kung fu fight between the maintainer's own character and a robot clone of himself,
   made one step at a time (four stills, a draft, the 1080p final), with how it was made, the prompt and the sound in
   `docs/demo/`. `tools/public_boundary.py` allows exactly those three media files, by the maintainer's decision.
+  The video plays in the page from a GitHub attachment of the same file; a link to the `.mp4` in the repository
+  only opened a download.
 
 ### Changed
 

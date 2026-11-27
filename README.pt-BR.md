@@ -63,7 +63,7 @@ Para um prompt rápido ou uma imagem só, o plano é o trabalho inteiro: não h�
 
 ### Na prática
 
-<a href="docs/demo/kung-fu-vs-robot-clone.mp4"><img src="docs/demo/kung-fu-vs-robot-clone.jpg" width="720" alt="O mantenedor num chute voador contra um robô cromado com o rosto dele, cercado de cópias dele mesmo"></a>
+https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
 Uma luta de 10 s entre o personagem do próprio mantenedor e um clone robô dele, feita um passo de cada vez: quatro
 imagens para escolher o visual (0,48 crédito), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a

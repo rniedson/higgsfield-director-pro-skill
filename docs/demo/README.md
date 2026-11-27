@@ -1,10 +1,10 @@
 # Demo: a kung fu fight against a robot clone
 
-<a href="kung-fu-vs-robot-clone.mp4"><img src="kung-fu-vs-robot-clone.jpg" width="720" alt="The maintainer in a flying kick against a chrome robot with his face, surrounded by copies of himself"></a>
+https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
-A 10 s shot at 1080p, with sound ([the video](kung-fu-vs-robot-clone.mp4), 9 MB). The man in it is the maintainer's
-own character, trained on his face, and he agreed to publish it (2026-11-26). Everything else was generated: the
-robot with his face, the copies, the warehouse.
+A 10 s shot at 1080p, with sound: press play above, or [download the file](kung-fu-vs-robot-clone.mp4) (9 MB). The
+man in it is the maintainer's own character, trained on his face, and he agreed to publish it (2026-11-26).
+Everything else was generated: the robot with his face, the copies, the warehouse.
 
 ## How it was made
 
