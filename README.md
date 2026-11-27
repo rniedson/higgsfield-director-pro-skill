@@ -62,7 +62,7 @@ For one quick prompt or one image, the plan is the whole job: there are no steps
 
 ### In practice
 
-<a href="docs/demo/kung-fu-vs-robot-clone.mp4"><img src="docs/demo/kung-fu-vs-robot-clone.jpg" width="720" alt="The maintainer in a flying kick against a chrome robot with his face, surrounded by copies of himself"></a>
+https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
 A 10 s fight between the maintainer's own character and a robot clone of himself, made one step at a time: four
 stills to choose the look (0.48 credits), the whole shot as a draft (30), then the final at 1080p from the approved
