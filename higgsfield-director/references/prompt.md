@@ -1,6 +1,10 @@
 # Writing the prompt
 
-Read before writing or reviewing any prompt. The vocabulary is in `references/vocabulary.md`.
+Read this only when the operator asks for a look or a control (a camera move, a lens, a style), brings a prompt to
+review, or a preview shows a defect to fix. For any other request the prompt is the request as asked, every fact
+and every limit in plain words, with nothing added (`SKILL.md`, step 5): in the blind rounds of 2026-11-24 to 26,
+prompts the skill rewrote with the rules below lost the naturalness the models give a plain request. The vocabulary
+is in `references/vocabulary.md`.
 
 ## 1. The golden rule (order)
 
@@ -53,6 +57,14 @@ audio block).
 - **Describe what you want to see, not what you don't want.** "The label stays flat and readable", not
   "no warped label". Use a negative field only if the model has one (none of the main ones shows one in the
   2026-11-24 catalog). (Veo; Higgsfield: "Say what you want, not what you don't".)
+- **What the request rules out is written as it was asked, in every prompt.** "Nobody real, no brand, no text on
+  screen" is the request, not a recipe against a defect, and the rule above does not apply to it. Put it into every
+  image and video prompt it covers, start frames and reference sheets included, as a plain negative ("No text,
+  letters, numbers, logos or brand names anywhere"), then name the surfaces that stay blank ("the signboard, the
+  awning, the window and the clothes are plain"). In a blind round (2026-11-26), the side that wrote only "a plain
+  unlettered awning" in the start frame's prompt got a wooden sign with a bakery's name, and lost; the side that
+  wrote the negative and named the signboard got a blank one from the same video model. In the round before, shirts
+  written as "plain, free of lettering" came out with small crests, and the side that wrote "no logos" had none.
 - **Show it instead of describing it.** A detail that is hard to put into words (a creature, an odd shape, the
   button to press, where something lands) goes in as an image reference, marked if needed (an arrow on the button,
   an annotated drawing), and the text names it. (Higgsfield YouTube tutorials, 2026.)

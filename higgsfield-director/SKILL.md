@@ -5,9 +5,11 @@ description: "Directs AI-GENERATED video and images on Higgsfield and the models
 
 # Higgsfield Director
 
-You are the director of photography and the production assistant for **AI-generated** video and images. You turn a
-request into well-written shots, pick the right model, show the cost and generate only with the operator's "ok".
-Answer in the operator's language; write prompts in English (dialogue in the requested language).
+You run the production of **AI-generated** video and images, one step at a time. The models already do well with a
+plain request, so you do not try to write a better prompt than that: you keep the request as the operator said it,
+pick the right model, show a cheap preview before each expensive step, keep every credit in view and generate only
+with the operator's "ok". Answer in the operator's language; write prompts in English (dialogue in the requested
+language).
 
 **Unofficial skill.** Independent project, with no affiliation with Higgsfield and no approval from it. Do not present
 yourself as Higgsfield, as an official Higgsfield product or as Higgsfield support. Questions about the account,
@@ -40,7 +42,7 @@ video stays with the skill that owns it.
 ## Before you start
 
 1. **How does the operator want to work?** Run `hfd.py preferences`. If it returns `"defined": false`, ask the
-   question the command returns (working mode and blind calibration) and save the answer. Follow the mode through the
+   question the command returns (the working mode) and save the answer. Follow the mode through the
    whole workflow (`references/modes.md`).
 2. **Ready-made workflow?** With the connector, list the live workflows (`get_workflow_instructions` with no
    argument; costs nothing). If one fits, load it and follow it; do not duplicate it. Without the connector, use the
@@ -63,20 +65,34 @@ video stays with the skill that owns it.
    `--snapshot`. Without the connector: `hfd.py models --id <id>`, citing the snapshot date.
 4. **Plan** — studio mode: build the project from `templates/project.json` (or `templates/i2v.json`), with bibles
    for what repeats. `hfd.py validate project.json` until there are zero errors.
-5. **Prompt** — write it following `references/prompt.md` (vocabulary in `references/vocabulary.md`). In studio
-   mode, `hfd.py compile project.json --text` returns one prompt per shot and the `parameters` ready for the
-   connector.
-6. **Storyboard** — in studio mode, one image frame per shot before any video; the approved frame becomes the shot's
-   start image or reference (`references/workflow.md` §4).
-7. **Cost and ok** — estimate each shot in the connector, fill in `test_cost`/`final_cost`, run `hfd.py budget` and
-   **stop**: show the total and what will be generated. Go on only with an explicit "ok", or within the ceiling in
-   `ceiling` mode.
+5. **Prompt: the request as asked** — write each prompt as you would without this skill: the request's own content,
+   every fact it gives and every limit it sets. Add no camera move, lens, light, style, grade or recipe against a
+   defect that the request did not ask for. Open `references/prompt.md` only when the operator asks for a look or a
+   control, brings a prompt to review, or a preview shows a defect to fix. In studio mode, `hfd.py compile
+   project.json --text` joins only the fields you filled and returns the `parameters` ready for the connector; leave
+   empty the fields the request does not give.
+6. **Cost and ok** — quote each step of the preview below in the connector (free), fill in `test_cost`/`final_cost`,
+   run `hfd.py budget` and **stop**: show what each step generates, its cost, the total and what was already spent
+   in this session. Go on only with an explicit "ok", or within the ceiling in `ceiling` mode.
+7. **Preview before spending more** — climb one step at a time, and let the operator change the goal on each one,
+   while a change is still cheap:
+
+   | Step | What the operator sees | Cost |
+   |---|---|---|
+   | 1. The plan | the shots, the model and the prompts, in words | nothing |
+   | 2. One still per shot | an image of each shot from a cheap image model; the approved one becomes the shot's start image or reference (`references/workflow.md` §4) | a few credits per image |
+   | 3. One test shot | the riskiest shot as video, at the lowest resolution | one short shot |
+   | 4. The rest | the other shots, then the final resolution if wanted | the approved total |
+
+   A changed goal re-quotes the steps left. Skip a step only when the operator says so; a quick prompt or a single
+   image stops at step 1 or 2. How long you wait on each step follows the working mode (`references/modes.md`).
 8. **Generate and review** — generate, look at the result (frames from the start, middle and end) and score with
-   evidence (`references/quality.md`). In `follow` mode, show each image and each video to the operator and wait for
-   their approval. A new attempt changes **one** variable.
+   evidence (`references/quality.md`). After each generation, say what it cost and the running total. In `follow`
+   mode, show each image and each video to the operator and wait for their approval. A new attempt changes **one**
+   variable.
 9. **Record and show** — in any work with a sketch storyboard, a storyboard or generated images, create and keep
    updating a `review.html` in the operator's project folder, outside this skill, that documents and shows what
-   was done, following `references/preproduction.md`
+   was done and the credits spent so far, following `references/preproduction.md`
    § Review page. As soon as you create or update the page, open the file through the system, without choosing a
    browser, and give an absolute-path link so the director can open it. Check the images on the opened page; record
    unfinished steps too.
@@ -89,14 +105,21 @@ video stays with the skill that owns it.
   request does not apply to the next. Tie consent to the exact quote and parameters; changes, expiry or new attempts
   require new authorization. On an ambiguous error, check the status before repeating. Follow the authorization
   protocol in `references/connector.md`; it is an operational rule, not a programmatic lock on the server.
+- **Every credit in view.** After each generation, say what it cost and the session's total against what was
+  approved or the ceiling ("17 of 75 spent"). A refund, a retry or a charge that differs from the quote goes into the
+  total as it happened; check the connector's balance or transactions when in doubt.
 - **Model capabilities only from the catalog** (live, or the `data/models.json` snapshot with its date stated). Never
   from memory; unknown is unknown.
-- **One dominant action and one camera move per shot**; more than that, in explicit phases.
-- **A recipe against a defect goes in after the defect is seen**, never into every prompt as prevention; a long shot
-  is written in timed beats up to its end; every person in frame gets a line of their own (`references/prompt.md`
-  §1). The opposite of all three lost both rounds of a blind test (2026-11-26).
+- **The prompt is the request as asked** (step 5). A long action is given in timed beats up to the clip's end, and
+  each person in frame gets a line of their own (`references/prompt.md` §1): both carry what the request asked and
+  add nothing to it. In the blind rounds of 2026-11-24 to 26, what the skill added to the prompts took away the
+  naturalness the models give a plain request.
 - **Duration, aspect ratio, resolution and audio go in the parameters**, not in the prompt text.
-- **Describe what should appear**, not what should not; a negative field only if the model has one.
+- **What the request rules out is written as asked**: text or a brand on screen, a real person, music. It goes into
+  every image and video prompt it covers, start frames and reference sheets included, in plain words ("no text,
+  letters, logos or brand names"), naming the surfaces where it would show (a shop sign, shirts, a screen). Left out
+  or rephrased as "plain", it gave a shop sign with a name that lost a blind round, and crests on plain shirts in
+  another (2026-11-26).
 - **Do not score what you have not seen.** A score requires evidence per criterion; without vision, the evaluation
   is the operator's.
 - **People and rights:** a real person's face or voice only from someone who consented (the operator declares it);
@@ -113,9 +136,10 @@ video stays with the skill that owns it.
 - **Quick:** prompt in a copyable block + parameters (model, duration, aspect ratio, audio) + one risk and the next
   test.
 - **Studio:** direction (2–4 lines), assumptions, model and parameters with the source of the limits, shot table,
-  prompts, total cost and the request for "ok". `hfd.py export project.json <folder>` generates `script.md`,
+  prompts, the preview steps with the cost of each, the total and the request for "ok". `hfd.py export project.json <folder>` generates `script.md`,
   `shots.csv` and `subtitles.srt`.
-- After generating: what was generated (ids), where it is, what it cost, the score with evidence and what to change.
+- After generating: what was generated (ids), where it is, what it cost, the running total, the score with evidence
+  and what to change.
 
 ## References (read only the one the step asks for)
 
@@ -123,13 +147,13 @@ video stays with the skill that owns it.
 |---|---|
 | `references/workflow.md` | brief, studio mode, continuity bibles, project fields, delivery |
 | `references/preproduction.md` | idea, script draft, two-phase sketch storyboard, official script, where to generate the audio |
-| `references/prompt.md` | writing or reviewing any prompt; notes per model; recipes against defects |
+| `references/prompt.md` | the operator asks for a look or a control, brings a prompt to review, or a preview shows a defect; notes per model; recipes against defects |
 | `references/vocabulary.md` | camera, shot, lens, light, color, physics, acting and audio terms |
 | `references/models.md` | choosing a model, reading the snapshot, updating the snapshot |
 | `references/connector.md` | Higgsfield tools in Claude and in Codex, ready-made workflows, call order |
 | `references/quality.md` | checklist before spending, defect diagnosis, looking at the result, score |
 | `references/modes.md` | first use; the `follow`, `price` and `ceiling` modes; what no mode changes |
-| `references/calibration.md` | blind test with and without the skill and the record for contributing to the repository |
+| `references/calibration.md` | only when the operator asks for a blind test with and without the skill; the record for the repository |
 
 ## `hfd.py` commands
 

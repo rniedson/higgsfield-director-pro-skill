@@ -1,0 +1,42 @@
+{
+ "format": 1,
+ "date": "2026-11-26",
+ "skill_version": "5.1.0+0f8bcfb",
+ "category": "trailer",
+ "model": "seedance_2_5",
+ "shots": 3,
+ "cost_credits": 100.5,
+ "image_reference": true,
+ "vote": "without",
+ "rater": "blind-auto",
+ "seen_first": "without",
+ "reason": "More natural; they look more real.",
+ "scores": {
+  "with": {
+   "total": 81.0,
+   "criteria": {
+    "identity": 8,
+    "motion": 8,
+    "camera": 8,
+    "lighting": 9,
+    "materials": 8,
+    "continuity": 8,
+    "briefing": 9,
+    "audio": 5
+   }
+  },
+  "without": {
+   "total": 71.5,
+   "criteria": {
+    "identity": 8,
+    "motion": 6,
+    "camera": 7,
+    "lighting": 8,
+    "materials": 8,
+    "continuity": 7,
+    "briefing": 7,
+    "audio": 5
+   }
+  }
+ }
+}

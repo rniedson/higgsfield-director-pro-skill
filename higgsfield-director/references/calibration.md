@@ -4,8 +4,10 @@ The question that matters is "**for me**, does the skill make a difference?". Th
 test: the same request, made with and without the skill, and the person chooses without knowing which is which. If
 they do not choose the skill, the skill needs to improve, and the result shows where.
 
-Calibration is **optional**: offer it on first use (`references/modes.md`) and when the operator asks. It spends
-credits (the shots of both conditions), quoted first and with their "ok".
+Calibration is **optional** and runs **only when the operator asks** for it: it pays for the shots of both
+conditions, quoted first and with their "ok". The skill does not offer it on its own. On 2026-11-26, after the
+fifth round, the maintainer decided that the skill's work is the process (steps, cheap previews, the credits in
+view), not winning against what the models give a plain request.
 
 ## Step by step
 
@@ -31,9 +33,12 @@ credits (the shots of both conditions), quoted first and with their "ok".
    reason in a few words. Record the vote **before** opening the key.
 6. **Scores (optional).** A rater who sees only the request and the videos (a subagent, with no access to the key or
    the prompts) fills in one `templates/evaluation.json` for X and another for Y. The scores are a second opinion.
-   In the third and fourth rounds the blind judge's score chose the version the person rejected in all four rounds,
-   once for the skill and once against it: its criteria weigh control (identity, camera and continuity are 45% of
-   the score), and none asks whether the video could pass for real footage, which is what the person judged on.
+   From the third to the fifth round the blind judge's score went against the person's vote in 5 of 6 rounds, for
+   the skill and against it: its criteria weigh control (identity, camera and continuity are 45% of the score), and
+   none asks whether the video could pass for real footage, which is what the person judged on. The one agreement
+   came from the briefing criterion: it caught a shop sign the request had ruled out, which the person had missed.
+   Asked separately which version looked more natural, it agreed with the person's blind vote in both rounds of
+   the fifth.
    The person's vote decides; a disagreement is reported, not averaged away.
 7. **Record.** `hfd.py result --key <folder>/blind/blind-key.json --vote X --category product-ad
    --model <id> --shots 3 --cost 90 --version <version>+<commit> [--reference] [--reason "..."]
@@ -54,8 +59,8 @@ credits (the shots of both conditions), quoted first and with their "ok".
 ## Contributing to the repository
 
 The record goes into the repository's `calibration/` folder by pull request (see CONTRIBUTING). CI checks each file
-against the same allowlist, and `tools/aggregate_calibration.py` adds everything up into the README table. That way
-the scoreboard shows, per request type, where the skill wins and where it loses, and each loss becomes a fix.
+against the same allowlist, and `tools/aggregate_calibration.py` adds everything up into the scoreboard in
+`calibration/README.md`, per request type.
 
 | Goes into the record | Never goes in |
 |---|---|

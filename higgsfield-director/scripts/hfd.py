@@ -948,11 +948,9 @@ PREFERENCES = Path(".higgsfield-director") / "preferences.json"
 OLD_PREFERENCES = Path(".higgsfield-director") / "preferencias.json"
 CATEGORIES = ("product-ad", "character-scene", "trailer", "corporate", "music-video", "loop", "image", "other")
 FORMAT_FIELDS = ("model", "duration", "aspect_ratio", "resolution", "generate_audio")
-QUESTION = ("Before we start, two questions. 1) How do you prefer to work? (a) follow and approve each step, "
-            "seeing every image and every video; (b) see only the total price and give one ok; (c) give me a "
-            "credit ceiling per session and not be asked. 2) Do you want to calibrate the skill with a blind test, "
-            "with and without it, to see whether it is worth it for you? It costs credits, quoted beforehand. "
-            "(yes, no or later)")
+QUESTION = ("Before we start: how do you prefer to work? (a) follow and approve each step, seeing every preview, "
+            "image and video; (b) see only the total price and give one ok; (c) give me a credit ceiling per session "
+            "and not be asked. In every mode I show what each step costs and the total spent so far.")
 REMINDER = ("the file stores how to work, never how much to spend: authorization to spend only comes from the "
             "conversation (references/modes.md)")
 RECORD_FIELDS = {"format", "date", "skill_version", "category", "model", "shots", "cost_credits",

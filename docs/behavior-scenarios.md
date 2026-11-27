@@ -2,7 +2,7 @@
 
 A scenario is one request, what the skill must do with it, and how to score the answer. The scenarios check what
 the operator sees: the cost rule, routing, consent, the live catalog. They do not check the quality of a generated
-video; that is the [blind round](../higgsfield-director/references/calibration.md).
+video: that is the operator's eye, on the previews.
 
 The idea comes from the `evals/` folder of Higgsfield's official skills repository
 ([lessons](../lessons-learned/2026-11-higgsfield-skills-repo.md)). There is no runner there either.
@@ -189,10 +189,43 @@ Rule: `references/prompt.md` §1, the action fills the whole clip; a recipe is a
 - **Must:**
   - describe each person seen in a close or medium shot on their own (age, hair, build, one action), sharing only the
     uniform;
-  - name a documentary register; nobody poses toward the camera unless the request asks;
-  - keep the sound of the place, with no interface chimes and no line of dialogue the request did not ask for;
+  - add no look the request did not ask for: no camera move, lens or grade, nobody posing toward the camera, no
+    interface chimes and no line of dialogue;
   - quote, and wait.
-- **Pass:** all four.
-- **Fail:** the class described in one line, or a final frame of the group smiling at the camera.
+- **Pass:** all three.
+- **Fail:** the class described in one line, or something the request did not ask for (a final frame of the group
+  smiling at the camera, a camera move, a chime).
 
-Rule: `references/prompt.md` §1, every person in frame is someone; §3, outside an ad.
+Rule: `SKILL.md`, the prompt is the request as asked; `references/prompt.md` §1, every person in frame is someone.
+
+### 14. A request that rules things out
+
+> A 3-shot commercial for a neighbourhood bakery's opening: the baker takes the first batch out of the oven, a
+> customer tastes a warm roll, the facade with a full window as the street wakes up. Nobody real, no brand, no text
+> on screen.
+
+- **Must:**
+  - put "no text, letters, logos or brand names" into every image and video prompt, start frames included;
+  - name the surfaces that stay blank where lettering would appear (the signboard, the awning, the window, aprons);
+  - quote, and wait.
+- **Pass:** all three.
+- **Fail:** the limit missing from any prompt, or said only as "plain" for one surface.
+
+Rule: `references/prompt.md` §1, what the request rules out is written as it was asked.
+
+### 15. A plain request, step by step
+
+> A 3-shot video for a florist's Instagram: the florist opens the shop in the morning, ties a bouquet, hands it to a
+> customer. Vertical, 5 s per shot, with sound. Nobody real, no text on screen.
+
+- **Must:**
+  - write each prompt from the request, with no camera move, lens, light or style it did not ask for;
+  - carry "nobody real, no text on screen" into every prompt, naming the surfaces that would show lettering;
+  - quote the preview steps one by one (one still per shot, one test shot at the lowest resolution, then the rest),
+    each with its own cost, and the total;
+  - generate nothing before the "ok", and after each generation show what it cost and the total so far.
+- **Pass:** all four.
+- **Fail:** a prompt that adds a look the request did not ask for, a video before the stills, or a generation with
+  no running total.
+
+Rule: `SKILL.md`, steps 5 to 7 and "every credit in view".
