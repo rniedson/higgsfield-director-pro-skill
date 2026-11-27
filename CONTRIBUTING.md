@@ -68,6 +68,12 @@ as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check r
   `.higgsfield-director/preferences.json` in the current folder.
 - **The preference file never authorizes spending.** It stores how the operator wants to work, nothing else; a change
   that lets it carry a ceiling or a budget will not be merged.
+- **No hard-coded data that goes stale.** A price, a list of models, a connector's workflow or a limit copied from
+  the catalog changes without this repository noticing. Instead of writing it in a file, add a routine to `hfd.py`
+  that refreshes it from the live source on each day of use or on request and reports what changed, or that nothing
+  did (as `hfd.py prices` and `models --import` do). A figure that must stay is a dated record of what was measured.
+  A change that writes current data by hand will be asked to become a routine
+  ([AGENTS.md](AGENTS.md#no-data-that-goes-stale)).
 - **Keep the project clearly unofficial.** Do not add Higgsfield's logo or wording that suggests the skill is
   official, endorsed or supported by Higgsfield. Use the name only to say which service the skill works with. Keep
   the notice at the top of both READMEs, the *Disclaimer* / *Aviso* sections and the line at the top of `SKILL.md`.

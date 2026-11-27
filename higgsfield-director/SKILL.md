@@ -51,6 +51,10 @@ video stays with the skill that owns it.
    prompt and parameters to paste into the site, without claiming an exact cost or a generation.
 4. **Mode:** *quick* (one shot, one image, reviewing a prompt) or *studio* (2+ shots, something that repeats across
    shots, campaign, budget). Ask only what blocks; the rest becomes a stated assumption.
+5. **Prices and models of the day** (with the connector, before choosing or planning by price): `hfd.py prices`.
+   If the table is not from today, make it once: `prices --plan`, each request to the connector's estimate (free),
+   `prices --import`. If it says the catalog is a week old, or the operator asks, read the catalog again and import it
+   into the project: new models join the table. Never write a price in a file of this skill (`references/models.md`).
 
 ## Workflow
 
@@ -158,7 +162,7 @@ video stays with the skill that owns it.
 ## `hfd.py` commands
 
 `validate` · `compile [--text]` · `budget` · `export` · `optics` · `score` · `models [--type|--search|--id]` ·
-`models --import ... --out ...` · `preferences` · `blind` · `result` (these three belong to the working mode and to
+`models --import ... --out ...` · `prices [--plan|--import]` (and `budget --prices`) · `preferences` · `blind` · `result` (these three belong to the working mode and to
 calibration; `scripts/calibrate_claude_code.sh` runs both conditions) · `crop` (writes the commands that cut the
 sketch sheet into panels). `--snapshot <file>` swaps the model snapshot. Output in JSON. Exit code 1: the project has
 errors, listed in `errors`. Exit code 2: usage, file or input in the wrong format, with the message in `error`.

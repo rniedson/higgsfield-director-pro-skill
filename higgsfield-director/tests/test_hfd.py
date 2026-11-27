@@ -1289,5 +1289,193 @@ def _usage(args):
     return code, out.getvalue(), err.getvalue()
 
 
+class Prices(unittest.TestCase):
+    """The day's price table: quoted once a day of use (or on request), kept with its date in the project folder,
+    used to choose a model and plan; the ok still waits for the exact quote."""
+
+    def _answers(self, plan, credits):
+        return [{"params": r["params"], "credits": c} for r, c in zip(plan["requests"], credits)]
+
+    def _table(self, d, rows=None, date=None):
+        f = Path(d) / "prices.json"
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        (Path(d) / "a.json").write_text(json.dumps(self._answers(plan, [15, 35, 80, 12.5])), encoding="utf-8")
+        hfd.prices(f, Path(d) / "a.json", CATALOG)
+        if date:
+            x = json.loads(f.read_text(encoding="utf-8"))
+            x["date"] = date
+            f.write_text(json.dumps(x), encoding="utf-8")
+        return f
+
+    def test_the_plan_asks_one_quote_per_model_and_tier(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling", "veo", "nobody"])
+        cs4 = [r["params"] for r in plan["requests"] if r["params"]["model"] == "cs4"]
+        self.assertEqual([x["resolution"] for x in cs4], ["480p", "720p", "1080p"])
+        self.assertTrue(all(x["duration"] == 5 and x["generate_audio"] is True for x in cs4))
+        kling = [r["params"] for r in plan["requests"] if r["params"]["model"] == "kling"]
+        self.assertEqual(kling, [{"model": "kling", "prompt": "price check", "aspect_ratio": "16:9", "duration": 5,
+                                  "sound": "on"}])
+        veo = [r["params"] for r in plan["requests"] if r["params"]["model"] == "veo"]
+        self.assertEqual(veo[0]["duration"], 4)  # the nearest option to 5 s, the shorter on a tie
+        self.assertEqual(plan["not_in_snapshot"], ["nobody"])
+        self.assertTrue(all(r["tool"] == "estimate_video_cost" for r in plan["requests"]))
+        image = hfd.price_plan(CATALOG, "image", ["photo"])["requests"]
+        self.assertEqual(image, [{"tool": "estimate_image_cost",
+                                  "params": {"model": "photo", "prompt": "price check", "aspect_ratio": "1:1"}}])
+
+    def test_a_model_new_in_the_catalog_joins_the_plan_for_30_days(self):
+        cat = copy.deepcopy(CATALOG)
+        today = datetime.date.today()
+        cat["models"]["kling"]["added_at"] = (today - datetime.timedelta(days=3)).isoformat()
+        cat["models"]["veo"]["added_at"] = (today - datetime.timedelta(days=31)).isoformat()
+        plan = hfd.price_plan(cat, "video")
+        self.assertEqual(plan["new_in_catalog"], ["kling"])
+        self.assertEqual({r["params"]["model"] for r in plan["requests"]}, {"kling"})
+
+    def test_the_connectors_shortlist_joins_the_plan(self):
+        page = {"items": [{"id": "brand_new", "name": "Brand New", "output_type": "video", "parameters": [],
+                           "purpose": "Default video model"}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+            cat = hfd.load_models(Path(d) / "new.json")
+        self.assertEqual(cat["models"]["brand_new"]["purpose"], "Default video model")
+        cat["models"]["brand_new"].pop("added_at")
+        plan = hfd.price_plan(cat, "video")
+        self.assertEqual(plan["connector_shortlist"], ["brand_new"])
+        self.assertIn("brand_new", {r["params"]["model"] for r in plan["requests"]})
+
+    def test_the_import_keeps_prices_with_the_date_and_the_price_per_second(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            table = json.loads(f.read_text(encoding="utf-8"))
+        self.assertEqual(table["date"], datetime.date.today().isoformat())
+        row = next(x for x in table["rows"] if x["model"] == "cs4" and x["tier"] == "720p")
+        self.assertEqual((row["credits"], row["duration"], row["credits_per_second"]), (35, 5, 7.0))
+        self.assertEqual(set(table), {"format", "date", "rows"})
+
+    def test_the_import_takes_the_estimate_answer_as_it_comes(self):
+        plan = hfd.price_plan(CATALOG, "video", ["kling"])
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "a.json").write_text(json.dumps(
+                [{"params": plan["requests"][0]["params"], "cost": {"credits": 13, "credits_exact": 12.5}}]),
+                encoding="utf-8")
+            r = hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
+        self.assertEqual(r["rows"][0]["credits"], 12.5)
+
+    def test_the_import_refuses_what_it_cannot_trust(self):
+        for answers in ([{"params": {"model": "nobody", "duration": 5}, "credits": 1}],
+                        [{"params": {"model": "cs4", "duration": 5, "resolution": "720p"}, "credits": "35"}],
+                        [{"params": {"model": "cs4", "resolution": "720p"}, "credits": 35}], []):
+            with self.subTest(answers=answers), tempfile.TemporaryDirectory() as d:
+                (Path(d) / "a.json").write_text(json.dumps(answers), encoding="utf-8")
+                with self.assertRaises(hfd.Error):
+                    hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
+                self.assertFalse((Path(d) / "p.json").exists())
+
+    def test_reading_says_when_the_table_is_missing_or_not_from_today(self):
+        with tempfile.TemporaryDirectory() as d:
+            missing = hfd.prices(Path(d) / "none.json", catalog=CATALOG)
+            self.assertFalse(missing["defined"])
+            self.assertIn("prices --plan", missing["next"])
+            fresh = hfd.prices(self._table(d), catalog=CATALOG)
+            self.assertTrue(fresh["today"])
+            self.assertNotIn("next", fresh)
+            old = hfd.prices(self._table(d, date="2026-01-02"), catalog=CATALOG)
+            self.assertFalse(old["today"])
+            self.assertIn("not today", old["next"])
+
+    def test_reading_says_when_the_catalog_is_a_week_old(self):
+        cat = copy.deepcopy(CATALOG)
+        cat["generated_at"] = (datetime.date.today() - datetime.timedelta(days=8)).isoformat()
+        with tempfile.TemporaryDirectory() as d:
+            r = hfd.prices(Path(d) / "none.json", catalog=cat)
+            self.assertIn("models_explore list", r["next_catalog"])
+            cat["generated_at"] = datetime.date.today().isoformat()
+            self.assertNotIn("next_catalog", hfd.prices(Path(d) / "none.json", catalog=cat))
+
+    def test_budget_plans_from_the_table_and_keeps_real_quotes(self):
+        p = project(resolution="720p", shots=[{"id": "T01", "duration": 8, "subject": "A", "action": "B"},
+                                              {"id": "T02", "duration": 5, "subject": "A", "action": "B",
+                                               "test_cost": 1, "final_cost": 2}])
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            shots, filled = hfd._fill_from_table(p, f, CATALOG)
+        self.assertEqual(filled, ["T01"])
+        self.assertEqual((shots[0]["test_cost"], shots[0]["final_cost"]), (24.0, 56.0))  # 3 and 7 credits a second
+        self.assertEqual((shots[1]["test_cost"], shots[1]["final_cost"]), (1, 2))
+
+    def test_budget_from_the_table_needs_todays_table_and_a_known_tier(self):
+        p = project(resolution="720p")
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(p, Path(d) / "none.json", CATALOG)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(p, self._table(d, date="2026-01-02"), CATALOG)
+            f = self._table(d)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(project(model="veo", aspect_ratio="16:9"), f, CATALOG)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(project(resolution="4k"), f, CATALOG)
+
+    def test_cli_budget_with_the_table_is_marked_as_planning(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            snap = Path(d) / "s.json"
+            snap.write_text(json.dumps(CATALOG), encoding="utf-8")
+            proj = Path(d) / "p.json"
+            proj.write_text(json.dumps(project(resolution="720p")), encoding="utf-8")
+            code, out, _ = _silent(["budget", proj, "--prices", f, "--snapshot", snap, "--attempts", "1"])
+        r = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertTrue(r["planning"])
+        self.assertEqual(r["base"], 50.0)
+        self.assertTrue(any("price table" in w for w in r["warnings"]))
+        self.assertIn("quote the exact request", r["reminder"])
+
+    def test_cli_refuses_plan_and_import_together(self):
+        self.assertEqual(_silent(["prices", "--plan", "--import", "x.json"])[0], 2)
+
+    def test_the_day_says_what_changed_or_that_nothing_did(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        with tempfile.TemporaryDirectory() as d:
+            f, a = Path(d) / "p.json", Path(d) / "a.json"
+            a.write_text(json.dumps(self._answers(plan, [15, 35, 80, 12.5])), encoding="utf-8")
+            first = hfd.prices(f, a, CATALOG)
+            self.assertEqual(first["summary"], "first price table of this project")
+            same = hfd.prices(f, a, CATALOG)
+            self.assertEqual(same["changes"], [])
+            self.assertIn("no change since", same["summary"])
+            a.write_text(json.dumps(self._answers(plan, [15, 40, 80])), encoding="utf-8")
+            moved = hfd.prices(f, a, CATALOG)
+        self.assertIn("cs4 720p 5 s: 35 -> 40 credits", moved["changes"])
+        self.assertIn("not quoted today: kling 5 s", moved["changes"])
+        self.assertEqual(moved["summary"].split(" since ")[0], "2 change(s)")
+
+    def test_a_catalog_import_says_when_nothing_changed(self):
+        page = {"items": [{"id": m, "name": m, "output_type": "video", "parameters": []}
+                          for m in ("cs4", "veo", "silent", "kling")]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            r = hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+        self.assertEqual((r["added"], r["removed"]), ([], []))
+        self.assertIn("no model appeared or disappeared", r["summary"])
+
+    def test_a_catalog_import_lists_the_new_models_and_dates_them(self):
+        page = {"items": [{"id": "cs4", "name": "Cinema Studio 4.0", "output_type": "video", "parameters": []},
+                          {"id": "brand_new", "name": "Brand New", "output_type": "video", "parameters": []}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            r = hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+            snap = json.loads((Path(d) / "new.json").read_text(encoding="utf-8"))
+        self.assertEqual(r["added"], ["brand_new"])
+        self.assertIn("veo", r["removed"])
+        self.assertEqual(snap["models"]["brand_new"]["added_at"], datetime.date.today().isoformat())
+        self.assertNotIn("added_at", snap["models"]["cs4"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -16,13 +16,16 @@ Subcommands:
   models    [--type video|image] [--search term] [--id ID]
   models    --import list.json [more.json ...] --out snapshot.json
   preferences [--mode follow|price|ceiling] [--calibrate yes|no|later] [--file path]
+  prices    [--plan [--type video|image|all] [--models a,b]] [--import answers.json] [--file path]
+            the day's price table, for choosing and planning; budget <project.json> --prices uses it
   blind     --with with.json --without without.json --out <folder>   draws X and Y and writes the key unseen
   result    --key blind-key.json --vote X|Y|tie ... --out calibration/<file>.json
   crop      <sheet.png> <folder> name:x0,y0,x1,y1 [...]   ffmpeg commands that crop the sketch sheet
 
 --snapshot file.json (in validate, compile, export and models) uses another models snapshot instead of
 data/models.json. No command writes inside the skill folder unless the path is given. `preferences` uses
-.higgsfield-director/preferences.json in the current folder, unless --file.
+.higgsfield-director/preferences.json and `prices` .higgsfield-director/prices.json in the current folder, unless
+--file.
 
 Old names (6.x only): the Portuguese subcommands, options, fields and values of 5.x still work, translated with a
 warning that names the new one. They will be removed in 7.0.
@@ -457,6 +460,8 @@ def _normalize_model(m):
         "media": roles,
         "parameters": sorted(k for k in ps if k),
         "tags": m.get("tags") or [],
+        # the connector's own shortlist: the default model of the type and the models for specific tasks
+        **({"purpose": m["purpose"]} if is_text(m.get("purpose")) else {}),
     }
 
 
@@ -508,8 +513,13 @@ def import_models(files, out, base=None):
     for k in removed:
         del models[k]
     today = _dt.date.today().isoformat()
-    for n in new.values():
+    added = sorted(k for k in new if k not in models)
+    for k, n in new.items():
         n["generated_at"] = today
+        # the day a model first entered this snapshot: the day's price table quotes it for its first 30 days
+        n["added_at"] = today if k in added else (models.get(k) or {}).get("added_at")
+        if n["added_at"] is None:
+            del n["added_at"]
     models.update(new)
     dates = [m.get("generated_at") for m in models.values() if isinstance(m, dict) and m.get("generated_at")]
     snapshot = {"generated_at": min(dates) if dates else today, "models": models,
@@ -523,7 +533,10 @@ def import_models(files, out, base=None):
     types = {}
     for n in new.values():
         types[n["type"]] = types.get(n["type"], 0) + 1
-    return {"out": str(dest), "imported": len(new), "by_type": types, "removed": removed,
+    summary = (f"{len(added)} new model(s), {len(removed)} gone" if added or removed else
+               "no model appeared or disappeared since the previous snapshot")
+    return {"out": str(dest), "imported": len(new), "by_type": types, "added": added, "removed": removed,
+            "summary": summary,
             "total_in_snapshot": len(models), "generated_at": snapshot["generated_at"]}
 
 
@@ -1050,6 +1063,229 @@ def preferences(file=None, mode=None, calibrate=None):
     return {"defined": True, "file": str(path), **new, "reminder": REMINDER}
 
 
+# --------------------------------------------------------------------------- the day's price table
+
+PRICES = Path(".higgsfield-director") / "prices.json"
+# The starting list of the daily table: the "start with" column of references/models.md, as of 2026-11-24. The plan
+# adds to it what the live catalog says today: the connector's shortlist (`purpose`) and the models new in the
+# catalog, both brought in by the weekly import. Any other model is quoted on request (--models).
+PRICE_MODELS = {
+    "video": ("cinematic_studio_video_4_0", "seedance_2_5", "kling4_0", "kling3_0", "magi_2", "wan3_0",
+              "cinematic_studio_video_3_5", "minimax_h3", "veo3_1", "veo3_1_lite", "gemini_omni_flash_1_2"),
+    "image": ("soul_2", "soul_cinematic", "cinematic_studio_image", "nano_banana_pro", "ideogram_4_6", "gpt_image_2_6",
+              "seedream_5_5", "recraft_v4_1"),
+}
+NEW_MODEL_DAYS = 30   # a model new in the catalog joins the day's table for this many days
+CATALOG_DAYS = 7      # read the live catalog again after this many days, or when the operator asks
+PRICE_REMINDER = ("the day's table is for choosing a model and planning; before generating, quote the exact request "
+                  "and wait for the operator's ok (references/connector.md)")
+
+
+def _days_since(date):
+    if not (isinstance(date, str) and _real_date(date)):
+        return None
+    return (_dt.date.today() - _dt.date.fromisoformat(date)).days
+
+
+def _catalog_note(catalog):
+    """How old the catalog is, and what to do when it is a week old: new models appear every day."""
+    age = _days_since(catalog.get("generated_at"))
+    r = {"catalog_date": catalog.get("generated_at"), "catalog_age_days": age}
+    if age is None or age > CATALOG_DAYS:
+        r["next_catalog"] = (f"the models catalog is {age if age is not None else '?'} days old: once a week, or when "
+                             "the operator asks, read it again (models_explore list, video and image, every page) "
+                             "and import it into the project (models --import <pages> --snapshot .higgsfield-director/models.json "
+                             "--out .higgsfield-director/models.json, without --snapshot the first time); the result lists the models that appeared and "
+                             "disappeared, and the new ones join the day's price table")
+    return r
+
+
+def _tier(m):
+    """The parameter that changes a model's price tier and its options: resolution (or quality), else a mode such
+    as Kling's std/pro/4k when the model has no resolution."""
+    r = m.get("resolution") or {}
+    if r.get("options"):
+        return r["parameter"], list(r["options"])
+    modes = [x for x in (m.get("modes") or []) if x not in sum(MODE_NAMES.values(), ("t2v", "text-to-video"))]
+    if modes:
+        return "mode", modes
+    return None, [None]
+
+
+def _quote_duration(m, wanted):
+    d = m.get("duration") or {}
+    if d.get("options"):
+        return min(d["options"], key=lambda o: (abs(o - wanted), o))
+    minimum, maximum = _duration_limits(d)
+    dur = wanted
+    if maximum is not None:
+        dur = min(dur, maximum)
+    if minimum is not None and minimum > 0:
+        dur = max(dur, minimum)
+    return dur
+
+
+def price_plan(catalog, kind="video", models=None, duration=5):
+    """The estimate requests that make the day's table, one per model and price tier. It asks nothing of the
+    connector: the agent sends each one to the connector's estimate, which is free."""
+    if kind not in ("video", "image", "all"):
+        raise Error("--type must be video, image or all")
+    if not is_number(duration) or not 1 <= duration <= 60:
+        raise Error("--duration must be between 1 and 60 seconds")
+    kinds = ("video", "image") if kind == "all" else (kind,)
+    new_models = sorted(k for k, m in catalog.get("models", {}).items() if isinstance(m, dict)
+                        and m.get("type") in kinds and _days_since(m.get("added_at")) is not None
+                        and _days_since(m["added_at"]) <= NEW_MODEL_DAYS)
+    shortlist = sorted(k for k, m in catalog.get("models", {}).items() if isinstance(m, dict)
+                       and m.get("type") in kinds and is_text(m.get("purpose")))
+    ids = list(models) if models else list(dict.fromkeys(
+        shortlist + new_models + [i for k in kinds for i in PRICE_MODELS[k]]))
+    requests, missing = [], []
+    for mid in ids:
+        m = catalog.get("models", {}).get(mid)
+        if not isinstance(m, dict) or m.get("type") not in ("video", "image"):
+            missing.append(mid)
+            continue
+        ratio = "16:9" if "16:9" in (m.get("aspect_ratios") or []) else next(
+            (r for r in m.get("aspect_ratios") or [] if r != "auto"), None)
+        param, options = _tier(m)
+        for option in options:
+            params = {"model": mid, "prompt": "price check"}
+            if ratio:
+                params["aspect_ratio"] = ratio
+            if m["type"] == "video":
+                params["duration"] = _quote_duration(m, duration)
+                a = m.get("audio")
+                if a:
+                    params[a["parameter"]] = "on" if a.get("options") == ["on", "off"] else True
+            if param:
+                params[param] = option
+            requests.append({"tool": f"estimate_{m['type']}_cost", "params": params})
+    return {"requests": requests, "count": len(requests), "not_in_snapshot": missing,
+            "new_in_catalog": [] if models else new_models, "connector_shortlist": [] if models else shortlist,
+            "next": "send each params to its tool (free), save [{\"params\": ..., \"credits\": <credits_exact>}] in "
+                    "a file and run: hfd.py prices --import <file>",
+            "reminder": PRICE_REMINDER}
+
+
+def _price_row(catalog, item):
+    if not isinstance(item, dict) or not isinstance(item.get("params"), dict):
+        raise Error("each answer is {\"params\": {...}, \"credits\": N} (or the estimate's \"cost\")")
+    params = item["params"]
+    cost = item.get("cost") if isinstance(item.get("cost"), dict) else {}
+    credits = item.get("credits", cost.get("credits_exact", cost.get("credits")))
+    if not is_number(credits) or not 0 <= credits <= 100000:
+        raise Error(f"{params.get('model')}: 'credits' must be a number from 0 to 100000, as the estimate gave it")
+    m = catalog.get("models", {}).get(params.get("model"))
+    if not isinstance(m, dict):
+        raise Error(f"{params.get('model')!r} is not in the snapshot; import it first (models --import)")
+    param, _ = _tier(m)
+    row = {"model": m["id"], "type": m["type"], "tier_parameter": param, "tier": params.get(param) if param else None,
+           "credits": credits}
+    if m["type"] == "video":
+        dur = params.get("duration")
+        if not is_number(dur) or dur <= 0:
+            raise Error(f"{m['id']}: a video quote needs the 'duration' it was asked with")
+        a = m.get("audio")
+        row.update({"duration": dur, "audio": params.get(a["parameter"]) if a else None,
+                    "credits_per_second": round(credits / dur, 4)})
+    return row
+
+
+def prices(file=None, import_file=None, catalog=None):
+    """Read the day's table, or write it from the estimates' answers. It stores prices only, with their date."""
+    path = Path(file) if file else PRICES
+    today = _dt.date.today().isoformat()
+    if import_file is not None:
+        raw = read_json(import_file)
+        items = raw.get("answers") if isinstance(raw, dict) else raw
+        if not isinstance(items, list) or not items:
+            raise Error(f"{import_file}: a non-empty list of answers")
+        rows = [_price_row(catalog, x) for x in items]
+        table = {"format": 1, "date": today, "rows": sorted(rows, key=lambda r: (r["type"], r["model"], str(r["tier"])))}
+        previous = None
+        if path.exists():
+            try:
+                previous = read_json(path)
+            except Error:
+                previous = None
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(table, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        except OSError as e:
+            raise Error(f"could not write {path}: {e}")
+        return {"file": str(path), "date": today, "today": True, "count": len(rows), "rows": table["rows"],
+                **price_changes(previous, table), "reminder": PRICE_REMINDER}
+    note = _catalog_note(catalog) if catalog is not None else {}
+    if not path.exists():
+        return {"file": str(path), "defined": False, "today": False,
+                "next": "no price table yet: run hfd.py prices --plan, send each request to the connector's estimate "
+                        "(free) and import the answers", **note, "reminder": PRICE_REMINDER}
+    table = read_json(path)
+    if not (isinstance(table, dict) and table.get("format") == 1 and isinstance(table.get("rows"), list)
+            and isinstance(table.get("date"), str) and _real_date(table["date"])):
+        raise Error(f"{path}: not a price table (format 1, date, rows); make it again with prices --plan")
+    fresh = table["date"] == today
+    r = {"file": str(path), "defined": True, "date": table["date"], "today": fresh, "rows": table["rows"]}
+    video = [x for x in table["rows"] if x.get("type") == "video" and is_number(x.get("credits_per_second"))]
+    r["cheapest_video_per_second"] = [f"{x['model']} {x['tier'] or ''}".strip() + f": {x['credits_per_second']:g}"
+                                      for x in sorted(video, key=lambda x: x["credits_per_second"])[:5]]
+    if not fresh:
+        r["next"] = (f"the table is from {table['date']}, not today: refresh it (prices --plan) before choosing or "
+                     "planning by price")
+    r.update(note)
+    r["reminder"] = PRICE_REMINDER
+    return r
+
+
+def _row_key(r):
+    return (r.get("model"), r.get("tier"), r.get("duration"), r.get("audio"))
+
+
+def _row_name(r):
+    return " ".join(str(x) for x in (r.get("model"), r.get("tier"), f"{r['duration']:g} s" if is_number(r.get("duration"))
+                                     else None) if x)
+
+
+def price_changes(previous, table):
+    """What changed since the previous table, in words the operator reads: every price that moved, every row that
+    appeared or went away, or that nothing changed."""
+    if not (isinstance(previous, dict) and isinstance(previous.get("rows"), list)):
+        return {"changes": [], "summary": "first price table of this project"}
+    before = {_row_key(r): r for r in previous["rows"] if isinstance(r, dict)}
+    now = {_row_key(r): r for r in table["rows"]}
+    changes = []
+    for k, r in now.items():
+        old = before.get(k)
+        if old is None:
+            changes.append(f"new: {_row_name(r)} = {r['credits']:g} credits")
+        elif old.get("credits") != r["credits"]:
+            changes.append(f"{_row_name(r)}: {old.get('credits')} -> {r['credits']:g} credits")
+    gone = [k for k in before if k not in now]
+    changes += [f"not quoted today: {_row_name(before[k])}" for k in gone]
+    since = previous.get("date")
+    summary = (f"{len(changes)} change(s) since {since}" if changes else
+               f"no change since {since}: the same {len(now)} prices")
+    return {"changes": changes, "summary": summary}
+
+
+def price_from_table(table, model, tier, duration):
+    """A shot's planned cost from the day's table: the price per second of that model and tier, times the duration.
+    The draft is the cheapest tier of the same model. Returns (test, final) or raises naming what is missing."""
+    rows = [x for x in table["rows"] if x.get("model") == model and is_number(x.get("credits_per_second"))]
+    if not rows:
+        raise Error(f"{model} is not in the price table of {table['date']}: quote it (prices --plan --models {model})")
+    final = [x for x in rows if x.get("tier") == tier] if tier is not None else rows
+    if tier is not None and not final:
+        raise Error(f"{model} at {tier} is not in the price table of {table['date']}")
+    if tier is None and len({x.get('tier') for x in rows}) > 1:
+        raise Error(f"{model}: the table has several price tiers ({', '.join(str(x.get('tier')) for x in rows)}) and "
+                    "the project does not say which one goes out; quote the shot")
+    per_second = final[0]["credits_per_second"]
+    cheapest = min(x["credits_per_second"] for x in rows)
+    return round(cheapest * duration, 2), round(per_second * duration, 2)
+
+
 def _requests(x, name):
     items = x.get("requests") if isinstance(x, dict) else x
     if not isinstance(items, list) or not items:
@@ -1360,6 +1596,17 @@ def main(argv=None):
     s.add_argument("--final-cost", type=float)
     s.add_argument("--attempts", type=int)
     s.add_argument("--reserve", type=float, default=20.0)
+    s.add_argument("--prices", nargs="?", const="", metavar="TABLE",
+                   help="fill the shots without a price from today's table (default .higgsfield-director/prices.json)")
+    s.add_argument("--snapshot", help="models snapshot to use instead of data/models.json")
+    s = sub.add_parser("prices", help="the day's price table: --plan the free quotes, --import the answers, or read it")
+    s.add_argument("--plan", action="store_true", help="list the estimate requests that make the table")
+    s.add_argument("--type", choices=["video", "image", "all"], default="video")
+    s.add_argument("--models", help="comma-separated model ids, instead of the default list")
+    s.add_argument("--duration", type=float, default=5, help="seconds quoted for a video (default 5)")
+    s.add_argument("--import", dest="import_file", metavar="ANSWERS", help="the estimates' answers (JSON)")
+    s.add_argument("--file", help="default: .higgsfield-director/prices.json in the current folder")
+    s.add_argument("--snapshot", help="models snapshot to use instead of data/models.json")
     s = sub.add_parser("optics")
     s.add_argument("values", nargs="+", type=float)
     s = sub.add_parser("export", parents=[common])
@@ -1425,6 +1672,33 @@ class _Parser(argparse.ArgumentParser):
         raise SystemExit(2)
 
 
+def _fill_from_table(p, file, catalog):
+    """The project's shots, with the ones that have no price filled from today's table."""
+    table = prices(file or None)
+    if not table.get("defined"):
+        raise Error("no price table: " + table["next"])
+    if not table["today"]:
+        raise Error(table["next"])
+    m = catalog.get("models", {}).get(p.get("model"))
+    if not isinstance(m, dict):
+        raise Error(f"model {p.get('model')!r} is not in the snapshot; the table cannot price it")
+    param, _ = _tier(m)
+    # the project's resolution goes out as the model's resolution (or quality) parameter; without one, the model's
+    # default applies. A tier set by 'mode' (Kling 3.0's std/pro/4k) is not sent by compile, so it stays unknown.
+    tier = (p.get("resolution") or (m.get("resolution") or {}).get("default")) if param and param != "mode" else None
+    shots, filled = [], []
+    for t in p.get("shots") or []:
+        if isinstance(t, dict) and not (is_number(t.get("test_cost")) and is_number(t.get("final_cost"))):
+            dur = t.get("duration") if m["type"] == "video" else 1
+            if not is_number(dur) or dur <= 0:
+                raise Error(f"{t.get('id')}: no duration, so the table cannot price it")
+            test, final = price_from_table(table, m["id"], tier, dur)
+            t = {**t, "test_cost": test, "final_cost": final}
+            filled.append(str(t.get("id")))
+        shots.append(t)
+    return shots, filled
+
+
 def _run(a):
     loaded = []  # warnings about the input files (old names), put before the command's own warnings
     if a.cmd == "validate":
@@ -1448,7 +1722,16 @@ def _run(a):
             p = load_project(a.file, loaded)
             if not isinstance(p, dict):
                 raise Error("the project must be a JSON object")
-            r = budget(p.get("shots"), a.reserve, a.attempts)
+            shots, filled = p.get("shots"), []
+            if a.prices is not None:
+                shots, filled = _fill_from_table(p, a.prices, load_models(a.snapshot, loaded))
+            r = budget(shots, a.reserve, a.attempts)
+            if filled:
+                r["planning"] = True
+                r["warnings"].append(f"planned from the price table of {_dt.date.today().isoformat()} "
+                                     f"({', '.join(filled)}): price per second times the duration, the draft at the "
+                                     "model's cheapest tier; quote the exact requests before the ok")
+                r["reminder"] = PRICE_REMINDER
             r["warnings"] = loaded + r["warnings"]
         else:
             if a.shots is None or a.test_cost is None or a.final_cost is None:
@@ -1458,6 +1741,19 @@ def _run(a):
             n = a.attempts if a.attempts is not None else 2
             r = budget([{"id": f"T{i + 1:02}", "test_cost": a.test_cost, "final_cost": a.final_cost,
                          "attempts": n} for i in range(a.shots)], a.reserve)
+        code = 0
+    elif a.cmd == "prices":
+        if a.plan and a.import_file:
+            raise Error("use --plan or --import, not both")
+        cat = load_models(a.snapshot, loaded)
+        if a.plan:
+            ids = [x.strip() for x in a.models.split(",") if x.strip()] if a.models else None
+            dur = int(a.duration) if float(a.duration).is_integer() else a.duration
+            r = price_plan(cat, a.type, ids, dur)
+        else:
+            r = prices(a.file, a.import_file, cat)
+        if loaded:
+            r["warnings"] = loaded
         code = 0
     elif a.cmd == "optics":
         if len(a.values) not in (2, 3):
