@@ -21,10 +21,10 @@ flowchart TD
 |---|---|---|
 | [`SKILL.md`](SKILL.md) | the scope, the 9-step flow and the rules that never bend | the agent, on every request |
 | [`references/`](references/README.md) | 9 guides: flow, pre-production, prompt, vocabulary, models, connector, quality, modes, calibration | the agent, one guide per step |
-| [`scripts/`](scripts/README.md) | `hfd.py`, the offline helper, and the blind-test runner | the agent, in studio mode |
+| [`scripts/`](scripts/README.md) | `hfd.py`, the offline helper; `connector.py`, the day's quotes without the model; the blind-test runner | the agent, in studio mode |
 | [`data/`](data/README.md) | the dated model snapshot and the scoring weights | `hfd.py` |
 | [`templates/`](templates/README.md) | projects to copy and fill in | the agent, at the start of a studio job |
-| [`tests/`](tests/README.md) | 155 unit tests, standard library only | CI and contributors |
+| [`tests/`](tests/README.md) | 162 unit tests, standard library only | CI and contributors |
 | [`agents/openai.yaml`](agents/openai.yaml) | the name and default prompt Codex shows | Codex only |
 
 ## What happens on a request, for example

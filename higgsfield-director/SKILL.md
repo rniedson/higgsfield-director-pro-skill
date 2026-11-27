@@ -52,10 +52,12 @@ video stays with the skill that owns it.
 4. **Mode:** *quick* (one shot, one image, reviewing a prompt) or *studio* (2+ shots, something that repeats across
    shots, campaign, budget). Ask only what blocks; the rest becomes a stated assumption.
 5. **Prices and models of the day** (with the connector, before choosing or planning by price): `hfd.py prices`.
-   If the table is not from today, make it once: `prices --plan`, each request to the connector's estimate (free),
-   `prices --import`. Give that to a subagent on a small model when the harness has one
-   ([who makes the quotes](references/models.md#who-makes-the-quotes)). If it says the catalog is a week old, or the operator asks, read the catalog again and import it
-   into the project: new models join the table. Never write a price in a file of this skill (`references/models.md`).
+   If the table is not from today, make it once, the cheapest way available
+   ([who makes the quotes](references/models.md#who-makes-the-quotes)): `connector.py prices`, with no tokens, when
+   `connector.py status` says the operator is signed in; else `prices --plan`, each request to the connector's
+   estimate (free) and `prices --import`, in a subagent on a small model when the harness has one. If it says the
+   catalog is a week old, or the operator asks, read the catalog again and import it into the project: new models
+   join the table. Never write a price in a file of this skill (`references/models.md`).
 
 ## Workflow
 

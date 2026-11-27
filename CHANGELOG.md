@@ -13,6 +13,11 @@ All notable changes to this project are listed here. The format follows
   repository. The import says what changed since the previous table, or that nothing did. `budget --prices` plans
   the shots without a quote from today's table (price per second times the duration, the draft at the model's
   cheapest tier) and marks the result `"planning": true`; the ok still waits for the exact quote.
+- `scripts/connector.py`: the day's quotes with no model. It talks to the Higgsfield connector's server itself, on
+  the operator's own sign-in (`login`, once, in the browser; kept in `~/.config/higgsfield-director/`, readable by the
+  operator alone; `logout` revokes it), plans, quotes and imports with `hfd.py`, and calls only free tools, refusing
+  any other in code. On 2026-11-27 it made that day's 29 quotes in 43.2 s and brought the same 29 prices. 7 tests,
+  with no network.
 - The day's quotes can go to a subagent on a small model (`references/models.md`, "Who makes the quotes"), which
   types only the credits: `prices --import credits.json --plan-file plan.json` matches them to the saved plan.
 - New models: `models --import` dates each model that was not in the previous snapshot (`added_at`), lists the

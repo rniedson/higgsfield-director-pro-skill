@@ -1284,7 +1284,7 @@ class ThisFile(unittest.TestCase):
 
     def test_no_made_up_price_can_pass_for_a_real_one(self):
         """Every price written in these tests is 0 or at least 1000 credits (see the note above CATALOG)."""
-        text = Path(__file__).read_text(encoding="utf-8")
+        text = "\n".join(p.read_text(encoding="utf-8") for p in sorted(Path(__file__).parent.glob("test_*.py")))
         keys = "test_cost|final_cost|credits|credits_exact|custo_teste|custo_final"
         found = re.findall(r'"(?:' + keys + r')": *"?(-?[0-9][0-9.]*)', text)
         found += re.findall(r"\b(?:test_cost|final_cost)=(-?[0-9][0-9.]*)", text)
