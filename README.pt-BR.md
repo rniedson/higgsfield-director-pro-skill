@@ -419,17 +419,17 @@ Cada rodada às cegas, nossa ou de quem usa a skill, entra aqui por pull request
 <!-- calibration:start -->
 | Tipo de pedido | Rodadas | Escolheu com a skill | Escolheu sem | Empate | Nota do avaliador cego, com × sem |
 |---|---:|---:|---:|---:|---|
-| Anúncio de produto | 2 | 1 | 1 | 0 | 76,6 × 72,5 (2) |
+| Anúncio de produto | 3 | 1 | 2 | 0 | 68,7 × 73,2 (3) |
 | Cena com personagem | 2 | 1 | 1 | 0 | 67,8 × 68,2 (2) |
-| Trailer | 1 | 1 | 0 | 0 | 78,0 × 69,8 (1) |
+| Trailer | 2 | 1 | 1 | 0 | 79,5 × 70,7 (2) |
 | Institucional | 2 | 1 | 1 | 0 | 71,2 × 67,8 (2) |
-| **Total** | 7 | 4 | 3 | 0 | |
+| **Total** | 9 | 4 | 5 | 0 | |
 
-Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2; `5.1.0+0717197`: 2 × 0.
+Por versão da skill (com × sem): `5.1.0+982e7fa`: 0 × 1; `5.1.0+e4dee7b`: 2 × 0; `5.1.0+7b60cfa`: 0 × 2; `5.1.0+0717197`: 2 × 0; `5.1.0+0f8bcfb`: 0 × 2.
 
-A versão vista primeiro foi a escolhida em 4 de 6 rodada(s) com a ordem registrada.
+A versão vista primeiro foi a escolhida em 5 de 8 rodada(s) com a ordem registrada.
 
-Gerado por `tools/aggregate_calibration.py` a partir de 7 registro(s) em `calibration/`.
+Gerado por `tools/aggregate_calibration.py` a partir de 9 registro(s) em `calibration/`.
 <!-- calibration:end -->
 
 ## Do seu jeito: modos e calibração

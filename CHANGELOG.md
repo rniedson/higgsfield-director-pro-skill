@@ -7,6 +7,12 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Calibration: a fifth blind round, on two new requests (a bakery commercial, a fishing teaser), with
+  `5.1.0+0f8bcfb`. The person chose the version without the skill in 2 of 2; in round 1 the blind vote was for the
+  skill and changed after the key showed a shop sign with a name the request had ruled out. What changed because of
+  it: the request's own limits (no text, no brand, nobody real) go into every image and video prompt in plain words,
+  naming the surfaces that stay blank, with a behavior scenario. The other differences of the round (studio
+  references with tidy clothes, an arrival the model skipped) are lessons only, not rules.
 - Calibration: a fourth blind round ran the same two requests again with the fix below (`5.1.0+0717197`), with new
   videos on both sides. The person chose the version with the skill in 2 of 2 ("could pass for real footage"); the
   blind judge's score chose the other in both, so it is now a second opinion only. The READMEs' lead starts there.

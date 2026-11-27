@@ -1,0 +1,42 @@
+{
+ "format": 1,
+ "date": "2026-11-26",
+ "skill_version": "5.1.0+0f8bcfb",
+ "category": "product-ad",
+ "model": "cinematic_studio_video_4_0",
+ "shots": 3,
+ "cost_credits": 96,
+ "image_reference": true,
+ "vote": "without",
+ "rater": "blind-auto",
+ "seen_first": "with",
+ "reason": "Blind vote was Y; changed to X after the key: Y showed a shop sign with a name though the request said no brand, no text.",
+ "scores": {
+  "without": {
+   "total": 74.5,
+   "criteria": {
+    "identity": 7,
+    "motion": 6,
+    "camera": 8,
+    "lighting": 9,
+    "materials": 8,
+    "continuity": 8,
+    "briefing": 8,
+    "audio": 5
+   }
+  },
+  "with": {
+   "total": 53.0,
+   "criteria": {
+    "identity": 5,
+    "motion": 8,
+    "camera": 4,
+    "lighting": 6,
+    "materials": 8,
+    "continuity": 4,
+    "briefing": 3,
+    "audio": 5
+   }
+  }
+ }
+}

@@ -19,7 +19,9 @@
 - [ ] In an ad, each shot has a moment of impact (an action on the product, with sound tied to it), not just a camera
       movement.
 - [ ] The speech fits the duration; the speaker is labeled.
-- [ ] No loose negative instruction ("no X") where the positive can be said.
+- [ ] No loose negative instruction ("no X") where the positive can be said, except the request's own limits (no
+      text, no brand, nobody real): those go into every image and video prompt in plain words, with the surfaces
+      that stay blank (`references/prompt.md` §1).
 - [ ] Uploaded references belong to the operator or are authorized; a real person only with consent.
 - [ ] Cost estimated by the connector and an explicit "ok" from the operator with the total.
 
@@ -60,6 +62,7 @@ shots, both the first shot of the video, at about 2.1 and 3.6 s, once on each si
 | Correct but lukewarm shot | only camera and setting, nothing happens | one moment of impact per shot, with sound tied to it | blind vote against an alternative version |
 | The action ends early and the shot holds still | the action was written for less time than the clip: one continuous motion and a described final frame (a 10 s fight over at about 6.5 s, one blind round) | timed beats up to the clip's end, with the final state in the last beat (`references/prompt.md` §1) | motion in the last third of the shot |
 | Clean but artificial, "looks made with AI" | recipes against defects in every prompt as prevention (constant light and exposure, a camera at constant speed), posed people, interface sounds (one blind round, both request types) | keep only the recipes for a defect seen; the atmosphere the place would have; people acting among themselves; the place's own sound (`references/prompt.md` §1 and §3) | blind vote against an alternative version |
+| A sign, label or shirt with lettering or a made-up name | the request's "no text, no brand" left out of the image or video prompt, or rephrased as "plain" for one surface (a bakery's sign in one blind round, crests on shirts in another) | write the limit as asked, in every prompt, and name each surface that could carry lettering (`references/prompt.md` §1) | the frame at full size: signs, clothes, packaging, screens |
 
 Two failures in a row on the same shot: **replan** (another framing, another model, a shorter shot) instead of
 piling up constraints. A hypothesis is not a cause: record what changed and what happened. When every attempt fails

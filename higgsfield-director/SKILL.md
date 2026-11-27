@@ -96,7 +96,11 @@ video stays with the skill that owns it.
   is written in timed beats up to its end; every person in frame gets a line of their own (`references/prompt.md`
   §1). The opposite of all three lost both rounds of a blind test (2026-11-26).
 - **Duration, aspect ratio, resolution and audio go in the parameters**, not in the prompt text.
-- **Describe what should appear**, not what should not; a negative field only if the model has one.
+- **Describe what should appear**, not what should not; a negative field only if the model has one. **The
+  request's own limits are the exception:** what the person ruled out (text or a brand on screen, a real person,
+  music) goes into every image and video prompt in plain words, "no text, letters, logos or brand names", naming
+  the surfaces where it would show (a shop sign, shirts, a screen). Left out or rephrased as "plain", it gave a
+  shop sign with a name that lost a blind round, and crests on plain shirts in another (2026-11-26).
 - **Do not score what you have not seen.** A score requires evidence per criterion; without vision, the evaluation
   is the operator's.
 - **People and rights:** a real person's face or voice only from someone who consented (the operator declares it);

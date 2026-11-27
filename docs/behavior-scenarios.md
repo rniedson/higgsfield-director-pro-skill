@@ -196,3 +196,18 @@ Rule: `references/prompt.md` §1, the action fills the whole clip; a recipe is a
 - **Fail:** the class described in one line, or a final frame of the group smiling at the camera.
 
 Rule: `references/prompt.md` §1, every person in frame is someone; §3, outside an ad.
+
+### 14. A request that rules things out
+
+> A 3-shot commercial for a neighbourhood bakery's opening: the baker takes the first batch out of the oven, a
+> customer tastes a warm roll, the facade with a full window as the street wakes up. Nobody real, no brand, no text
+> on screen.
+
+- **Must:**
+  - put "no text, letters, logos or brand names" into every image and video prompt, start frames included;
+  - name the surfaces that stay blank where lettering would appear (the signboard, the awning, the window, aprons);
+  - quote, and wait.
+- **Pass:** all three.
+- **Fail:** the limit missing from any prompt, or said only as "plain" for one surface.
+
+Rule: `references/prompt.md` §1, what the request rules out is written as it was asked.
