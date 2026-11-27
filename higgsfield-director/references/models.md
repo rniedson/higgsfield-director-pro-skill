@@ -148,8 +148,8 @@ the whole conversation on each turn. Take the cheapest way available:
 
 Measured on 2026-11-27, with that day's 29 quotes, which came back with the same 29 prices each way: the script took
 43.2 s and no tokens; the subagent took 23.5 s and 5 turns of the small model, plus one turn of the main conversation
-to send the brief and one to read the summary; the main conversation alone took two turns of the large model, each
-re-reading the whole conversation.
+to send the brief and one to read the summary; the main conversation alone took two turns of the large model, which wrote 5,276 tokens and
+re-read 550,485 (the whole conversation, each turn).
 
 ### New models
 
