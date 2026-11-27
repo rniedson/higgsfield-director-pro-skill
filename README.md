@@ -222,7 +222,7 @@ flowchart TD
 
 | | Part | What it holds | When it comes in |
 |:---:|---|---|---|
-| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | scope, the 9-step flow, hard rules, who handles what (165 lines) | every request: the agent reads it first |
+| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | scope, the 9-step flow, hard rules, who handles what | every request: the agent reads it first |
 | **2** | [`references/`](higgsfield-director/references/README.md) | 9 guides: flow · pre-production · prompt · vocabulary · models · connector · quality · modes · calibration | only the guide the current step asks for |
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
 | **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
