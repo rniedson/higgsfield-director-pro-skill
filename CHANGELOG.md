@@ -5,6 +5,12 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+### Added
+
+- A demo in the README: a 10 s kung fu fight between the maintainer's own character and a robot clone of himself,
+  made one step at a time (four stills, a draft, the 1080p final), with how it was made, the prompt and the sound in
+  `docs/demo/`. `tools/public_boundary.py` allows exactly those three media files, by the maintainer's decision.
+
 ### Changed
 
 - The skill's work is now the process, not a better prompt. After five blind rounds, where what the skill added to

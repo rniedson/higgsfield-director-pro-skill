@@ -33,6 +33,15 @@ class PublicBoundaryTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertTrue(check_public_path(path))
 
+    def test_the_readme_demo_passes_and_nothing_beside_it(self):
+        for path in ("docs/demo/kung-fu-vs-robot-clone.mp4", "docs/demo/kung-fu-vs-robot-clone.jpg",
+                     "docs/demo/how-it-was-made.jpg"):
+            with self.subTest(path=path):
+                self.assertEqual([], check_public_path(path))
+        for path in ("docs/demo/another-take.mp4", "docs/demo/kung-fu-vs-robot-clone.mov", "docs/kung-fu.mp4"):
+            with self.subTest(path=path):
+                self.assertTrue(check_public_path(path))
+
     def test_agent_instruction_files_pass(self):
         for path in ("AGENTS.md", "CLAUDE.md"):
             with self.subTest(path=path):
