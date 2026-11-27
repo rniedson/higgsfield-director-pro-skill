@@ -1192,7 +1192,21 @@ def _price_row(catalog, item):
     return row
 
 
-def prices(file=None, import_file=None, catalog=None):
+def _answers_from_credits(credits, plan_file, name):
+    """Only the credits, in the order of `prices --plan`: whoever quotes types numbers, not the requests again."""
+    if not plan_file:
+        raise Error(f"{name}: a list of credits needs --plan-file, the plan it answers")
+    plan = read_json(plan_file)
+    reqs = plan.get("requests") if isinstance(plan, dict) else None
+    if not isinstance(reqs, list) or not all(isinstance(r, dict) and isinstance(r.get("params"), dict) for r in reqs):
+        raise Error(f"{plan_file}: not the output of prices --plan")
+    if len(reqs) != len(credits):
+        raise Error(f"{name}: {len(credits)} credits for the {len(reqs)} requests of {plan_file}")
+    # null is a request that came back with no price: it is left out, and price_changes names it
+    return [{"params": r["params"], "credits": c} for r, c in zip(reqs, credits) if c is not None]
+
+
+def prices(file=None, import_file=None, catalog=None, plan_file=None):
     """Read the day's table, or write it from the estimates' answers. It stores prices only, with their date."""
     path = Path(file) if file else PRICES
     today = _dt.date.today().isoformat()
@@ -1201,6 +1215,10 @@ def prices(file=None, import_file=None, catalog=None):
         items = raw.get("answers") if isinstance(raw, dict) else raw
         if not isinstance(items, list) or not items:
             raise Error(f"{import_file}: a non-empty list of answers")
+        if all(x is None or is_number(x) for x in items):
+            items = _answers_from_credits(items, plan_file, import_file)
+            if not items:
+                raise Error(f"{import_file}: no request came back with a price")
         rows = [_price_row(catalog, x) for x in items]
         table = {"format": 1, "date": today, "rows": sorted(rows, key=lambda r: (r["type"], r["model"], str(r["tier"])))}
         previous = None
@@ -1604,7 +1622,10 @@ def main(argv=None):
     s.add_argument("--type", choices=["video", "image", "all"], default="video")
     s.add_argument("--models", help="comma-separated model ids, instead of the default list")
     s.add_argument("--duration", type=float, default=5, help="seconds quoted for a video (default 5)")
-    s.add_argument("--import", dest="import_file", metavar="ANSWERS", help="the estimates' answers (JSON)")
+    s.add_argument("--import", dest="import_file", metavar="ANSWERS",
+                   help="the estimates' answers (JSON): [{\"params\": ..., \"credits\": N}], or only the credits "
+                        "in the plan's order, with --plan-file")
+    s.add_argument("--plan-file", metavar="PLAN", help="the saved output of prices --plan that a list of credits answers")
     s.add_argument("--file", help="default: .higgsfield-director/prices.json in the current folder")
     s.add_argument("--snapshot", help="models snapshot to use instead of data/models.json")
     s = sub.add_parser("optics")
@@ -1751,7 +1772,7 @@ def _run(a):
             dur = int(a.duration) if float(a.duration).is_integer() else a.duration
             r = price_plan(cat, a.type, ids, dur)
         else:
-            r = prices(a.file, a.import_file, cat)
+            r = prices(a.file, a.import_file, cat, a.plan_file)
         if loaded:
             r["warnings"] = loaded
         code = 0

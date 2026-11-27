@@ -13,6 +13,8 @@ All notable changes to this project are listed here. The format follows
   repository. The import says what changed since the previous table, or that nothing did. `budget --prices` plans
   the shots without a quote from today's table (price per second times the duration, the draft at the model's
   cheapest tier) and marks the result `"planning": true`; the ok still waits for the exact quote.
+- The day's quotes can go to a subagent on a small model (`references/models.md`, "Who makes the quotes"), which
+  types only the credits: `prices --import credits.json --plan-file plan.json` matches them to the saved plan.
 - New models: `models --import` dates each model that was not in the previous snapshot (`added_at`), lists the
   models that appeared and disappeared, or says that none did, and a new model joins the day's price table for 30
   days. `hfd.py prices` says when the project's catalog is more than 7 days old.

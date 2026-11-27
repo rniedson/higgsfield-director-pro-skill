@@ -1364,6 +1364,32 @@ class Prices(unittest.TestCase):
             r = hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
         self.assertEqual(r["rows"][0]["credits"], 12.5)
 
+    def test_a_list_of_credits_takes_the_params_from_the_plan(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        n = len(plan["requests"])
+        self.assertGreater(n, 1)
+        credits = [10.0 * (i + 1) for i in range(n - 1)] + [None]
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
+            r = hfd.prices(Path(d) / "p.json", Path(d) / "c.json", CATALOG, Path(d) / "plan.json")
+        self.assertEqual(r["count"], n - 1)
+        first = plan["requests"][0]["params"]
+        row = next(x for x in r["rows"] if x["model"] == first["model"]
+                   and x["tier"] == first.get(x["tier_parameter"] or "", None))
+        self.assertEqual(row["credits"], 10.0)
+
+    def test_a_list_of_credits_needs_its_own_plan(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            for credits, plan_file in (([1] * len(plan["requests"]), None), ([1], Path(d) / "plan.json"),
+                                       ([None] * len(plan["requests"]), Path(d) / "plan.json")):
+                (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
+                with self.subTest(credits=credits[:2], plan_file=plan_file), self.assertRaises(hfd.Error):
+                    hfd.prices(Path(d) / "p.json", Path(d) / "c.json", CATALOG, plan_file)
+            self.assertFalse((Path(d) / "p.json").exists())
+
     def test_the_import_refuses_what_it_cannot_trust(self):
         for answers in ([{"params": {"model": "nobody", "duration": 5}, "credits": 1}],
                         [{"params": {"model": "cs4", "duration": 5, "resolution": "720p"}, "credits": "35"}],

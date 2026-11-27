@@ -100,9 +100,10 @@ repository. The table is read on every day of use and made again when it is not 
 ```bash
 python3 <skill>/scripts/hfd.py prices                        # today: true or false; the cheapest per second
 python3 <skill>/scripts/hfd.py prices --plan > plan.json     # one request per model and tier, video by default
-# send each request to its tool (estimate_video_cost / estimate_image_cost, free) and save
-# [{"params": <the request's params>, "credits": <credits_exact>}, ...] in answers.json
-python3 <skill>/scripts/hfd.py prices --import answers.json
+# send each request to its tool (estimate_video_cost / estimate_image_cost, free) and save the credits
+# (credits_exact) in the order of the requests, null where an answer has no price: [15, 35, 80, ...]
+python3 <skill>/scripts/hfd.py prices --import credits.json --plan-file plan.json
+# or, with the params typed again: --import answers.json with [{"params": {...}, "credits": N}, ...]
 python3 <skill>/scripts/hfd.py budget project.json --prices  # a shot with no quote is planned from the table
 ```
 
@@ -116,6 +117,23 @@ python3 <skill>/scripts/hfd.py budget project.json --prices  # a shot with no qu
   per second by the shot's duration and plans the draft at the model's cheapest tier. Its result says
   `"planning": true`: it is for choosing and planning, not for the ok.
 - `budget --prices` refuses a table that is not from today, and a model or tier the table does not have.
+
+### Who makes the quotes
+
+Each quote is a small tool call. In the main conversation, though, the large model writes every request and re-reads
+the whole conversation on each turn. When the harness has subagents, give the quotes to one on a small model (in
+Claude Code, the Agent tool with `model: haiku`), with this brief:
+
+1. In the project folder, run `hfd.py prices --plan > plan.json`.
+2. Call the connector's estimate once per request, with that request's `params` unchanged, all in one message. Call
+   no other tool of the connector: no generation, no upload.
+3. Write the credits in the order of the requests, as a JSON list of numbers, `null` where an answer has no price,
+   in `credits.json`.
+4. Run `hfd.py prices --import credits.json --plan-file plan.json` and return only its `summary` and `changes`.
+
+Measured on 2026-11-27: a subagent on the small model made that day's 29 quotes in 23.5 s and 5 turns, and brought
+the same 29 prices as the main conversation. The main conversation then spends one turn to send the brief and one to
+read the summary.
 
 ### New models
 
