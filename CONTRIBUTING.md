@@ -74,6 +74,9 @@ as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check r
   did (as `hfd.py prices` and `models --import` do). A figure that must stay is a dated record of what was measured.
   A change that writes current data by hand will be asked to become a routine
   ([AGENTS.md](AGENTS.md#no-data-that-goes-stale)).
+- **Scripts before the model.** Every step the agent takes by itself costs tokens; a step a script takes costs
+  none. If a change asks the agent to compute, check, look up, convert or repeat something, make it a command of
+  `hfd.py` and have the instruction call it ([AGENTS.md](AGENTS.md#scripts-before-the-model)).
 - **Keep the project clearly unofficial.** Do not add Higgsfield's logo or wording that suggests the skill is
   official, endorsed or supported by Higgsfield. Use the name only to say which service the skill works with. Keep
   the notice at the top of both READMEs, the *Disclaimer* / *Aviso* sections and the line at the top of `SKILL.md`.

@@ -20,6 +20,14 @@ a routine instead (a command of `hfd.py` the agent runs on each day of use, or o
 live source and tells the user what changed since the last run, or that nothing changed. A figure that must stay is
 written as a dated record of what was measured, never as a current fact. Hard-coded data is how a skill dies slowly.
 
+## Scripts before the model
+
+What a script can do, a script does. The agent that runs this skill pays in tokens for every step it takes itself; a
+step that `hfd.py` takes for it costs nothing. Before adding an instruction that asks the agent to work something out
+(count, check, look up, convert, merge files, repeat a request), ask whether a command could do it. If it could, write
+the command and make the instruction call it. Leave to the model only what needs judgement: the operator's request,
+the plan, the prompt, reading a result.
+
 ## Also
 
 - Everything in the repository is in English, file names included

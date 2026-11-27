@@ -20,6 +20,10 @@ All notable changes to this project are listed here. The format follows
   days. `hfd.py prices` says when the project's catalog is more than 7 days old.
 - A rule for every contributor and agent (`AGENTS.md`, `CONTRIBUTING.md`): question every piece of hard-coded data;
   what can go stale becomes a routine that refreshes it and reports what changed.
+- A second rule (`AGENTS.md`, `CONTRIBUTING.md`): what a script can do, a script does, so that the agent spends no
+  tokens on it.
+- Tests: the made-up prices are now 0 or at least 1000 credits, so that none can pass for a model's price, and a test
+  keeps it so. They used to copy that day's real quotes (15, 35, 80, 12.5).
 - A guide in each main folder (`higgsfield-director/` and its `references/`, `scripts/`, `templates/`, `data/` and
   `tests/`; `docs/`, `tools/`, `examples/`): what the folder is for, with a diagram and, where it helps, pictures.
   The skill never loads them; `check_repo.py` and the public boundary allow a `README.md` there.

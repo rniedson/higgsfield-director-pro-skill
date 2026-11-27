@@ -67,7 +67,7 @@ Para um prompt rápido ou uma imagem só, o plano é o trabalho inteiro: não h�
 https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
 Uma luta de 10 s entre o personagem do próprio mantenedor e um clone robô dele, feita um passo de cada vez: quatro
-imagens para escolher o visual (0,48 crédito), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
+imagens para escolher o visual (0,48 crédito, cotado em 26/11/2026), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
 partir do rascunho aprovado (160). A ideia de se dividir em cópias entrou antes do rascunho, enquanto mudar o plano
 ainda era de graça. [Como foi feito](docs/demo/README.md) (em inglês), com o prompt e o som.
 
@@ -185,7 +185,7 @@ flowchart TD
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 154 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 155 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -216,7 +216,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/models.json              retrato datado do catálogo do conector (122 modelos)
   data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/                        154 testes (unittest)
+  tests/                        155 testes (unittest)
 examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
@@ -549,7 +549,7 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 154 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
+| Testes | 155 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |

@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import hfd  # noqa: E402
 
+# The prices in these tests are made up: always 0 or at least 1000 credits, which no 5 s quote costs, so none of them
+# can pass for a model's price. A real price comes from the day's table (hfd.py prices), never from a file of this
+# repository. ThisFile.test_no_made_up_price_can_pass_for_a_real_one keeps it so.
 CATALOG = {
     "generated_at": "2099-01-01",
     "models": {
@@ -239,9 +242,9 @@ class Rules(unittest.TestCase):
 
 class Calculations(unittest.TestCase):
     def test_budget(self):
-        r = hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=20)
-        self.assertEqual(r["base"], 55)
-        self.assertEqual(r["total"], 66)
+        r = hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=20)
+        self.assertEqual(r["base"], 5000)
+        self.assertEqual(r["total"], 6000)
 
     def test_budget_without_price_refuses(self):
         with self.assertRaises(hfd.Error):
@@ -408,14 +411,14 @@ class Robustness(unittest.TestCase):
 
 class Review(unittest.TestCase):
     def test_budget_rounds(self):
-        ts = [{"id": f"T0{i}", "test_cost": 7.5, "final_cost": 0.1} for i in range(3)]
-        r = hfd.budget(ts, reserve=20, attempts=3)
-        self.assertEqual(r["base"], 67.8)
-        self.assertEqual(r["total"], 81.36)
+        ts = [{"id": f"T0{i}", "test_cost": 1000.2, "final_cost": 1000.2} for i in range(3)]
+        r = hfd.budget(ts, reserve=20, attempts=3)  # unrounded: 12002.400000000001 and 14402.880000000001
+        self.assertEqual(r["base"], 12002.4)
+        self.assertEqual(r["total"], 14402.88)
 
     def test_attempts_of_the_shot_warn(self):
-        ts = [{"id": "T01", "test_cost": 1, "final_cost": 1, "attempts": 5},
-              {"id": "T02", "test_cost": 1, "final_cost": 1}]
+        ts = [{"id": "T01", "test_cost": 1000, "final_cost": 1000, "attempts": 5},
+              {"id": "T02", "test_cost": 1000, "final_cost": 1000}]
         r = hfd.budget(ts, attempts=1)
         self.assertEqual([t["attempts"] for t in r["shots"]], [5, 1])
         self.assertEqual(len(r["warnings"]), 1)
@@ -699,8 +702,8 @@ OLD_FULL_PROJECT = {
                  "falas": [{"quem": "A", "idioma": "English", "texto": "Hi."}],
                  "inicio": {"P01": {"position": "plinth"}}, "fim": {"P01": {"position": "plinth"}},
                  "mudancas_aprovadas": ["P01.position"], "camera_xy": [1, -2], "cruzamento_motivado": True,
-                 "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}], "custo_teste": 10,
-                 "custo_final": 35, "tentativas": 3, "referencias": ["ref"], "preservar": ["shape"],
+                 "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}], "custo_teste": 1000,
+                 "custo_final": 3000, "tentativas": 3, "referencias": ["ref"], "preservar": ["shape"],
                  "restricoes": ["No text."], "alvo": "the label"}],
 }
 NEW_FULL_PROJECT = {
@@ -717,8 +720,8 @@ NEW_FULL_PROJECT = {
                "dialogue": [{"speaker": "A", "language": "English", "text": "Hi."}],
                "start": {"P01": {"position": "plinth"}}, "end": {"P01": {"position": "plinth"}},
                "approved_changes": ["P01.position"], "camera_xy": [1, -2], "motivated_crossing": True,
-               "timeline": [{"track": "camera", "from": 0, "to": 3}], "test_cost": 10,
-               "final_cost": 35, "attempts": 3, "references": ["ref"], "preserve": ["shape"],
+               "timeline": [{"track": "camera", "from": 0, "to": 3}], "test_cost": 1000,
+               "final_cost": 3000, "attempts": 3, "references": ["ref"], "preserve": ["shape"],
                "constraints": ["No text."], "target": "the label"}],
 }
 
@@ -780,9 +783,9 @@ class OldNames(unittest.TestCase):
                             "camera": "slow orbit", "som": "soft glass chime",
                             "falas": [{"quem": "A", "idioma": "English", "texto": "Hi."}],
                             "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}],
-                            "custo_teste": 10, "custo_final": 35, "tentativas": 1}]}
+                            "custo_teste": 1000, "custo_final": 3000, "tentativas": 1}]}
         new = shot(project(), sound="soft glass chime", dialogue=[{"speaker": "A", "language": "English", "text": "Hi."}],
-                   timeline=[{"track": "camera", "from": 0, "to": 3}], test_cost=10, final_cost=35, attempts=1)
+                   timeline=[{"track": "camera", "from": 0, "to": 3}], test_cost=1000, final_cost=3000, attempts=1)
         old_f, new_f = self.write("old.json", old), self.write("new.json", new)
         for cmd in ("validate", "compile", "budget"):
             with self.subTest(cmd):
@@ -908,8 +911,8 @@ class MutationKillersOldNames(unittest.TestCase):
     """Mutants of the old-name translation that the first suite let live."""
 
     def test_old_budget_command_and_reserve_option_still_work(self):  # OLD03, OLD04
-        old = _cli("orcamento", "--tomadas", "1", "--custo-teste", "10", "--custo-final", "35", "--reserva", "30")
-        new = _cli("budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35", "--reserve", "30")
+        old = _cli("orcamento", "--tomadas", "1", "--custo-teste", "1000", "--custo-final", "3000", "--reserva", "30")
+        new = _cli("budget", "--shots", "1", "--test-cost", "1000", "--final-cost", "3000", "--reserve", "30")
         self.assertEqual(old[:2], new[:2])
 
     def test_old_image_mode_translates(self):  # OLD05
@@ -966,20 +969,20 @@ class MutationKillers(unittest.TestCase):
 
     # ----- money
     def test_budget_reports_the_reserve_in_credits(self):  # BUD03
-        r = hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=20)
-        self.assertEqual(r["reserve"], 11.0)
+        r = hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=20)
+        self.assertEqual(r["reserve"], 1000.0)
 
     def test_cli_budget_applies_default_reserve_and_attempts(self):  # BUD04, BUD07
-        args = ["budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35"]
-        self.assertEqual(json.loads(_cli(*args)[1])["total"], 66.0)
-        self.assertEqual(json.loads(_cli(*args, "--attempts", "0")[1])["total"], 42.0)
+        args = ["budget", "--shots", "1", "--test-cost", "1000", "--final-cost", "3000"]
+        self.assertEqual(json.loads(_cli(*args)[1])["total"], 6000.0)
+        self.assertEqual(json.loads(_cli(*args, "--attempts", "0")[1])["total"], 3600.0)
 
     def test_budget_refuses_a_negative_reserve(self):  # BUD05
         with self.assertRaises(hfd.Error):
-            hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=-20)
+            hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=-20)
 
     def test_budget_refuses_a_partial_or_negative_price(self):  # BUD09, BUD10
-        for t in ({"id": "T01", "test_cost": 10}, {"id": "T01", "test_cost": -10, "final_cost": 35}):
+        for t in ({"id": "T01", "test_cost": 1000}, {"id": "T01", "test_cost": -1000, "final_cost": 3000}):
             with self.subTest(t=t), self.assertRaises(hfd.Error):
                 hfd.budget([t])
 
@@ -1253,8 +1256,9 @@ class ReviewFixes(unittest.TestCase):
             hfd.score(x)
 
     def test_budget_figures_add_up(self):
-        r = hfd.budget([{"id": "T01", "test_cost": 0, "final_cost": 12.5, "attempts": 0}], reserve=15)
-        self.assertEqual((r["base"], r["reserve"], r["total"]), (12.5, 1.88, 14.38))
+        r = hfd.budget([{"id": "T01", "test_cost": 0, "final_cost": 1000.1, "attempts": 0}], reserve=15)
+        # rounding the raw total would give 1150.12, which is not 1000.1 + 150.01
+        self.assertEqual((r["base"], r["reserve"], r["total"]), (1000.1, 150.01, 1150.11))
 
     def test_frame_width_uses_the_same_thin_lens_as_the_focus(self):
         self.assertAlmostEqual(hfd.optics(85, 2, 1.8)["frame_width_m"], 0.811, places=3)
@@ -1278,6 +1282,18 @@ class ThisFile(unittest.TestCase):
         self.assertEqual(len(re.findall(r"^if __name__ ==", text, re.M)), 1)
         self.assertTrue(text.rstrip().endswith("unittest.main()"))
 
+    def test_no_made_up_price_can_pass_for_a_real_one(self):
+        """Every price written in these tests is 0 or at least 1000 credits (see the note above CATALOG)."""
+        text = Path(__file__).read_text(encoding="utf-8")
+        keys = "test_cost|final_cost|credits|credits_exact|custo_teste|custo_final"
+        found = re.findall(r'"(?:' + keys + r')": *"?(-?[0-9][0-9.]*)', text)
+        found += re.findall(r"\b(?:test_cost|final_cost)=(-?[0-9][0-9.]*)", text)
+        found += re.findall(r'"--(?:test-cost|final-cost|custo-teste|custo-final)", *"(-?[0-9][0-9.]*)"', text)
+        for listed in re.findall(r"_answers\(plan, \[([^\]]*)\]", text):
+            found += re.findall(r"-?[0-9][0-9.]*", listed)
+        self.assertGreater(len(found), 30)
+        self.assertEqual([v for v in found if float(v) != 0 and abs(float(v)) < 1000], [])
+
 
 def _usage(args):
     out, err = io.StringIO(), io.StringIO()
@@ -1299,7 +1315,7 @@ class Prices(unittest.TestCase):
     def _table(self, d, rows=None, date=None):
         f = Path(d) / "prices.json"
         plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
-        (Path(d) / "a.json").write_text(json.dumps(self._answers(plan, [15, 35, 80, 12.5])), encoding="utf-8")
+        (Path(d) / "a.json").write_text(json.dumps(self._answers(plan, [5000, 10000, 20000, 4000])), encoding="utf-8")
         hfd.prices(f, Path(d) / "a.json", CATALOG)
         if date:
             x = json.loads(f.read_text(encoding="utf-8"))
@@ -1352,23 +1368,23 @@ class Prices(unittest.TestCase):
             table = json.loads(f.read_text(encoding="utf-8"))
         self.assertEqual(table["date"], datetime.date.today().isoformat())
         row = next(x for x in table["rows"] if x["model"] == "cs4" and x["tier"] == "720p")
-        self.assertEqual((row["credits"], row["duration"], row["credits_per_second"]), (35, 5, 7.0))
+        self.assertEqual((row["credits"], row["duration"], row["credits_per_second"]), (10000, 5, 2000.0))
         self.assertEqual(set(table), {"format", "date", "rows"})
 
     def test_the_import_takes_the_estimate_answer_as_it_comes(self):
         plan = hfd.price_plan(CATALOG, "video", ["kling"])
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "a.json").write_text(json.dumps(
-                [{"params": plan["requests"][0]["params"], "cost": {"credits": 13, "credits_exact": 12.5}}]),
+                [{"params": plan["requests"][0]["params"], "cost": {"credits": 4001, "credits_exact": 4000.5}}]),
                 encoding="utf-8")
             r = hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
-        self.assertEqual(r["rows"][0]["credits"], 12.5)
+        self.assertEqual(r["rows"][0]["credits"], 4000.5)
 
     def test_a_list_of_credits_takes_the_params_from_the_plan(self):
         plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
         n = len(plan["requests"])
         self.assertGreater(n, 1)
-        credits = [10.0 * (i + 1) for i in range(n - 1)] + [None]
+        credits = [1000.0 * (i + 1) for i in range(n - 1)] + [None]
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
             (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
@@ -1377,13 +1393,13 @@ class Prices(unittest.TestCase):
         first = plan["requests"][0]["params"]
         row = next(x for x in r["rows"] if x["model"] == first["model"]
                    and x["tier"] == first.get(x["tier_parameter"] or "", None))
-        self.assertEqual(row["credits"], 10.0)
+        self.assertEqual(row["credits"], 1000.0)
 
     def test_a_list_of_credits_needs_its_own_plan(self):
         plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
-            for credits, plan_file in (([1] * len(plan["requests"]), None), ([1], Path(d) / "plan.json"),
+            for credits, plan_file in (([1000] * len(plan["requests"]), None), ([1000], Path(d) / "plan.json"),
                                        ([None] * len(plan["requests"]), Path(d) / "plan.json")):
                 (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
                 with self.subTest(credits=credits[:2], plan_file=plan_file), self.assertRaises(hfd.Error):
@@ -1391,9 +1407,9 @@ class Prices(unittest.TestCase):
             self.assertFalse((Path(d) / "p.json").exists())
 
     def test_the_import_refuses_what_it_cannot_trust(self):
-        for answers in ([{"params": {"model": "nobody", "duration": 5}, "credits": 1}],
-                        [{"params": {"model": "cs4", "duration": 5, "resolution": "720p"}, "credits": "35"}],
-                        [{"params": {"model": "cs4", "resolution": "720p"}, "credits": 35}], []):
+        for answers in ([{"params": {"model": "nobody", "duration": 5}, "credits": 1000}],
+                        [{"params": {"model": "cs4", "duration": 5, "resolution": "720p"}, "credits": "1000"}],
+                        [{"params": {"model": "cs4", "resolution": "720p"}, "credits": 1000}], []):
             with self.subTest(answers=answers), tempfile.TemporaryDirectory() as d:
                 (Path(d) / "a.json").write_text(json.dumps(answers), encoding="utf-8")
                 with self.assertRaises(hfd.Error):
@@ -1424,13 +1440,13 @@ class Prices(unittest.TestCase):
     def test_budget_plans_from_the_table_and_keeps_real_quotes(self):
         p = project(resolution="720p", shots=[{"id": "T01", "duration": 8, "subject": "A", "action": "B"},
                                               {"id": "T02", "duration": 5, "subject": "A", "action": "B",
-                                               "test_cost": 1, "final_cost": 2}])
+                                               "test_cost": 1000, "final_cost": 2000}])
         with tempfile.TemporaryDirectory() as d:
             f = self._table(d)
             shots, filled = hfd._fill_from_table(p, f, CATALOG)
         self.assertEqual(filled, ["T01"])
-        self.assertEqual((shots[0]["test_cost"], shots[0]["final_cost"]), (24.0, 56.0))  # 3 and 7 credits a second
-        self.assertEqual((shots[1]["test_cost"], shots[1]["final_cost"]), (1, 2))
+        self.assertEqual((shots[0]["test_cost"], shots[0]["final_cost"]), (8000.0, 16000.0))  # 1000 and 2000 credits a second
+        self.assertEqual((shots[1]["test_cost"], shots[1]["final_cost"]), (1000, 2000))
 
     def test_budget_from_the_table_needs_todays_table_and_a_known_tier(self):
         p = project(resolution="720p")
@@ -1456,7 +1472,7 @@ class Prices(unittest.TestCase):
         r = json.loads(out)
         self.assertEqual(code, 0)
         self.assertTrue(r["planning"])
-        self.assertEqual(r["base"], 50.0)
+        self.assertEqual(r["base"], 15000.0)  # the draft at 480p (5000) and the final at 720p (10000)
         self.assertTrue(any("price table" in w for w in r["warnings"]))
         self.assertIn("quote the exact request", r["reminder"])
 
@@ -1467,15 +1483,15 @@ class Prices(unittest.TestCase):
         plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
         with tempfile.TemporaryDirectory() as d:
             f, a = Path(d) / "p.json", Path(d) / "a.json"
-            a.write_text(json.dumps(self._answers(plan, [15, 35, 80, 12.5])), encoding="utf-8")
+            a.write_text(json.dumps(self._answers(plan, [5000, 10000, 20000, 4000])), encoding="utf-8")
             first = hfd.prices(f, a, CATALOG)
             self.assertEqual(first["summary"], "first price table of this project")
             same = hfd.prices(f, a, CATALOG)
             self.assertEqual(same["changes"], [])
             self.assertIn("no change since", same["summary"])
-            a.write_text(json.dumps(self._answers(plan, [15, 40, 80])), encoding="utf-8")
+            a.write_text(json.dumps(self._answers(plan, [5000, 11000, 20000])), encoding="utf-8")
             moved = hfd.prices(f, a, CATALOG)
-        self.assertIn("cs4 720p 5 s: 35 -> 40 credits", moved["changes"])
+        self.assertIn("cs4 720p 5 s: 10000 -> 11000 credits", moved["changes"])
         self.assertIn("not quoted today: kling 5 s", moved["changes"])
         self.assertEqual(moved["summary"].split(" since ")[0], "2 change(s)")
 
