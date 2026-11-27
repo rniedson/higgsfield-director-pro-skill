@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import hfd  # noqa: E402
 
+# The prices in these tests are made up: always 0 or at least 1000 credits, which no 5 s quote costs, so none of them
+# can pass for a model's price. A real price comes from the day's table (hfd.py prices), never from a file of this
+# repository. ThisFile.test_no_made_up_price_can_pass_for_a_real_one keeps it so.
 CATALOG = {
     "generated_at": "2099-01-01",
     "models": {
@@ -239,9 +242,9 @@ class Rules(unittest.TestCase):
 
 class Calculations(unittest.TestCase):
     def test_budget(self):
-        r = hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=20)
-        self.assertEqual(r["base"], 55)
-        self.assertEqual(r["total"], 66)
+        r = hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=20)
+        self.assertEqual(r["base"], 5000)
+        self.assertEqual(r["total"], 6000)
 
     def test_budget_without_price_refuses(self):
         with self.assertRaises(hfd.Error):
@@ -408,14 +411,14 @@ class Robustness(unittest.TestCase):
 
 class Review(unittest.TestCase):
     def test_budget_rounds(self):
-        ts = [{"id": f"T0{i}", "test_cost": 7.5, "final_cost": 0.1} for i in range(3)]
-        r = hfd.budget(ts, reserve=20, attempts=3)
-        self.assertEqual(r["base"], 67.8)
-        self.assertEqual(r["total"], 81.36)
+        ts = [{"id": f"T0{i}", "test_cost": 1000.2, "final_cost": 1000.2} for i in range(3)]
+        r = hfd.budget(ts, reserve=20, attempts=3)  # unrounded: 12002.400000000001 and 14402.880000000001
+        self.assertEqual(r["base"], 12002.4)
+        self.assertEqual(r["total"], 14402.88)
 
     def test_attempts_of_the_shot_warn(self):
-        ts = [{"id": "T01", "test_cost": 1, "final_cost": 1, "attempts": 5},
-              {"id": "T02", "test_cost": 1, "final_cost": 1}]
+        ts = [{"id": "T01", "test_cost": 1000, "final_cost": 1000, "attempts": 5},
+              {"id": "T02", "test_cost": 1000, "final_cost": 1000}]
         r = hfd.budget(ts, attempts=1)
         self.assertEqual([t["attempts"] for t in r["shots"]], [5, 1])
         self.assertEqual(len(r["warnings"]), 1)
@@ -699,8 +702,8 @@ OLD_FULL_PROJECT = {
                  "falas": [{"quem": "A", "idioma": "English", "texto": "Hi."}],
                  "inicio": {"P01": {"position": "plinth"}}, "fim": {"P01": {"position": "plinth"}},
                  "mudancas_aprovadas": ["P01.position"], "camera_xy": [1, -2], "cruzamento_motivado": True,
-                 "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}], "custo_teste": 10,
-                 "custo_final": 35, "tentativas": 3, "referencias": ["ref"], "preservar": ["shape"],
+                 "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}], "custo_teste": 1000,
+                 "custo_final": 3000, "tentativas": 3, "referencias": ["ref"], "preservar": ["shape"],
                  "restricoes": ["No text."], "alvo": "the label"}],
 }
 NEW_FULL_PROJECT = {
@@ -717,8 +720,8 @@ NEW_FULL_PROJECT = {
                "dialogue": [{"speaker": "A", "language": "English", "text": "Hi."}],
                "start": {"P01": {"position": "plinth"}}, "end": {"P01": {"position": "plinth"}},
                "approved_changes": ["P01.position"], "camera_xy": [1, -2], "motivated_crossing": True,
-               "timeline": [{"track": "camera", "from": 0, "to": 3}], "test_cost": 10,
-               "final_cost": 35, "attempts": 3, "references": ["ref"], "preserve": ["shape"],
+               "timeline": [{"track": "camera", "from": 0, "to": 3}], "test_cost": 1000,
+               "final_cost": 3000, "attempts": 3, "references": ["ref"], "preserve": ["shape"],
                "constraints": ["No text."], "target": "the label"}],
 }
 
@@ -780,9 +783,9 @@ class OldNames(unittest.TestCase):
                             "camera": "slow orbit", "som": "soft glass chime",
                             "falas": [{"quem": "A", "idioma": "English", "texto": "Hi."}],
                             "linha_do_tempo": [{"trilha": "camera", "de": 0, "ate": 3}],
-                            "custo_teste": 10, "custo_final": 35, "tentativas": 1}]}
+                            "custo_teste": 1000, "custo_final": 3000, "tentativas": 1}]}
         new = shot(project(), sound="soft glass chime", dialogue=[{"speaker": "A", "language": "English", "text": "Hi."}],
-                   timeline=[{"track": "camera", "from": 0, "to": 3}], test_cost=10, final_cost=35, attempts=1)
+                   timeline=[{"track": "camera", "from": 0, "to": 3}], test_cost=1000, final_cost=3000, attempts=1)
         old_f, new_f = self.write("old.json", old), self.write("new.json", new)
         for cmd in ("validate", "compile", "budget"):
             with self.subTest(cmd):
@@ -908,8 +911,8 @@ class MutationKillersOldNames(unittest.TestCase):
     """Mutants of the old-name translation that the first suite let live."""
 
     def test_old_budget_command_and_reserve_option_still_work(self):  # OLD03, OLD04
-        old = _cli("orcamento", "--tomadas", "1", "--custo-teste", "10", "--custo-final", "35", "--reserva", "30")
-        new = _cli("budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35", "--reserve", "30")
+        old = _cli("orcamento", "--tomadas", "1", "--custo-teste", "1000", "--custo-final", "3000", "--reserva", "30")
+        new = _cli("budget", "--shots", "1", "--test-cost", "1000", "--final-cost", "3000", "--reserve", "30")
         self.assertEqual(old[:2], new[:2])
 
     def test_old_image_mode_translates(self):  # OLD05
@@ -966,20 +969,20 @@ class MutationKillers(unittest.TestCase):
 
     # ----- money
     def test_budget_reports_the_reserve_in_credits(self):  # BUD03
-        r = hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=20)
-        self.assertEqual(r["reserve"], 11.0)
+        r = hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=20)
+        self.assertEqual(r["reserve"], 1000.0)
 
     def test_cli_budget_applies_default_reserve_and_attempts(self):  # BUD04, BUD07
-        args = ["budget", "--shots", "1", "--test-cost", "10", "--final-cost", "35"]
-        self.assertEqual(json.loads(_cli(*args)[1])["total"], 66.0)
-        self.assertEqual(json.loads(_cli(*args, "--attempts", "0")[1])["total"], 42.0)
+        args = ["budget", "--shots", "1", "--test-cost", "1000", "--final-cost", "3000"]
+        self.assertEqual(json.loads(_cli(*args)[1])["total"], 6000.0)
+        self.assertEqual(json.loads(_cli(*args, "--attempts", "0")[1])["total"], 3600.0)
 
     def test_budget_refuses_a_negative_reserve(self):  # BUD05
         with self.assertRaises(hfd.Error):
-            hfd.budget([{"id": "T01", "test_cost": 10, "final_cost": 35}], reserve=-20)
+            hfd.budget([{"id": "T01", "test_cost": 1000, "final_cost": 3000}], reserve=-20)
 
     def test_budget_refuses_a_partial_or_negative_price(self):  # BUD09, BUD10
-        for t in ({"id": "T01", "test_cost": 10}, {"id": "T01", "test_cost": -10, "final_cost": 35}):
+        for t in ({"id": "T01", "test_cost": 1000}, {"id": "T01", "test_cost": -1000, "final_cost": 3000}):
             with self.subTest(t=t), self.assertRaises(hfd.Error):
                 hfd.budget([t])
 
@@ -1253,8 +1256,9 @@ class ReviewFixes(unittest.TestCase):
             hfd.score(x)
 
     def test_budget_figures_add_up(self):
-        r = hfd.budget([{"id": "T01", "test_cost": 0, "final_cost": 12.5, "attempts": 0}], reserve=15)
-        self.assertEqual((r["base"], r["reserve"], r["total"]), (12.5, 1.88, 14.38))
+        r = hfd.budget([{"id": "T01", "test_cost": 0, "final_cost": 1000.1, "attempts": 0}], reserve=15)
+        # rounding the raw total would give 1150.12, which is not 1000.1 + 150.01
+        self.assertEqual((r["base"], r["reserve"], r["total"]), (1000.1, 150.01, 1150.11))
 
     def test_frame_width_uses_the_same_thin_lens_as_the_focus(self):
         self.assertAlmostEqual(hfd.optics(85, 2, 1.8)["frame_width_m"], 0.811, places=3)
@@ -1278,6 +1282,18 @@ class ThisFile(unittest.TestCase):
         self.assertEqual(len(re.findall(r"^if __name__ ==", text, re.M)), 1)
         self.assertTrue(text.rstrip().endswith("unittest.main()"))
 
+    def test_no_made_up_price_can_pass_for_a_real_one(self):
+        """Every price written in these tests is 0 or at least 1000 credits (see the note above CATALOG)."""
+        text = "\n".join(p.read_text(encoding="utf-8") for p in sorted(Path(__file__).parent.glob("test_*.py")))
+        keys = "test_cost|final_cost|credits|credits_exact|custo_teste|custo_final"
+        found = re.findall(r'"(?:' + keys + r')": *"?(-?[0-9][0-9.]*)', text)
+        found += re.findall(r"\b(?:test_cost|final_cost)=(-?[0-9][0-9.]*)", text)
+        found += re.findall(r'"--(?:test-cost|final-cost|custo-teste|custo-final)", *"(-?[0-9][0-9.]*)"', text)
+        for listed in re.findall(r"_answers\(plan, \[([^\]]*)\]", text):
+            found += re.findall(r"-?[0-9][0-9.]*", listed)
+        self.assertGreater(len(found), 30)
+        self.assertEqual([v for v in found if float(v) != 0 and abs(float(v)) < 1000], [])
+
 
 def _usage(args):
     out, err = io.StringIO(), io.StringIO()
@@ -1287,6 +1303,220 @@ def _usage(args):
         except SystemExit as e:
             code = e.code
     return code, out.getvalue(), err.getvalue()
+
+
+class Prices(unittest.TestCase):
+    """The day's price table: quoted once a day of use (or on request), kept with its date in the project folder,
+    used to choose a model and plan; the ok still waits for the exact quote."""
+
+    def _answers(self, plan, credits):
+        return [{"params": r["params"], "credits": c} for r, c in zip(plan["requests"], credits)]
+
+    def _table(self, d, rows=None, date=None):
+        f = Path(d) / "prices.json"
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        (Path(d) / "a.json").write_text(json.dumps(self._answers(plan, [5000, 10000, 20000, 4000])), encoding="utf-8")
+        hfd.prices(f, Path(d) / "a.json", CATALOG)
+        if date:
+            x = json.loads(f.read_text(encoding="utf-8"))
+            x["date"] = date
+            f.write_text(json.dumps(x), encoding="utf-8")
+        return f
+
+    def test_the_plan_asks_one_quote_per_model_and_tier(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling", "veo", "nobody"])
+        cs4 = [r["params"] for r in plan["requests"] if r["params"]["model"] == "cs4"]
+        self.assertEqual([x["resolution"] for x in cs4], ["480p", "720p", "1080p"])
+        self.assertTrue(all(x["duration"] == 5 and x["generate_audio"] is True for x in cs4))
+        kling = [r["params"] for r in plan["requests"] if r["params"]["model"] == "kling"]
+        self.assertEqual(kling, [{"model": "kling", "prompt": "price check", "aspect_ratio": "16:9", "duration": 5,
+                                  "sound": "on"}])
+        veo = [r["params"] for r in plan["requests"] if r["params"]["model"] == "veo"]
+        self.assertEqual(veo[0]["duration"], 4)  # the nearest option to 5 s, the shorter on a tie
+        self.assertEqual(plan["not_in_snapshot"], ["nobody"])
+        self.assertTrue(all(r["tool"] == "estimate_video_cost" for r in plan["requests"]))
+        image = hfd.price_plan(CATALOG, "image", ["photo"])["requests"]
+        self.assertEqual(image, [{"tool": "estimate_image_cost",
+                                  "params": {"model": "photo", "prompt": "price check", "aspect_ratio": "1:1"}}])
+
+    def test_a_model_new_in_the_catalog_joins_the_plan_for_30_days(self):
+        cat = copy.deepcopy(CATALOG)
+        today = datetime.date.today()
+        cat["models"]["kling"]["added_at"] = (today - datetime.timedelta(days=3)).isoformat()
+        cat["models"]["veo"]["added_at"] = (today - datetime.timedelta(days=31)).isoformat()
+        plan = hfd.price_plan(cat, "video")
+        self.assertEqual(plan["new_in_catalog"], ["kling"])
+        self.assertEqual({r["params"]["model"] for r in plan["requests"]}, {"kling"})
+
+    def test_the_connectors_shortlist_joins_the_plan(self):
+        page = {"items": [{"id": "brand_new", "name": "Brand New", "output_type": "video", "parameters": [],
+                           "purpose": "Default video model"}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+            cat = hfd.load_models(Path(d) / "new.json")
+        self.assertEqual(cat["models"]["brand_new"]["purpose"], "Default video model")
+        cat["models"]["brand_new"].pop("added_at")
+        plan = hfd.price_plan(cat, "video")
+        self.assertEqual(plan["connector_shortlist"], ["brand_new"])
+        self.assertIn("brand_new", {r["params"]["model"] for r in plan["requests"]})
+
+    def test_the_import_keeps_prices_with_the_date_and_the_price_per_second(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            table = json.loads(f.read_text(encoding="utf-8"))
+        self.assertEqual(table["date"], datetime.date.today().isoformat())
+        row = next(x for x in table["rows"] if x["model"] == "cs4" and x["tier"] == "720p")
+        self.assertEqual((row["credits"], row["duration"], row["credits_per_second"]), (10000, 5, 2000.0))
+        self.assertEqual(set(table), {"format", "date", "rows"})
+
+    def test_the_import_takes_the_estimate_answer_as_it_comes(self):
+        plan = hfd.price_plan(CATALOG, "video", ["kling"])
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "a.json").write_text(json.dumps(
+                [{"params": plan["requests"][0]["params"], "cost": {"credits": 4001, "credits_exact": 4000.5}}]),
+                encoding="utf-8")
+            r = hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
+        self.assertEqual(r["rows"][0]["credits"], 4000.5)
+
+    def test_a_list_of_credits_takes_the_params_from_the_plan(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        n = len(plan["requests"])
+        self.assertGreater(n, 1)
+        credits = [1000.0 * (i + 1) for i in range(n - 1)] + [None]
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
+            r = hfd.prices(Path(d) / "p.json", Path(d) / "c.json", CATALOG, Path(d) / "plan.json")
+        self.assertEqual(r["count"], n - 1)
+        first = plan["requests"][0]["params"]
+        row = next(x for x in r["rows"] if x["model"] == first["model"]
+                   and x["tier"] == first.get(x["tier_parameter"] or "", None))
+        self.assertEqual(row["credits"], 1000.0)
+
+    def test_a_list_of_credits_needs_its_own_plan(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            for credits, plan_file in (([1000] * len(plan["requests"]), None), ([1000], Path(d) / "plan.json"),
+                                       ([None] * len(plan["requests"]), Path(d) / "plan.json")):
+                (Path(d) / "c.json").write_text(json.dumps(credits), encoding="utf-8")
+                with self.subTest(credits=credits[:2], plan_file=plan_file), self.assertRaises(hfd.Error):
+                    hfd.prices(Path(d) / "p.json", Path(d) / "c.json", CATALOG, plan_file)
+            self.assertFalse((Path(d) / "p.json").exists())
+
+    def test_the_import_refuses_what_it_cannot_trust(self):
+        for answers in ([{"params": {"model": "nobody", "duration": 5}, "credits": 1000}],
+                        [{"params": {"model": "cs4", "duration": 5, "resolution": "720p"}, "credits": "1000"}],
+                        [{"params": {"model": "cs4", "resolution": "720p"}, "credits": 1000}], []):
+            with self.subTest(answers=answers), tempfile.TemporaryDirectory() as d:
+                (Path(d) / "a.json").write_text(json.dumps(answers), encoding="utf-8")
+                with self.assertRaises(hfd.Error):
+                    hfd.prices(Path(d) / "p.json", Path(d) / "a.json", CATALOG)
+                self.assertFalse((Path(d) / "p.json").exists())
+
+    def test_reading_says_when_the_table_is_missing_or_not_from_today(self):
+        with tempfile.TemporaryDirectory() as d:
+            missing = hfd.prices(Path(d) / "none.json", catalog=CATALOG)
+            self.assertFalse(missing["defined"])
+            self.assertIn("prices --plan", missing["next"])
+            fresh = hfd.prices(self._table(d), catalog=CATALOG)
+            self.assertTrue(fresh["today"])
+            self.assertNotIn("next", fresh)
+            old = hfd.prices(self._table(d, date="2026-01-02"), catalog=CATALOG)
+            self.assertFalse(old["today"])
+            self.assertIn("not today", old["next"])
+
+    def test_reading_says_when_the_catalog_is_a_week_old(self):
+        cat = copy.deepcopy(CATALOG)
+        cat["generated_at"] = (datetime.date.today() - datetime.timedelta(days=8)).isoformat()
+        with tempfile.TemporaryDirectory() as d:
+            r = hfd.prices(Path(d) / "none.json", catalog=cat)
+            self.assertIn("models_explore list", r["next_catalog"])
+            cat["generated_at"] = datetime.date.today().isoformat()
+            self.assertNotIn("next_catalog", hfd.prices(Path(d) / "none.json", catalog=cat))
+
+    def test_budget_plans_from_the_table_and_keeps_real_quotes(self):
+        p = project(resolution="720p", shots=[{"id": "T01", "duration": 8, "subject": "A", "action": "B"},
+                                              {"id": "T02", "duration": 5, "subject": "A", "action": "B",
+                                               "test_cost": 1000, "final_cost": 2000}])
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            shots, filled = hfd._fill_from_table(p, f, CATALOG)
+        self.assertEqual(filled, ["T01"])
+        self.assertEqual((shots[0]["test_cost"], shots[0]["final_cost"]), (8000.0, 16000.0))  # 1000 and 2000 credits a second
+        self.assertEqual((shots[1]["test_cost"], shots[1]["final_cost"]), (1000, 2000))
+
+    def test_budget_from_the_table_needs_todays_table_and_a_known_tier(self):
+        p = project(resolution="720p")
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(p, Path(d) / "none.json", CATALOG)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(p, self._table(d, date="2026-01-02"), CATALOG)
+            f = self._table(d)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(project(model="veo", aspect_ratio="16:9"), f, CATALOG)
+            with self.assertRaises(hfd.Error):
+                hfd._fill_from_table(project(resolution="4k"), f, CATALOG)
+
+    def test_cli_budget_with_the_table_is_marked_as_planning(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = self._table(d)
+            snap = Path(d) / "s.json"
+            snap.write_text(json.dumps(CATALOG), encoding="utf-8")
+            proj = Path(d) / "p.json"
+            proj.write_text(json.dumps(project(resolution="720p")), encoding="utf-8")
+            code, out, _ = _silent(["budget", proj, "--prices", f, "--snapshot", snap, "--attempts", "1"])
+        r = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertTrue(r["planning"])
+        self.assertEqual(r["base"], 15000.0)  # the draft at 480p (5000) and the final at 720p (10000)
+        self.assertTrue(any("price table" in w for w in r["warnings"]))
+        self.assertIn("quote the exact request", r["reminder"])
+
+    def test_cli_refuses_plan_and_import_together(self):
+        self.assertEqual(_silent(["prices", "--plan", "--import", "x.json"])[0], 2)
+
+    def test_the_day_says_what_changed_or_that_nothing_did(self):
+        plan = hfd.price_plan(CATALOG, "video", ["cs4", "kling"])
+        with tempfile.TemporaryDirectory() as d:
+            f, a = Path(d) / "p.json", Path(d) / "a.json"
+            a.write_text(json.dumps(self._answers(plan, [5000, 10000, 20000, 4000])), encoding="utf-8")
+            first = hfd.prices(f, a, CATALOG)
+            self.assertEqual(first["summary"], "first price table of this project")
+            same = hfd.prices(f, a, CATALOG)
+            self.assertEqual(same["changes"], [])
+            self.assertIn("no change since", same["summary"])
+            a.write_text(json.dumps(self._answers(plan, [5000, 11000, 20000])), encoding="utf-8")
+            moved = hfd.prices(f, a, CATALOG)
+        self.assertIn("cs4 720p 5 s: 10000 -> 11000 credits", moved["changes"])
+        self.assertIn("not quoted today: kling 5 s", moved["changes"])
+        self.assertEqual(moved["summary"].split(" since ")[0], "2 change(s)")
+
+    def test_a_catalog_import_says_when_nothing_changed(self):
+        page = {"items": [{"id": m, "name": m, "output_type": "video", "parameters": []}
+                          for m in ("cs4", "veo", "silent", "kling")]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            r = hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+        self.assertEqual((r["added"], r["removed"]), ([], []))
+        self.assertIn("no model appeared or disappeared", r["summary"])
+
+    def test_a_catalog_import_lists_the_new_models_and_dates_them(self):
+        page = {"items": [{"id": "cs4", "name": "Cinema Studio 4.0", "output_type": "video", "parameters": []},
+                          {"id": "brand_new", "name": "Brand New", "output_type": "video", "parameters": []}]}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps(CATALOG), encoding="utf-8")
+            (Path(d) / "page.json").write_text(json.dumps(page), encoding="utf-8")
+            r = hfd.import_models([Path(d) / "page.json"], Path(d) / "new.json", Path(d) / "base.json")
+            snap = json.loads((Path(d) / "new.json").read_text(encoding="utf-8"))
+        self.assertEqual(r["added"], ["brand_new"])
+        self.assertIn("veo", r["removed"])
+        self.assertEqual(snap["models"]["brand_new"]["added_at"], datetime.date.today().isoformat())
+        self.assertNotIn("added_at", snap["models"]["cs4"])
 
 
 if __name__ == "__main__":

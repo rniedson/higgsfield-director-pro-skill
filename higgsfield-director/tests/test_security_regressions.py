@@ -37,13 +37,13 @@ class SecurityRegressions(unittest.TestCase):
 
     def test_budget_rejects_huge_attempt_count(self):
         with self.assertRaises(hfd.Error):
-            hfd.budget([{"id": "T1", "test_cost": 1,
-                        "final_cost": 1, "attempts": 10 ** 1000}])
+            hfd.budget([{"id": "T1", "test_cost": 1000,
+                        "final_cost": 1000, "attempts": 10 ** 1000}])
 
     def test_cli_rejects_huge_shot_count_before_allocation(self):
         with patch.object(hfd, "budget") as budget:
             self.assertEqual(hfd.main(["budget", "--shots", "10001",
-                                      "--test-cost", "1", "--final-cost", "1"]), 2)
+                                      "--test-cost", "1000", "--final-cost", "1000"]), 2)
             budget.assert_not_called()
 
     def test_i2v_preserves_both_scopes(self):

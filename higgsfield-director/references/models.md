@@ -31,9 +31,10 @@ python3 <skill>/scripts/hfd.py models --id seedance_2_5       # full entry
 | Transparent background, PNG | `seedream_5_5` | "optional transparent background" |
 | Vector, logo, icon | `recraft_v4_1` | `model_type` for vector |
 
-Price is not stored: it changes with model, duration, resolution, mode, sound and plan, and it changes over time.
-**Always quote** with `estimate_video_cost` / `estimate_image_cost` (costs nothing, returns `quote_ref`) and never
-use a remembered number.
+Price is not stored in this skill: it changes with model, duration, resolution, mode, sound and plan, and over
+time. For choosing and planning, use the day's table ([Price of the day](#price-of-the-day)); before generating,
+quote the exact request with `estimate_video_cost` / `estimate_image_cost` (costs nothing, returns `quote_ref`).
+Never use a remembered number.
 
 ## Video generation models in the snapshot (2026-11-24)
 
@@ -89,3 +90,79 @@ and `export`: validation then uses today's limits, not those of the snapshot tha
 4. Updating the snapshot that ships with the skill is work for whoever maintains the repository:
    `--out <clone>/higgsfield-director/data/models.json`, run `python3 -m unittest discover -s <skill>/tests`, review
    the table above if something big changed and commit.
+
+## Price of the day
+
+The price decides which model to use when the operator wants to save or to plan, and it can change any day. So the
+skill keeps a table of the day's prices in the project folder, `.higgsfield-director/prices.json`, never in this
+repository. The table is read on every day of use and made again when it is not from today:
+
+```bash
+python3 <skill>/scripts/hfd.py prices                        # today: true or false; the cheapest per second
+python3 <skill>/scripts/hfd.py prices --plan > plan.json     # one request per model and tier, video by default
+# send each request to its tool (estimate_video_cost / estimate_image_cost, free) and save the credits
+# (credits_exact) in the order of the requests, null where an answer has no price: [15, 35, 80, ...]
+python3 <skill>/scripts/hfd.py prices --import credits.json --plan-file plan.json
+# or, with the params typed again: --import answers.json with [{"params": {...}, "credits": N}, ...]
+python3 <skill>/scripts/hfd.py budget project.json --prices  # a shot with no quote is planned from the table
+```
+
+- The default list is what the live catalog recommends today, the connector's shortlist (`purpose`) and the models
+  new in the catalog, plus the "start with" models of the table above: one quote per model and price tier (the count
+  is in `prices --plan`), for video at 5 s (the nearest option when the model has fixed durations), with sound on
+  where the model has it. `--type image` or `--type all` adds the
+  image models; `--models a,b` quotes only those, on request.
+- Each row keeps the credits and, for video, the credits per second. In the quotes checked on 2026-11-27, 10 s cost
+  twice 5 s (Cinema Studio 4.0 and Kling 3.0) and sound off cost the same, so `budget --prices` multiplies the price
+  per second by the shot's duration and plans the draft at the model's cheapest tier. Its result says
+  `"planning": true`: it is for choosing and planning, not for the ok.
+- `budget --prices` refuses a table that is not from today, and a model or tier the table does not have.
+
+### Who makes the quotes
+
+Each quote is a small tool call. In the main conversation, though, the large model writes every request and re-reads
+the whole conversation on each turn. Take the cheapest way available:
+
+1. **The script, with no model** ([`scripts/connector.py`](../scripts/README.md#the-connector-script)). It talks to
+   the connector's server itself, with the operator's own sign-in, and runs the whole routine: the plan, one quote per
+   request, the import.
+
+   ```bash
+   python3 <skill>/scripts/connector.py status    # signed in? does the server still have the tools it uses?
+   python3 <skill>/scripts/connector.py prices    # in the project folder: the summary and what changed
+   ```
+
+   The first time, ask the operator, then run `connector.py login`: the browser opens on Higgsfield's sign-in page
+   and the operator signs in and approves, once; the agent types nothing there. The sign-in can do whatever the
+   connector can, so it stays on that computer, in a file only the operator can read, and `connector.py logout`
+   revokes it. The script itself calls only free tools; any other is refused in code.
+2. **A subagent on a small model**, when there is no sign-in and the harness has subagents (in Claude Code, the Agent
+   tool with `model: haiku`), with this brief:
+   1. In the project folder, run `hfd.py prices --plan > plan.json`.
+   2. Call the connector's estimate once per request, with that request's `params` unchanged, all in one message.
+      Call no other tool of the connector: no generation, no upload.
+   3. Write the credits in the order of the requests, as a JSON list of numbers, `null` where an answer has no
+      price, in `credits.json`.
+   4. Run `hfd.py prices --import credits.json --plan-file plan.json` and return only its `summary` and `changes`.
+3. **The main conversation**, when neither is available.
+
+Measured on 2026-11-27, with that day's 29 quotes, which came back with the same 29 prices each way: the script took
+43.2 s and no tokens; the subagent took 23.5 s and 5 turns of the small model, plus one turn of the main conversation
+to send the brief and one to read the summary; the main conversation alone took two turns of the large model, which wrote 5,276 tokens and
+re-read 550,485 (the whole conversation, each turn).
+
+### New models
+
+New models come out often. Reading the whole catalog (`models_explore list`, video and image, every page, about 7
+pages) costs tens of thousands of tokens, so it happens once a week or when the operator asks, not every day.
+`hfd.py prices` says when the project's catalog is more than 7 days old.
+
+```bash
+python3 <skill>/scripts/hfd.py models --import video-1.json video-2.json ... image-1.json ... \
+        --snapshot .higgsfield-director/models.json --out .higgsfield-director/models.json   # no --snapshot the first time
+```
+
+The result lists the models that appeared (`added`) and disappeared (`removed`). A new model is dated (`added_at`)
+and joins the day's price table for its first 30 days, so its price is known the day after it appears. Tell the
+operator what is new; then pass `--snapshot .higgsfield-director/models.json` to the commands of the project.
+

@@ -7,6 +7,28 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- The day's price table (`hfd.py prices`, `references/models.md`). On each day of use, or on request, the agent asks
+  the connector for free quotes of the models the live catalog recommends (its shortlist and the models new in it)
+  and of the skill's starting list, one per model and price tier (video by default; images on request), and imports them into `.higgsfield-director/prices.json` in the project folder, never into this
+  repository. The import says what changed since the previous table, or that nothing did. `budget --prices` plans
+  the shots without a quote from today's table (price per second times the duration, the draft at the model's
+  cheapest tier) and marks the result `"planning": true`; the ok still waits for the exact quote.
+- `scripts/connector.py`: the day's quotes with no model. It talks to the Higgsfield connector's server itself, on
+  the operator's own sign-in (`login`, once, in the browser; kept in `~/.config/higgsfield-director/`, readable by the
+  operator alone; `logout` revokes it), plans, quotes and imports with `hfd.py`, and calls only free tools, refusing
+  any other in code. On 2026-11-27 it made that day's 29 quotes in 43.2 s and brought the same 29 prices. 7 tests,
+  with no network.
+- The day's quotes can go to a subagent on a small model (`references/models.md`, "Who makes the quotes"), which
+  types only the credits: `prices --import credits.json --plan-file plan.json` matches them to the saved plan.
+- New models: `models --import` dates each model that was not in the previous snapshot (`added_at`), lists the
+  models that appeared and disappeared, or says that none did, and a new model joins the day's price table for 30
+  days. `hfd.py prices` says when the project's catalog is more than 7 days old.
+- A rule for every contributor and agent (`AGENTS.md`, `CONTRIBUTING.md`): question every piece of hard-coded data;
+  what can go stale becomes a routine that refreshes it and reports what changed.
+- A second rule (`AGENTS.md`, `CONTRIBUTING.md`): what a script can do, a script does, so that the agent spends no
+  tokens on it.
+- Tests: the made-up prices are now 0 or at least 1000 credits, so that none can pass for a model's price, and a test
+  keeps it so. They used to copy that day's real quotes (15, 35, 80, 12.5).
 - A guide in each main folder (`higgsfield-director/` and its `references/`, `scripts/`, `templates/`, `data/` and
   `tests/`; `docs/`, `tools/`, `examples/`): what the folder is for, with a diagram and, where it helps, pictures.
   The skill never loads them; `check_repo.py` and the public boundary allow a `README.md` there.

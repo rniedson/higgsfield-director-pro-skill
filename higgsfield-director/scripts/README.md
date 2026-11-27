@@ -29,6 +29,7 @@ flowchart LR
 | `score EVALUATION` | a weighted score with evidence per criterion; a critical failure blocks |
 | `models [--type T] [--search S] [--id ID]` | read the model snapshot |
 | `models --import LIST... --out FILE` | build a fresh snapshot from the connector's lists, written only to `--out` |
+| `prices [--plan] [--import ANSWERS]` | the day's price table in `.higgsfield-director/prices.json`: the free quotes to ask for, their import with what changed since the last table (only the credits, in the plan's order, with `--plan-file`), or reading it; `budget --prices` plans the shots without a quote from it |
 | `preferences [--mode M]` | read or store how the operator wants to work (`follow`, `price`, `ceiling`); refuses a spending field |
 | `crop SHEET DIR NAME:x0,y0,x1,y1...` | write the ffmpeg commands that cut a sketch sheet into frames; runs nothing |
 | `blind`, `result` | draw X, Y and the order for a blind test, and build its record; only when the operator asks for one |
@@ -55,6 +56,23 @@ parameters: {"model": "cinematic_studio_video_4_0", "duration": 5, "aspect_ratio
 ```
 
 `validate` on the same file: zero errors, zero warnings.
+
+## The connector script
+
+[`connector.py`](connector.py) is the one script here that uses the network. It makes the day's free quotes by
+talking to the Higgsfield connector's server itself, so the agent spends no tokens on them
+([`models.md`](../references/models.md#who-makes-the-quotes)). Python 3.9 or later, standard library only.
+
+| Command | What it does |
+|---|---|
+| `login [--port N] [--no-browser]` | the operator's own sign-in, once, in the browser; kept in `~/.config/higgsfield-director/connector.json`, which only the operator can read, never in a project |
+| `prices [--type T] [--models M] [--duration S] [--file F]` | `hfd.py prices --plan`, one quote per request, `hfd.py prices --import`; prints the summary and what changed |
+| `status` | whether a sign-in is stored and renews itself, and whether the server still has the tools the script uses |
+| `logout` | revokes the sign-in and deletes the file |
+
+It reads the sign-in endpoints from the server each time, and calls only the free tools in `ALLOWED`
+(`estimate_video_cost`, `estimate_image_cost`, `models_explore`); any other is refused in code. It never prints the
+sign-in.
 
 ## The blind-test runner
 

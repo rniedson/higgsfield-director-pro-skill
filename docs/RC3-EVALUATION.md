@@ -38,7 +38,7 @@ it lean, keeping ~15% of the content.
 | Code | 675 lines in 4 scripts + 1 package that repeat each other (3 compilers, 2 optics, 3 budgets) | `wc -l` |
 | Known models | 9 profiles; 7 with every field `null`; two matrices that contradict each other | `models/` × `ultimate/capabilities.json` |
 | Models in the connector | 66 video + 56 image | `models_explore list`, 2026-11-24 |
-| Real cost (5 s) | Cinema Studio 4.0 = 15 / 35 / 80 credits (480p / 720p / 1080p); Seedance 2.5 720p = 35; Kling 3.0 = 7.5 to 10 | `estimate_video_cost` (does not generate) |
+| Cost quoted on 2026-11-24 (5 s), a record of that day, not a price list | Cinema Studio 4.0 = 15 / 35 / 80 credits (480p / 720p / 1080p); Seedance 2.5 720p = 35; Kling 3.0 = 7.5 to 10 | `estimate_video_cost` (does not generate); today's prices: `hfd.py prices` |
 
 ## 3. Measured defects (all became tests in `higgsfield-director/tests/test_hfd.py`)
 

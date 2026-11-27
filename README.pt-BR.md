@@ -16,7 +16,7 @@
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
 ![Não oficial](https://img.shields.io/badge/n%C3%A3o%20oficial-sem%20v%C3%ADnculo%20com%20o%20Higgsfield-b45309)
 
-[Como funciona](#como-funciona) · [Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Aviso](#aviso) · [Licenças](#licenças)
+[Como funciona](#como-funciona) · [Por que usar](#por-que-usar) · [Manual ilustrado](#manual-ilustrado) · [Arquitetura](#arquitetura) · [Começo rápido](#começo-rápido) · [Exemplos](#exemplos) · [Aviso](#aviso) · [Licenças](#licenças)
 
 [English](README.md) · **Português**
 
@@ -67,9 +67,53 @@ Para um prompt rápido ou uma imagem só, o plano é o trabalho inteiro: não h�
 https://github.com/user-attachments/assets/95668b75-fac8-459f-b26f-211d8e396daa
 
 Uma luta de 10 s entre o personagem do próprio mantenedor e um clone robô dele, feita um passo de cada vez: quatro
-imagens para escolher o visual (0,48 crédito), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
+imagens para escolher o visual (0,48 crédito, cotado em 26/11/2026), a tomada inteira como rascunho (30) e, depois, a versão final em 1080p a
 partir do rascunho aprovado (160). A ideia de se dividir em cópias entrou antes do rascunho, enquanto mudar o plano
 ainda era de graça. [Como foi feito](docs/demo/README.md) (em inglês), com o prompt e o som.
+
+## Por que usar
+
+1. **Nada é gasto de surpresa.** Toda geração é cotada antes e espera o seu "ok"; depois de cada uma, você vê quanto
+   custou e o total até ali.
+2. **O erro é pego onde custa menos.** Uma imagem por tomada, depois uma tomada de teste na menor resolução, antes do
+   resto. No demo acima, quatro imagens (0,48 crédito) vieram antes de uma versão final de 160.
+3. **O seu pedido continua seu.** Cada fato e cada limite que você dá entram no prompt do jeito que você disse.
+   Câmera, luz e receitas só entram quando você pede, ou para corrigir um defeito que uma prévia mostrou.
+4. **Erros aparecem antes de qualquer crédito.** O `hfd.py validate`, sem rede e de graça, confere os limites do
+   modelo (duração, proporção, resolução, áudio), fala que não cabe na tomada, continuidade entre tomadas e o eixo de
+   180°.
+5. **Modelos e preços de hoje, nunca os velhos.** Nenhum preço fica escrito na skill. Em cada dia de uso ela monta uma
+   tabela com as cotações grátis do dia e diz o que mudou; relê o catálogo toda semana, ou quando você pede, e os
+   modelos novos entram na tabela por 30 dias.
+6. **Um orçamento que não chuta.** O `hfd.py budget` soma cotações reais, tentativas e uma reserva, e se recusa a rodar
+   sem os preços; o `--prices` planeja pela tabela do dia, marcado como planejamento.
+7. **Menos tokens.** O que um script faz, o script faz: as checagens, os prompts, o orçamento e as cotações do dia
+   rodam em Python, não no modelo. O `connector.py` faz as cotações do dia sem modelo nenhum (abaixo).
+8. **Do seu jeito.** Aprovar cada passo, dar um "ok" para o total ou dar um teto para a sessão. O arquivo de
+   preferências nunca guarda limite de gasto ([modos](#do-seu-jeito-modos)).
+9. **Ela sai da frente quando deve.** Nos fluxos prontos do conector (fotos de produto, vídeos de criador, dublagem,
+   anúncios), ela mantém só a regra de custo e "ok". Sem o conector, ainda entrega os prompts e os parâmetros para
+   colar no site do Higgsfield.
+10. **Leve, e conferida.** Só a biblioteca padrão do Python, nada para instalar. 162 testes, sem rede e sem créditos,
+    rodam no Python 3.9 a 3.13 a cada mudança, e pegaram todos os 75 defeitos que uma revisão plantou de propósito e
+    que ainda se aplicam ([testes](higgsfield-director/tests/README.md)). O que as rodadas reais ensinaram fica em
+    [`lessons-learned/`](lessons-learned/README.md).
+
+### Tokens gastos na tabela do dia
+
+A tabela de preços do dia foi de 29 cotações grátis em 27/11/2026. Elas não custam crédito, mas quem as faz gasta
+tokens. Medido nesse dia, numa sessão longa do Claude Code, com os mesmos 29 preços nos três jeitos:
+
+| Quem faz as 29 cotações | Tokens de modelo | Tempo | No preço de lista da API do dia |
+|---|---|---|---|
+| A conversa principal (Claude Opus 5.5) | 5.276 escritos e 550.485 relidos, em dois turnos | — | cerca de US$ 0,28 |
+| Um subagente no Claude Haiku 5.5 | 5.088 escritos e 250.714 lidos pelo modelo pequeno; 1.029 escritos e 180.280 relidos pela conversa principal para mandá-lo, mais um turno para ler o resumo | 23,5 s | cerca de US$ 0,11, mais esse turno |
+| `connector.py prices` | nenhum nas cotações: o agente escreve um comando e lê um resumo de uns 600 caracteres | 43,2 s | nada nas cotações |
+
+A maior parte do custo da conversa principal é reler a si mesma: cada turno relê a conversa inteira, uns 275 mil
+tokens naquela sessão. Uma sessão nova relê bem menos, mas as cotações continuam passando pelo modelo grande. Numa
+assinatura do Claude, esses números saem do limite de uso, não em dólar. Como funciona cada jeito:
+[`models.md`](higgsfield-director/references/models.md#who-makes-the-quotes) (em inglês).
 
 ## Manual ilustrado
 
@@ -180,12 +224,12 @@ flowchart TD
 
 | | Peça | O que guarda | Quando entra |
 |:---:|---|---|---|
-| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | escopo, o fluxo em 9 passos, regras duras, quem cuida do quê (165 linhas) | em todo pedido: o agente lê primeiro |
+| **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | escopo, o fluxo em 9 passos, regras duras, quem cuida do quê | em todo pedido: o agente lê primeiro |
 | **2** | [`references/`](higgsfield-director/references/README.md) | 9 guias: fluxo · pré-produção · prompt · vocabulário · modelos · conector · qualidade · modos · calibração | só o guia que o passo atual pede |
 | **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
 | **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
 | **5** | [`templates/`](higgsfield-director/templates/README.md) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests/README.md) | 137 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 162 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
 
@@ -199,7 +243,7 @@ Cada pasta tem o próprio guia, com diagrama (em inglês): [a skill](higgsfield-
 
 ```text
 higgsfield-director/            a skill: é ESTA pasta que se instala
-  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento (165 linhas)
+  SKILL.md                      entrada: escopo, fluxo, regras duras, roteamento
   agents/openai.yaml            nome e prompt padrão na interface do Codex
   references/
     workflow.md                 briefing, modo estúdio, fichas, campos do projeto, entrega
@@ -212,11 +256,12 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
     modes.md                    primeiro uso; modos follow, price e ceiling
     calibration.md              teste às cegas com e sem a skill, só a pedido
   scripts/hfd.py                validate, compile, budget, export, optics, score, models, crop, blind, result
+  scripts/connector.py          as cotações do dia sem modelo, com o login do próprio operador
   scripts/calibrate_claude_code.sh  roda as duas condições da calibração no Claude Code
   data/models.json              retrato datado do catálogo do conector (122 modelos)
   data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
-  tests/                        137 testes (unittest)
+  tests/                        162 testes (unittest)
 examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
@@ -236,6 +281,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 ## Sumário
 
 - [Como funciona](#como-funciona)
+- [Por que usar](#por-que-usar)
 - [Manual ilustrado](#manual-ilustrado)
 - [Imagens de referência](#imagens-de-referência)
 - [Arquitetura](#arquitetura)
@@ -333,7 +379,7 @@ Avaliação completa: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 | Continuidade | fichas (personagem, produto, lugar) com atributos fixos; conferência na passagem entre tomadas | `hfd.py validate` |
 | Regra dos 180° | posições de câmera contra o eixo da ação | `hfd.py validate` |
 | Limites do modelo | duração, proporção, resolução, áudio, entradas de imagem-para-vídeo | `hfd.py validate` + retrato |
-| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço | `hfd.py budget` |
+| Orçamento | cotação real do conector + tentativas + reserva; recusa inventar preço; planeja pela tabela de preços do dia, a pedido | `hfd.py budget` |
 | Geração | ordem das chamadas do conector, fluxos prontos, envio de mídia, espera | [`connector.md`](higgsfield-director/references/connector.md) |
 | Revisão | checklist antes de gastar, tabela sintoma → causa, quadros, nota ponderada com evidência | [`quality.md`](higgsfield-director/references/quality.md), `hfd.py score` |
 | Entrega | roteiro, lista de tomadas em CSV, legendas | `hfd.py export` |
@@ -444,6 +490,8 @@ O modelo não traz preço, de propósito: o preço muda a qualquer momento, e um
 sem ninguém perceber. Antes do orçamento, o agente cota cada passo ao vivo com o `estimate_video_cost` do conector
 (que não cobra e devolve um `quote_ref`), escreve o que voltou no `test_cost` e no `final_cost` de cada tomada, e só
 então o `budget` soma as tentativas e uma reserva de 20 %. Sem os preços, ele se recusa a rodar em vez de chutar.
+Para planejar antes de cotar cada tomada, o `budget --prices` os preenche pela tabela de preços do dia, marcado
+`"planning": true`.
 
 ### 03 — O validador pega uma quebra de continuidade
 
@@ -493,6 +541,8 @@ Modelo de lente fina num sensor full-frame de 36 mm: descreve o *visual* a pedir
 | `score AVALIACAO` | nota ponderada com evidência por critério; falha crítica bloqueia |
 | `models [--type] [--search] [--id]` | ler o retrato dos modelos |
 | `models --import LISTA... --out ARQUIVO` | montar um retrato novo com as listas do `models_explore`, gravado só no `--out` |
+| `prices [--plan] [--import RESPOSTAS]` | a tabela de preços do dia na pasta do projeto: as cotações grátis a pedir, a importação delas (com o que mudou desde a última tabela) ou a leitura; o `budget --prices` planeja por ela |
+| `connector.py login`, `prices`, `status`, `logout` | as cotações do dia sem modelo e sem tokens: o operador entra no Higgsfield uma vez, e o script planeja, cota e importa |
 | `preferences [--mode M] [--calibrate C]` | ler ou gravar como o operador quer trabalhar (`follow`, `price`, `ceiling`); nunca guarda teto de gasto |
 | `blind --with A --without B --out PASTA` | conferir que as duas condições têm o mesmo formato e sortear X, Y e a ordem; grava a chave sem mostrá-la (para um teste com e sem a skill, só a pedido) |
 | `result --key C --vote X ... --out ARQUIVO` | montar o registro de calibração com lista branca, pronto para `calibration/` |
@@ -517,8 +567,10 @@ A fonte de verdade é o **catálogo ao vivo** (`models_explore`). O retrato que 
 | Áudio e fala nativos | Cinema Studio 4.0, Seedance 2.5, Kling 3.0, Veo 3.1, Wan 3.0 |
 | Texto legível numa imagem | Nano Banana Pro, Ideogram 4.6 |
 
-Sem preços aqui: eles mudam com o modelo, a duração, a resolução, o som e o plano, e mudam com o tempo. A skill cota
-cada geração ao vivo, toda vez ([`models.md`](higgsfield-director/references/models.md)).
+Sem preços aqui: eles mudam com o modelo, a duração, a resolução, o som e o plano, e mudam com o tempo. Em cada dia
+de uso a skill faz, na pasta do projeto, uma tabela com os preços do dia, a partir das cotações grátis do conector, e
+diz o que mudou desde a última; um catálogo com uma semana é lido de novo, e os modelos novos entram na tabela
+([`models.md`](higgsfield-director/references/models.md#price-of-the-day)).
 
 ## Escopo e convivência
 
@@ -544,7 +596,7 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 137 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
+| Testes | 162 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
