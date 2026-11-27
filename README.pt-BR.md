@@ -142,11 +142,11 @@ Estudos geométricos de um mesmo objeto em lentes, distâncias e paletas diferen
 
 Como é uma boa referência. Estas três foram geradas para um dos testes da skill (GPT Image 2.6 pelo Higgsfield,
 25/11/2026); os prompts que as fizeram, e como um prompt de vídeo as nomeia, estão em
-[`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
+[`examples/references`](examples/references/README.md).
 
 | | | |
 |:---:|:---:|:---:|
-| <img src="higgsfield-director/examples/references/character-sheet.jpg" width="260" alt="Ficha de personagem"><br>**Ficha de personagem**<br>um rosto; o corpo cortado no pescoço | <img src="higgsfield-director/examples/references/two-view-location.jpg" width="260" alt="Locação em duas vistas"><br>**Locação em duas vistas**<br>a sala e a entrada, sem pessoas | <img src="higgsfield-director/examples/references/photo-wall.jpg" width="260" alt="Um detalhe do cenário"><br>**Um detalhe do cenário**<br>o detalhe em que a ação termina |
+| <img src="examples/references/character-sheet.jpg" width="260" alt="Ficha de personagem"><br>**Ficha de personagem**<br>um rosto; o corpo cortado no pescoço | <img src="examples/references/two-view-location.jpg" width="260" alt="Locação em duas vistas"><br>**Locação em duas vistas**<br>a sala e a entrada, sem pessoas | <img src="examples/references/photo-wall.jpg" width="260" alt="Um detalhe do cenário"><br>**Um detalhe do cenário**<br>o detalhe em que a ação termina |
 
 Cada referência diz o que traz e o que fica fora do plano: a ficha dá a identidade, e o fundo cinza dela nunca
 entra na cena.
@@ -212,6 +212,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
   data/weights.json             pesos da nota
   templates/                    comercial de 3 tomadas, imagem-para-vídeo, avaliação
   tests/                        83 testes (unittest)
+examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
 docs/
@@ -609,8 +610,8 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
   no fim do manual; as imagens são desenhos esquemáticos feitos por código.
 - O vídeo de demonstração e as imagens dele em `docs/demo/`: a licença é decisão do mantenedor, registrada
   [nessa pasta](docs/demo/README.md) quando tomada; o homem neles é o mantenedor, que concordou em publicá-los.
-- As três imagens de referência em `higgsfield-director/examples/references/`: a licença é decisão do mantenedor, registrada
-  [nessa pasta](higgsfield-director/examples/references/README.md) quando tomada.
+- As três imagens de referência em `examples/references/`: a licença é decisão do mantenedor, registrada
+  [nessa pasta](examples/references/README.md) quando tomada.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão
   direito de usá-los. Este projeto é independente e não tem vínculo com nenhum deles nem aprovação deles.
 

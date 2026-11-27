@@ -19,7 +19,7 @@ MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "
             "docs/RC3-EVALUATION.md", "docs/manual/README.md", "docs/manual/visual/README.md", "calibration/README.md",
             "docs/MIGRATION-6.md", "lessons-learned/README.md", "lessons-learned/2026-11-higgsfield-channel.md",
             "lessons-learned/2026-11-higgsfield-channel-2.md", "lessons-learned/2026-11-higgsfield-channel-3.md",
-            "higgsfield-director/examples/references/README.md", "docs/demo/README.md",
+            "examples/references/README.md", "docs/demo/README.md",
             "lessons-learned/tests/README.md",
             "lessons-learned/tests/2026-11-25-timed-beats.md", "lessons-learned/tests/to-test.md",
             "lessons-learned/tests/2026-11-25-timed-beats-faithful.md"]

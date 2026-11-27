@@ -13,6 +13,8 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The example references moved from `higgsfield-director/examples/references/` to `examples/references/`, at the
+  root, where new users see them first. The skill points to them beside its own folder, or online.
 - The skill's work is now the process, not a better prompt. After five blind rounds, where what the skill added to
   the prompts took away the naturalness the models give a plain request, the prompt is the request as asked: every
   fact and every limit, with no camera, lens, light, style or recipe the request did not ask for;

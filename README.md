@@ -141,11 +141,11 @@ Geometric studies of one object across lenses, distances and palettes; the full 
 
 What a good reference looks like. These three were generated for one of the skill's tests (GPT Image 2.6 through
 Higgsfield, 2026-11-25); the prompts that made them, and how a video prompt names them, are in
-[`higgsfield-director/examples/references`](higgsfield-director/examples/references/README.md).
+[`examples/references`](examples/references/README.md).
 
 | | | |
 |:---:|:---:|:---:|
-| <img src="higgsfield-director/examples/references/character-sheet.jpg" width="260" alt="Character sheet"><br>**Character sheet**<br>one face; the body cropped at the neck | <img src="higgsfield-director/examples/references/two-view-location.jpg" width="260" alt="Location in two views"><br>**Location in two views**<br>the room and the way in, no people | <img src="higgsfield-director/examples/references/photo-wall.jpg" width="260" alt="A set detail"><br>**A set detail**<br>the detail the action ends on |
+| <img src="examples/references/character-sheet.jpg" width="260" alt="Character sheet"><br>**Character sheet**<br>one face; the body cropped at the neck | <img src="examples/references/two-view-location.jpg" width="260" alt="Location in two views"><br>**Location in two views**<br>the room and the way in, no people | <img src="examples/references/photo-wall.jpg" width="260" alt="A set detail"><br>**A set detail**<br>the detail the action ends on |
 
 Each reference says what it brings and what stays out of the shot: the sheet gives the identity, and its grey
 background never enters the scene.
@@ -211,6 +211,7 @@ higgsfield-director/            the skill: install THIS folder
   data/weights.json             scoring weights
   templates/                    3-shot commercial, image-to-video, evaluation
   tests/                        83 unittest cases
+examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
 docs/
@@ -606,8 +607,8 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
   listed at the end of the manual; the images are schematic drawings made by code.
 - The demo video and its images in `docs/demo/`: their license is the maintainer's decision, recorded in
   [that folder](docs/demo/README.md) when made; the man in them is the maintainer, who agreed to publish them.
-- The three reference images in `higgsfield-director/examples/references/`: their license is the maintainer's decision, recorded in
-  [that folder](higgsfield-director/examples/references/README.md) when made.
+- The three reference images in `examples/references/`: their license is the maintainer's decision, recorded in
+  [that folder](examples/references/README.md) when made.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. The licenses above
   give no right to use them. This project is independent and not affiliated with or endorsed by any of them.
 

@@ -11,8 +11,8 @@ ROOT_FILES = {
     ".gitignore", "AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "CONTRIBUTING.md", "LICENSE",
     "README.md", "README.pt-BR.md", "SECURITY.md",
 }
-TOP_LEVEL = {".github", "calibration", "docs", "higgsfield-director", "lessons-learned", "tools"}
-SKILL_AREAS = {"agents", "data", "examples", "references", "scripts", "templates", "tests"}
+TOP_LEVEL = {".github", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned", "tools"}
+SKILL_AREAS = {"agents", "data", "references", "scripts", "templates", "tests"}
 PERSONAL_AREAS = {
     "artifact", "artifacts", "client", "clients", "customer", "customers",
     "output", "outputs", "personal", "private", "production", "productions",
@@ -54,7 +54,7 @@ def check_public_path(path):
         shared_visual = path.startswith(("docs/manual/visual/assets/", "docs/manual/visual/atlas/",
                                          "docs/manual/visual/style/", "docs/assets/"))
         # Frame sheets of the skill's own tests: generic scenes, still images only, never video.
-        test_evidence = path.startswith(("lessons-learned/tests/", "higgsfield-director/examples/")) \
+        test_evidence = path.startswith(("lessons-learned/tests/", "examples/")) \
             and rel.suffix.lower() in {".jpg", ".png"}
         if not test_evidence and (not shared_visual or rel.suffix.lower() not in {".gif", ".png", ".svg"}):
             problems.append(f"{path}: production media belongs outside this repository")
