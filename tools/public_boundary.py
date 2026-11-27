@@ -13,7 +13,8 @@ ROOT_FILES = {
     ".gitignore", "AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "CONTRIBUTING.md", "LICENSE",
     "README.md", "README.pt-BR.md", "SECURITY.md",
 }
-TOP_LEVEL = {".github", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned", "tools"}
+TOP_LEVEL = {".github", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned", "price-history",
+             "tools"}
 SKILL_AREAS = {"agents", "data", "references", "scripts", "templates", "tests"}
 PERSONAL_AREAS = {
     "artifact", "artifacts", "client", "clients", "customer", "customers",

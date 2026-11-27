@@ -12,6 +12,7 @@ flowchart LR
     R --> CR[check_repo.py --require-yaml]
     CR --> PB[public_boundary.py<br/>what may be published]
     CR --> AG[aggregate_calibration.py<br/>the scoreboard is current]
+    CR --> AP[aggregate_prices.py<br/>the price page is current]
     T & BT & CR --> OK{all green?}
     OK -- yes --> M([the maintainer reviews and merges])
     classDef gold fill:#bca271,stroke:#8a7448,color:#101217
@@ -23,12 +24,14 @@ flowchart LR
 | [check_repo.py](check_repo.py) | the skill's frontmatter; every guide cited by `SKILL.md`; valid JSON; links and anchors of every published Markdown file; the calibration records; English names and text; and the public boundary below |
 | [public_boundary.py](public_boundary.py) | the guard: decides by path, by content and by a file's first bytes which files may be in a public repository |
 | [aggregate_calibration.py](aggregate_calibration.py) | adds up the blind-round records of [`calibration/`](../calibration/README.md) into its scoreboard; `check_repo` fails if the scoreboard is out of date |
-| [tests/](tests/) | 19 tests of the guard: what must pass and what must be refused, one test per hole a review found |
+| [aggregate_prices.py](aggregate_prices.py) | adds a week's price table to [`price-history/`](../price-history/README.md) and redraws its page (the index chart and the table); refuses a second record in the same week; `check_repo` fails if the page is out of date |
+| [tests/](tests/) | 25 tests: 19 of the guard (what must pass and what must be refused, one test per hole a review found) and 6 of the price record |
 
 ```bash
-python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, language and public/private boundary
+python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, prices, language and public/private boundary
 python3 -m unittest discover -s tools/tests      # the guard's tests
 python3 tools/aggregate_calibration.py --write   # rewrite the scoreboard after adding a record
+python3 tools/aggregate_prices.py --add <prices.json>   # add this week's price table and redraw its page
 ```
 
 ## What the guard lets through

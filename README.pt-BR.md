@@ -265,6 +265,7 @@ higgsfield-director/            a skill: é ESTA pasta que se instala
 examples/references/            três imagens de referência e os prompts que as fizeram
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
+price-history/                  as cotações do conector, um registro por semana, com o gráfico da evolução
 docs/
   MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
   RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou
@@ -363,7 +364,7 @@ resumo:
 - **A skill é o processo, não um prompt melhor.** Ela mantém o seu pedido como você disse, mostra uma imagem por
   tomada e depois uma tomada de teste antes do resto, deixa cada crédito à vista e pergunta uma vez como você quer
   trabalhar ([modos](#do-seu-jeito-modos)).
-- **Preços e modelos de hoje.** Nenhum preço fica escrito no repositório: a tabela de preços do dia
+- **Preços e modelos de hoje.** Nenhum preço fica escrito na skill: a tabela de preços do dia
   (`hfd.py prices`), os modelos novos datados por 30 dias e o `connector.py`, que faz as cotações do dia sem gastar
   token de modelo.
 - **Pré-produção barata:** ideia, rascunho de roteiro e um storyboard de rascunho em duas fases (`hfd.py crop`).
@@ -618,7 +619,7 @@ cd .. && python3 tools/check_repo.py
 
 | Conferência | Resultado |
 |---|---|
-| Testes | 162 testes da skill e 19 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
+| Testes | 162 testes da skill e 25 testes das checagens do repositório passando em 27/11/2026; CI roda no Python 3.9 ao 3.13 (sem pacotes de terceiros para a skill) |
 | Entrada fora do formato | 13 tipos errados no projeto, mais avaliações e orçamentos malformados: viram erro listado ou código 2, nunca traceback |
 | Conferência do repositório | `tools/check_repo.py` passou no Codex e roda no CI: cabeçalho, JSON, links, âncoras, idioma e fronteira público/privado |
 | Mutações | 4 defeitos plantados (negação ignorada, checagem de passagem desligada, áudio perdido, modelo desconhecido calado): 4 pegos |
