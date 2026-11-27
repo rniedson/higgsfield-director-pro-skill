@@ -31,7 +31,7 @@ flowchart LR
 | Old names | 10 | the Portuguese commands, fields and files from before 6.0 still work, with a warning |
 | Crop | 4 | a valid box becomes a crop command; an invalid one is an error with no command |
 | Mutation killers | 34 | one test per planted defect that the suite used to let through (below) |
-| Review fixes | 16 | one test per defect a review reproduced in 6.0; each one fails on that version |
+| Review fixes | 16 | one test per defect a review reproduced on `e2810a5`, before 6.0.0; each one fails there |
 | Prices | 17 | the day's price table: one quote per model and tier; a list of credits matched to its saved plan; the connector's shortlist and a model new in the catalog join it; the import says what changed or that nothing did; `budget --prices` plans only from today's table |
 | This file | 2 | running `python3 tests/test_hfd.py` directly runs every class, not only the ones above a stray `unittest.main()`; no made-up price in any test file can pass for a real one (each is 0 or at least 1000 credits) |
 | Connector | 7 | `connector.py`, with no network: only the free tools can be called; the answer read from JSON or from events; the credits of an estimate; the sign-in file readable by the operator alone; the sign-in endpoints read from the server; the day's routine end to end against a fake server |
@@ -46,7 +46,7 @@ let into the preferences, a missing price guessed as 0.
 
 ```mermaid
 flowchart LR
-    A[91 mutants<br/>one per run] --> B{the tests of 6.0<br/>fail?}
+    A[91 mutants<br/>one per run] --> B{the tests of then<br/>fail?}
     B -- yes --> K[39 caught]
     B -- no --> S[52 lived]
     S --> W[a test written<br/>for each]

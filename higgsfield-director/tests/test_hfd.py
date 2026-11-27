@@ -1171,7 +1171,7 @@ class MutationKillers(unittest.TestCase):
 
 
 class ReviewFixes(unittest.TestCase):
-    """A skeptical review reproduced each of these against 6.0; every test fails on that version."""
+    """A skeptical review reproduced each of these on e2810a5, before 6.0.0; every test fails there."""
 
     def test_operator_capitals_survive_the_sentence(self):
         self.assertEqual(hfd.sentence("iPhone 17 on a desk"), "iPhone 17 on a desk.")

@@ -8,7 +8,7 @@
 
 **O seu pedido como você disse · Prévia barata antes do vídeo · Cada crédito à vista · Geração só depois do seu ok**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-475569)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-6.0.0-475569)
 ![Agentes](https://img.shields.io/badge/testada%20no-Claude%20Code-bca271)
 ![Codex](https://img.shields.io/badge/Codex-fluxo%20local%20testado-2f7d68)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
@@ -28,7 +28,7 @@
 > dizer com qual serviço a skill funciona. Para conta, créditos, cobrança ou o conector, fale com o Higgsfield; este
 > repositório não resolve isso. Veja o [Aviso](#aviso).
 
-> **Estado:** versão 5.1.0, mais as mudanças do `main` listadas em *Unreleased* no [CHANGELOG](CHANGELOG.md).
+> **Estado:** versão 6.0.0, mais as mudanças do `main` listadas em *Unreleased* no [CHANGELOG](CHANGELOG.md).
 > Sozinha, a skill só *planeja*: vídeo e imagem são gerados pelo conector oficial do Higgsfield (MCP), com créditos da
 > sua conta, e **só depois que o custo é mostrado e o operador diz "ok"**.
 
@@ -287,6 +287,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 - [Arquitetura](#arquitetura)
 - [Visão geral](#visão-geral)
 - [Do seu jeito: modos](#do-seu-jeito-modos)
+- [O que mudou na 6.0](#o-que-mudou-na-60)
 - [O que mudou na v5](#o-que-mudou-na-v5)
 - [Recursos](#recursos)
 - [Começo rápido](#começo-rápido)
@@ -350,6 +351,27 @@ de imagem mais barato; depois cada quadro, recortado (`hfd.py crop`), vira a ref
 modelo barato que aceita referência, e todos mantêm os mesmos bonecos de bloco e podem ser refeitos um a um. Só com o
 roteiro travado pelo operador a skill pergunta por onde gerar o áudio
 ([preproduction.md](higgsfield-director/references/preproduction.md)). Testado uma vez.
+
+## O que mudou na 6.0
+
+A 6.0.0 (27/11/2026) é a primeira versão depois da 5.1.0. Está tudo no [CHANGELOG.md](CHANGELOG.md) (em inglês); em
+resumo:
+
+- **Quebra compatibilidade: tudo em inglês.** O `SKILL.md`, as referências e os comandos, campos e a saída do
+  `hfd.py`. Os nomes em português continuam funcionando na 6.x, com um aviso que diz o nome novo, e saem na 7.0
+  ([MIGRATION-6.md](docs/MIGRATION-6.md), em inglês).
+- **A skill é o processo, não um prompt melhor.** Ela mantém o seu pedido como você disse, mostra uma imagem por
+  tomada e depois uma tomada de teste antes do resto, deixa cada crédito à vista e pergunta uma vez como você quer
+  trabalhar ([modos](#do-seu-jeito-modos)).
+- **Preços e modelos de hoje.** Nenhum preço fica escrito no repositório: a tabela de preços do dia
+  (`hfd.py prices`), os modelos novos datados por 30 dias e o `connector.py`, que faz as cotações do dia sem gastar
+  token de modelo.
+- **Pré-produção barata:** ideia, rascunho de roteiro e um storyboard de rascunho em duas fases (`hfd.py crop`).
+- **Mais conferida:** 162 testes, eram 50 na 5.1.0. Uma revisão plantou 91 defeitos de propósito, e os testes agora
+  pegam todos os que ainda se aplicam. A checagem do repositório lê cada link e cada âncora e deixa material privado
+  de fora.
+- **Duas regras para quem contribui** ([AGENTS.md](AGENTS.md)): nenhum dado que envelhece, e script antes do modelo.
+- **O que as rodadas reais ensinaram**, em [`lessons-learned/`](lessons-learned/README.md), e o demo lá em cima.
 
 ## O que mudou na v5
 
@@ -626,7 +648,7 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
 | Prioridade | Objetivo | Situação |
 |---|---|---|
 | P1 | Um registro de gastos na pasta do projeto, para o total acumulado passar de uma sessão para a outra | Planejado |
-| P1 | Atualizar o retrato dos modelos todo mês | Processo descrito em `models.md` |
+| P1 | O catálogo semanal lido pelo `connector.py`, sem token de modelo, como as cotações do dia | Proposto |
 | P2 | Mais casos no teste de gatilho (mais pedidos, várias rodadas cada) | Planejado |
 | P2 | Rodada completa no Codex com o MCP do Higgsfield configurado | Aberta: testes locais no Codex passaram em 25/11/2026; falta testar cotação e geração autenticadas pelo Higgsfield |
 
