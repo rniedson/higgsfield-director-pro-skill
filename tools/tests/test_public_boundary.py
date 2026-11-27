@@ -25,11 +25,20 @@ class PublicBoundaryTests(unittest.TestCase):
                 self.assertTrue(check_public_path(path))
 
     def test_skill_example_images_pass_but_not_video(self):
-        self.assertEqual([], check_public_path("higgsfield-director/examples/references/character-sheet.jpg"))
+        self.assertEqual([], check_public_path("examples/references/character-sheet.jpg"))
         for path in (
-            "higgsfield-director/examples/references/take.mp4",
+            "examples/references/take.mp4",
+            "higgsfield-director/examples/references/character-sheet.jpg",
             "higgsfield-director/references/character-sheet.jpg",
         ):
+            with self.subTest(path=path):
+                self.assertTrue(check_public_path(path))
+
+    def test_the_skill_root_takes_only_the_skill_and_its_guide(self):
+        for path in ("higgsfield-director/SKILL.md", "higgsfield-director/README.md"):
+            with self.subTest(path=path):
+                self.assertEqual([], check_public_path(path))
+        for path in ("higgsfield-director/notes.md", "higgsfield-director/brief.json"):
             with self.subTest(path=path):
                 self.assertTrue(check_public_path(path))
 

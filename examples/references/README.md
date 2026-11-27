@@ -1,8 +1,10 @@
 # Reference images: three examples
 
-Three references made the way the skill asks (`references/workflow.md` §4 and `references/prompt.md` §1), with the
+Three references made the way the skill asks ([`workflow.md`](../../higgsfield-director/references/workflow.md) §4 and
+[`prompt.md`](../../higgsfield-director/references/prompt.md) §1), with the
 prompt that made each one. They were generated on 2026-11-25 with GPT Image 2.6 through the Higgsfield connector, for
-the reproduction of a lesson about unwanted cuts (`lessons-learned/tests/2026-11-25-timed-beats-faithful.md` in the repository). The person is
+the reproduction of a lesson about unwanted cuts
+([`2026-11-25-timed-beats-faithful.md`](../../lessons-learned/tests/2026-11-25-timed-beats-faithful.md)). The person is
 fictional; the scene has no brand. Show them to the operator when a sheet, a location or a prop has to be explained.
 
 The license of these three images is the maintainer's decision; until it is recorded here, no license is granted
@@ -56,6 +58,6 @@ No faces in close-up, no readable text, no logos.
 
 ## In a prompt
 
-Each reference is named and given its scope (`references/prompt.md` §1): for example, "@image1 is the character:
-identity only, the sheet's grey background stays out; @image2 is the apartment's layout; @image3 is the photo wall on
-the left wall of the living room".
+Each reference is named and given its scope ([`prompt.md`](../../higgsfield-director/references/prompt.md) §1): for
+example, "@image1 is the character: identity only, the sheet's grey background stays out; @image2 is the apartment's
+layout; @image3 is the photo wall on the left wall of the living room".

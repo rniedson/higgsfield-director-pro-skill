@@ -5,6 +5,15 @@ Collected on 2026-11-25 from the 12 most-viewed tutorials on the official channe
 were extracted, and each tip was compared with the skill as of 6.0. This is the vendor's own channel: almost every tip
 rests on one example, and none was measured here.
 
+```mermaid
+flowchart LR
+    A["12 most-viewed tutorials"] --> B["audio transcribed locally,<br/>keyframes extracted"]
+    B --> C["each tip compared<br/>with the skill as of 6.0"]
+    C --> D["13 adopted,<br/>2 of them to test"]
+    C --> E["3 decisions"]
+    C --> F["6 not adopted"]
+```
+
 Strength: **high** when several videos agree or the screen shows it; **medium** when one video explains it; **low**
 when it is a single claim, adopted as something to test.
 

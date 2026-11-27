@@ -19,8 +19,13 @@ MARKDOWN = ["README.md", "README.pt-BR.md", "CHANGELOG.md", "CONTRIBUTING.md", "
             "docs/RC3-EVALUATION.md", "docs/manual/README.md", "docs/manual/visual/README.md", "calibration/README.md",
             "docs/MIGRATION-6.md", "lessons-learned/README.md", "lessons-learned/2026-11-higgsfield-channel.md",
             "lessons-learned/2026-11-higgsfield-channel-2.md", "lessons-learned/2026-11-higgsfield-channel-3.md",
-            "higgsfield-director/examples/references/README.md", "docs/demo/README.md",
-            "lessons-learned/tests/README.md",
+            "examples/references/README.md", "docs/demo/README.md",
+            "examples/README.md", "docs/README.md", "tools/README.md", "higgsfield-director/README.md",
+            "higgsfield-director/references/README.md", "higgsfield-director/scripts/README.md",
+            "higgsfield-director/templates/README.md", "higgsfield-director/data/README.md",
+            "higgsfield-director/tests/README.md",
+            "lessons-learned/tests/README.md", "lessons-learned/2026-11-own-runs.md",
+            "lessons-learned/2026-11-higgsfield-skills-repo.md",
             "lessons-learned/tests/2026-11-25-timed-beats.md", "lessons-learned/tests/to-test.md",
             "lessons-learned/tests/2026-11-25-timed-beats-faithful.md"]
 
@@ -99,6 +104,8 @@ def check_skill(problems, require_yaml):
     elif re.search(r"[<>]", desc):
         problems.append("SKILL.md: 'description' cannot have < or >")
     for ref in sorted((SKILL / "references").glob("*.md")):
+        if ref.name == "README.md":  # the folder's guide for people reading it on GitHub, never loaded
+            continue
         if f"references/{ref.name}" not in txt:
             problems.append(f"SKILL.md: references/{ref.name} is never cited, so it is never loaded")
 

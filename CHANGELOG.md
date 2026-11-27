@@ -7,12 +7,20 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- A guide in each main folder (`higgsfield-director/` and its `references/`, `scripts/`, `templates/`, `data/` and
+  `tests/`; `docs/`, `tools/`, `examples/`): what the folder is for, with a diagram and, where it helps, pictures.
+  The skill never loads them; `check_repo.py` and the public boundary allow a `README.md` there.
+- Illustrated lessons: six side-by-side images from the blind rounds (the version made with the skill beside the one
+  made without it, at the same instants) and a card per illustrated lesson in `lessons-learned/2026-11-own-runs.md`;
+  the folder's README traces a lesson's life in a diagram.
 - A demo in the README: a 10 s kung fu fight between the maintainer's own character and a robot clone of himself,
   made one step at a time (four stills, a draft, the 1080p final), with how it was made, the prompt and the sound in
   `docs/demo/`. `tools/public_boundary.py` allows exactly those three media files, by the maintainer's decision.
 
 ### Changed
 
+- The example references moved from `higgsfield-director/examples/references/` to `examples/references/`, at the
+  root, where new users see them first. The skill points to them beside its own folder, or online.
 - The skill's work is now the process, not a better prompt. After five blind rounds, where what the skill added to
   the prompts took away the naturalness the models give a plain request, the prompt is the request as asked: every
   fact and every limit, with no camera, lens, light, style or recipe the request did not ask for;

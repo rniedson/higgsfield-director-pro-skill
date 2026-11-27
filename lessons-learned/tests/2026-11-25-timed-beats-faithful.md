@@ -16,7 +16,8 @@ repeated here.
   one run (`count: 4`).
 - **References:** three images generated first with GPT Image 2.6, of the same kinds as the original's: a character
   sheet, the apartment in two views (the living room; the hallway from the front door) and the photo wall. They are
-  the skill's example references, with the prompts that made them, in `higgsfield-director/examples/references/`.
+  the skill's example references, with the prompts that made them, in
+  [`examples/references/`](../../examples/references/README.md).
   Passed as `image_references` and named `@image1` to `@image3` in the prompt.
 - **Prompt:** the original's structure: the references by tag, a layout block, five timed phases (0–3, 3–6, 6–10,
   10–13 and 13–15 s), a failure-mode block that asks for one continuous take, and a style line. Written in English
