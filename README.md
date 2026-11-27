@@ -160,7 +160,7 @@ after the quoted total and the operator's "ok".
 flowchart TD
     U([Request]) --> A[Claude Code or Codex]
     A -->|reads first| S[SKILL.md<br/>scope · flow · rules]
-    S -.->|only the guide a step needs| R[references/<br/>6 guides]
+    S -.->|only the guide a step needs| R[references/<br/>9 guides]
     S -->|studio mode| H[scripts/hfd.py<br/>validate · compile · budget]
     H --> D[(data/<br/>122-model snapshot)]
     H --> T[templates/<br/>ready projects]
@@ -179,13 +179,17 @@ flowchart TD
 | | Part | What it holds | When it comes in |
 |:---:|---|---|---|
 | **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | scope, the 9-step flow, hard rules, who handles what (165 lines) | every request: the agent reads it first |
-| **2** | [`references/`](higgsfield-director/references) | 6 guides: flow · prompt · vocabulary · models · connector · quality | only the guide the current step asks for |
-| **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
-| **4** | [`data/`](higgsfield-director/data) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
-| **5** | [`templates/`](higgsfield-director/templates) | 3-shot commercial, image-to-video, evaluation | starting a new project |
-| **6** | [`tests/`](higgsfield-director/tests) | 61 cases, no dependencies, run in CI | before publishing a change |
+| **2** | [`references/`](higgsfield-director/references/README.md) | 9 guides: flow · pre-production · prompt · vocabulary · models · connector · quality · modes · calibration | only the guide the current step asks for |
+| **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validate · compile · budget · export · optics · score · models | studio mode, before any credit is spent |
+| **4** | [`data/`](higgsfield-director/data/README.md) | dated snapshot of 122 models + scoring weights | checking model limits without the connector |
+| **5** | [`templates/`](higgsfield-director/templates/README.md) | 3-shot commercial, image-to-video, evaluation | starting a new project |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 84 cases, no dependencies, run in CI | before publishing a change |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | name and default prompt shown by Codex | Codex only |
 | **+** | [`docs/manual/`](docs/manual/README.md) | illustrated manual: 11 parts, 185 images | learning the language of direction |
+
+Each folder has its own guide, with a diagram: [the skill](higgsfield-director/README.md) · [docs](docs/README.md) ·
+[tools](tools/README.md) · [examples](examples/README.md) · [lessons learned](lessons-learned/README.md) ·
+[calibration](calibration/README.md).
 
 <details>
 <summary><b>Full file tree</b></summary>

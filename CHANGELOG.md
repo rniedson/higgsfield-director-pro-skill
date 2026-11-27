@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- A guide in each main folder (`higgsfield-director/` and its `references/`, `scripts/`, `templates/`, `data/` and
+  `tests/`; `docs/`, `tools/`, `examples/`): what the folder is for, with a diagram and, where it helps, pictures.
+  The skill never loads them; `check_repo.py` and the public boundary allow a `README.md` there.
 - A demo in the README: a 10 s kung fu fight between the maintainer's own character and a robot clone of himself,
   made one step at a time (four stills, a draft, the 1080p final), with how it was made, the prompt and the sound in
   `docs/demo/`. `tools/public_boundary.py` allows exactly those three media files, by the maintainer's decision.

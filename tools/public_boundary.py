@@ -25,6 +25,8 @@ TEXT_SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".sh", ".txt",
                  ".svg", ".toml", ".cfg", ".html", ".css", ".js"}
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "node_modules"}
 PATH_FIXTURES = {"tools/public_boundary.py", "tools/tests/test_public_boundary.py"}
+# At the skill's root: the skill itself, and the folder's guide for people reading it on GitHub.
+SKILL_ROOT_FILES = {"higgsfield-director/SKILL.md", "higgsfield-director/README.md"}
 # The README's demo, published by the maintainer's decision (2026-11-26): exactly these files, nothing beside them.
 DEMO_MEDIA = {"docs/demo/kung-fu-vs-robot-clone.mp4", "docs/demo/kung-fu-vs-robot-clone.jpg",
               "docs/demo/how-it-was-made.jpg"}
@@ -48,7 +50,7 @@ def check_public_path(path):
             problems.append(f"{path}: unreviewed top-level file; add only shared skill material")
     elif parts[0] not in TOP_LEVEL:
         problems.append(f"{path}: unreviewed top-level directory; project files stay outside this repository")
-    elif parts[0] == "higgsfield-director" and parts[1] not in SKILL_AREAS and path != "higgsfield-director/SKILL.md":
+    elif parts[0] == "higgsfield-director" and parts[1] not in SKILL_AREAS and path not in SKILL_ROOT_FILES:
         problems.append(f"{path}: outside the shared skill's source areas")
     if rel.suffix.lower() in MEDIA_SUFFIXES and path not in DEMO_MEDIA:
         shared_visual = path.startswith(("docs/manual/visual/assets/", "docs/manual/visual/atlas/",

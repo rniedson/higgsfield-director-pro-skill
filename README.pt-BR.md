@@ -161,7 +161,7 @@ trabalha sem rede, e o único caminho que gasta crédito passa pelo conector do 
 flowchart TD
     U([Pedido]) --> A[Claude Code ou Codex]
     A -->|lê primeiro| S[SKILL.md<br/>escopo · fluxo · regras]
-    S -.->|só o guia que o passo pede| R[references/<br/>6 guias]
+    S -.->|só o guia que o passo pede| R[references/<br/>9 guias]
     S -->|mode estúdio| H[scripts/hfd.py<br/>validate · compile · orçar]
     H --> D[(data/<br/>retrato de 122 modelos)]
     H --> T[templates/<br/>projetos prontos]
@@ -180,13 +180,17 @@ flowchart TD
 | | Peça | O que guarda | Quando entra |
 |:---:|---|---|---|
 | **1** | [`SKILL.md`](higgsfield-director/SKILL.md) | escopo, o fluxo em 9 passos, regras duras, quem cuida do quê (165 linhas) | em todo pedido: o agente lê primeiro |
-| **2** | [`references/`](higgsfield-director/references) | 6 guias: fluxo · prompt · vocabulário · modelos · conector · qualidade | só o guia que o passo atual pede |
-| **3** | [`scripts/hfd.py`](higgsfield-director/scripts/hfd.py) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
-| **4** | [`data/`](higgsfield-director/data) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
-| **5** | [`templates/`](higgsfield-director/templates) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
-| **6** | [`tests/`](higgsfield-director/tests) | 61 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
+| **2** | [`references/`](higgsfield-director/references/README.md) | 9 guias: fluxo · pré-produção · prompt · vocabulário · modelos · conector · qualidade · modos · calibração | só o guia que o passo atual pede |
+| **3** | [`scripts/hfd.py`](higgsfield-director/scripts/README.md) | validar · compilar · orçar · exportar · óptica · nota · modelos | no modo estúdio, antes de gastar crédito |
+| **4** | [`data/`](higgsfield-director/data/README.md) | retrato datado de 122 modelos + pesos da nota | para conferir limites sem o conector |
+| **5** | [`templates/`](higgsfield-director/templates/README.md) | comercial de 3 tomadas, imagem-para-vídeo, avaliação | ao começar um projeto |
+| **6** | [`tests/`](higgsfield-director/tests/README.md) | 84 testes, sem dependências, rodados no CI | antes de publicar uma mudança |
 | **7** | [`agents/openai.yaml`](higgsfield-director/agents/openai.yaml) | nome e prompt padrão que o Codex mostra | só no Codex |
 | **+** | [`docs/manual/`](docs/manual/README.md) | manual ilustrado: 11 partes, 185 imagens | para aprender a linguagem da direção |
+
+Cada pasta tem o próprio guia, com diagrama (em inglês): [a skill](higgsfield-director/README.md) ·
+[docs](docs/README.md) · [tools](tools/README.md) · [examples](examples/README.md) ·
+[lições aprendidas](lessons-learned/README.md) · [calibração](calibration/README.md).
 
 <details>
 <summary><b>Árvore completa de arquivos</b></summary>

@@ -34,6 +34,14 @@ class PublicBoundaryTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertTrue(check_public_path(path))
 
+    def test_the_skill_root_takes_only_the_skill_and_its_guide(self):
+        for path in ("higgsfield-director/SKILL.md", "higgsfield-director/README.md"):
+            with self.subTest(path=path):
+                self.assertEqual([], check_public_path(path))
+        for path in ("higgsfield-director/notes.md", "higgsfield-director/brief.json"):
+            with self.subTest(path=path):
+                self.assertTrue(check_public_path(path))
+
     def test_the_readme_demo_passes_and_nothing_beside_it(self):
         for path in ("docs/demo/kung-fu-vs-robot-clone.mp4", "docs/demo/kung-fu-vs-robot-clone.jpg",
                      "docs/demo/how-it-was-made.jpg"):

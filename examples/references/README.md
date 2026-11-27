@@ -58,6 +58,6 @@ No faces in close-up, no readable text, no logos.
 
 ## In a prompt
 
-Each reference is named and given its scope ([`prompt.md`](../../higgsfield-director/references/prompt.md) §1): for example, "@image1 is the character:
-identity only, the sheet's grey background stays out; @image2 is the apartment's layout; @image3 is the photo wall on
-the left wall of the living room".
+Each reference is named and given its scope ([`prompt.md`](../../higgsfield-director/references/prompt.md) §1): for
+example, "@image1 is the character: identity only, the sheet's grey background stays out; @image2 is the apartment's
+layout; @image3 is the photo wall on the left wall of the living room".
