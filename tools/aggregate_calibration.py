@@ -42,7 +42,14 @@ def _warn(message):
 def load():
     """Returns (records, problems). Each problem already carries the file name."""
     records, problems = [], []
-    for f in sorted(FOLDER.glob("*")) if FOLDER.exists() else []:
+    # the files git would publish: an ignored .DS_Store is not a record
+    from public_boundary import published_files
+    names = [p for p in published_files(ROOT) if p.startswith("calibration/")]
+    for p in names:
+        f = ROOT / p
+        if p.count("/") > 1:
+            problems.append(f"{p}: a record goes directly in calibration/, not in a subfolder")
+            continue
         if f.name == "README.md":
             continue
         where = f"calibration/{f.name}"
