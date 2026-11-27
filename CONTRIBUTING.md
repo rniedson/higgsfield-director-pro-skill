@@ -110,6 +110,21 @@ A blind round, with and without the skill, on a request of your own, is kept as 
    --write` to refresh the scoreboard in `calibration/README.md`, and run the checks above.
 4. Open a pull request with the record and the scoreboard change. A round where the skill lost is just as welcome.
 
+## Add the week's price record
+
+Once a week, someone whose computer is signed in to the connector (`connector.py login`) adds that day's price table
+to [`price-history/`](price-history/README.md), so its chart shows how prices move:
+
+1. `python3 higgsfield-director/scripts/connector.py prices --file /tmp/prices.json`. The quotes cost no credits and
+   no model tokens.
+2. `python3 tools/aggregate_prices.py --add /tmp/prices.json`. It refuses a second record in the same week (Monday to
+   Sunday) and redraws `price-history/README.md`.
+3. Open a pull request titled `Price record YYYY-MM-DD` with the record and the page. If every row changed, say which
+   plan quoted them: prices can depend on the plan.
+
+The record is history. The skill never reads it; it plans from the day's table in the project and quotes before
+spending ([`AGENTS.md`](AGENTS.md#no-data-that-goes-stale)).
+
 ## License
 
 Contributions are accepted under the license of the files they change (see *Licensing* in the README).

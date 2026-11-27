@@ -263,6 +263,7 @@ higgsfield-director/            the skill: install THIS folder
 examples/references/            three reference images and the prompts that made them
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
+price-history/                  the connector's quotes, one record a week, with a chart of how they move
 docs/
   MIGRATION-6.md                every name from before 6.0 and its English name
   RC3-EVALUATION.md             evaluation of the previous package and what v5 kept
@@ -359,7 +360,7 @@ after the operator locks the script does the skill ask where to make the audio
 - **The skill is the process, not a better prompt.** It keeps your request as you said it, shows one still per shot
   and then one test shot before the rest, keeps every credit in view, and asks once how you want to work
   ([modes](#your-way-modes)).
-- **Today's prices and models.** No price is written in the repository: the day's price table (`hfd.py prices`),
+- **Today's prices and models.** No price is written in the skill: the day's price table (`hfd.py prices`),
   new models dated for 30 days, and `connector.py`, which makes the day's quotes with no model tokens.
 - **Cheap pre-production:** idea, script draft and a sketch storyboard in two phases (`hfd.py crop`).
 - **Checked harder:** 162 tests, from 50 in 5.1.0. A review planted 91 defects on purpose, and the tests now catch
@@ -610,7 +611,7 @@ cd .. && python3 tools/check_repo.py
 
 | Check | Result |
 |---|---|
-| Unit tests | 162 skill tests and 19 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
+| Unit tests | 162 skill tests and 25 repository-check tests passing on 27/11/2026; CI runs on Python 3.9 to 3.13 (no third-party packages for the skill) |
 | Malformed input | 13 kinds of wrong types in a project, plus bad evaluations and budgets: reported as errors or exit code 2, never a traceback |
 | Repository check | `tools/check_repo.py` passed in Codex and runs in CI: frontmatter, JSON, links, anchors, language and the public/private boundary |
 | Mutation check | 4 planted bugs (negation ignored, boundary check off, audio dropped, unknown model silent): 4 caught |

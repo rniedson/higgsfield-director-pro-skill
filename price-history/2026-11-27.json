@@ -1,0 +1,296 @@
+{
+ "format": 1,
+ "date": "2026-11-27",
+ "rows": [
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_3_5",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": true,
+   "credits": 65,
+   "credits_per_second": 13.0
+  },
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_3_5",
+   "tier_parameter": "resolution",
+   "tier": "480p",
+   "duration": 5,
+   "audio": true,
+   "credits": 17.5,
+   "credits_per_second": 3.5
+  },
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_3_5",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": true,
+   "credits": 25,
+   "credits_per_second": 5.0
+  },
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_4_0",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": true,
+   "credits": 80,
+   "credits_per_second": 16.0
+  },
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_4_0",
+   "tier_parameter": "resolution",
+   "tier": "480p",
+   "duration": 5,
+   "audio": true,
+   "credits": 15,
+   "credits_per_second": 3.0
+  },
+  {
+   "type": "video",
+   "model": "cinematic_studio_video_4_0",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": true,
+   "credits": 35,
+   "credits_per_second": 7.0
+  },
+  {
+   "type": "video",
+   "model": "gemini_omni_flash_1_2",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": null,
+   "credits": 16.25,
+   "credits_per_second": 3.25
+  },
+  {
+   "type": "video",
+   "model": "gemini_omni_flash_1_2",
+   "tier_parameter": "resolution",
+   "tier": "360p",
+   "duration": 5,
+   "audio": null,
+   "credits": 3.75,
+   "credits_per_second": 0.75
+  },
+  {
+   "type": "video",
+   "model": "gemini_omni_flash_1_2",
+   "tier_parameter": "resolution",
+   "tier": "4k",
+   "duration": 5,
+   "audio": null,
+   "credits": 33.75,
+   "credits_per_second": 6.75
+  },
+  {
+   "type": "video",
+   "model": "gemini_omni_flash_1_2",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": null,
+   "credits": 11.25,
+   "credits_per_second": 2.25
+  },
+  {
+   "type": "video",
+   "model": "kling3_0",
+   "tier_parameter": "mode",
+   "tier": "4k",
+   "duration": 5,
+   "audio": "on",
+   "credits": 30,
+   "credits_per_second": 6.0
+  },
+  {
+   "type": "video",
+   "model": "kling3_0",
+   "tier_parameter": "mode",
+   "tier": "pro",
+   "duration": 5,
+   "audio": "on",
+   "credits": 12.5,
+   "credits_per_second": 2.5
+  },
+  {
+   "type": "video",
+   "model": "kling3_0",
+   "tier_parameter": "mode",
+   "tier": "std",
+   "duration": 5,
+   "audio": "on",
+   "credits": 10,
+   "credits_per_second": 2.0
+  },
+  {
+   "type": "video",
+   "model": "kling4_0",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": null,
+   "credits": 18.75,
+   "credits_per_second": 3.75
+  },
+  {
+   "type": "video",
+   "model": "kling4_0",
+   "tier_parameter": "resolution",
+   "tier": "4k",
+   "duration": 5,
+   "audio": null,
+   "credits": 45,
+   "credits_per_second": 9.0
+  },
+  {
+   "type": "video",
+   "model": "kling4_0",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": null,
+   "credits": 12.5,
+   "credits_per_second": 2.5
+  },
+  {
+   "type": "video",
+   "model": "magi_2",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": true,
+   "credits": 12.5,
+   "credits_per_second": 2.5
+  },
+  {
+   "type": "video",
+   "model": "minimax_h3",
+   "tier_parameter": "resolution",
+   "tier": "2K",
+   "duration": 5,
+   "audio": null,
+   "credits": 10,
+   "credits_per_second": 2.0
+  },
+  {
+   "type": "video",
+   "model": "seedance_2_5",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": true,
+   "credits": 80,
+   "credits_per_second": 16.0
+  },
+  {
+   "type": "video",
+   "model": "seedance_2_5",
+   "tier_parameter": "resolution",
+   "tier": "480p",
+   "duration": 5,
+   "audio": true,
+   "credits": 15,
+   "credits_per_second": 3.0
+  },
+  {
+   "type": "video",
+   "model": "seedance_2_5",
+   "tier_parameter": "resolution",
+   "tier": "4k",
+   "duration": 5,
+   "audio": true,
+   "credits": 140,
+   "credits_per_second": 28.0
+  },
+  {
+   "type": "video",
+   "model": "seedance_2_5",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": true,
+   "credits": 35,
+   "credits_per_second": 7.0
+  },
+  {
+   "type": "video",
+   "model": "veo3_1",
+   "tier_parameter": "quality",
+   "tier": "basic",
+   "duration": 4,
+   "audio": null,
+   "credits": 16,
+   "credits_per_second": 4.0
+  },
+  {
+   "type": "video",
+   "model": "veo3_1",
+   "tier_parameter": "quality",
+   "tier": "high",
+   "duration": 4,
+   "audio": null,
+   "credits": 16,
+   "credits_per_second": 4.0
+  },
+  {
+   "type": "video",
+   "model": "veo3_1",
+   "tier_parameter": "quality",
+   "tier": "ultra",
+   "duration": 4,
+   "audio": null,
+   "credits": 36,
+   "credits_per_second": 9.0
+  },
+  {
+   "type": "video",
+   "model": "veo3_1_lite",
+   "tier_parameter": null,
+   "tier": null,
+   "duration": 4,
+   "audio": true,
+   "credits": 6,
+   "credits_per_second": 1.5
+  },
+  {
+   "type": "video",
+   "model": "wan3_0",
+   "tier_parameter": "resolution",
+   "tier": "1080p",
+   "duration": 5,
+   "audio": true,
+   "credits": 15,
+   "credits_per_second": 3.0
+  },
+  {
+   "type": "video",
+   "model": "wan3_0",
+   "tier_parameter": "resolution",
+   "tier": "480p",
+   "duration": 5,
+   "audio": true,
+   "credits": 3.75,
+   "credits_per_second": 0.75
+  },
+  {
+   "type": "video",
+   "model": "wan3_0",
+   "tier_parameter": "resolution",
+   "tier": "720p",
+   "duration": 5,
+   "audio": true,
+   "credits": 7.5,
+   "credits_per_second": 1.5
+  }
+ ]
+}

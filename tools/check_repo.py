@@ -215,9 +215,11 @@ def main():
     sys.path.insert(0, str(ROOT / "tools"))
     import aggregate_calibration
     aggregate_calibration.check(problems)
+    import aggregate_prices
+    aggregate_prices.check(problems)
     for p in problems:
         print(p)
-    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, language and public/private boundary")
+    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, prices, language and public/private boundary")
     return 1 if problems else 0
 
 

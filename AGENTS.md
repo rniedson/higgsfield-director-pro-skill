@@ -19,6 +19,7 @@ copied from the catalog. If it can change without this repository noticing, it d
 a routine instead (a command of `hfd.py` the agent runs on each day of use, or on request) that fetches it from the
 live source and tells the user what changed since the last run, or that nothing changed. A figure that must stay is
 written as a dated record of what was measured, never as a current fact. Hard-coded data is how a skill dies slowly.
+The weekly price record in [`price-history/`](price-history/README.md) is such a record: the skill never reads it.
 
 ## Scripts before the model
 
