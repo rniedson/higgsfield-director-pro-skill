@@ -772,6 +772,52 @@ test('the library\'s fit: hands/fit.js is what tools/fit_hand_poses.mjs writes f
   assert.ok(diff <= 1e-4, `hands/fit.js is out of date (largest difference ${diff}): run node tools/fit_hand_poses.mjs`);
 });
 
+test('neighbouring bodies get neighbouring thumbs: no thumb angle of a pose changes by more than its bound between two neighbours', async (t) => {
+  const { continuity, ageLine, idLine, AGE_LINES, ADULT_LINES, BOUND_DEG } = await import('../tools/hand_continuity.mjs');
+  // The thumb's search is seeded with the library's fit for the hand's age (rig.solveThumb), so that two bodies next to
+  // each other land on answers next to each other: a thumb that jumps shows as a pop when a character ages. The bounds
+  // are regression bounds, degrees: the largest change of a thumb angle between two neighbours over the whole sweep of
+  // tools/hand_continuity.mjs, as it measured them on 2026-11-28. BOUND_DEG (9 along the ages, 6 between adult
+  // neighbours) holds every pose but the ones named here: on the pair where each changes most, both hands miss their
+  // contact (hand-contact-missed) and the search lands on two answers that each miss. HP10 (9.000, female 174 -> 177
+  // months) and HP19 (6.000, F_H01_C05 -> F_H02_C05) reach BOUND_DEG exactly. A named pose is also measured on the pair
+  // where the sweep found its largest change. After a change to the solver, the fit or the proportions, run the tool
+  // and write here what it measures.
+  const NAMED = {
+    ages: { HP12: { bound: 17.5, at: ageLine('female', [195, 198]) },          // measured 17.453
+      HP21: { bound: 32, at: ageLine('female', [3, 6]) },                      // measured 31.952
+      HP23: { bound: 25.1, at: ageLine('female', [21, 24]) } },                // measured 25.016
+    adults: { HP12: { bound: 13.5, at: idLine(['F_H05_C04', 'F_H05_C05']) },   // measured 13.438
+      HP21: { bound: 9.3, at: idLine(['M_H05_C09', 'M_H05_C10']) } },          // measured 9.297
+  };
+  // The sample, every pose on it: each knot of the child weight (the library's fit is kept at them) and the age 3 months
+  // after it, the sexes in turn; between adults a pair of builds and a pair of heights, the pairs where the sweep found
+  // the two largest changes of the poses not named (HP10 5.500, HP19 6.000).
+  const SAMPLE = { ages: rig.CHILD_WEIGHT_KNOTS.map(([months], i) => ageLine(i % 2 ? 'male' : 'female', [months, months + 3])),
+    adults: [idLine(['M_H05_C09', 'M_H05_C10']), idLine(['F_H01_C05', 'F_H02_C05'])] };
+  const start = process.hrtime.bigint(), cpu0 = process.cpuUsage(), over = [], said = [], f3 = (x) => x.toFixed(3);
+  let hands = 0;
+  for (const kind of ['ages', 'adults']) {
+    const all = continuity(SAMPLE[kind], POSES), worst = { ...all.worst }, sampled = new Set(SAMPLE[kind].flat().map((b) => b.name));
+    hands += all.hands;
+    for (const [pose, n] of Object.entries(NAMED[kind])) {   // on its own pair only the named pose is solved
+      const own = continuity([n.at], [pose]).worst[pose];
+      hands += n.at.filter((b) => !sampled.has(b.name)).length;
+      if (own.deg > worst[pose].deg) worst[pose] = own;
+    }
+    for (const pose of POSES) {
+      const w = worst[pose], bound = NAMED[kind][pose]?.bound ?? BOUND_DEG[kind];
+      if (w.deg > bound) over.push(`${pose} ${w.angle} changes by ${f3(w.deg)} degrees from ${w.from} to ${w.to} (bound ${bound})`);
+    }
+    const rest = POSES.filter((p) => !NAMED[kind][p]).reduce((a, p) => (worst[p].deg > worst[a].deg ? p : a));
+    said.push(`${kind} (${all.pairs} pairs, a named pose also on its own): ${Object.keys(NAMED[kind]).map((p) => `${p} ${f3(worst[p].deg)}`).join(', ')}, the largest of the other poses ${rest} ${f3(worst[rest].deg)} (bound ${BOUND_DEG[kind]})`);
+  }
+  const cpu = process.cpuUsage(cpu0), sec = Number(process.hrtime.bigint() - start) / 1e9, whole = [AGE_LINES(), ADULT_LINES()].map((lines) => lines.reduce((n, l) => n + l.length - 1, 0));
+  t.diagnostic(`${hands} hands in ${sec.toFixed(1)} s (${((cpu.user + cpu.system) / 1e6).toFixed(1)} s of CPU); the largest change of a thumb angle between two neighbours, degrees: ${said.join('; ')}`);
+  t.diagnostic(`covered: every pose at each knot of the child weight and 3 months after it (the sexes in turn) and on two pairs of adults, a named pose also where its largest change is; left to tools/hand_continuity.mjs: all ${whole[0]} pairs of ages and ${whole[1]} of adults`);
+  assert.equal(over.length, 0, `a thumb jumps between two neighbouring bodies: ${over.join('; ')}. Is the search still seeded with the library's fit (rig.solveThumb)? node tools/hand_continuity.mjs measures every pair`);
+});
+
 // ---------------------------------------------------------------- the Hand DNA
 
 test('the Hand DNA: the maintainer\'s three examples validate, and build through generate()', () => {
