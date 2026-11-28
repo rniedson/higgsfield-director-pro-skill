@@ -527,18 +527,38 @@ test('every solved joint is within its limit: the sweep, and strong grips on sma
 
 test('folded fingers close until the fingertip rests on the palm, and say so (hand-folded)', (t) => {
   const folded = { HP04: ['index', 'middle', 'ring', 'pinky'], HP14: ['index', 'middle', 'ring', 'pinky'], HP07: ['ring', 'pinky'], HP22: ['middle', 'ring'], HP23: ['pinky'] };
+  const rows = BODIES().map((B) => ({ name: B.name, listed: 0, closed: 0, opened: [], off: 0 }));
   let worst = 0, at = '';
-  for (const [pose, fingers] of Object.entries(folded)) for (const B of BODIES()) {
+  for (const [pose, fingers] of Object.entries(folded)) for (const [i, B] of BODIES().entries()) {
     const h = build({ pose, body: B.body, level: 0, mode: 'articulated' }), s = h.dims.length / rig.REF_LENGTH;
-    assert.deepEqual(h.corrections.filter((k) => k.rule === 'hand-folded').map((k) => k.path), fingers.map((f) => `fingers.${f}`), `${B.name} ${pose}`);
+    const said = (rule) => h.corrections.filter((k) => k.rule === rule).map((k) => k.path), closed = said('hand-folded'), opened = said('hand-palm-clearance');
+    // the list is the reference body's. On another body a finger of it may pass through the palm at its authored fold
+    // (a newborn's little finger): the solver does not close that one, it opens it clear of the palm, and says so
+    // (hand-palm-clearance)
+    if (B.body === REF_CORNER) assert.deepEqual(closed, fingers.map((f) => `fingers.${f}`), `${B.name} ${pose}`);
+    else for (const p of closed) assert.ok(fingers.some((f) => p === `fingers.${f}`), `${B.name} ${pose}: ${p} is said folded, and is not one of the pose's folded fingers`);
     const sh = shells(h), palm = sh.find((x) => x.name === 'Hand');
     for (const f of fingers) {
       const tip = sh.find((x) => x.name === `${f[0].toUpperCase()}${f.slice(1)}_03`);
       const gap = Math.min(...tip.V.map((v) => meshDist(v, palm.V, palm.T))) / s;
+      rows[i].listed++;
+      if (!closed.includes(`fingers.${f}`)) {
+        assert.ok(opened.includes(`fingers.${f}`), `${B.name} ${pose} ${f}: neither closed onto the palm (hand-folded) nor opened clear of it (hand-palm-clearance) is said`);
+        rows[i].opened.push(`${pose} ${f}`); rows[i].off = Math.max(rows[i].off, gap);
+        continue;
+      }
+      rows[i].closed++;
       if (gap > worst) { worst = gap; at = `${B.name} ${pose} ${f}`; }
       assert.ok(gap <= 1.5 * MM, `${B.name} ${pose} ${f}: the fingertip ${(gap / MM).toFixed(2)} mm off the palm (reference hand)`);
     }
   }
+  // which of the listed fingers are opened instead of closed is pinned, and how far that leaves them: the newborn's
+  // little finger only, in its four poses of the list. A shortfall as it is today, not a rule: another finger or
+  // another body there, or that finger left further from the palm, fails
+  assert.deepEqual(rows.filter((r) => r.opened.length).map((r) => [r.name, r.opened]), [['newborn', ['HP04 pinky', 'HP14 pinky', 'HP07 pinky', 'HP23 pinky']]], 'the listed fingers opened clear of the palm instead of closed onto it: the newborn\'s little finger only');
+  const off = Math.max(...rows.map((r) => r.off));
+  assert.ok(off <= 16 * MM, `a listed finger opened instead of closed is left ${(off / MM).toFixed(2)} mm off the palm (reference hand); bound 16 mm`);
+  t.diagnostic(`hand-folded said for the fingers listed: ${rows.map((r) => `${r.name} ${r.closed} of ${r.listed}${r.opened.length ? ` (opened clear of the palm instead, hand-palm-clearance: ${r.opened.join(', ')}; their tips up to ${(r.off / MM).toFixed(2)} mm off it on the reference hand; bound 16 mm, a regression bound on this shortfall)` : ''}`).join('; ')}`);
   t.diagnostic(`folded fingertips: the farthest ${(worst / MM).toFixed(2)} mm from the palm on the reference hand (${at}); bound 1.5 mm (a regression bound: measured on the sweep's four bodies)`);
 });
 
@@ -554,11 +574,13 @@ test('the finger controls move their finger only: curl, spread and twist on the 
   const body = REF_CORNER, pose = 'HP01', base = build({ pose, body, level: 0, mode: 'articulated' }), P0 = H.posed(base);
   const moved = (h) => { const P = H.posed(h), out = {}; for (const pc of h.pieces) { let m = 0; for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) m = Math.max(m, len(sub(V3(P, v), V3(P0, v)))); out[pc.name] = m; } return out; };
   const rows = [];
-  for (const [f, c] of [['ring', { twist: -1 }], ['pinky', { twist: 1 }], ['middle', { spread: 1 }], ['index', { spread: -0.5 }], ['index', { curl: 1 }]]) {
+  // the middle finger is spread toward the ring finger twice: 1 reaches it (the solver parts the two), 0.25 does not
+  for (const [f, c] of [['ring', { twist: -1 }], ['pinky', { twist: 1 }], ['middle', { spread: 1 }], ['middle', { spread: 0.25 }], ['index', { spread: -0.5 }], ['index', { curl: 1 }]]) {
     const h = build({ pose, body, level: 0, mode: 'articulated', controls: { fingers: { [f]: c } } }), m = moved(h);
     const own = Object.keys(m).filter((n) => n.toLowerCase().startsWith(f));
-    // the solver may move a neighbour clear, and says so (hand-finger-spread, hand-collision-margin): only those
-    const said = new Set(h.corrections.filter((k) => k.rule !== 'hand-control').map((k) => (k.path.startsWith('fingers.') ? k.path.split('.')[1] : k.path.split('.')[0])));
+    // the solver may move a neighbour clear, and says so (hand-finger-spread, on a path that names both fingers:
+    // fingers.middle+ring; hand-collision-margin): only those
+    const said = new Set(h.corrections.filter((k) => k.rule !== 'hand-control').flatMap((k) => (k.path.startsWith('fingers.') ? k.path.split('.')[1].split('+') : [k.path.split('.')[0]])));
     for (const o of own) assert.ok(m[o] > 0.2 * MM, `${f} ${JSON.stringify(c)}: ${o} moved ${(m[o] / MM).toFixed(2)} mm`);
     assert.ok(Math.max(...own.map((o) => m[o])) > 1 * MM, `${f} ${JSON.stringify(c)} moves its finger`);
     for (const [n, d] of Object.entries(m)) {
@@ -567,7 +589,21 @@ test('the finger controls move their finger only: curl, spread and twist on the 
       if (said.has(digit)) continue;
       assert.ok(d < 1e-9, `${f} ${JSON.stringify(c)} moved ${n} by ${(d / MM).toFixed(3)} mm`);
     }
-    rows.push(`${f} ${JSON.stringify(c)}: its tip ${(Math.max(...own.map((o) => m[o])) / MM).toFixed(1)} mm${said.size ? `, the solver also moved ${[...said].join(', ')} (said)` : ''}`);
+    // a neighbour the solver moved clear moved as the solver says, and no more: hand-finger-spread names the two
+    // neighbouring fingers it parted and opens the spread of each by half of `used` (the degrees in all), the first
+    // toward the index finger, the second toward the little finger; no other angle of theirs changes
+    for (const k of h.corrections.filter((x) => x.rule === 'hand-finger-spread')) {
+      const pair = k.path.split('.')[1].split('+'), i = rig.FINGERS.indexOf(pair[0]);
+      assert.ok(pair.length === 2 && i >= 0 && pair[1] === rig.FINGERS[i + 1], `${f} ${JSON.stringify(c)}: hand-finger-spread on ${k.path} does not name two neighbouring fingers`);
+      for (const [j, x] of pair.entries()) {
+        if (x === f) continue;
+        const a1 = h.angles.fingers[x], a0 = base.angles.fingers[x], turn = a1.spread_deg - a0.spread_deg;
+        assert.deepEqual({ ...a1, spread_deg: a0.spread_deg }, a0, `${f} ${JSON.stringify(c)}: the solver says it opened the spread of ${x}, and another of its angles changed`);
+        assert.ok(Math.abs(turn - (j ? 0.5 : -0.5) * k.used) < 1e-9, `${f} ${JSON.stringify(c)}: the spread of ${x} changed by ${turn} deg, the solver says it opened ${k.used} deg in all (${k.used / 2} a finger)`);
+      }
+    }
+    const also = [...said].filter((x) => x !== f);
+    rows.push(`${f} ${JSON.stringify(c)}: its tip ${(Math.max(...own.map((o) => m[o])) / MM).toFixed(1)} mm${also.length ? `, the solver also moved ${also.join(', ')} (said)` : ''}`);
   }
   t.diagnostic(rows.join('; '));
 });
@@ -586,12 +622,29 @@ test('grip strength: 0 stands the fingers off the object, 1 presses them in, the
 });
 
 test('a plane under every pose: each builds, finite and clear, and a grip strength on a plane is said to be ignored', () => {
+  const kept = [], plane = { ...G0, object: { shape: 'plane', orientation_deg: null } };
+  const on = (pose, grip) => build({ pose, body: REF_CORNER, level: 0, mode: 'preset', grip });
   for (const pose of POSES) {
-    const h = build({ pose, body: REF_CORNER, level: 0, mode: 'preset', grip: { ...G0, object: { shape: 'plane', orientation_deg: null }, grip_strength: 1 } });
+    const h = on(pose, { ...plane, grip_strength: 1 });
     assert.ok(h.positions.every(Number.isFinite), pose);
     assert.ok(!h.corrections.some((k) => k.rule === 'hand-collision'), `${pose}: ${JSON.stringify(h.corrections.filter((k) => k.rule === 'hand-collision'))}`);
-    if (GRIP_POSES.includes(pose)) assert.ok(h.corrections.some((k) => k.rule === 'hand-grip-ignored' && k.path === 'grip_strength'), `${pose}: grip strength on a plane`);
+    if (!GRIP_POSES.includes(pose)) continue;
+    const says = (rule, path) => h.corrections.some((k) => k.rule === rule && k.path === path);
+    // a grip that keeps its own object (the hook's bar): the plane is what is said to be ignored, and the grip
+    // strength applies to the object kept
+    if (h.contact && h.contact.shape !== 'plane') {
+      kept.push(pose);
+      assert.ok(says('hand-grip-ignored', 'object.shape'), `${pose}: holds a ${h.contact.shape}, and the plane is not said to be ignored`);
+      assert.ok(says('hand-grip', 'grip_strength') && !says('hand-grip-ignored', 'grip_strength'), `${pose}: grip strength on its ${h.contact.shape}`);
+    } else {
+      // said to be ignored, and ignored: it is not said to be applied as well, and the hand is the one the plane gives
+      // with no grip strength
+      assert.ok(says('hand-grip-ignored', 'grip_strength'), `${pose}: grip strength on a plane`);
+      assert.ok(!says('hand-grip', 'grip_strength'), `${pose}: grip strength on a plane said to be ignored, and said to be applied`);
+      assert.deepEqual(h.angles, on(pose, plane).angles, `${pose}: the grip strength said to be ignored changes the hand`);
+    }
   }
+  assert.deepEqual(kept, ['HP15'], 'the hook, and no other grip, keeps its own object');
 });
 
 test('every start cap of a digit piece, at the fit\'s own scale, stays inside its parent: 24 poses, four bodies, the controls at their ends', (t) => {
@@ -615,16 +668,36 @@ test('every start cap of a digit piece, at the fit\'s own scale, stays inside it
 // the contacts whose error is a distance between a point on the thumb's distal piece and a point on another piece:
 // the separation of the two pieces (the separating-axis test's, a lower bound of their distance) is at most the error
 const TIP_CONTACTS = { thumb_index_tips: 'Index_03', thumb_ring: 'Ring_02', thumb_pinky: 'Pinky_02' };
+// What a contact is missed by, as hands/rig.js solveThumb takes it, and where a hand's diagnostics give it. The eight
+// contacts of hands/rig.js contactSpec (the six of the thumb on the hand itself, the tripod, the card): their contact
+// error. A grip with the thumb on an object (hands/rig.js objectSpec): the thumb pad's distance to the object's
+// surface, "pad X mm from the surface"; there the contact error also counts the distance to a target on that surface,
+// and is not what is said to be missed. The other contacts (none, cradle, hook, plane) give the thumb nothing to touch
+const MISSED_BY = {
+  error: ['thumb_index_tips', 'thumb_ring', 'thumb_middle_ring', 'thumb_pinky', 'thumb_over_fingers', 'thumb_palm', 'tripod', 'thin_plane'],
+  pad: ['cylinder', 'handle', 'sphere', 'box'],
+};
 test('a contact the mesh cannot meet is said: within the tolerance, or a hand-contact-missed correction that names it', (t) => {
-  const rows = [];
+  const rows = [], seen = Object.fromEntries(Object.values(MISSED_BY).flat().map((c) => [c, 0])), beyond = { error: 0, pad: 0 };
   let checked = 0;
   for (const it of sweep()) {
     if (it.controlSet !== null) continue;
     const h = it.hands['0 A|right'], s = h.dims.length / rig.REF_LENGTH, tol = rig.CONTACT_TOLERANCE * s, type = getPose(it.pose).contact.type;
-    const missed = h.corrections.filter((k) => k.rule === 'hand-contact-missed');
+    const missed = h.corrections.filter((k) => k.rule === 'hand-contact-missed'), where = `${it.bodyName} ${it.pose}`;
     for (const k of missed) { assert.equal(k.path, 'thumb'); assert.ok(k.used > tol && Math.abs(k.tolerance_m - tol) < 1e-12, JSON.stringify(k)); }
-    const error = h.diagnostics.join(' ').match(/thumb solved for [a-z_]+: .*?contact error ([\d.]+) mm/);
-    if (error && type !== 'tripod' && Number(error[1]) * MM > tol + 0.05 * MM) assert.ok(missed.length, `${it.bodyName} ${it.pose}: a contact error of ${error[1]} mm, not said`);
+    // the miss as the diagnostics give it (to a tenth of a millimetre): beyond the tolerance it is said, and a miss
+    // that is said gives that distance
+    const solved = h.diagnostics.find((x) => x.startsWith(`thumb solved for ${type}: `)), kind = Object.keys(MISSED_BY).find((k) => MISSED_BY[k].includes(type));
+    if (kind) {
+      const given = solved?.match(kind === 'error' ? /contact error ([\d.]+) mm/ : /pad (-?[\d.]+) mm from the surface/);
+      assert.ok(given, `${where}: the diagnostics give no ${kind === 'error' ? 'contact error' : 'distance from the thumb pad to the object'}`); seen[type]++;
+      const miss = Math.abs(Number(given[1])) * MM, what = kind === 'error' ? `a contact error of ${given[1]} mm` : `the thumb pad ${given[1]} mm from the object`;
+      if (miss > tol + 0.05 * MM) { beyond[kind]++; assert.ok(missed.length, `${where}: ${what}, not said`); }
+      if (missed.length) assert.ok(Math.abs(missed[0].used - miss) <= 0.051 * MM, `${where}: ${what}, said as ${(missed[0].used / MM).toFixed(2)} mm`);
+    } else {
+      assert.ok(!solved, `${where}: the thumb is solved for the contact ${type}, and this test does not say what its miss is`);
+      assert.equal(missed.length, 0, `${where}: a miss is said, and the contact ${type} gives the thumb nothing to touch`);
+    }
     if (TIP_CONTACTS[type]) {
       const sh = shells(h), hull = (n) => { const x = sh.find((p) => p.name === n); return rig.convex(x.V, x.T); };
       const gap = -rig.satDepth(hull('Thumb_03'), hull(TIP_CONTACTS[type])); checked++;
@@ -632,6 +705,9 @@ test('a contact the mesh cannot meet is said: within the tolerance, or a hand-co
     }
     if (missed.length) rows.push(`${it.bodyName} ${it.pose} ${(missed[0].used / s / MM).toFixed(1)} mm`);
   }
+  for (const [c, n] of Object.entries(seen)) assert.ok(n > 0, `no pose of the sweep has the contact ${c}`);
+  const hands = (k) => MISSED_BY[k].reduce((a, c) => a + seen[c], 0), types = (k) => MISSED_BY[k].map((c) => `${c} ${seen[c]}`).join(', ');
+  t.diagnostic(`the thumb's miss compared with the tolerance on ${hands('error') + hands('pad')} hands: the contact error on ${hands('error')} (${types('error')}), ${beyond.error} beyond it; the thumb pad's distance to the object held on ${hands('pad')} (${types('pad')}), ${beyond.pad} beyond it; each one beyond it is said, and every miss said gives that distance`);
   t.diagnostic(`${checked} tip contacts checked against their pieces' separation; missed (on the reference hand's scale): ${rows.join(', ') || 'none'}`);
 });
 
@@ -640,12 +716,29 @@ test('the drawn shells of levels 1 and 2 are checked against each other: a shell
     const h = build({ pose: 'HP01', body: REF_CORNER, level, variant }), s = h.dims.length / rig.REF_LENGTH;
     const deep = (P) => SHELLS.overlaps(P, h.index, h.pieces, { palm }).filter((o) => o.depth > 0.0003 * s);
     assert.deepEqual(deep(h.positions), [], `level ${level} ${variant}: HP01 as built`);
-    // every vertex but the base ring moved toward the neighbour's centre, by half the distance between the centres
+    // every vertex but the base ring moved along the line that takes the shell's far end (its last vertex) onto the
+    // neighbour's centre. The whole move leaves the far end at that centre, inside the neighbour: found. Half way to
+    // where the far end goes into the neighbour (half way into the gap) nothing is reported. (Not the distance between
+    // the two centres: a shell that is a tetrahedron moves only its far end, which then stops outside the neighbour.)
     const centre = (name) => { const pc = h.pieces.find((p) => p.name === name), c = [0, 0, 0]; for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) c[k] += h.positions[3 * v + k] / pc.vertices; return c; };
-    const pc = h.pieces.find((p) => p.name === moving), shift = scl(sub(centre(into), centre(moving)), 0.5), P = h.positions.slice();
-    for (let v = pc.firstVertex + 3; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) P[3 * v + k] += shift[k];
-    const hit = deep(P);
-    assert.ok(hit.some((o) => [o.a, o.b].includes(moving) && [o.a, o.b].includes(into)), `level ${level} ${variant}: ${moving} moved into ${into}, found ${JSON.stringify(hit)}`);
+    const pc = h.pieces.find((p) => p.name === moving), far = V3(h.positions, pc.firstVertex + pc.vertices - 1), whole = sub(centre(into), far);
+    const movedBy = (f) => { const P = h.positions.slice(); for (let v = pc.firstVertex + 3; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) P[3 * v + k] += f * whole[k]; return P; };
+    const N = shells(h, h.positions).find((x) => x.name === into), farIn = (f) => winding(add(far, scl(whole, f)), N.V, N.T) > 0.5;
+    assert.ok(meshSd(centre(into), N.V, N.T) > 0.0003 * s, `level ${level} ${variant}: the centre of ${into} is inside it`);
+    let enters = 0; while (enters < 100 && !farIn(enters / 100)) enters++;   // the hundredth of the move at which the far end is first inside
+    assert.ok(enters > 0, `level ${level} ${variant}: the far end of ${moving} is outside ${into} as built`);
+    assert.deepEqual(deep(movedBy(enters / 200)), [], `level ${level} ${variant}: ${moving} moved half way into the gap (${(enters / 200).toFixed(3)} of the way)`);
+    const hit = deep(movedBy(1)), pair = (o) => [o.a, o.b].includes(moving) && [o.a, o.b].includes(into);
+    assert.ok(hit.some(pair), `level ${level} ${variant}: ${moving} moved into ${into}, found ${JSON.stringify(hit)}`);
+    // pushed on through, the far end out again on the other side, no vertex is inside: found by the samples along the
+    // edges. On 'budget' alone: the tube of 'readable' is clear of its neighbour again, and level 2's thumb only leaves
+    // the volume it is rooted in (against that one only a re-entry counts).
+    if (variant === 'budget') {
+      let leaves = 100; while (leaves < 300 && farIn(leaves / 100)) leaves++;
+      const Q = movedBy(leaves / 100), M = shells(h, Q).find((x) => x.name === moving), through = deep(Q);
+      assert.ok(M.V.every((p) => winding(p, N.V, N.T) < 0.5) && N.V.every((p) => winding(p, M.V, M.T) < 0.5), `level ${level} ${variant}: ${moving} pushed through ${into} (${leaves / 100} of the way), a vertex of one is inside the other`);
+      assert.ok(through.some(pair), `level ${level} ${variant}: ${moving} pushed through ${into} (${leaves / 100} of the way), found ${JSON.stringify(through)}`);
+    }
   }
 });
 
