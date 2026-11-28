@@ -7,8 +7,11 @@
 // controls and grips; the Hand DNA; the integration with generate(); the budget. What is measured against a stated
 // tolerance says where the tolerance comes from; shortfalls against the design are TODO tests (reported, not failed).
 //
-// Cost: the library solves a pose in 0.1 to 0.35 s for each new body; the sweeps below reuse its caches (the same
-// bodies, the same grip block as the generator), which keeps the file at about 40 s.
+// Cost: every hand is built for its own body at every level (buildHand on the body the character gives): the solver
+// runs on level 0's pieces and the lower levels are drawn from the solved skeleton. A pose new to a body costs the
+// solver from a few milliseconds to over a second, by the pose; the sweeps below reuse the library's caches (the same
+// bodies, the same grip block as the generator). The whole file took 71 s on an 8 GB MacBook Air on 2026-11-28, 12 s
+// of it in the test of neighbouring bodies.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -35,7 +38,7 @@ const G0 = { grip_radius_m: null, object: null, grip_strength: null };
 const build = (o) => ok(H.buildHand({ grip: G0, ...o }), JSON.stringify(o));
 const make = (dna, options) => ok(generate(dna, options), `${dna.id} ${JSON.stringify(options)}`);
 
-// The maintainer's examples (hands_in/examples.json), as given.
+// The maintainer's three examples of the Hand DNA, as given.
 const EXAMPLES = [
   { id: 'REST', hands: { mode: 'preset', left: { pose: 'HP01' }, right: { pose: 'HP01' } } },
   { id: 'TOOL', hands: { mode: 'articulated', left: { pose: 'HP03' }, right: { pose: 'HP06', grip_radius_m: 0.02 } } },
@@ -178,13 +181,13 @@ function characterWristGap(c, step = 10) {
 // ---------------------------------------------------------------- the bodies and the sweep
 // A body as the generator hands it to the library (character.hands.left.body).
 const bodyOf = (dna) => make(dna).hands.left.body;
-const REF_CORNER = { length: rig.REF_LENGTH, ring: { ...rig.REF_RING }, months: 168, fem: 0, fat: 0 };   // the reference hand (rig.REFERENCE_BODY)
+const REF_HAND = { length: rig.REF_LENGTH, ring: { ...rig.REF_RING }, months: 168, fem: 0, fat: 0 };   // the reference hand's length and ring (rig.REF_LENGTH, rig.REF_RING) at 168 months
 const LEAN_MAN = presetDNA({ sex: 'male', age_months: 360, build: 1 });   // arm fat 0
 const TALL_LEAN_MAN = dnaFromId('M_H10_C01');   // the library's HP01 thumb overlaps his palm: the solver moves it clear
 const WOMAN = dnaFromId('F_H05_C04');
 let BODIES_ = null;
 const BODIES = () => (BODIES_ ??= [
-  { name: 'reference adult hand (168 months)', body: REF_CORNER },
+  { name: 'reference adult hand (168 months)', body: REF_HAND },
   { name: 'newborn', body: bodyOf(presetDNA({ sex: 'male', age_months: 0 })) },
   { name: 'child of 6', body: bodyOf(presetDNA({ sex: 'female', age_months: 72 })) },
   { name: 'adult woman', body: bodyOf(WOMAN) },
@@ -197,7 +200,7 @@ const CONFIGS = [
   { key: '2', level: 2, mode: 'simplified', variant: null, target: [12, 20], jump: { bbox: 0.19, centroid: 0.11 } },
   { key: '3', level: 3, mode: 'simplified', variant: null, target: [6, 12], jump: { bbox: 0.40, centroid: 0.16 } },
 ];
-// controls at their ends, on a few poses of the reference hand (the levels step's control sets)
+// controls at their ends, on a few poses of the reference hand: the hand's own, then the fingers' and the thumb's
 const CONTROL_SETS = [{ size: 0, palm_width: 1, finger_length: 0, finger_thickness: 1 },
   { fingers: { index: { curl: 1, spread: 1, twist: -1, length: 1, thickness: 0 }, pinky: { curl: -1, spread: -1, twist: 1 } }, thumb: { flexion: 1, abduction: -1, opposition: 1 } }];
 const CONTROL_POSES = ['HP01', 'HP04', 'HP06', 'HP11', 'HP18', 'HP24'];
@@ -212,7 +215,7 @@ function sweep() {
     items.push({ bodyName, body, pose, controlSet, hands });
   };
   for (const B of BODIES()) for (const pose of POSES) add1(B.name, B.body, pose, {}, null);
-  CONTROL_SETS.forEach((cs, i) => { for (const pose of CONTROL_POSES) add1(BODIES()[0].name, REF_CORNER, pose, cs, i); });
+  CONTROL_SETS.forEach((cs, i) => { for (const pose of CONTROL_POSES) add1(BODIES()[0].name, REF_HAND, pose, cs, i); });
   return (SWEEP_ = items);
 }
 
@@ -280,9 +283,8 @@ test('the wrist: level 0\'s connector closes the joint at flexion -70..+70 and d
   t.diagnostic('level 0: no point of the forearm\'s end ring outside the hand at any flexion and deviation of the range (5 degree steps), 4 bodies, 3 poses, both sides');
 });
 
-// the measured gaps of level 1 (the levels step measured 0.047 L for 'budget' and 0.005 L for 'readable'; measured again
-// for issue #54 on these bodies, 2026-11-28: 0.0465 L for 'budget', the reference hand, and 0.0049 L for 'readable',
-// the newborn)
+// the bounds on level 1's wrist gap, in hand lengths (measured for issue #54 on these bodies, 2026-11-28: 0.0465 L
+// for 'budget', the reference hand, and 0.0049 L for 'readable', the newborn)
 const L1_GAP = { budget: 0.047, readable: 0.006 };
 const level1Gaps = (() => {
   let out = null;
@@ -406,7 +408,7 @@ test('no jump: levels 1 to 3 stay within their tolerance of level 0 for every po
       if (j.bbox / L > wb) { wb = j.bbox / L; wbAt = `${it.bodyName} ${it.pose}`; }
       if (j.centroid / L > wc) { wc = j.centroid / L; wcAt = `${it.bodyName} ${it.pose}`; }
     }
-    t.diagnostic(`level ${C.key}: bounding box within ${wb.toFixed(3)} L of level 0 (${wbAt}), centroid within ${wc.toFixed(3)} L (${wcAt}); tolerance ${C.jump.bbox} / ${C.jump.centroid} L (the levels step's measured worst cases over six bodies, rounded up)`);
+    t.diagnostic(`level ${C.key}: bounding box within ${wb.toFixed(3)} L of level 0 (${wbAt}), centroid within ${wc.toFixed(3)} L (${wcAt}); tolerance ${C.jump.bbox} / ${C.jump.centroid} L (regression bounds, CONFIGS.jump; every hand of this sweep is built for its own body, at every level)`);
     assert.ok(wb <= C.jump.bbox, `level ${C.key}: bounding box ${wb.toFixed(3)} L at ${wbAt}`);
     assert.ok(wc <= C.jump.centroid, `level ${C.key}: centroid ${wc.toFixed(3)} L at ${wcAt}`);
   }
@@ -426,7 +428,7 @@ test('mirroring: the left hand is the right hand reflected in x, its winding fli
 });
 
 test('blending: hands of one topology blend and meet their ends; other pairs are refused, never switched', () => {
-  const body = REF_CORNER;
+  const body = REF_HAND;
   for (const C of CONFIGS) {
     const a = build({ pose: 'HP01', side: 'right', level: C.level, mode: C.mode, variant: C.variant, body }), b = build({ pose: 'HP04', side: 'right', level: C.level, mode: C.mode, variant: C.variant, body });
     const at = (t) => ok(H.blendHands(a, b, t), `${C.key} at ${t}`);
@@ -447,7 +449,7 @@ test('blending: hands of one topology blend and meet their ends; other pairs are
 });
 
 test('controls: each one moves what it says, and says so; at its end it is reported at the joint limit', () => {
-  const body = REF_CORNER, pose = 'HP01';
+  const body = REF_HAND, pose = 'HP01';
   const base = build({ pose, body, level: 0, mode: 'articulated' }), A0 = base.angles;
   const sumFlex = (A, f) => A.fingers[f].mcp_flex_deg + A.fingers[f].pip_flex_deg + A.fingers[f].dip_flex_deg;
   const control = (c) => { const h = build({ pose, body, level: 0, mode: 'articulated', controls: c }); return { h, A: h.angles, k: h.corrections.filter((x) => x.rule === 'hand-control') }; };
@@ -475,7 +477,7 @@ test('controls: each one moves what it says, and says so; at its end it is repor
   const span = 1 + rig.CONTROL_SPAN, head = (h, a) => h.bones.find((x) => x.name === a + '_R').head, headDist = (h, a, b) => len(sub(head(h, a), head(h, b)));
   const across = (h) => head(h, 'Index_01')[0] - head(h, 'Pinky_01')[0];   // the knuckles' span across the palm
   const width = (h, piece) => { const pc = h.pieces.find((p) => p.name === piece), xs = []; for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) xs.push(h.positions[3 * v]); return Math.max(...xs) - Math.min(...xs); };
-  { const h = build({ pose, body, level: 0, mode: 'articulated', controls: { size: 1 } }); assert.ok(Math.abs(h.dims.length - rig.REF_LENGTH * span) < 1e-12); assert.deepEqual(h.dims.ring, REF_CORNER.ring); assert.match(h.diagnostics.join(' '), /size 1: hand length/); }
+  { const h = build({ pose, body, level: 0, mode: 'articulated', controls: { size: 1 } }); assert.ok(Math.abs(h.dims.length - rig.REF_LENGTH * span) < 1e-12); assert.deepEqual(h.dims.ring, REF_HAND.ring); assert.match(h.diagnostics.join(' '), /size 1: hand length/); }
   { const h = build({ pose, body, level: 0, mode: 'articulated', controls: { size: 0 } }); assert.ok(Math.abs(h.dims.length - rig.REF_LENGTH * (1 - rig.CONTROL_SPAN)) < 1e-12); }
   { const h = build({ pose, body, level: 0, mode: 'articulated', controls: { palm_width: 1 } }); assert.ok(Math.abs(across(h) / across(base) - span) < 1e-9, `palm width: x${(across(h) / across(base)).toFixed(4)}`); }
   { const h = build({ pose, body, level: 0, mode: 'articulated', controls: { finger_length: 1 } }); assert.ok(Math.abs(headDist(h, 'Middle_02', 'Middle_03') / headDist(base, 'Middle_02', 'Middle_03') - span) < 1e-9, 'finger length'); }
@@ -489,7 +491,7 @@ test('controls: each one moves what it says, and says so; at its end it is repor
 });
 
 test('grips: the object\'s radius, shape and orientation change the grip, and an absolute radius stays absolute', () => {
-  const body = REF_CORNER, curl = (h) => ['middle', 'ring', 'pinky'].reduce((s, f) => s + h.angles.fingers[f].pip_flex_deg + h.angles.fingers[f].dip_flex_deg + h.angles.fingers[f].mcp_flex_deg, 0);
+  const body = REF_HAND, curl = (h) => ['middle', 'ring', 'pinky'].reduce((s, f) => s + h.angles.fingers[f].pip_flex_deg + h.angles.fingers[f].dip_flex_deg + h.angles.fingers[f].mcp_flex_deg, 0);
   const at = (grip) => ok(H.buildHand({ pose: 'HP06', body, level: 0, mode: 'articulated', grip }), JSON.stringify(grip));
   const r = [0.012, 0.02, 0.03].map((R) => at({ grip_radius_m: R }));
   r.forEach((h, i) => { assert.equal(h.contact.radius, [0.012, 0.02, 0.03][i]); assert.equal(h.contact.shape, 'cylinder'); });
@@ -501,8 +503,8 @@ test('grips: the object\'s radius, shape and orientation change the grip, and an
   // a radius on a pose that holds nothing is ignored and said
   const none = ok(H.buildHand({ pose: 'HP10', body, level: 0, grip: { grip_radius_m: 0.02 } }), 'HP10');
   assert.ok(none.corrections.some((k) => k.rule === 'hand-grip-ignored' && k.path === 'grip_radius_m'));
-  // through the generator: the same 20 mm on another body, at level 0 (exact) and level 1 (fitted, built on the
-  // reference hand at the radius that scales back to 20 mm)
+  // through the generator: the same 20 mm on another body, at level 0 and at level 1: both are built for that body
+  // (buildHand on the body the character gives), so the radius given is the radius held
   for (const level of [0, 1]) {
     const c = make(WOMAN, { hands: { level, left: { pose: 'HP01' }, right: { pose: 'HP06', grip_radius_m: 0.02 } } });
     assert.ok(Math.abs(c.hands.right.contact.radius - 0.02) < 1e-12, `level ${level}: ${c.hands.right.contact.radius}`);
@@ -563,7 +565,7 @@ test('every solved joint is within its limit: the sweep, and strong grips on sma
   // a grip curls the fingers by a factor of the pose's own curl: the factor stops at the joint limits
   const grips = [{ grip_radius_m: 0.006, grip_strength: 1 }, { grip_radius_m: 0.06, grip_strength: 0 }, { object: { shape: 'sphere', orientation_deg: 45 }, grip_strength: 1 }];
   for (const pose of GRIP_POSES) for (const g of grips) {
-    const h = build({ pose, body: REF_CORNER, level: 2, grip: { ...G0, ...g } }); n++;
+    const h = build({ pose, body: REF_HAND, level: 2, grip: { ...G0, ...g } }); n++;
     assert.deepEqual(pastLimits(h.angles), [], `${pose} ${JSON.stringify(g)}`);
   }
   t.diagnostic(`${n} hands: every finger and thumb joint within rig.LIMITS; grip poses ${GRIP_POSES.join(', ')}`);
@@ -579,7 +581,7 @@ test('folded fingers close until the fingertip rests on the palm, and say so (ha
     // the list is the reference body's. On another body a finger of it may pass through the palm at its authored fold
     // (a newborn's little finger): the solver does not close that one, it opens it clear of the palm, and says so
     // (hand-palm-clearance)
-    if (B.body === REF_CORNER) assert.deepEqual(closed, fingers.map((f) => `fingers.${f}`), `${B.name} ${pose}`);
+    if (B.body === REF_HAND) assert.deepEqual(closed, fingers.map((f) => `fingers.${f}`), `${B.name} ${pose}`);
     else for (const p of closed) assert.ok(fingers.some((f) => p === `fingers.${f}`), `${B.name} ${pose}: ${p} is said folded, and is not one of the pose's folded fingers`);
     const sh = shells(h), palm = sh.find((x) => x.name === 'Hand');
     for (const f of fingers) {
@@ -615,7 +617,7 @@ test('a pose\'s own grip radius scales with the hand; a radius given is absolute
 });
 
 test('the finger controls move their finger only: curl, spread and twist on the bones, the other fingers left where they were', (t) => {
-  const body = REF_CORNER, pose = 'HP01', base = build({ pose, body, level: 0, mode: 'articulated' }), P0 = H.posed(base);
+  const body = REF_HAND, pose = 'HP01', base = build({ pose, body, level: 0, mode: 'articulated' }), P0 = H.posed(base);
   const moved = (h) => { const P = H.posed(h), out = {}; for (const pc of h.pieces) { let m = 0; for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) m = Math.max(m, len(sub(V3(P, v), V3(P0, v)))); out[pc.name] = m; } return out; };
   const rows = [];
   // the middle finger is spread toward the ring finger twice: 1 reaches it (the solver parts the two), 0.25 does not
@@ -656,9 +658,9 @@ test('grip strength: 0 stands the fingers off the object, 1 presses them in, the
   const curl = (h) => rig.FINGERS.reduce((s, f) => s + h.angles.fingers[f].mcp_flex_deg + h.angles.fingers[f].pip_flex_deg + h.angles.fingers[f].dip_flex_deg, 0);
   const rows = [];
   for (const pose of ['HP06', 'HP20', 'HP09']) {
-    const hs = [0, 0.5, 1].map((g) => build({ pose, body: REF_CORNER, level: 2, grip: { ...G0, grip_strength: g } })), c = hs.map(curl);
+    const hs = [0, 0.5, 1].map((g) => build({ pose, body: REF_HAND, level: 2, grip: { ...G0, grip_strength: g } })), c = hs.map(curl);
     assert.ok(c[0] < c[1] && c[1] < c[2], `${pose}: ${c.map((x) => x.toFixed(1)).join(', ')}`);
-    assert.deepEqual(hs[1].angles, build({ pose, body: REF_CORNER, level: 2 }).angles, `${pose}: 0.5 is the pose`);
+    assert.deepEqual(hs[1].angles, build({ pose, body: REF_HAND, level: 2 }).angles, `${pose}: 0.5 is the pose`);
     hs.forEach((h, i) => assert.equal(h.corrections.some((k) => k.rule === 'hand-grip' && k.path === 'grip_strength'), i !== 1, `${pose} at ${[0, 0.5, 1][i]}`));
     rows.push(`${pose} ${c.map((x) => x.toFixed(0)).join(' < ')} deg of curl`);
   }
@@ -667,7 +669,7 @@ test('grip strength: 0 stands the fingers off the object, 1 presses them in, the
 
 test('a plane under every pose: each builds, finite and clear, and a grip strength on a plane is said to be ignored', () => {
   const kept = [], plane = { ...G0, object: { shape: 'plane', orientation_deg: null } };
-  const on = (pose, grip) => build({ pose, body: REF_CORNER, level: 0, mode: 'preset', grip });
+  const on = (pose, grip) => build({ pose, body: REF_HAND, level: 0, mode: 'preset', grip });
   for (const pose of POSES) {
     const h = on(pose, { ...plane, grip_strength: 1 });
     assert.ok(h.positions.every(Number.isFinite), pose);
@@ -757,7 +759,7 @@ test('a contact the mesh cannot meet is said: within the tolerance, or a hand-co
 
 test('the drawn shells of levels 1 and 2 are checked against each other: a shell moved into its neighbour is found', () => {
   for (const [level, variant, palm, moving, into] of [[1, 'readable', 'L1_Palm', 'L1_Index', 'L1_Middle'], [1, 'budget', 'L1_Palm', 'L1_Ring', 'L1_Middle'], [2, null, 'L2_Main', 'L2_Thumb', 'L2_Main']]) {
-    const h = build({ pose: 'HP01', body: REF_CORNER, level, variant }), s = h.dims.length / rig.REF_LENGTH;
+    const h = build({ pose: 'HP01', body: REF_HAND, level, variant }), s = h.dims.length / rig.REF_LENGTH;
     const deep = (P) => SHELLS.overlaps(P, h.index, h.pieces, { palm }).filter((o) => o.depth > 0.0003 * s);
     assert.deepEqual(deep(h.positions), [], `level ${level} ${variant}: HP01 as built`);
     // every vertex but the base ring moved along the line that takes the shell's far end (its last vertex) onto the
