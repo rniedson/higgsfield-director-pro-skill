@@ -5,7 +5,7 @@ area: Release
 files: 
 after: 
 ---
-The branch [`procedural-hands`](https://github.com/rniedson/higgsfield-director-pro-skill/tree/procedural-hands) adds procedural hands to the human generator
+The branch [`procedural-hands`](https://github.com/rniedson/hfd/tree/procedural-hands) adds procedural hands to the human generator
 (`blocking-studio/human-generator/`). It works end to end, but it is not ready for a pull request into `main`: some
 tests fail, documentation is stale, and a few decisions are open. This issue tracks what is left; each task has its
 own issue, written so that someone new to the branch can pick it up.

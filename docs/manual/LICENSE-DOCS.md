@@ -5,7 +5,7 @@ The illustrated manual in this folder, both its text (`README.md`) and its image
 (CC BY-SA 4.0). Legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode.en
 
 Attribution: "Higgsfield Director PRO, by Robson Niedson and contributors". Link to
-https://github.com/rniedson/higgsfield-director-pro-skill and to the license, and say what you changed.
+https://github.com/rniedson/hfd and to the license, and say what you changed.
 
 The text is adapted from the v4.1 illustrated package; the changes are listed at the end of the manual. The image
 catalogs record every image as an original procedural drawing, with no third-party imagery.

@@ -5,6 +5,13 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+### Changed
+
+- The repository is now `rniedson/hfd` (it was `rniedson/higgsfield-director-pro-skill`), named after `hfd.py`. GitHub
+  redirects the old address, including `git clone`, `fetch` and `push`; the links in the repository use the new one.
+  A clone made with the new address is a folder named `hfd`, so the install commands in both READMEs now use
+  `R="$PWD/hfd/higgsfield-director"`.
+
 ### Added
 
 - `blocking-studio/human-generator/`: a procedural generator of ultra low-poly, articulated mannequins of any age,
@@ -365,6 +372,6 @@ Generated in ChatGPT and kept out of this repository.
 | v4.0 | master modules and illustrated manual |
 | v4.1 RC1 – RC4 | packaging, hardening, public/private split, AAA illustrated README |
 
-[6.0.0]: https://github.com/rniedson/higgsfield-director-pro-skill/compare/v5.1.0...v6.0.0
-[5.1.0]: https://github.com/rniedson/higgsfield-director-pro-skill/compare/v5.0.0...v5.1.0
-[5.0.0]: https://github.com/rniedson/higgsfield-director-pro-skill/tree/v5.0.0
+[6.0.0]: https://github.com/rniedson/hfd/compare/v5.1.0...v6.0.0
+[5.1.0]: https://github.com/rniedson/hfd/compare/v5.0.0...v5.1.0
+[5.0.0]: https://github.com/rniedson/hfd/tree/v5.0.0
