@@ -417,12 +417,26 @@ Avaliação completa: [docs/RC3-EVALUATION.md](docs/RC3-EVALUATION.md).
 
 Requisitos: Claude Code e/ou Codex, Python 3.9+ (só biblioteca padrão). Para gerar, uma conta no Higgsfield.
 
-**1. Instale a skill só onde for usar.** Faça um link da pasta `higgsfield-director/` (nunca da raiz do repositório)
-dentro de `.claude/skills/` do projeto. A skill passa a existir apenas nas sessões abertas naquele projeto; as outras
-sessões ficam como estavam.
+**1. Instale a skill só onde for usar.** O `install.sh` faz o link da pasta `higgsfield-director/` (nunca da raiz do
+repositório) na pasta de skills do agente. No Claude Code ele oferece o `.claude/skills/` do projeto (o padrão quando
+o projeto tem uma pasta `.claude/`: a skill passa a existir só nas sessões abertas ali) ou `~/.claude/skills/` para
+todas as sessões; no Codex, `~/.agents/skills/`. Ele pergunta quando o Claude Code e o Codex estão instalados, nunca
+sobrescreve o que já existe e diz como tirar o link. Só bash; `--help` lista as opções, `--dry-run` mostra o que ele
+faria.
 
 ```bash
 git clone https://github.com/rniedson/hfd.git
+H="$PWD/hfd"
+cd /caminho/do/projeto
+"$H/install.sh"
+```
+
+Sem clonar antes: `curl -fsSL https://raw.githubusercontent.com/rniedson/hfd/main/install.sh | bash` clona o
+repositório em `~/hfd` (ou `--dir`) e faz o mesmo; leia o script nesse endereço antes de rodar.
+
+À mão, o mesmo link para um projeto:
+
+```bash
 R="$PWD/hfd/higgsfield-director"
 cd /caminho/do/projeto
 mkdir -p .claude/skills && ln -s "$R" .claude/skills/higgsfield-director

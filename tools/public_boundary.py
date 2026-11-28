@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 
 ROOT_FILES = {
     ".gitignore", "AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "CONTRIBUTING.md", "LICENSE",
-    "README.md", "README.pt-BR.md", "SECURITY.md",
+    "README.md", "README.pt-BR.md", "SECURITY.md", "install.sh",
 }
 TOP_LEVEL = {".github", "blocking-studio", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned",
              "price-history", "tools", "website"}

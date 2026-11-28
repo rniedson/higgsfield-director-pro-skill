@@ -232,6 +232,13 @@ def readme_language_problems(root):
             elif m.group(1) != other_name or not (root / m.group(1)).is_file():
                 problems.append(f"{name}: the language line links {other} to {m.group(1)}, not to {other_name}")
     return problems
+def check_install(problems):
+    """install.sh, the one-command install (#69): it must be there and executable (git keeps the mode)."""
+    f = ROOT / "install.sh"
+    if not f.is_file():
+        problems.append("install.sh: missing")
+    elif not os.access(f, os.X_OK):
+        problems.append("install.sh: not executable (chmod +x install.sh, and commit the mode)")
 
 
 def main():
@@ -242,6 +249,7 @@ def main():
     check_links(problems)
     check_language(problems)
     problems.extend(readme_language_problems(ROOT))
+    check_install(problems)
     problems.extend(check_public_boundary(ROOT))
     sys.path.insert(0, str(ROOT / "tools"))
     import aggregate_calibration
@@ -250,7 +258,7 @@ def main():
     aggregate_prices.check(problems)
     for p in problems:
         print(p)
-    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, prices, language, README language links and public/private boundary")
+    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, prices, language, README language links, install.sh and public/private boundary")
     return 1 if problems else 0
 
 
