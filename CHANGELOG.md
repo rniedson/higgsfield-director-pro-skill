@@ -7,6 +7,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- Showcases (#70): a "Showcases" section in both READMEs, after "Why use it", and `docs/showcases/` with two cases
+  told from their records (the request, the steps and credits, what was learned, what changed in the skill): the kung
+  fu demo of 2026-11-26 and the price check measured in tokens on 2026-11-27.
 - `tools/check_repo.py` checks the language line in the header of both READMEs (the first 40 lines): the current
   language in bold and without a link, and a link to each other README that exists (#68). A new language is one more
   entry in `READMES` and one more file. Tested in `tools/tests/test_readme_languages.py`.

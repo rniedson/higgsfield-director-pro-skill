@@ -115,6 +115,24 @@ tokens naquela sessão. Uma sessão nova relê bem menos, mas as cotações cont
 assinatura do Claude, esses números saem do limite de uso, não em dólar. Como funciona cada jeito:
 [`models.md`](higgsfield-director/references/models.md#who-makes-the-quotes) (em inglês).
 
+## Casos
+
+O que a skill fez em pedidos reais, contado a partir dos registros ([todos os casos](docs/showcases/README.md), em
+inglês).
+
+### Kung fu contra o clone robô: uma luta de 10 s, um passo de cada vez
+
+Quatro imagens para escolher o visual (0,48 crédito), a tomada inteira como rascunho (30) e o final em 1080p a partir
+do rascunho aprovado (160), cotados em 2026-11-26. O final repetiu o movimento do rascunho e também o silêncio dele;
+por isso a skill agora faz o rascunho com som quando o final precisa de som.
+[Ler o caso](docs/showcases/kung-fu-clone.md) · [Ver o vídeo](docs/demo/kung-fu-vs-robot-clone.mp4)
+
+### Os preços do dia sem o modelo
+
+As mesmas 29 cotações gratuitas feitas de três jeitos em 2026-11-27: pela conversa principal (5.276 tokens escritos,
+550.485 relidos), por um subagente num modelo pequeno e pelo `connector.py prices` (nenhum token de modelo nas
+cotações). [Ler o caso](docs/showcases/price-check-tokens.md)
+
 ## Manual ilustrado
 
 O [manual ilustrado de direção](docs/manual/README.md) tem **11 partes e 185 imagens esquemáticas**: movimento de
@@ -286,6 +304,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 
 - [Como funciona](#como-funciona)
 - [Por que usar](#por-que-usar)
+- [Casos](#casos)
 - [Manual ilustrado](#manual-ilustrado)
 - [Imagens de referência](#imagens-de-referência)
 - [Arquitetura](#arquitetura)
