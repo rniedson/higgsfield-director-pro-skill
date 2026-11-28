@@ -10,6 +10,12 @@ All notable changes to this project are listed here. The format follows
 - `tools/check_repo.py` checks the language line in the header of both READMEs (the first 40 lines): the current
   language in bold and without a link, and a link to each other README that exists (#68). A new language is one more
   entry in `READMES` and one more file. Tested in `tools/tests/test_readme_languages.py`.
+- `install.sh` at the root (#69): one command links the skill. It finds the skill next to itself in a clone, or
+  clones the repository into `~/hfd` (or `--dir`) when it runs through `curl | bash`; detects Claude Code and Codex
+  on the PATH and asks when both are there; for Claude Code offers the project's `.claude/skills/` or
+  `~/.claude/skills/`, for Codex `~/.agents/skills/`; never overwrites an existing link or folder; prints the link
+  and how to remove it. Plain bash (it runs on macOS's bash 3.2), with `--dry-run` and `--yes`. Tested in
+  `tools/tests/test_install.py`; `tools/check_repo.py` checks that it is executable. Both READMEs' Quick start use it.
 
 ### Fixed
 

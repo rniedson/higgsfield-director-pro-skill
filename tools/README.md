@@ -28,7 +28,7 @@ flowchart LR
 | [tests/](tests/) | 26 tests: 20 of the guard (what must pass and what must be refused, one test per hole a review found) and 6 of the price record |
 
 ```bash
-python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, prices, language, README language links and public/private boundary
+python3 tools/check_repo.py                      # ok: skill, JSON, links, anchors, calibration, prices, language, README language links, install.sh and public/private boundary
 python3 -m unittest discover -s tools/tests      # the guard's tests
 python3 tools/aggregate_calibration.py --write   # rewrite the scoreboard after adding a record
 python3 tools/aggregate_prices.py --add <prices.json>   # add this week's price table and redraw its page
