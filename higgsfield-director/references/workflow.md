@@ -53,7 +53,7 @@ Each character, product, place or brand that repeats gets a bible in `bibles`:
 - To chain shots, generate shot N, extract the last frame (or any good frame, cutting the clip there) and use it as
   the `start_image` of N+1.
 - **Examples** of a character sheet, a location in two views and a set detail, with the prompts that made them,
-  are in the repository's `examples/references/` folder, at the top of a clone, beside this skill's folder; online at https://github.com/rniedson/higgsfield-director-pro-skill/tree/main/examples/references); show them when the operator asks what a reference should look
+  are in the repository's `examples/references/` folder, at the top of a clone, beside this skill's folder; online at https://github.com/rniedson/hfd/tree/main/examples/references); show them when the operator asks what a reference should look
   like.
 - **One face per reference sheet.** A character sheet carries one face close-up; the other panels (full body, front
   and back) are cropped from the neck down, so the model has a single face to read. Neutral mid-grey background, soft

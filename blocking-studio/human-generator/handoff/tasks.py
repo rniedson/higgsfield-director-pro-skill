@@ -13,7 +13,7 @@ needs the repository's owner (the project is created under that account), with t
 """
 import glob, json, os, subprocess, sys
 
-OWNER, REPO_NAME = 'rniedson', 'higgsfield-director-pro-skill'
+OWNER, REPO_NAME = 'rniedson', 'hfd'
 REPO = f'{OWNER}/{REPO_NAME}'
 MILESTONE = 'Procedural hands'
 PROJECT = 'Procedural hands'

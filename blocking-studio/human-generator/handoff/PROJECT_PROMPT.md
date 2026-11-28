@@ -1,6 +1,6 @@
 # Prompts for the hand tasks
 
-Two prompts for a coding agent with a checkout of `rniedson/higgsfield-director-pro-skill`: the first sets up the
+Two prompts for a coding agent with a checkout of `rniedson/hfd`: the first sets up the
 issues and the project board once; the second is for every agent that takes a task afterwards.
 
 **Who runs the first one.** The project is created under the account `rniedson`, and only that account can create a
@@ -11,7 +11,7 @@ to the GitHub CLI as `rniedson`, with the `project` scope (`gh auth refresh -s p
 **What a collaborator needs from the owner,** before the second prompt:
 
 - the write role on the repository, to push branches and be assigned issues (the owner invites it under Settings,
-  Collaborators, or with `gh api -X PUT repos/rniedson/higgsfield-director-pro-skill/collaborators/<login> -f permission=push`;
+  Collaborators, or with `gh api -X PUT repos/rniedson/hfd/collaborators/<login> -f permission=push`;
   the collaborator accepts the invitation);
 - the writer role on the project, to move its cards (the project's page, Settings, Manage access).
 
@@ -19,7 +19,7 @@ to the GitHub CLI as `rniedson`, with the `project` scope (`gh auth refresh -s p
 
 ```text
 You are setting up the GitHub issues and project board for the procedural hand pose system in the repository
-rniedson/higgsfield-director-pro-skill. The work is on the branch `procedural-hands`. Its tasks are written as issue
+rniedson/hfd. The work is on the branch `procedural-hands`. Its tasks are written as issue
 drafts in `blocking-studio/human-generator/handoff/issues/`, and `blocking-studio/human-generator/handoff/tasks.py`
 puts them on GitHub.
 
@@ -54,7 +54,7 @@ that), and keep everything in English.
 ## 2. Take a task (every agent afterwards)
 
 ```text
-You are taking one task of the procedural hand pose system in rniedson/higgsfield-director-pro-skill. Read
+You are taking one task of the procedural hand pose system in rniedson/hfd. Read
 `blocking-studio/human-generator/handoff/README.md` on the branch `procedural-hands`, section "Taking a task", and
 follow it: pick a Todo issue in the milestone "Procedural hands" whose dependencies are closed and whose files no
 task in progress is changing, assign yourself, set it In Progress on the project board, branch from

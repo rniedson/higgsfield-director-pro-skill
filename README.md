@@ -12,7 +12,7 @@
 ![Agents](https://img.shields.io/badge/tested%20in-Claude%20Code-bca271)
 ![Codex](https://img.shields.io/badge/Codex-local%20workflow%20tested-2f7d68)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
-[![Tests](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml)
+[![Tests](https://github.com/rniedson/hfd/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/hfd/actions/workflows/tests.yml)
 ![License](https://img.shields.io/badge/code-MIT-blue)
 ![Unofficial](https://img.shields.io/badge/unofficial-not%20affiliated%20with%20Higgsfield-b45309)
 
@@ -414,8 +414,8 @@ root) into the `.claude/skills/` folder of the project. The skill then exists on
 every other session stays as it was.
 
 ```bash
-git clone https://github.com/rniedson/higgsfield-director-pro-skill.git
-R="$PWD/higgsfield-director-pro-skill/higgsfield-director"
+git clone https://github.com/rniedson/hfd.git
+R="$PWD/hfd/higgsfield-director"
 cd /path/to/your/project
 mkdir -p .claude/skills && ln -s "$R" .claude/skills/higgsfield-director
 ```

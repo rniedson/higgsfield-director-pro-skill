@@ -12,7 +12,7 @@
 ![Agentes](https://img.shields.io/badge/testada%20no-Claude%20Code-bca271)
 ![Codex](https://img.shields.io/badge/Codex-fluxo%20local%20testado-2f7d68)
 ![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)
-[![Testes](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/higgsfield-director-pro-skill/actions/workflows/tests.yml)
+[![Testes](https://github.com/rniedson/hfd/actions/workflows/tests.yml/badge.svg)](https://github.com/rniedson/hfd/actions/workflows/tests.yml)
 ![Licença](https://img.shields.io/badge/c%C3%B3digo-MIT-blue)
 ![Não oficial](https://img.shields.io/badge/n%C3%A3o%20oficial-sem%20v%C3%ADnculo%20com%20o%20Higgsfield-b45309)
 
@@ -421,8 +421,8 @@ dentro de `.claude/skills/` do projeto. A skill passa a existir apenas nas sess�
 sessões ficam como estavam.
 
 ```bash
-git clone https://github.com/rniedson/higgsfield-director-pro-skill.git
-R="$PWD/higgsfield-director-pro-skill/higgsfield-director"
+git clone https://github.com/rniedson/hfd.git
+R="$PWD/hfd/higgsfield-director"
 cd /caminho/do/projeto
 mkdir -p .claude/skills && ln -s "$R" .claude/skills/higgsfield-director
 ```
