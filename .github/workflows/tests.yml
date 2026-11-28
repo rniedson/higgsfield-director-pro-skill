@@ -48,6 +48,8 @@ jobs:
   human-generator:
     name: human generator · Node ${{ matrix.node }}
     runs-on: ubuntu-latest
+    # Stops a sweep that hangs.
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -57,5 +59,17 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
-      - name: Tests (no dependencies)
+      # One command for each file: given together, `node --test` runs the files side by side, and the generator's
+      # performance test (bounds in milliseconds per character) would be timed against the hand sweeps. Each step
+      # runs even when an earlier one failed, so that one run reports every suite.
+      - name: Generator tests (no dependencies)
         run: node --expose-gc --test blocking-studio/human-generator/tests/test_generator.mjs
+      - name: Hand DNA contract tests
+        if: ${{ !cancelled() }}
+        run: node --expose-gc --test blocking-studio/human-generator/tests/test_hand_dna.mjs
+      - name: Hand tests
+        if: ${{ !cancelled() }}
+        run: node --expose-gc --test blocking-studio/human-generator/tests/test_hands.mjs
+      - name: hands/fit.js is what the fit tool writes for the current poses and mesh
+        if: ${{ !cancelled() }}
+        run: node blocking-studio/human-generator/tools/fit_hand_poses.mjs --check
