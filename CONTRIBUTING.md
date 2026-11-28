@@ -52,10 +52,12 @@ There is nothing to install. The skill uses only the Python standard library (3.
 cd higgsfield-director && python3 -m unittest discover -s tests -v   # hfd.py and skill format
 cd .. && python3 -m unittest discover -s tools/tests -v           # public/private boundary
 python3 tools/check_repo.py                                        # repository and privacy checks
+node --test blocking-studio/human-generator/tests/test_generator.mjs   # the human generator (Node 22 or later)
 ```
 
 CI runs them on every pull request and on every push to `main`, with PyYAML installed so that the frontmatter is read
-as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check reads it by pattern and says so.
+as real YAML (`check_repo.py --require-yaml`). Without PyYAML, the local check reads it by pattern and says so. The
+last line needs Node and only matters for a change under `blocking-studio/human-generator/`.
 
 ## Rules for changes
 

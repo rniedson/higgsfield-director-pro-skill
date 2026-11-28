@@ -264,7 +264,7 @@ examples/references/            three reference images and the prompts that made
 calibration/                    records of the blind rounds run while the skill was built, and their scoreboard
 lessons-learned/                lessons that changed the skill, each with its source
 price-history/                  the connector's quotes, one record a week, with a chart of how they move
-blocking-studio/                animated 3D storyboards before spending credits: two mannequins (GLB), Blender scripts, a Three.js viewer
+blocking-studio/                animated 3D storyboards before spending credits: two mannequins (GLB), a procedural human generator, Blender scripts, a Three.js viewer
 docs/
   MIGRATION-6.md                every name from before 6.0 and its English name
   RC3-EVALUATION.md             evaluation of the previous package and what v5 kept
@@ -693,8 +693,8 @@ Versions up to v4.1 were generated with ChatGPT and are kept outside this reposi
 - The mannequins in `blocking-studio/assets/` (the models, their sources and their design sheets): their license is
   the maintainer's decision, recorded in each one's folder when made
   ([male](blocking-studio/assets/characters/mannequin/README.md#license),
-  [female](blocking-studio/assets/characters/mannequin-female/README.md#license)). The blocking studio's scripts and
-  viewer are code, under the MIT License.
+  [female](blocking-studio/assets/characters/mannequin-female/README.md#license)). The blocking studio's scripts,
+  viewer and human generator are code, under the MIT License.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax and other names are trademarks of their owners. The licenses above
   give no right to use them. This project is independent and not affiliated with or endorsed by any of them.
 

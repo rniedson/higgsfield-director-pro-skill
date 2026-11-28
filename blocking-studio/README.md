@@ -13,8 +13,9 @@ It belongs to the first step of the pipeline, pre-production and storyboard
 by an image model, at a fraction of a credit per frame, and shows still poses. The 3D storyboard shows the motion and
 costs no credits.
 
-The studio starts with its first assets, two articulated mannequins, male and female, on the same skeleton. The engine
-that stages, animates and renders the storyboard comes next. This folder is not part of the installed skill.
+The studio starts with its first assets: two articulated mannequins, male and female, on the same skeleton, and a
+generator that builds a low-poly mannequin of any age and build on those same bones. The engine that stages, animates
+and renders the storyboard comes next. This folder is not part of the installed skill.
 
 ## What is here
 
@@ -22,6 +23,7 @@ that stages, animates and renders the storyboard comes next. This folder is not 
 |---|---|
 | `assets/characters/mannequin/` | the articulated mannequin, its rig data, its cut heights, the design sheets and the raw source model ([README](assets/characters/mannequin/README.md)) |
 | `assets/characters/mannequin-female/` | the articulated female mannequin, on the same skeleton: its cut heights, the design sheet and the raw source model ([README](assets/characters/mannequin-female/README.md)) |
+| `human-generator/` | a procedural generator: from a character's DNA (sex, age, height, build, proportions) to an articulated low-poly mannequin on the same bones, with an editor and tests ([README](human-generator/README.md)) |
 | `tools/blender/` | Blender scripts, run headless, that build and check the assets |
 | `viewer/` | a single-page Three.js viewer to load a GLB, pose its bones and test it |
 | `docs/` | images referenced by the READMEs |
@@ -41,6 +43,17 @@ Then go to <http://localhost:8766/blocking-studio/viewer/index.html>.
   `?glb=../assets/characters/mannequin-female/mannequin-female.glb`.
 - **Console:** `boneWorldPositions()` returns every bone's position in the world, to check a pose by numbers.
 - **Three.js:** loaded from the jsDelivr CDN (`three@0.170.0`). No build step and no install.
+
+## Generate a character
+
+The modelled mannequins are two people. For anyone else (a child, an old man, a crowd), the
+[human generator](human-generator/README.md) builds a mannequin from a DNA: one topology and one rig for every
+character, a few hundred triangles each, nothing stored. Its editor is at
+<http://localhost:8766/blocking-studio/human-generator/index.html>, on the same server, and its tests run with Node:
+
+```bash
+node --test blocking-studio/human-generator/tests/test_generator.mjs
+```
 
 ## Rebuild and check a mannequin
 
