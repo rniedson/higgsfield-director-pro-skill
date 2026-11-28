@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Higgsfield Director PRO</title>
+  <meta name="description" content="Direct AI-generated video one step at a time: plan, preview and price every shot before spending a credit. Agent skill for Claude Code.">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #1e1e2a;
+      --text: #e4e4eb;
+      --muted: #8888a0;
+      --accent: #c9a84c;
+      --accent-dim: #c9a84c33;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+    header { padding: 80px 0 48px; text-align: center; }
+    header .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border: 1px solid var(--accent-dim);
+      border-radius: 20px;
+      color: var(--accent);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
+    header p { font-size: 18px; color: var(--muted); max-width: 560px; margin: 0 auto 32px; }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: opacity 0.2s;
+      margin: 4px;
+    }
+    .cta:hover { opacity: 0.85; }
+    .cta-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .cta-secondary:hover { border-color: var(--muted); }
+    section { padding: 48px 0; border-top: 1px solid var(--border); }
+    section h2 { font-size: 24px; font-weight: 600; margin-bottom: 24px; }
+    .steps { display: grid; gap: 16px; }
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-weight: 700; font-size: 14px;
+    }
+    .step h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .step p { font-size: 14px; color: var(--muted); }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .features { grid-template-columns: 1fr; } }
+    .feature { padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+    .feature h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .feature p { font-size: 13px; color: var(--muted); }
+    .install-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+    .install-box code {
+      display: block;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      white-space: pre;
+      line-height: 1.8;
+    }
+    .install-box .comment { color: var(--muted); }
+    .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+    .links a {
+      padding: 8px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .links a:hover { border-color: var(--accent); }
+    footer { padding: 48px 0; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">v6.0.0 &middot; unofficial &middot; not affiliated with Higgsfield</span>
+      <h1>Higgsfield Director PRO</h1>
+      <p>Direct AI-generated video one step at a time: plan, preview and price every shot before spending a credit.</p>
+      <a href="https://github.com/rniedson/hfd" class="cta">View on GitHub</a>
+      <a href="https://github.com/rniedson/hfd/tree/main/docs/manual" class="cta cta-secondary">Illustrated manual</a>
+    </header>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div>
+            <h3>The plan</h3>
+            <p>The idea, the shots, the model and the prompts, in words. Costs nothing. Change it while it is free.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div>
+            <h3>One still per shot</h3>
+            <p>A cheap image of each shot. A few credits. Check the look, the people and the place.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div>
+            <h3>One test shot</h3>
+            <p>The riskiest shot as a short video at the lowest resolution. Check motion and sound.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">4</span>
+          <div>
+            <h3>The rest</h3>
+            <p>The other shots, then the final resolution if you want it. Only the total you approved.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Why use it</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Nothing spent by surprise</h3>
+          <p>Every generation is quoted first and waits for your ok. After each one you see what it cost and the total so far.</p>
+        </div>
+        <div class="feature">
+          <h3>Mistakes caught early</h3>
+          <p>One still per shot, then one test shot at the lowest resolution, before the rest.</p>
+        </div>
+        <div class="feature">
+          <h3>Your request stays yours</h3>
+          <p>Every fact and limit you give goes into the prompt as you said it. Camera and light come in only when you ask.</p>
+        </div>
+        <div class="feature">
+          <h3>Errors found before any credit</h3>
+          <p>hfd.py validate checks model limits, dialogue, continuity and the 180-degree axis, offline and free.</p>
+        </div>
+        <div class="feature">
+          <h3>Today's prices, never stale</h3>
+          <p>No price is written in the skill. The day's price table comes from the connector's free quotes.</p>
+        </div>
+        <div class="feature">
+          <h3>Your way of working</h3>
+          <p>Approve every step, give one ok for the total, or set a ceiling for the session.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Quick start</h2>
+      <p style="color: var(--muted); margin-bottom: 16px;">Requires Claude Code and/or Codex, Python 3.9+. For generation, a Higgsfield account.</p>
+      <div class="install-box">
+        <code><span class="comment"># Clone and link the skill to your project</span>
+git clone https://github.com/rniedson/hfd.git
+R="$PWD/hfd/higgsfield-director"
+cd /path/to/your/project
+mkdir -p .claude/skills &amp;&amp; ln -s "$R" .claude/skills/higgsfield-director</code>
+      </div>
+    </section>
+
+    <section>
+      <h2>Documentation</h2>
+      <div class="links">
+        <a href="https://github.com/rniedson/hfd/blob/main/higgsfield-director/SKILL.md">Skill entry point</a>
+        <a href="https://github.com/rniedson/hfd/tree/main/docs/manual">Illustrated manual</a>
+        <a href="https://github.com/rniedson/hfd/tree/main/examples">Examples</a>
+        <a href="https://github.com/rniedson/hfd/tree/main/lessons-learned">Lessons learned</a>
+        <a href="https://github.com/rniedson/hfd/blob/main/CHANGELOG.md">Changelog</a>
+        <a href="https://github.com/rniedson/hfd/blob/main/CONTRIBUTING.md">Contributing</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>Higgsfield Director PRO &middot; MIT License &middot; &copy; 2026 Robson Niedson</p>
+      <p style="margin-top: 8px;">Unofficial, independent project &middot; not affiliated with or endorsed by Higgsfield</p>
+    </footer>
+  </div>
+</body>
+</html>
