@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Human generator</title>
+<style>
+  :root { --bg:#f4f5f7; --fg:#1d2329; --muted:#5d6670; --panel:#ffffff; --line:#d9dde2; --accent:#2f6fde; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); font:13px/1.4 system-ui,sans-serif; }
+  #app { display:flex; height:100%; }
+  #view { flex:1; min-width:0; position:relative; background:#fff; }
+  #labels { position:absolute; inset:0; pointer-events:none; }
+  #labels div { position:absolute; transform:translateX(-50%); text-align:center; font-size:11px; color:var(--muted); white-space:nowrap; }
+  #labels div b { display:block; color:var(--fg); font-size:12px; }
+  #title { position:absolute; left:14px; top:10px; font-weight:600; font-size:15px; }
+  #side { width:330px; overflow:auto; background:var(--panel); border-left:1px solid var(--line); padding:10px 12px; box-sizing:border-box; }
+  h1 { font-size:15px; margin:0 0 6px; }
+  .stats { font-size:12px; color:var(--muted); white-space:pre-wrap; margin:4px 0 8px; }
+  .row { display:flex; flex-wrap:wrap; gap:3px; margin:4px 0; }
+  button { font:inherit; font-size:12px; padding:3px 7px; border:1px solid var(--line); border-radius:6px; background:#fff; cursor:pointer; }
+  button:hover, button.on { border-color:var(--accent); color:var(--accent); }
+  details { border-top:1px solid var(--line); padding:5px 0; }
+  summary { cursor:pointer; font-weight:600; }
+  label.s { display:grid; grid-template-columns:16px 112px 1fr 44px; gap:5px; align-items:center; font-size:12px; margin:2px 0; }
+  label.s input[type=checkbox] { margin:0; }
+  label.s.preset span, label.s.off span { color:var(--muted); }
+  .hint { font-size:11px; color:var(--muted); margin:2px 0 4px; }
+  label.s span:last-child { text-align:right; color:var(--muted); }
+  input[type=range] { width:100%; }
+  textarea { width:100%; box-sizing:border-box; height:140px; font:11px/1.3 ui-monospace,monospace; }
+  .corr { font-size:12px; color:#8a4b00; margin:4px 0; }
+  .err { color:#b00020; }
+  @media (max-width:760px) { #app { flex-direction:column; } #side { width:auto; height:48%; border-left:0; border-top:1px solid var(--line); } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <div id="view"><div id="title"></div><div id="labels"></div></div>
+  <div id="side">
+    <h1>Human generator</h1>
+    <div class="stats" id="stats"></div>
+    <div class="row" id="modes"></div>
+    <div class="row">
+      <button id="bPieces">Pieces</button><button id="bWire">Wireframe</button><button id="bColl">Colliders</button>
+      <button id="bRandom">Random adult</button>
+    </div>
+    <div class="row" id="poses"></div>
+    <div class="row" id="views"></div>
+    <div id="corr"></div>
+    <details open><summary>Sex, age, height, build</summary><div id="gMain"></div></details>
+    <details><summary>Body: bone, muscle, fat</summary><div class="hint">Unticked: the value comes from the preset.</div><div id="gBody"></div></details>
+    <details><summary>Fat distribution</summary><div class="hint">Weights: they share out the fat, they do not add any.</div><div class="row" id="patterns"></div><div id="gFat"></div></details>
+    <details><summary>Proportions</summary><div id="gProp"></div></details>
+    <details><summary>Aging and function</summary><div class="hint">Apart from age: an older character is not frail unless these say so.</div><div id="gAge"></div></details>
+    <details><summary>Posture</summary><div id="gPost"></div></details>
+    <details><summary>DNA (JSON)</summary><textarea id="dna" spellcheck="false"></textarea>
+      <div class="row"><button id="bApply">Apply</button><button id="bCopy">Copy</button></div><div id="dnaErr" class="err"></div></details>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { generate, validate, randomDNA, dnaFromId, presetDNA, colliders, referenceStature, HEIGHTS, HEIGHT_LEVELS, BUILDS, FAT_PATTERNS,
+  GROUPS, STAGES, STAGE_AGE, ADULT_MONTHS, stageOf } from './generator.js';
+
+// ---------- scene
+const view = document.getElementById('view'), labels = document.getElementById('labels');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+view.prepend(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xffffff);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa1a8, 1.7));
+const key = new THREE.DirectionalLight(0xffffff, 1.9); key.position.set(1.5, 3, 4); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.6); rim.position.set(-3, 2, -3); scene.add(rim);
+const persp = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
+let camera = persp;
+const controls = new OrbitControls(persp, renderer.domElement);
+const grid = new THREE.GridHelper(30, 60, 0xdde1e5, 0xeceef0); scene.add(grid);
+const material = new THREE.MeshStandardMaterial({ color: 0xb4b9bf, flatShading: true, roughness: 0.9, metalness: 0 });
+const pieceMaterial = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.9 });
+const PALETTE = [0x8c96a0, 0xd9a441, 0x6aa6d8, 0x7bc47f, 0xe0786f, 0xb08bd6, 0x5fc2b8, 0xe39bc4, 0xa3b15a, 0xd98a4e];
+
+// ---------- state
+const AZIMUTH = { front: 0, three_quarter: 35, side: 90, back: 180, top: 0 };   // degrees around the character
+let dna = dnaFromId('M_H05_C04');
+let mode = 'character', showPieces = false, wire = false, showColl = false, poseName = 'rest', viewName = 'three_quarter';
+let fixtureCases = null, caseFilter = 'PAIR_';
+const group = new THREE.Group(); scene.add(group);
+const characters = [];   // { char, mesh, bones, rest, item }
+const clone = (o) => JSON.parse(JSON.stringify(o));
+
+function toMesh(c) {
+  const g = new THREE.BufferGeometry(), n = c.positions.length / 3;
+  g.setAttribute('position', new THREE.BufferAttribute(c.positions, 3));
+  const si = new Uint16Array(n * 4), sw = new Float32Array(n * 4), col = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    si[4 * i] = c.boneIndex[i]; sw[4 * i] = 1;
+    const k = new THREE.Color(PALETTE[c.boneIndex[i] % PALETTE.length]); col[3 * i] = k.r; col[3 * i + 1] = k.g; col[3 * i + 2] = k.b;
+  }
+  g.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(si, 4));
+  g.setAttribute('skinWeight', new THREE.Float32BufferAttribute(sw, 4));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  g.setIndex(new THREE.BufferAttribute(c.index, 1));
+  const bones = c.bones.map((b) => { const o = new THREE.Bone(); o.name = b.name; return o; });
+  c.bones.forEach((b, i) => {
+    if (!b.parent) { bones[i].position.set(...b.head); return; }
+    const pi = c.bones.findIndex((x) => x.name === b.parent);
+    bones[pi].add(bones[i]); bones[i].position.set(b.head[0] - c.bones[pi].head[0], b.head[1] - c.bones[pi].head[1], b.head[2] - c.bones[pi].head[2]);
+  });
+  const mesh = new THREE.SkinnedMesh(g, showPieces ? pieceMaterial : material);
+  mesh.add(bones[0]); mesh.updateMatrixWorld(true);
+  mesh.bind(new THREE.Skeleton(bones));          // the bind pose: no rotation on any bone
+  mesh.frustumCulled = false;
+  const rest = c.bones.map((b) => new THREE.Quaternion(...b.rest));
+  return { mesh, bones, rest };
+}
+
+// Poses are quaternions per bone, applied after the rest pose, as the generator's own functions take them.
+const euler = (x, y, z) => new THREE.Quaternion().setFromEuler(new THREE.Euler(...[x, y, z].map(THREE.MathUtils.degToRad))).toArray();
+const TEST_POSE = { UpperArm_L: euler(0, 0, 70), LowerArm_L: euler(-60, 0, 0), UpperArm_R: euler(-40, 0, -20), LowerArm_R: euler(-90, 0, 0),
+  Thigh_L: euler(-45, 0, 0), Calf_L: euler(70, 0, 0), Spine_03: euler(12, 15, 0), Neck: euler(0, 20, 0), Head: euler(-10, 0, 0) };
+const poseOf = (c) => (poseName === 'test' ? TEST_POSE : poseName === 'neutral' ? (c.neutral_pose ?? {}) : {});
+function applyPose(entry) {
+  const pose = poseOf(entry.char), offset = pose.$offset ?? [0, 0, 0];
+  entry.bones.forEach((b, i) => {
+    b.quaternion.copy(entry.rest[i]);
+    if (pose[b.name]) b.quaternion.multiply(new THREE.Quaternion(...pose[b.name]));
+    if (i === 0) b.position.set(entry.char.bones[0].head[0] + offset[0], entry.char.bones[0].head[1] + offset[1], entry.char.bones[0].head[2] + offset[2]);
+  });
+}
+
+function collidersObject(c) {
+  const g = new THREE.Group(), m = new THREE.MeshBasicMaterial({ color: 0xff3b30, wireframe: true, transparent: true, opacity: 0.35 });
+  for (const k of colliders(c, poseOf(c))) {
+    const a = new THREE.Vector3(...k.a), b = new THREE.Vector3(...k.b), len = a.distanceTo(b);
+    const cap = new THREE.Mesh(new THREE.CapsuleGeometry(k.r, len, 3, 8), m);
+    cap.position.copy(a).add(b).multiplyScalar(0.5);
+    if (len > 1e-6) cap.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    g.add(cap);
+  }
+  return g;
+}
+
+// ---------- lineups (seed 0: the plain presets, so a lineup shows only what it varies)
+const pad = (i) => String(i).padStart(2, '0');
+const levelOf = (d) => HEIGHT_LEVELS.indexOf(d.height_level) + 1;
+const years = (m) => (m < 24 ? `${m} mo` : `${+(m / 12).toFixed(1)} y`);
+const at = (changes) => { const d = clone(dna); d.seed = 0; for (const [k, v] of Object.entries(changes)) { if (v && typeof v === 'object') Object.assign(d[k], v); else d[k] = v; } return d; };
+const aged = (months, sex = dna.sex, extra = {}) => ({ ...presetDNA({ sex, age_months: months, level: levelOf(dna), build: dna.build, seed: 0 }), ...extra });
+const MODES = {
+  character: { label: 'Character', list: () => [{ dna }] },
+  ages: { label: '10 ages', title: 'Ten stages of life, same height level and build', list: () => STAGES.map((s) => { const d = aged(STAGE_AGE[s.id]);
+    return { dna: d, label: s.id, sub: `${years(d.age_months)} · ${d.height_m.toFixed(2)} m` }; }) },
+  growth: { label: 'Growth', title: 'Growing, year by year: no jump between stages', list: () => [0, 3, 6, 12, 24, 36, 60, 84, 108, 132, 156, 180, 204, 228].map((m) => { const d = aged(m);
+    return { dna: d, label: years(m), sub: `${d.height_m.toFixed(2)} m` }; }) },
+  aging: { label: 'Aging', title: 'Aging: the same adult, older; the last one at 85 with the aging controls at zero', list: () => [
+    ...[360, 600, 780, 900, 1020, 1140].map((m) => ({ dna: aged(m), label: years(m), sub: stageOf(m) })),
+    { dna: at({ age_months: 1020, development_stage: 'A10', aging: { muscle_atrophy: 0, skin_laxity: 0 } }), label: '85 y', sub: 'aging at zero' },
+    { dna: at({ age_months: 1020, development_stage: 'A10', aging: { muscle_atrophy: 1, skin_laxity: 1 }, posture: { spine_curvature: 0.85 } }), label: '85 y', sub: 'atrophy, laxity and curve set high' }] },
+  heights: { label: '10 heights', title: 'Ten height levels, same age and build', list: () => HEIGHTS.map((h, i) => { const d = aged(dna.age_months, dna.sex); const e = presetDNA({ sex: dna.sex, age_months: dna.age_months, level: i + 1, build: dna.build, seed: 0 });
+    return { dna: { ...d, height_level: e.height_level, height_m: e.height_m }, label: `H${pad(i + 1)}`, sub: `${e.height_m.toFixed(2)} m` }; }) },
+  builds: { label: '10 builds', title: 'Ten builds, same age and height', list: () => BUILDS.map((b, i) => ({ dna: at({ build: i + 1, body_fat: null, muscle_mass: null }), label: `C${pad(i + 1)}`, sub: b.label })) },
+  sexes: { label: 'Male / female', title: 'The male and the female preset at each stage', list: () => STAGES.flatMap((s) => ['male', 'female'].map((sex) => { const d = aged(STAGE_AGE[s.id], sex);
+    return { dna: d, label: `${s.id} ${sex === 'male' ? 'M' : 'F'}`, sub: `${d.height_m.toFixed(2)} m` }; })) },
+  fat: { label: 'Fat patterns', title: 'Where the fat goes: same amount, different weights', list: () => Object.keys(FAT_PATTERNS).map((k) => ({ dna: at({ body_fat: Math.max(0.6, dna.body_fat ?? 0), fat_distribution: FAT_PATTERNS[k] }), label: k, sub: '' })) },
+  proportions: { label: 'Proportions', title: 'Same height, different segment lengths', list: () => [
+    { dna: at({ proportions: { torso_length: 1, leg_length: 0 } }), label: 'Long torso', sub: '' },
+    { dna: at({ proportions: { torso_length: 0.5, leg_length: 0.5 } }), label: 'Balanced', sub: '' },
+    { dna: at({ proportions: { torso_length: 0, leg_length: 1 } }), label: 'Long legs', sub: '' }] },
+  extremes: { label: 'Extremes', title: 'The extremes of the adult scale', list: () => ['M', 'F'].flatMap((s) => [[1, 1], [1, 10], [10, 1], [10, 10]].map(([h, c]) => { const id = `${s}_H${pad(h)}_C${pad(c)}`;
+    return { dna: dnaFromId(id), label: id, sub: `${HEIGHTS[h - 1].toFixed(2)} m · ${BUILDS[c - 1].label}` }; })) },
+  matrix: { label: '10 × 10', title: 'Ten heights by ten builds', list: () => {
+    const out = []; for (let b = 1; b <= 10; b++) for (let h = 1; h <= 10; h++) { const e = presetDNA({ sex: dna.sex, age_months: dna.age_months, level: h, build: b, seed: 0 }); out.push({ dna: e, row: b - 1, col: h - 1 }); }
+    return out; } },
+  crowd: { label: 'Crowd', title: 'Random adults from seeds', list: () => Array.from({ length: 12 }, (_, i) => ({ dna: randomDNA(1000 + i), label: `seed ${1000 + i}`, sub: '' })) },
+  cases: { label: 'Test cases', title: 'Cases of the test collection', list: () => (fixtureCases ?? []).filter((d) => caseFilter.split(',').some((f) => d.id.startsWith(f))).map((d) => ({ dna: d, label: d.id, sub: `${d.height_m.toFixed(2)} m` })) },
+};
+
+function rebuild() {
+  for (const e of characters) { e.mesh.geometry.dispose(); group.remove(e.mesh); if (e.coll) { e.coll.traverse((o) => o.geometry?.dispose()); group.remove(e.coll); } }
+  characters.length = 0; labels.innerHTML = '';
+  const items = MODES[mode].list();
+  let x = 0, prevHalf = 0;
+  const built = items.map((it) => ({ it, c: generate(it.dna) }));
+  for (const b of built) if (!b.c.ok) console.warn('not generated', b.it.dna.id, b.c.errors);
+  const good = built.filter((b) => b.c.ok);
+  const grid2 = mode === 'matrix';
+  const cell = grid2 ? Math.max(...good.map((b) => b.c.dna.height_m)) * 0.62 : 0;
+  const turn = mode === 'character' || viewName === 'top' ? 0 : -THREE.MathUtils.degToRad(AZIMUTH[viewName] ?? 0);
+  for (const { it, c } of good) {
+    const e = toMesh(c); e.char = c; e.item = it; applyPose(e);
+    e.mesh.rotation.y = turn;   // in a lineup the characters turn, the camera stays in front
+    e.mesh.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(e.mesh, true);   // the posed bounds
+    const half = Math.max(Math.max(Math.abs(box.min.x), Math.abs(box.max.x)) + 0.1 * c.dna.height_m / 1.75, c.dna.height_m * 0.2);
+    if (grid2) { e.mesh.position.set(it.col * cell, -it.row * cell * 2.0, 0); }
+    else { x += prevHalf + half + (characters.length ? 0.06 : 0); e.mesh.position.x = x; prevHalf = half; }
+    group.add(e.mesh);
+    if (showColl) { e.coll = collidersObject(c); e.coll.position.copy(e.mesh.position); e.coll.rotation.y = turn; group.add(e.coll); }
+    characters.push(e);
+  }
+  if (!grid2 && characters.length) { const mid = x / 2; for (const e of characters) { e.mesh.position.x -= mid; if (e.coll) e.coll.position.x -= mid; } }
+  group.updateMatrixWorld(true);
+  setMaterials(); frame(); info();
+}
+
+function setMaterials() {
+  for (const e of characters) { e.mesh.material = showPieces ? pieceMaterial : material; }
+  material.wireframe = pieceMaterial.wireframe = wire;
+}
+
+// ---------- cameras
+function frame() {
+  document.getElementById('title').textContent = mode === 'character' ? '' : MODES[mode].title + (mode === 'cases' ? `: ${caseFilter}` : '');
+  grid.visible = mode === 'character';
+  const box = new THREE.Box3().setFromObject(group, true);
+  if (box.isEmpty()) { resize(); return; }
+  const c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+  const az = THREE.MathUtils.degToRad(AZIMUTH[viewName] ?? 35);
+  if (mode === 'character') {
+    camera = persp; controls.enabled = true;
+    const d = Math.max(size.y, size.x, size.z) * 2.6;
+    if (viewName === 'top') persp.position.set(c.x, c.y + d, c.z + 0.001); else persp.position.set(c.x + Math.sin(az) * d, c.y + size.y * 0.12 + d * 0.04, c.z + Math.cos(az) * d);
+    controls.target.copy(c); controls.update();
+  } else {
+    camera = ortho; controls.enabled = false;
+    if (viewName === 'top') { ortho.up.set(0, 0, -1); ortho.position.set(c.x, c.y + 20, c.z); } else { ortho.up.set(0, 1, 0); ortho.position.set(c.x, c.y, c.z + 20); }
+    ortho.lookAt(c); ortho.userData.box = box; ortho.userData.top = viewName === 'top';
+  }
+  resize();
+}
+function resize() {
+  const w = view.clientWidth, h = view.clientHeight; renderer.setSize(w, h);
+  persp.aspect = w / h; persp.updateProjectionMatrix();
+  const box = ortho.userData.box;
+  if (box) {
+    const size = box.getSize(new THREE.Vector3()), bw = size.x * 1.06, bh = (ortho.userData.top ? size.z : size.y) * 1.18;
+    const s = Math.max(bw / w, bh / h) / 2;
+    const lift = (ortho.userData.top ? size.z : size.y) * 0.04;
+    ortho.left = -w * s; ortho.right = w * s; ortho.top = h * s * 0.94 + lift; ortho.bottom = -h * s * 1.06 + lift; ortho.updateProjectionMatrix();
+  }
+  placeLabels();
+}
+function placeLabels() {
+  labels.innerHTML = '';
+  if (mode === 'character' || mode === 'matrix') return;
+  const w = view.clientWidth, h = view.clientHeight;
+  for (const e of characters) {
+    const v = e.mesh.position.clone().setY(-0.02).project(camera);
+    const d = document.createElement('div');
+    d.style.left = ((v.x + 1) / 2 * w) + 'px'; d.style.top = ((1 - v.y) / 2 * h + 4) + 'px';
+    d.innerHTML = `<b>${e.item.label ?? ''}</b>${e.item.sub ?? ''}<br>${e.char.measures.triangles} tris`;
+    labels.appendChild(d);
+  }
+}
+addEventListener('resize', resize);
+
+// ---------- panel
+const $ = (id) => document.getElementById(id);
+let current = generate(dna);   // the last valid character of the DNA being edited: it gives the value of every preset
+function info() {
+  const mine = generate(dna);
+  if (mine.ok) current = mine;
+  const e = characters[0];
+  if (e) {
+    const c = e.char, m = c.measures;
+    const lines = mode === 'character'
+      ? [`${m.triangles} triangles · ${m.vertices} vertices · 1 draw call`,
+        `${c.stage} · ${years(c.dna.age_months)} · ${c.dna.sex} · ${c.motor_profile.library} library, ${c.motor_profile.stance}`,
+        `height ${m.height_reference.toFixed(3)} m (${m.height_mode}) · posed ${m.height_posed.toFixed(3)} m · arms ${m.arm_angle.L.toFixed(1)}° · legs ${m.leg_angle.toFixed(1)}°`,
+        `maturity ${c.resolved.skeletal_maturity.toFixed(2)} · fat ${c.resolved.body_fat.toFixed(2)} · muscle ${c.resolved.muscle_mass.toFixed(2)} · ${c.solved ? 'solved' : 'NOT solved: see the corrections'}`,
+        `limits: hip ≤ ${c.limits.Hip.flexion_max}°, knee ≤ ${c.limits.Knee.flexion_max}°, elbow ≤ ${c.limits.Elbow.flexion_max}°`,
+        `generator ${c.generator} · DNA ${c.contract} · LOD ${c.topology.lod} topology v${c.topology.version}`]
+      : [`${characters.length} characters · ${characters.length} draw calls · ${characters.reduce((a, x) => a + x.char.measures.triangles, 0)} triangles`];
+    $('stats').textContent = lines.join('\n');
+    const corr = mode === 'character' ? c.corrections : [];
+    $('corr').innerHTML = corr.map((k) => `<div class="corr">⚙ ${k.detail}</div>`).join('') + (mode === 'character' ? c.notes : []).map((n) => `<div class="corr">${n}</div>`).join('');
+  }
+  if (document.activeElement !== $('dna')) $('dna').value = JSON.stringify(dna, null, 1);
+  window.__hg.characters = characters.map((x) => x.char);
+}
+
+const sliders = [];
+let pending = 0;
+function schedule() { cancelAnimationFrame(pending); pending = requestAnimationFrame(() => { rebuild(); refreshSliders(); }); }
+function refreshSliders() { for (const s of sliders) s(); }
+
+// A slider of a 0..1 channel. Unticked, the channel is null in the DNA and the slider shows what the preset gives.
+function channel(parent, label, read, write, resolved, enabled = () => true) {
+  const l = document.createElement('label'); l.className = 's';
+  l.innerHTML = `<input type="checkbox" title="ticked: an explicit value; unticked: the preset"><span>${label}</span><input type="range" min="0" max="1" step="0.01"><span></span>`;
+  const [box, inp] = l.querySelectorAll('input'), out = l.lastElementChild;
+  const show = () => {
+    const v = read(), on = enabled();
+    box.checked = v !== null; box.disabled = inp.disabled = !on;
+    l.classList.toggle('preset', v === null); l.classList.toggle('off', !on);
+    const shown = v ?? resolved(); inp.value = shown; out.textContent = on ? (+shown).toFixed(2) : 'adult';
+  };
+  box.addEventListener('change', () => { write(box.checked ? +inp.value : null); schedule(); });
+  inp.addEventListener('input', () => { write(+inp.value); box.checked = true; out.textContent = (+inp.value).toFixed(2); schedule(); });
+  parent.appendChild(l); sliders.push(show); show();
+}
+function plain(parent, label, min, max, step, read, write, text) {
+  const l = document.createElement('label'); l.className = 's';
+  l.innerHTML = `<span></span><span>${label}</span><input type="range" min="${min}" max="${max}" step="${step}"><span></span>`;
+  const inp = l.querySelector('input'), out = l.lastElementChild;
+  const show = () => { inp.value = read(); out.textContent = text(read()); };
+  inp.addEventListener('input', () => { write(+inp.value); out.textContent = text(read()); schedule(); });
+  parent.appendChild(l); sliders.push(show); show();
+}
+const buttons = (parent, items, click, mark) => { const row = document.createElement('div'); row.className = 'row';
+  items.forEach(([text, title, value]) => { const b = document.createElement('button'); b.textContent = text; b.title = title ?? ''; b.onclick = () => { click(value); refreshSliders(); rebuild(); };
+    if (mark) sliders.push(() => b.classList.toggle('on', mark(value))); row.appendChild(b); });
+  parent.appendChild(row); return row; };
+
+// Age and height go together: a minor's height follows the age at the same level; an adult's is the adult scale.
+function setAge(months) {
+  const level = levelOf(dna), d = presetDNA({ sex: dna.sex, age_months: months, level, build: dna.build, seed: dna.seed });
+  Object.assign(dna, { age_months: d.age_months, development_stage: d.development_stage, height_m: d.height_m, height_mode: d.height_mode });
+  if (months < ADULT_MONTHS) { dna.proportions.breast_volume = null; dna.proportions.breast_projection = null; }   // adult channels: null for a minor
+}
+function setLevel(level) { const d = presetDNA({ sex: dna.sex, age_months: dna.age_months, level, build: dna.build }); dna.height_level = d.height_level; dna.height_m = d.height_m; }
+const AGES = [...Array.from({ length: 25 }, (_, i) => i), ...Array.from({ length: 32 }, (_, i) => 30 + i * 6), ...Array.from({ length: 82 }, (_, i) => (19 + i) * 12)];   // months: monthly, half-yearly, yearly
+buttons($('gMain'), [['Male', '', 'male'], ['Female', '', 'female']], (sex) => { dna.sex = sex; setAge(dna.age_months); }, (sex) => dna.sex === sex);
+buttons($('gMain'), STAGES.map((s) => [s.id, `${s.label}: ${years(STAGE_AGE[s.id])}`, s.id]), (id) => setAge(STAGE_AGE[id]), (id) => dna.development_stage === id);
+plain($('gMain'), 'age', 0, AGES.length - 1, 1, () => AGES.reduce((best, m, i) => (Math.abs(m - dna.age_months) < Math.abs(AGES[best] - dna.age_months) ? i : best), 0), (i) => setAge(AGES[i]), () => years(dna.age_months));
+buttons($('gMain'), HEIGHTS.map((h, i) => [`H${pad(i + 1)}`, `${h} m for an adult`, i + 1]), setLevel, (level) => levelOf(dna) === level);
+plain($('gMain'), 'height level', 1, 10, 1, () => levelOf(dna), setLevel, () => `${dna.height_m.toFixed(2)} m`);
+buttons($('gMain'), BUILDS.map((b, i) => [`C${pad(i + 1)}`, b.label, i + 1]), (n) => { dna.build = n; dna.body_fat = null; dna.muscle_mass = null; }, (n) => dna.build === n);
+plain($('gMain'), 'seed', 0, 9999, 1, () => dna.seed, (v) => { dna.seed = v; }, (v) => String(v));
+$('gMain').insertAdjacentHTML('beforeend', '<div class="hint">The seed is carried in the DNA and changes nothing yet. For varied people, use Random adult.</div>');
+for (const k of ['bone_structure', 'muscle_mass', 'body_fat']) channel($('gBody'), k.replace('_', ' '), () => dna[k], (v) => { dna[k] = v; }, () => current.resolved[k]);
+const groupChannels = (parent, name, resolvedOf, enabled) => { for (const k of GROUPS[name]) channel(parent, k.replaceAll('_', ' '), () => dna[name][k], (v) => { dna[name][k] = v; }, () => resolvedOf(k), enabled ? () => enabled(k) : undefined); };
+buttons($('patterns'), [...Object.keys(FAT_PATTERNS).map((k) => [k, '', k]), ['preset', 'back to the preset of the sex and the age', null]],
+  (k) => { for (const r of GROUPS.fat_distribution) dna.fat_distribution[r] = k ? FAT_PATTERNS[k][r] : null; });
+groupChannels($('gFat'), 'fat_distribution', (k) => current.resolved.fat_distribution[k]);
+groupChannels($('gProp'), 'proportions', (k) => current.resolved.proportions[k], (k) => dna.age_months >= ADULT_MONTHS || !['breast_volume', 'breast_projection'].includes(k));
+groupChannels($('gAge'), 'aging', (k) => current.resolved.aging[k]);
+groupChannels($('gAge'), 'functional', (k) => current.resolved.functional[k]);
+groupChannels($('gPost'), 'posture', (k) => current.resolved.posture[k]);
+
+Object.entries(MODES).forEach(([k, m]) => { const b = document.createElement('button'); b.textContent = m.label; b.dataset.mode = k; b.onclick = () => { mode = k; marks(); rebuild(); }; $('modes').appendChild(b); });
+[['rest', 'Rest pose'], ['test', 'Test pose'], ['neutral', 'Neutral of the age']].forEach(([k, l]) => { const b = document.createElement('button'); b.textContent = l; b.dataset.pose = k; b.onclick = () => { poseName = k; marks(); rebuild(); }; $('poses').appendChild(b); });
+[['front', 'Front'], ['three_quarter', '3/4'], ['side', 'Side'], ['back', 'Back'], ['top', 'Top']].forEach(([k, l]) => { const b = document.createElement('button'); b.textContent = l; b.dataset.view = k; b.onclick = () => { viewName = k; marks(); frame(); }; $('views').appendChild(b); });
+function marks() {
+  document.querySelectorAll('[data-mode]').forEach((b) => b.classList.toggle('on', b.dataset.mode === mode));
+  document.querySelectorAll('[data-view]').forEach((b) => b.classList.toggle('on', b.dataset.view === viewName));
+  document.querySelectorAll('[data-pose]').forEach((b) => b.classList.toggle('on', b.dataset.pose === poseName));
+  $('bPieces').classList.toggle('on', showPieces); $('bWire').classList.toggle('on', wire); $('bColl').classList.toggle('on', showColl);
+}
+$('bPieces').onclick = () => { showPieces = !showPieces; marks(); setMaterials(); };
+$('bWire').onclick = () => { wire = !wire; marks(); setMaterials(); };
+$('bColl').onclick = () => { showColl = !showColl; marks(); rebuild(); };
+$('bRandom').onclick = () => { dna = randomDNA(Math.floor(Math.random() * 1e6)); refreshSliders(); rebuild(); };
+$('bApply').onclick = () => {
+  let d;
+  try { d = JSON.parse($('dna').value); } catch (err) { $('dnaErr').textContent = String(err); return; }
+  const c = generate(d);   // the last valid character stays on screen when this one is refused
+  if (!c.ok) { $('dnaErr').textContent = c.errors.map((e) => `${e.code}: ${e.message}`).join('\n'); return; }
+  dna = d; $('dnaErr').textContent = ''; refreshSliders(); rebuild();
+};
+$('bCopy').onclick = () => navigator.clipboard?.writeText($('dna').value);
+
+// ?id=F_H05_C05 or F_A05_H05_C04, ?dna=<json>, &mode=ages, &view=front, &pose=test|neutral, &pieces=1, &panel=0, &cases=PAIR_
+const q = new URLSearchParams(location.search);
+if (q.get('id') && dnaFromId(q.get('id'))) dna = dnaFromId(q.get('id'));
+if (q.get('dna')) { try { const d = JSON.parse(q.get('dna')); if (validate(d).ok) dna = d; } catch {} }
+if (q.get('mode') in MODES) mode = q.get('mode');
+if (q.get('view')) viewName = q.get('view');
+if (q.get('pieces') === '1') showPieces = true;
+if (q.get('colliders') === '1') showColl = true;
+if (q.get('pose') === '1' || q.get('pose') === 'test') poseName = 'test';
+if (q.get('pose') === 'neutral') poseName = 'neutral';
+if (q.get('cases')) caseFilter = q.get('cases');
+if (q.get('panel') === '0') document.getElementById('side').style.display = 'none';
+
+window.__hg = { generate, set: (d, m, v) => { dna = d; if (m) mode = m; if (v) viewName = v; marks(); refreshSliders(); rebuild(); }, characters: [] };
+marks(); rebuild(); refreshSliders();
+if (mode === 'cases') fetch('tests/fixtures/dna_cases_52.json').then((r) => r.json()).then((cases) => { fixtureCases = cases; rebuild(); });
+else fetch('tests/fixtures/dna_cases_52.json').then((r) => r.json()).then((cases) => { fixtureCases = cases; }).catch(() => {});
+renderer.setAnimationLoop(() => { renderer.render(scene, camera); });
+</script>
+</body>
+</html>

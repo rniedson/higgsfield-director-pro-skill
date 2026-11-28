@@ -44,3 +44,18 @@ jobs:
         run: python -m unittest discover -s tools/tests -v
       - name: Repository and public/private boundary checks
         run: python tools/check_repo.py --require-yaml
+
+  human-generator:
+    name: human generator · Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22", "24"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Tests (no dependencies)
+        run: node --expose-gc --test blocking-studio/human-generator/tests/test_generator.mjs
