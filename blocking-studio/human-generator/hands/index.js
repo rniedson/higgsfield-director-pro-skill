@@ -299,21 +299,38 @@ export function validateHands(spec) {
 }
 
 // ------------------------------------------------------------------------------------------------------- building
-const CTX = new Map(), MESH0 = new Map();
+// What is kept by body here (rig.js, THE HAND CACHES, has the bounds and what they cost). A body's GEOMETRY, which only
+// the solver and the body's first mesh read: its rig with its pieces (CTX). And what a hand ALREADY SOLVED reads at
+// every build. At levels 1 to 3, of that rig (ENDS): its bind skeleton, and the fingertip and the pad of each digit's
+// distal piece, in that bone's frame; with them, the solve (rig.solvedHand), the palm corners (kept by mesh1.js) and
+// the dimensions, such a hand is built without its body's geometry. At level 0, the body's bind mesh (MESH0): it is
+// made from the pieces and is heavy as they are, so it has a bound of its own, smaller than the ends'; while it is
+// kept, a solved hand needs no rig at level 0 either, and once it has left, the pieces are fitted again for that hand.
+const CTX = rig.lruCache('rigs', rig.CACHE_BOUNDS.geometry), MESH0 = rig.lruCache('bindMeshes', rig.CACHE_BOUNDS.bindMeshes);
+const ENDS = rig.lruCache('digitEnds', rig.CACHE_BOUNDS.bodies);
+const DISTAL = rig.DIGITS.map((dg) => rig.DIGIT_BONES[dg][2]);
 function context(d) {
   let c = CTX.get(d.key);
   if (!c) {
     const bones = rig.skeleton(d), P = mesh0.pieces(d, bones);
-    c = { bones, P, ctx: rig.makeRig(d, bones, P.bones) };
-    if (CTX.size > 200) CTX.delete(CTX.keys().next().value);
-    CTX.set(d.key, c);
+    c = CTX.set(d.key, { bones, P, ctx: rig.makeRig(d, bones, P.bones) });
   }
   return c;
 }
-function bindMesh0(d, c) {
+function bindMesh0(d) {
   let m = MESH0.get(d.key);
-  if (!m) { m = mesh0.bindMesh(d, c.bones, c.P); if (MESH0.size > 200) MESH0.delete(MESH0.keys().next().value); MESH0.set(d.key, m); }
+  if (!m) { const c = context(d); m = MESH0.set(d.key, mesh0.bindMesh(d, c.bones, c.P)); }
   return m;
+}
+// All that rig.worldSkeleton reads of a rig, for a hand already solved: the dimensions, the bind skeleton and the kept
+// ends. The rig itself is built only for a body whose ends are not kept (any more). The bind skeleton is the rig's own,
+// kept with the ends, and not one made again from the dimensions at each build: with a second skeleton of the same
+// body a character new to every cache read 15 to 18% more CPU than before the bounds, and with the rig's own it reads
+// the same as before (rig.js, THE HAND CACHES, has the record; why a second skeleton costs that was not found).
+function solvedRig(d) {
+  let e = ENDS.get(d.key);
+  if (!e) { const { bones, ctx } = context(d); e = ENDS.set(d.key, { bones, tips: DISTAL.map((b) => ctx.tipLocal(b).slice()), pads: DISTAL.map((b) => ctx.padLocal(b)) }); }
+  return { d, bones: e.bones, tipLocal: (b) => e.tips[DISTAL.indexOf(b)], padLocal: (b) => e.pads[DISTAL.indexOf(b)] };
 }
 const mirrorQ = rig.quat.mirrorX;
 const sideSuffix = (side) => (side === 'left' ? '_L' : '_R');
@@ -440,8 +457,8 @@ export function buildHand(args = {}) {
   let d;
   try { d = rig.handDimensions(body ?? {}, c); }
   catch (e) { return { ok: false, errors: [err('BODY', 'body', String(e.message))] }; }
-  const C = context(d);
-  const solved = rig.solveHand(C.ctx, poseObj, c, g);
+  // the kept solve is asked before any geometry: the rig and its pieces are built only for a hand not solved yet
+  const solved = rig.solvedHand(d, poseObj, c, g) ?? rig.solveHand(context(d).ctx, poseObj, c, g);
   const L = side === 'left', sfx = sideSuffix(side);
   const angles = rig.anglesOut(solved.angles);
   const diagnostics = [...d.notes, ...solved.diagnostics];
@@ -455,20 +472,20 @@ export function buildHand(args = {}) {
   base.corrections = solved.corrections;   // the solve's (cached, read-only): copied before anything is added
   let positions, index, boneIndex, bones, pieces;
   if (ml.level === 0) {
-    const m = bindMesh0(d, C);
+    const m = bindMesh0(d), bind = rig.skeleton(d);
     pieces = m.pieces.map((p) => ({ ...p, bone: p.bone + sfx }));
     if (ml.mode === 'articulated') {
       positions = m.positions.slice(); index = m.index.slice(); boneIndex = m.boneIndex.slice();
-      bones = C.bones.map((bn, b) => ({ name: bn.name + sfx, parent: bn.parent < 0 ? null : C.bones[bn.parent].name + sfx, parentIndex: bn.parent,
+      bones = bind.map((bn, b) => ({ name: bn.name + sfx, parent: bn.parent < 0 ? null : bind[bn.parent].name + sfx, parentIndex: bn.parent,
         head: bn.head.slice(), bind: bn.bind.slice(), rest: solved.rest[b].slice() }));
     } else {
-      positions = mesh0.posePositions(m, C.bones, solved.rest); index = m.index.slice(); boneIndex = new Array(positions.length / 3).fill(0);
+      positions = mesh0.posePositions(m, bind, solved.rest); index = m.index.slice(); boneIndex = new Array(positions.length / 3).fill(0);
       bones = [{ name: 'Hand' + sfx, parent: null, parentIndex: -1, head: [0, 0, 0], bind: rig.quat.id(), rest: rig.quat.id() }];
       pieces = pieces.map((p) => ({ ...p, bone: 'Hand' + sfx }));
     }
   } else {
     const mod = LOWER[ml.level].mod;
-    const skeleton = rig.worldSkeleton(C.ctx, solved.rest, solved.contact);
+    const skeleton = rig.worldSkeleton(solvedRig(d), solved.rest, solved.contact);
     const r = mod.build({ dims: d, skeleton, pose: poseObj, angles, variant });
     positions = Array.from(r.positions); index = Array.from(r.index); boneIndex = new Array(positions.length / 3).fill(0);
     bones = [{ name: 'Hand' + sfx, parent: null, parentIndex: -1, head: [0, 0, 0], bind: rig.quat.id(), rest: rig.quat.id() }];
@@ -579,5 +596,8 @@ export function buildHands(spec, opts = {}) {
   } catch (e) { return { ok: false, errors: [err('INTERNAL', '', `the hands could not be built: ${why(e)}`)] }; }
 }
 
-// cache control (tests)
-export function clearHandCaches() { CTX.clear(); MESH0.clear(); rig.clearSolveCache(); mesh0.clearPieceCache(); mesh1.clearPalmCache(); }
+// cache control (tests): every cache made by rig.lruCache emptied, and read: { rigs, pieces, palmFits (a body's
+// geometry), solves, palmCorners, digitEnds, bindMeshes (what a solved hand reads) }, each { size, max } (rig.js, THE
+// HAND CACHES, which also names the two things hands/ keeps outside them)
+export const clearHandCaches = rig.clearCaches;
+export const handCacheSizes = rig.cacheSizes;

@@ -19,7 +19,7 @@
 // THE SHARED HELPERS (exported as _lod) are also used by mesh2.js and mesh3.js: the level-0 palm of a hand, a digit's
 // posed chain, a smooth "far end" of a curled digit, rings in a bone frame, and the topology builder.
 
-import { vec, FINGERS, DIGIT_BONES, wristRingPoints, skeleton as bindSkeleton } from './rig.js';
+import { vec, FINGERS, DIGIT_BONES, wristRingPoints, skeleton as bindSkeleton, lruCache, CACHE_BOUNDS } from './rig.js';
 import { palmPiece as level0PalmPiece, _internal as level0Internal } from './mesh0.js';
 
 const { add, sub, scl, dot, cross, len, nrm } = vec;
@@ -36,8 +36,9 @@ const K0 = 0.94;   // a digit's base, of its first segment's start size (level 0
 // level-0 connector's depth below the pivot; and `knuckles`: the four knuckle corners (front radial, front ulnar, back
 // ulnar, back radial) raised together by `raise`, so that a roof through the corners alone (no cascade of knuckles)
 // still holds the proximal phalanges' start caps at every MCP flexion, spread and twist within the limits (level 0's
-// own sweep samples, the 0.94 caps, a margin of 2 m).
-const P0CACHE = new Map();
+// own sweep samples, the 0.94 caps, a margin of 2 m). Kept by body in the tier of the hand caches that a hand already
+// solved reads (rig.js, THE HAND CACHES): every build of levels 1 to 3 reads it.
+const P0CACHE = lruCache('palmCorners', CACHE_BOUNDS.bodies);
 export const clearPalmCache = () => P0CACHE.clear();
 export function level0Palm(d) {
   let hit = P0CACHE.get(d.key);
@@ -54,9 +55,7 @@ export function level0Palm(d) {
       raise = Math.max(raise, q[1] + 2 * d.m - (ku[1] + (kr[1] - ku[1]) * u));
     }
     const knuckles = [14, 17, 18, 21].map((i) => [V[i][0], V[i][1] + raise, V[i][2]]);
-    hit = { verts: V.map((v) => v.slice()), knuckles, raise, connectorBelow: P.connectorBelow };
-    if (P0CACHE.size > 400) P0CACHE.delete(P0CACHE.keys().next().value);
-    P0CACHE.set(d.key, hit);
+    hit = P0CACHE.set(d.key, { verts: V.map((v) => v.slice()), knuckles, raise, connectorBelow: P.connectorBelow });
   }
   return hit;
 }

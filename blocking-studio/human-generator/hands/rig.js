@@ -986,11 +986,97 @@ function solvePose(ctx, pose, A, grip, diag, corr, fit = null) {
   return null;
 }
 
+// ------------------------------------------------------------------------------------------------- the hand caches
+// THE HAND CACHES. Everything hands/ keeps by body or by solve from one build to the next is in a cache made here,
+// bounded and least recently used (cacheSizes reads them all, clearCaches empties them all). Two things are kept
+// outside them, which cacheSizes does not list and clearCaches does not touch: the drawn shells' overlaps ride on their
+// solve (index.js, DRAWN: a WeakMap from the kept solve, so they leave with it), and the limits' MCP samples are one
+// list a finger, built once whatever the body (mesh0.js, MCP_SAMPLES). There are two tiers, because one bound in
+// bodies cannot serve both kinds: a body's geometry is heavy and is read only while one of its hands is solved or
+// first meshed; what a hand already solved reads is read at every build of that hand, and at levels 1 to 3 it is
+// light. A hand whose solve is kept is built without its body's rig and pieces (index.js asks solvedHand first): at
+// levels 1 to 3 from the palm corners and the digit ends (kept with the rig's bind skeleton), at level 0 from the
+// body's bind mesh, which is heavy as geometry is and so has a bound of its own, between the two tiers'.
+//
+//   cache (module)                                      bound, in CACHE_BOUNDS     an entry    full
+//   A BODY'S GEOMETRY: read by the solver and by a body's first mesh
+//     rigs         planes, capsules, queries (index.js)   geometry    8 bodies      54.6 KB    0.44 MB
+//     pieces       the convex pieces (mesh0.js)           geometry                  29.8 KB    0.24 MB
+//     palmFits     the palm's fit (mesh0.js)              geometry                   2.6 KB    0.02 MB
+//   WHAT A HAND ALREADY SOLVED READS, at every build
+//     solves       every level (below)                    solves      512 solves     4.1 KB    2.10 MB
+//     palmCorners  levels 1 to 3 (mesh1.js)               bodies      320 bodies     2.4 KB    0.75 MB
+//     digitEnds    levels 1 to 3 (index.js)               bodies                     5.0 KB    1.59 MB
+//     bindMeshes   level 0: the bind mesh (index.js)      bindMeshes  32 bodies     22.2 KB    0.71 MB
+//
+// The four bounds are PROPOSALS. What they were chosen against (read on 2026-11-28): tests/test_generator.mjs goes
+// twice in a row through 269 hand bodies (its 252 valid cases and 54 presets by age), reads 200 in turn in its memory
+// test, which allows 8 MB, and 100 again in its performance test, so `bodies` holds them all: least recently used, a
+// cache misses every time on a round longer than its bound (the second pass over the 269 took 9 ms of CPU a character
+// with 256 bodies kept, 1.2 ms with 320). With these bounds the memory test read 5.1 MB run alone and 1.25 MB inside
+// its file. tests/test_hands.mjs keeps 27 level-0 bodies alive at once (read on the code before the bounds), which
+// `bindMeshes` holds, and makes 897 solves in all (its test of neighbouring bodies alone builds 391 hands): with 512
+// kept it runs the solver 928 times, 31 solves made twice, and builds 141 rigs where the code before built 79, in the
+// same 99 s (both counted that day with the two codes run one after the other on a loaded machine). So level 0 is
+// cached for 32 bodies, where the code before the bounds kept up to 201 bind meshes: a round of more level-0 bodies
+// than the bound misses every time, and the pieces, the palm and the connector are fitted again for every character
+// (the same day, the two codes interleaved character by character in one process on a loaded machine: 100 bodies in
+// turn at level 0 read 72 ms of main-thread CPU a character against 6.5 ms before the bounds, 11 times, and 30 bodies
+// in turn 6.8 ms against 6.7). One character needs the geometry of one body (two when a side has its own finger
+// sizes), and 8 keeps the last few an editor went through.
+//
+// The weights are a record of 2026-11-28 (Node v24.22.1), not a current fact: every cache was filled to its bound (328
+// bodies of the adult grid and of presets of other ages at level 1 with the default hands, 34 of them at level 0, then
+// 184 solves on one body with a finger control), and emptied one at a time (solves, palmCorners, digitEnds, bindMeshes,
+// rigs, pieces, palmFits), reading V8's data spaces after gc() each time: 5.8 MB in all. A solve of HP01 with no
+// control is 3.9 KB; the library's 24 poses on two bodies are 5.0 KB a solve at the mean (then 2.6 MB full and 6.3 MB
+// in all: computed). The pieces are counted with their wrist connector, which level 0 fits, and the digit ends with
+// the bind skeleton they keep, 3.8 KB of their 5.0 (the reason for it is below).
+//
+// What a miss costs, as the CPU time of a whole character with that one thing missing (both hands on one body; the
+// same record: a character new to every cache took 20 ms on that machine and one kept in full 1.0 to 1.3 ms; two
+// other runs that day, one under more load, read 0.8 to 2.1 times each figure, and one under less load, on the code
+// as it is with the kept skeleton, 0.6 to 0.9 times): the geometry, nothing while the hand's solve is kept; a solve,
+// 5 ms with its body's geometry kept (HP01; a hand in another pose of the library 16 ms at the median and up to
+// 0.48 s, HP12) and 18 ms without; the palm corners, 4 ms (10 ms when the palm's fit has left too); the digit ends,
+// nothing while the rig is kept and 16 ms when the body's geometry has left; a bind mesh, nothing while the pieces are
+// kept with their connector fitted (kept without it, as after a solve at levels 1 to 3, the connector is fitted then)
+// and 29 ms when they have left (the pieces, the palm and the connector are fitted again).
+//
+// Against the code before the bounds, the same day (the two codes interleaved character by character in one process
+// that had built level 0 too, main-thread CPU, 100 characters a reading, a loaded machine): a character new to every
+// cache read 0.99 to 1.02 times the old code's time, where a second copy of the old code read 1.01 to 1.04. It does
+// so because the digit ends keep the rig's own bind skeleton: with a skeleton made again from the dimensions for
+// worldSkeleton, at every build or once a body, the same reading was 1.15 to 1.18. Why a second skeleton of a body
+// costs that was not found; what the kept one weighs is said with the weights above.
+export const CACHE_BOUNDS = Object.freeze({ geometry: 8, bindMeshes: 32, bodies: 320, solves: 512 });
+
+// A cache of at most `max` entries, least recently used first out. A Map keeps its keys in the order they were set: a
+// hit sets its entry again, so the first key is always the one unused for longest, and that one leaves when a new entry
+// would pass the bound. The values are objects (a miss reads undefined); `name` is the cache's name in cacheSizes. A
+// bound that is not a whole number of 1 or more is refused: a mistyped name in CACHE_BOUNDS would give no bound at all.
+const CACHES = new Map();
+export function lruCache(name, max) {
+  if (CACHES.has(name)) throw new Error(`lruCache: there is already a cache named ${name}`);
+  if (!(Number.isInteger(max) && max >= 1)) throw new Error(`lruCache: the bound of ${name} is ${max}, not a whole number of 1 or more`);
+  const map = new Map();
+  const cache = {
+    get(key) { const hit = map.get(key); if (hit !== undefined) { map.delete(key); map.set(key, hit); } return hit; },
+    set(key, value) { map.delete(key); while (map.size >= max) map.delete(map.keys().next().value); map.set(key, value); return value; },
+    clear() { map.clear(); },
+    sizes: () => ({ size: map.size, max }),
+  };
+  CACHES.set(name, cache);
+  return cache;
+}
+// Every cache's entries and bound, by name: { solves: { size, max }, pieces: ..., ... }.
+export const cacheSizes = () => Object.fromEntries([...CACHES].map(([name, cache]) => [name, cache.sizes()]));
+export const clearCaches = () => { for (const cache of CACHES.values()) cache.clear(); };
+
 // ------------------------------------------------------------------------------------------- the public solve
-const SOLVED = new Map();
-const CACHE_MAX = 2000;
+const SOLVED = lruCache('solves', CACHE_BOUNDS.solves);
 export function clearSolveCache() { SOLVED.clear(); }
-export const solveCacheSize = () => SOLVED.size;
+export const solveCacheSize = () => SOLVED.sizes().size;
 
 // A short hash of a pose object's data (FNV-1a over its JSON): the fit applies to the library's pose exactly.
 export function poseHash(pose) {
@@ -1037,9 +1123,14 @@ export function poseFit(pose, d) {
 // one a local search reaches. { fit: false } solves from the authored angles, { fit: <a fit> } from that fit (the
 // tool uses both).
 const thumbAsked = (controls) => ['flexion', 'abduction', 'opposition'].some((k) => Number.isFinite(controls?.thumb?.[k]) && controls.thumb[k] !== 0);
+const solveKey = (d, hullKey, pose, controls, grip, f) => JSON.stringify([d.key, hullKey ?? null, pose, controls?.fingers ?? null, controls?.thumb ?? null, grip ?? null, f ? f.thumb : null]);
+// The solve kept for these dimensions, pose, controls and grip (with the library's fit, on the hand's own pieces), or
+// undefined. It is asked with the dimensions alone: a hand that is already solved needs no rig, so index.js asks this
+// before it builds one.
+export const solvedHand = (d, pose, controls = {}, grip = {}) => SOLVED.get(solveKey(d, null, pose, controls, grip, poseFit(pose, d)));
 export function solveHand(ctx, pose, controls = {}, grip = {}, { fit = true } = {}) {
   const f = fit === true ? poseFit(pose, ctx.d) : fit || null;   // a fit object: that fit (the tool's continuation)
-  const key = JSON.stringify([ctx.d.key, ctx.hullKey ?? null, pose, controls?.fingers ?? null, controls?.thumb ?? null, grip ?? null, f ? f.thumb : null]);
+  const key = solveKey(ctx.d, ctx.hullKey, pose, controls, grip, f);
   const hit = SOLVED.get(key);
   if (hit) return hit;
   const diag = [], corr = [];
@@ -1050,11 +1141,8 @@ export function solveHand(ctx, pose, controls = {}, grip = {}, { fit = true } = 
   }
   const A = applyControls(P, controls, diag, corr);
   const r = solvePose(ctx, pose, A, grip ?? {}, diag, corr, thumbAsked(controls) ? null : f);
-  const out = { angles: r.angles, rest: restFromAngles(ctx.d, r.angles), contact: r.contact, allow: r.allow, thumb: r.thumb,
-    fit: f ? { changed: f.changed, detail: f.detail } : null, diagnostics: diag, corrections: corr };
-  if (SOLVED.size >= CACHE_MAX) SOLVED.delete(SOLVED.keys().next().value);
-  SOLVED.set(key, out);
-  return out;
+  return SOLVED.set(key, { angles: r.angles, rest: restFromAngles(ctx.d, r.angles), contact: r.contact, allow: r.allow, thumb: r.thumb,
+    fit: f ? { changed: f.changed, detail: f.detail } : null, diagnostics: diag, corrections: corr });
 }
 
 // The rig's angles in the data's names (degrees), as a build returns them.
@@ -1070,6 +1158,8 @@ export function anglesOut(A) {
 //                length (head to the next joint or the tip), halfWidth, halfThickness (the segment's start, m) }
 //   tips = { thumb, index, middle, ring, pinky } (the fingertip points), pads = the distal pads,
 //   ring = the six wrist points, contact = the object held (or null).
+// Of the rig it reads the dimensions, the bind skeleton and the five distal pieces' tipLocal and padLocal, nothing
+// else: for a hand already solved index.js hands it those alone, kept without the pieces (see THE HAND CACHES).
 export function worldSkeleton(ctx, rest, contact) {
   const F = fk(ctx.bones, rest), d = ctx.d;
   const segOf = (b) => { if (b === 0) return null; const dg = DIGITS[Math.floor((b - 1) / 3)], k = (b - 1) % 3; return dg === 'thumb' ? d.thumb.segs[k] : d.fingers[dg].segs[k]; };
