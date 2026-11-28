@@ -14,7 +14,7 @@ ROOT_FILES = {
     "README.md", "README.pt-BR.md", "SECURITY.md",
 }
 TOP_LEVEL = {".github", "blocking-studio", "calibration", "docs", "examples", "higgsfield-director", "lessons-learned",
-             "price-history", "tools"}
+             "price-history", "tools", "website"}
 SKILL_AREAS = {"agents", "data", "references", "scripts", "templates", "tests"}
 PERSONAL_AREAS = {
     "artifact", "artifacts", "client", "clients", "customer", "customers",
