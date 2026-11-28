@@ -1,0 +1,8 @@
+{
+  "name": "Mannequin",
+  "seams": {"Pelvis": 1.035, "Spine_01": 1.232, "Spine_03": 1.4725, "Neck": 1.525},
+  "v_base": 0.895,
+  "v_slope": 0.7,
+  "neck_radius": 0.075,
+  "shoulder_x": 0.155
+}

@@ -7,6 +7,12 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- `blocking-studio/assets/characters/mannequin-female/`: a female mannequin on the same 23 bones, with the same names,
+  as the male one, so a pose or clip made for one fits the other. It is 1.68 m tall and has 6,283 triangles, made from
+  four views of the author's turnaround sheet sent to Meshy for 25 credits. `convert_meshy_mannequin.py` now reads
+  each character's cut heights from its `cuts.json` (`--cuts`), takes seams that rise toward the back, and can keep
+  the side of the chest off the upper arm (`arm_radius`). The new `measure_meshy_model.py` prints what a `cuts.json`
+  needs. Both mannequins rebuild byte for byte from their sources.
 - `blocking-studio/`: the engine for animated 3D storyboards in Three.js, to plan a video before generating it on
   Higgsfield, so no credits go to a shot that was not thought through. It belongs to the first step of the pipeline,
   pre-production and storyboard. It starts with an articulated male mannequin

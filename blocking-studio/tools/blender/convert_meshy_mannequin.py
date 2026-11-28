@@ -7,11 +7,21 @@
 #    ankle, neck) and two fillers in the torso;
 #  - drops the animation that came with the file and sets a flat gray material (pieces) and a darker gray (joints).
 # With --smooth it only renames, adds the Root and swaps the material: the skin stays Meshy's, which stretches.
-# Usage: blender -b --factory-startup --python-exit-code 1 -P convert_meshy_mannequin.py -- in.glb out.glb [--smooth]
+# The cut heights are measured on each model (measure_meshy_model.py helps) and read from the character's cuts.json
+# (--cuts); without it, the values of the first mannequin are used. Fields: name (the objects' name); seams (the top of
+# Pelvis, Spine_01, Spine_03 and Neck, each a height or [height at y = 0, tilt]); v_base and v_slope (the V of the
+# pelvis); neck_radius; shoulder_x; and, optional, arm_radius (near the shoulder, a face with a corner farther than this
+# from the arm's axis stays with the chest).
+# Usage: blender -b --factory-startup --python-exit-code 1 -P convert_meshy_mannequin.py -- in.glb out.glb
+#        [--cuts cuts.json] [--smooth]
 import bpy, sys, json, math
 from mathutils import Vector
 args = sys.argv[sys.argv.index('--') + 1:]
 src, dst = args[0], args[1]; smooth = '--smooth' in args
+CUTS = {"name": "Mannequin", "seams": {"Pelvis": 1.035, "Spine_01": 1.232, "Spine_03": 1.4725, "Neck": 1.525},
+        "v_base": 0.895, "v_slope": 0.7, "neck_radius": 0.075, "shoulder_x": 0.155}
+if '--cuts' in args:
+    CUTS.update(json.load(open(args[args.index('--cuts') + 1])))
 NAMES = {
     'Hips': 'Pelvis', 'Spine02': 'Spine_01', 'Spine01': 'Spine_02', 'Spine': 'Spine_03', 'neck': 'Neck', 'Head': 'Head',
     'LeftShoulder': 'Clavicle_L', 'LeftArm': 'UpperArm_L', 'LeftForeArm': 'LowerArm_L', 'LeftHand': 'Hand_L',
@@ -30,12 +40,15 @@ if arm.animation_data: arm.animation_data_clear()
 for a in list(bpy.data.actions): bpy.data.actions.remove(a)
 missing = [n for n in NAMES if n not in arm.data.bones]
 assert not missing, f"expected bones that did not come: {missing}"
-# Heights of the seams measured on this model (histogram of the vertices of the middle column, 2026-11-27): the top of
-# each piece, in metres.
-SEAMS = {'Pelvis': 1.035, 'Spine_01': 1.232, 'Spine_03': 1.4725, 'Neck': 1.525}
-V_BASE, V_SLOPE = 0.895, 0.7     # V-shaped pelvis, as in the decomposition sheet: z >= 0.895 + 0.7·|x|
-NECK_RADIUS = 0.075              # above the chest seam, farther from the axis than this is still trapezius (chest)
-SHOULDER_X = 0.155               # at shoulder height, beyond this is the arm
+# Heights of the seams, measured on each model (histogram of the vertices of the middle column): the top of each
+# piece, in metres. A seam is a height, or [height at y = 0, tilt]: a tilted seam is higher at the back by tilt·y.
+SEAMS = {n: v if isinstance(v, (int, float)) else v[0] for n, v in CUTS['seams'].items()}
+TILT = {n: 0 if isinstance(v, (int, float)) else v[1] for n, v in CUTS['seams'].items()}
+seam = lambda n, c: SEAMS[n] + TILT[n] * c.y   # height of seam n at point c
+V_BASE, V_SLOPE = CUTS['v_base'], CUTS['v_slope']   # V-shaped pelvis, as in the decomposition sheet: z >= base + slope·|x|
+NECK_RADIUS = CUTS['neck_radius']   # above the chest seam, farther from the axis than this is still trapezius (chest)
+SHOULDER_X = CUTS['shoulder_x']     # at shoulder height, beyond this is the arm
+ARM_RADIUS = CUTS.get('arm_radius')  # ...unless farther than this from the arm's axis: then it is the side of the chest
 NECK_AXIS_Y = (arm.matrix_world @ arm.data.bones['neck'].head_local).y
 idx2name = {g.index: g.name for g in body.vertex_groups}
 if not smooth:
@@ -70,32 +83,41 @@ if not smooth:
         planes['knee' + s_] = ({5 + k}, H(P + 'Leg'), (D(P + 'UpLeg') + D(P + 'Leg')).normalized())
         planes['ankle' + s_] = ({5 + k}, H(P + 'Foot') - D(P + 'Leg') * 0.02, D(P + 'Leg'))
     for name, z in SEAMS.items():
-        planes['seam_' + name] = ({0, 1, 2, 5, 6}, Vector((0, 0, z)), Vector((0, 0, 1)))
+        nrm = Vector((0, -TILT[name], 1)).normalized() if TILT[name] else Vector((0, 0, 1))
+        planes['seam_' + name] = ({0, 1, 2, 5, 6}, Vector((0, 0, z)), nrm)
     for name, (regs, co, no) in planes.items():
         fs = [f for f in bm.faces if f[REG] in regs]
         if name.startswith('hip'):   # the V of the pelvis applies only on its own side and below the seam
             sg = 1 if name.endswith('L') else -1
-            fs = [f for f in fs if f[REG] != 0 or (sg * f.calc_center_median().x > -0.01 and f.calc_center_median().z < SEAMS['Pelvis'] + 0.03)]
+            fs = [f for f in fs if f[REG] != 0 or (sg * f.calc_center_median().x > -0.01
+                                                   and f.calc_center_median().z < seam('Pelvis', f.calc_center_median()) + 0.03)]
         es = {e for f in fs for e in f.edges}; vs = {v for f in fs for v in f.verts}
         bmesh.ops.bisect_plane(bm, geom=list(vs) + list(es) + fs, dist=1e-6, plane_co=co, plane_no=no)
     beyond = lambda name, c: (c - planes[name][1]).dot(planes[name][2]) > 0
+    def off_arm(f, s_):   # a face near the shoulder with a corner far from the arm's axis is the side of the chest
+        if ARM_RADIUS is None: return False
+        P = 'Left' if s_ == 'L' else 'Right'; h, d = H(P + 'Arm'), D(P + 'Arm')
+        if (f.calc_center_median() - h).dot(d) >= 0.12: return False
+        return max(((v.co - h) - d * (v.co - h).dot(d)).length for v in f.verts) > ARM_RADIUS
     def piece(f):
         c = f.calc_center_median(); r = f[REG]; s_ = 'L' if c.x > 0 else 'R'
         if r in (3, 4):
             s_ = 'L' if r == 3 else 'R'
-            return 'Hand_' + s_ if beyond('wrist' + s_, c) else 'LowerArm_' + s_ if beyond('elbow' + s_, c) else 'UpperArm_' + s_
-        if r in (5, 6) and c.z < SEAMS['Pelvis']:
+            if beyond('wrist' + s_, c): return 'Hand_' + s_
+            if beyond('elbow' + s_, c): return 'LowerArm_' + s_
+            return 'Spine_03' if off_arm(f, s_) else 'UpperArm_' + s_
+        if r in (5, 6) and c.z < seam('Pelvis', c):
             s_ = 'L' if r == 5 else 'R'
             if beyond('ankle' + s_, c): return 'Foot_' + s_
             if beyond('knee' + s_, c): return 'Calf_' + s_
-            if beyond('hip' + s_, c) and c.z < SEAMS['Pelvis'] + 0.01: return 'Pelvis'
+            if beyond('hip' + s_, c) and c.z < seam('Pelvis', c) + 0.01: return 'Pelvis'
             return 'Thigh_' + s_
-        if r in (1, 2) and abs(c.x) > SHOULDER_X: return 'UpperArm_' + s_
+        if r in (1, 2) and abs(c.x) > SHOULDER_X and not off_arm(f, s_): return 'UpperArm_' + s_
         if r in (5, 6) and beyond('ankle' + s_, c): return 'Foot_' + s_
-        if c.z < SEAMS['Pelvis']: return 'Pelvis' if beyond('hip' + s_, c) else 'Thigh_' + s_
-        if c.z < SEAMS['Spine_01']: return 'Spine_01'
-        if c.z < SEAMS['Spine_03']: return 'Spine_03'
-        if c.z < SEAMS['Neck']: return 'Neck' if math.hypot(c.x, c.y - NECK_AXIS_Y) < NECK_RADIUS else 'Spine_03'
+        if c.z < seam('Pelvis', c): return 'Pelvis' if beyond('hip' + s_, c) else 'Thigh_' + s_
+        if c.z < seam('Spine_01', c): return 'Spine_01'
+        if c.z < seam('Spine_03', c): return 'Spine_03'
+        if c.z < seam('Neck', c): return 'Neck' if math.hypot(c.x, c.y - NECK_AXIS_Y) < NECK_RADIUS else 'Spine_03'
         return 'Head'
     PIECES = sorted(set(NAMES.values()) - {'Toe_L', 'Toe_R'})
     PC = bm.faces.layers.int.new('piece')
@@ -175,7 +197,7 @@ for old, new in NAMES.items():
 arm.data.bones['Root'].use_deform = False
 for g in list(body.vertex_groups):
     if g.name in DROPPED: body.vertex_groups.remove(g)
-arm.name = 'Mannequin'; arm.data.name = 'Mannequin_rig'; body.name = 'Mannequin_body'
+arm.name = CUTS['name']; arm.data.name = CUTS['name'] + '_rig'; body.name = CUTS['name'] + '_body'
 def material(name, colour):
     m = bpy.data.materials.new(name); m.use_nodes = True
     p = next(n for n in m.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')

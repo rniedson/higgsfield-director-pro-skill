@@ -13,6 +13,7 @@ Approved by the author on 2026-11-27.
 |---|---|
 | `mannequin.glb` | the mannequin to use: skinned mesh, 23 bones, no animation |
 | `rig.json` | the sheet's bone hierarchy, range of motion per joint and piece table |
+| `cuts.json` | the cut heights measured on this model, read by the converter |
 | `sheets/` | the author's design sheets: turnaround, decomposition into pieces, bones, joint study |
 | `source/meshy_four_views.glb` | the raw model the mannequin is converted from (see below) |
 
@@ -39,7 +40,13 @@ mannequin:
 2. It cuts the shell with a plane at each joint, splits and caps the pieces, and binds each piece to one bone.
 3. It moves the spine pivots to the seams and adds the ball joints.
 
-The seam heights are numbers measured on this particular model. A new Meshy model needs them measured again.
+The seam heights are numbers measured on this particular model, kept in `cuts.json`:
+
+```bash
+blender -b --factory-startup --python-exit-code 1 -P tools/blender/convert_meshy_mannequin.py -- assets/characters/mannequin/source/meshy_four_views.glb assets/characters/mannequin/mannequin.glb --cuts assets/characters/mannequin/cuts.json
+```
+
+A new Meshy model needs them measured again, with `tools/blender/measure_meshy_model.py`.
 
 ## Where it differs from the sheet
 
