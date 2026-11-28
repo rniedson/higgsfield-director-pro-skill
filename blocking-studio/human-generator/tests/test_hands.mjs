@@ -716,12 +716,29 @@ test('the drawn shells of levels 1 and 2 are checked against each other: a shell
     const h = build({ pose: 'HP01', body: REF_CORNER, level, variant }), s = h.dims.length / rig.REF_LENGTH;
     const deep = (P) => SHELLS.overlaps(P, h.index, h.pieces, { palm }).filter((o) => o.depth > 0.0003 * s);
     assert.deepEqual(deep(h.positions), [], `level ${level} ${variant}: HP01 as built`);
-    // every vertex but the base ring moved toward the neighbour's centre, by half the distance between the centres
+    // every vertex but the base ring moved along the line that takes the shell's far end (its last vertex) onto the
+    // neighbour's centre. The whole move leaves the far end at that centre, inside the neighbour: found. Half way to
+    // where the far end goes into the neighbour (half way into the gap) nothing is reported. (Not the distance between
+    // the two centres: a shell that is a tetrahedron moves only its far end, which then stops outside the neighbour.)
     const centre = (name) => { const pc = h.pieces.find((p) => p.name === name), c = [0, 0, 0]; for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) c[k] += h.positions[3 * v + k] / pc.vertices; return c; };
-    const pc = h.pieces.find((p) => p.name === moving), shift = scl(sub(centre(into), centre(moving)), 0.5), P = h.positions.slice();
-    for (let v = pc.firstVertex + 3; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) P[3 * v + k] += shift[k];
-    const hit = deep(P);
-    assert.ok(hit.some((o) => [o.a, o.b].includes(moving) && [o.a, o.b].includes(into)), `level ${level} ${variant}: ${moving} moved into ${into}, found ${JSON.stringify(hit)}`);
+    const pc = h.pieces.find((p) => p.name === moving), far = V3(h.positions, pc.firstVertex + pc.vertices - 1), whole = sub(centre(into), far);
+    const movedBy = (f) => { const P = h.positions.slice(); for (let v = pc.firstVertex + 3; v < pc.firstVertex + pc.vertices; v++) for (let k = 0; k < 3; k++) P[3 * v + k] += f * whole[k]; return P; };
+    const N = shells(h, h.positions).find((x) => x.name === into), farIn = (f) => winding(add(far, scl(whole, f)), N.V, N.T) > 0.5;
+    assert.ok(meshSd(centre(into), N.V, N.T) > 0.0003 * s, `level ${level} ${variant}: the centre of ${into} is inside it`);
+    let enters = 0; while (enters < 100 && !farIn(enters / 100)) enters++;   // the hundredth of the move at which the far end is first inside
+    assert.ok(enters > 0, `level ${level} ${variant}: the far end of ${moving} is outside ${into} as built`);
+    assert.deepEqual(deep(movedBy(enters / 200)), [], `level ${level} ${variant}: ${moving} moved half way into the gap (${(enters / 200).toFixed(3)} of the way)`);
+    const hit = deep(movedBy(1)), pair = (o) => [o.a, o.b].includes(moving) && [o.a, o.b].includes(into);
+    assert.ok(hit.some(pair), `level ${level} ${variant}: ${moving} moved into ${into}, found ${JSON.stringify(hit)}`);
+    // pushed on through, the far end out again on the other side, no vertex is inside: found by the samples along the
+    // edges. On 'budget' alone: the tube of 'readable' is clear of its neighbour again, and level 2's thumb only leaves
+    // the volume it is rooted in (against that one only a re-entry counts).
+    if (variant === 'budget') {
+      let leaves = 100; while (leaves < 300 && farIn(leaves / 100)) leaves++;
+      const Q = movedBy(leaves / 100), M = shells(h, Q).find((x) => x.name === moving), through = deep(Q);
+      assert.ok(M.V.every((p) => winding(p, N.V, N.T) < 0.5) && N.V.every((p) => winding(p, M.V, M.T) < 0.5), `level ${level} ${variant}: ${moving} pushed through ${into} (${leaves / 100} of the way), a vertex of one is inside the other`);
+      assert.ok(through.some(pair), `level ${level} ${variant}: ${moving} pushed through ${into} (${leaves / 100} of the way), found ${JSON.stringify(through)}`);
+    }
   }
 });
 
