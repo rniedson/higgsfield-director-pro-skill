@@ -64,6 +64,8 @@ class PublicBoundaryTests(unittest.TestCase):
             "blocking-studio/assets/characters/mannequin/mannequin.glb",
             "blocking-studio/assets/characters/mannequin/sheets/turnaround.webp",
             "blocking-studio/docs/mannequin-approved.png",
+            "blocking-studio/assets/characters/mannequin-female/sheets/turnaround.webp",
+            "blocking-studio/docs/mannequin-female-approved.png",
             "blocking-studio/tools/blender/convert_meshy_mannequin.py",
         ):
             with self.subTest(path=path):

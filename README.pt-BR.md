@@ -267,7 +267,7 @@ examples/references/            três imagens de referência e os prompts que as
 calibration/                    registros das rodadas às cegas feitas durante o desenvolvimento, e o placar delas
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
 price-history/                  as cotações do conector, um registro por semana, com o gráfico da evolução
-blocking-studio/                storyboards 3D animados antes de gastar créditos: o manequim (GLB), scripts do Blender, um visualizador em Three.js
+blocking-studio/                storyboards 3D animados antes de gastar créditos: dois manequins (GLB), um gerador humano procedural, scripts do Blender, um visualizador em Three.js
 docs/
   MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
   RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou
@@ -699,9 +699,11 @@ As versões até a v4.1 foram geradas no ChatGPT e ficam fora deste repositório
   [nessa pasta](docs/demo/README.md) quando tomada; o homem neles é o mantenedor, que concordou em publicá-los.
 - As três imagens de referência em `examples/references/`: a licença é decisão do mantenedor, registrada
   [nessa pasta](examples/references/README.md) quando tomada.
-- O manequim em `blocking-studio/assets/` (o modelo, a fonte e as folhas de design): a licença é decisão do
-  mantenedor, registrada [nessa pasta](blocking-studio/assets/characters/mannequin/README.md#license) quando tomada. Os
-  scripts e o visualizador do estúdio de blocking são código, sob a licença MIT.
+- Os manequins em `blocking-studio/assets/` (os modelos, as fontes e as folhas de design): a licença é decisão do
+  mantenedor, registrada na pasta de cada um quando tomada
+  ([masculino](blocking-studio/assets/characters/mannequin/README.md#license),
+  [feminino](blocking-studio/assets/characters/mannequin-female/README.md#license)). Os scripts, o visualizador e o
+  gerador humano do estúdio de blocking são código, sob a licença MIT.
 - Higgsfield, Kling, Seedance, Veo, Wan, MiniMax e outros nomes são marcas dos seus donos, e as licenças acima não dão
   direito de usá-los. Este projeto é independente e não tem vínculo com nenhum deles nem aprovação deles.
 
