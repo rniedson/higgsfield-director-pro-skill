@@ -280,8 +280,10 @@ test('the wrist: level 0\'s connector closes the joint at flexion -70..+70 and d
   t.diagnostic('level 0: no point of the forearm\'s end ring outside the hand at any flexion and deviation of the range (5 degree steps), 4 bodies, 3 poses, both sides');
 });
 
-// the measured gaps of level 1 (the levels step measured 0.047 L for 'budget' and 0.005 L for 'readable')
-const L1_GAP = { budget: 0.05, readable: 0.006 };
+// the measured gaps of level 1 (the levels step measured 0.047 L for 'budget' and 0.005 L for 'readable'; measured again
+// for issue #54 on these bodies, 2026-11-28: 0.0465 L for 'budget', the reference hand, and 0.0049 L for 'readable',
+// the newborn)
+const L1_GAP = { budget: 0.047, readable: 0.006 };
 const level1Gaps = (() => {
   let out = null;
   return () => out ??= Object.fromEntries(['budget', 'readable'].map((variant) => {
@@ -303,6 +305,48 @@ test('the wrist: level 1 \'readable\' closes the joint to within 0.006 of the ha
 test('the wrist: level 1 \'budget\' closes the joint over the whole range', { todo: 'the budget base (40 triangles) leaves a gap of up to about 0.047 of the hand length at the range\'s ends; \'readable\' and level 0 close it' }, () => {
   const g = level1Gaps().budget;
   assert.ok(g.worst <= 0.001, `${g.worst.toFixed(4)} L at ${g.at}`);
+});
+
+// Level 1 'budget', the gap against the forearm's ring (issue #54). One apex under the ring cannot hold the forearm's
+// rim: a face from the ring to the apex slopes in, while the rim turns about the pivot. Measured on the four bodies
+// (2026-11-28): nothing at the neutral wrist, where the rim is the hand's own first six vertices; the largest gap is
+// the ring's radial corner at the full ulnar deviation (30 degrees, whatever the flexion), 0.279 to 0.285 of the
+// ring's half-size toward the thumb, f (the issue's 0.29 of the ring's thickness; 8.56 mm on the reference hand). A
+// deeper apex narrows it and does not close it (reference hand: 0.245 f at 1.2 x the depth, 0.129 f at 2 x). The
+// bound is the largest measure rounded up to 0.29 (a proposal).
+const L1_BUDGET_GAP_F = 0.29;
+test('the wrist: level 1 \'budget\' leaves no gap at the neutral wrist, and at most 0.29 of the ring\'s half-size f at the full ulnar deviation', (t) => {
+  const rows = [];
+  for (const B of BODIES()) {
+    const h = build({ pose: 'HP01', side: 'right', level: 1, variant: 'budget', body: B.body }), sh = shells(h), ring = B.body.ring;
+    const R = mesh0.forearmRingAt({ ring }, 0, 0);
+    let neutral = 0; for (let k = 0; k < 6; k++) for (let j = 0; j < 3; j++) neutral = Math.max(neutral, unionGap(lerp(R[k], R[(k + 1) % 6], j / 3), sh));
+    assert.ok(neutral <= 1e-9 * h.dims.length, `${B.name}: a gap of ${(neutral / MM).toFixed(4)} mm at the neutral wrist`);
+    const g = wristGap(sh, ring, 'right');
+    rows.push(`${B.name} ${(g.gap / ring.f).toFixed(3)} f (${(g.gap / MM).toFixed(2)} mm at flexion ${g.at.flex}, deviation ${g.at.dev})`);
+    assert.equal(g.at.dev, DEV[1], `${B.name}: the largest gap is at the full ulnar deviation`);
+    assert.ok(g.gap <= L1_BUDGET_GAP_F * ring.f, `${B.name}: ${(g.gap / ring.f).toFixed(3)} of the ring's half-size f, bound ${L1_BUDGET_GAP_F}`);
+  }
+  t.diagnostic(`level 1 'budget', the largest wrist gap against the ring's half-size f: ${rows.join('; ')}`);
+});
+
+// Level 1 'readable', the thumb against the palm (issue #54). The thumb's tube starts inside the palm and leaves it
+// once. Before the thenar vertex was kept in from the palm's radial edge (mesh1.js, THENAR_LEAN) the tube's back edge
+// came back into the palm on the newborn and the child of 6: hands/shells.js read it on 10 of these 96 hands, 8 of them
+// deeper than 0.3 mm on the reference hand (1.94 mm the deepest), 6 of them 'hand-collision' corrections. Measured
+// after it (2026-11-28): nothing at any depth. The bound is a third of the 0.3 mm two free pieces may overlap (a
+// proposal).
+const L1_REENTRY = 0.0001;   // of the scale: 0.1 mm on the reference hand
+test('level 1 \'readable\': the drawn thumb leaves the palm once: no re-entry (hands/shells.js), no hand-collision from it; 24 poses, four sizes and ages', (t) => {
+  let n = 0, worst = 0, at = '';
+  for (const B of BODIES()) for (const pose of POSES) {
+    const h = build({ pose, side: 'right', level: 1, variant: 'readable', body: B.body }), s = h.dims.length / rig.REF_LENGTH; n++;
+    const back = SHELLS.overlaps(h.positions, h.index, h.pieces, { palm: 'L1_Palm' }).filter((o) => o.a === 'L1_Thumb' && o.b === 'L1_Palm');
+    for (const o of back) if (o.depth / s > worst) { worst = o.depth / s; at = `${B.name} ${pose}`; }
+    assert.ok(back.every((o) => o.depth <= L1_REENTRY * s), `${B.name} ${pose}: the thumb comes back ${(back[0]?.depth / s / MM).toFixed(2)} mm (on the reference hand) into the palm`);
+    assert.deepEqual(h.corrections.filter((k) => k.rule === 'hand-collision' && k.path === 'L1_Thumb+L1_Palm').map((k) => k.detail), [], `${B.name} ${pose}`);
+  }
+  t.diagnostic(`level 1 'readable', ${n} hands: the thumb's deepest re-entry into the palm ${(worst / MM).toFixed(2)} mm on the reference hand${at ? ` (${at})` : ''}; bound ${(L1_REENTRY / MM).toFixed(1)} mm`);
 });
 
 // ---------------------------------------------------------------- collisions

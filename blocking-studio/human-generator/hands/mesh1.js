@@ -13,7 +13,8 @@
 // The look of level 0, reduced: the palm is level 0's own palm vertices (the wrist ring, the knuckle corners, in
 // 'readable' the thenar), so the palm does not jump between the levels; the digits start inside the palm at their
 // joints with level 0's start-cap size, and the knuckle corners are raised just enough (level0Palm) that no digit base
-// shows at any MCP flexion, spread or twist.
+// shows at any MCP flexion, spread or twist. One vertex is not level 0's as it is: the thenar is kept in from the palm
+// face's radial edge (thenarIn), so that the thumb's tube leaves this palm once.
 //
 // THE SHARED HELPERS (exported as _lod) are also used by mesh2.js and mesh3.js: the level-0 palm of a hand, a digit's
 // posed chain, a smooth "far end" of a curled digit, rings in a bone frame, and the topology builder.
@@ -134,7 +135,8 @@ export function topology(shells) {
 
 // ------------------------------------------------------------------------------------------------------ the palm
 // The palm's own vertex numbers: 0-5 W (exact), 6 front radial knuckle corner, 7 front ulnar, 8 back ulnar, 9 back
-// radial (the raised corners), in 'thenar' 10 the thenar mass (level 0's vertex 7), then the base's vertices.
+// radial (the raised corners), in 'thenar' 10 the thenar mass (level 0's vertex 7, kept in from the palm face's radial
+// edge: thenarIn below), then the base's vertices.
 //   'box'     the ring to the four knuckle corners: 12 triangles
 //   'thenar'  the box with its palm face split on the thenar vertex (a four-facet bulge low on the thumb side): 14
 const PALMS = {
@@ -218,9 +220,28 @@ export function digitVerts(kind, C, g0, sizes, d, inward = 0) {
 export const INWARD = { thumb: 0.2, fingers: 0.05 };
 const fingerSizes = (g) => [[g[0].hw0, g[0].ht0], [[g[0].hw1, g[0].ht1], [g[1].hw1, g[1].ht1]]];
 const thumbSizes = (g) => [[g[0].hw0, g[0].ht0], [[g[1].hw0, g[1].ht0], [g[2].hw0, g[2].ht0]]];
+// 'thenar': level 0's thenar vertex kept in from the palm face's radial edge (palm vertex 1 to 6: W1 to the front
+// radial knuckle corner). Level 0's palm has a radial corner at mid height; this palm ends on that straight edge, and
+// on a small hand (a narrow wrist under a wide palm) level 0's thenar hangs over it: by 2.4 mm on the newborn and 3.0
+// mm on the child of 6 (on the reference scale; not on the reference hand). The facet 1-6-10 then faces back, and the
+// thumb tube's back edge (its base vertex 0 to ring vertex 4), out through the palm's radial side, comes back in under
+// it: a crease up to 2.1 mm deep (newborn, HP04), a 'hand-collision' on 6 of the 96 hands of four bodies x 24 poses.
+// So the vertex goes no farther out (x) than that edge at its height, less THENAR_LEAN x its stand in front of the
+// edge (z): in the section at its height the facet faces forward by at least atan(THENAR_LEAN), 8.5 degrees. In steps
+// of 0.025, 0.1 is the least that leaves no re-entry on those 96 hands (traced along the thumb's edges); 0.15 also
+// keeps it under 0.3 mm x scale with the thumb's controls at their ends and half way on small hands (0.18 mm; 0.54 mm
+// with 0.1). The vertex moves in x only: 1.3 mm on the reference hand, 3.8 on the newborn, 4.5 on the child of 6, 1.6
+// on the adult woman (reference scale). Nothing else of level 1 moves, and levels 0, 2 and 3 take level0Palm as it is.
+// Every figure here was measured for issue #54 on 2026-11-28; 0.15 is a proposal.
+export const THENAR_LEAN = 0.15;
+function thenarIn(T, W1, K) {
+  const t = T[1] / K[1], edge = (k) => W1[k] + t * (K[k] - W1[k]);   // the edge at the vertex's height (W1 is at y = 0)
+  return [Math.min(T[0], edge(0) - THENAR_LEAN * (T[2] - edge(2))), T[1], T[2]];
+}
 function palmVerts(d, spec) {
   const P0 = level0Palm(d), W = wristRingPoints(d.ring), c = P0.connectorBelow;
   const own = PALMS[spec.palm].from.map((i) => (typeof i === 'number' ? P0.verts[i] : P0.knuckles[+i[1]]).slice());
+  if (spec.palm === 'thenar') own[4] = thenarIn(own[4], W[1], own[0]);
   if (spec.base === 'pyramid') return [...W, ...own, [0, -BASE.pyramid.apex * c, 0]];
   const k = BASE.skirt;
   return [...W, ...own, ...W.map((v) => [v[0] * k.scale, -k.ring * c, v[2] * k.scale]), [0, -k.apex * c, 0]];
