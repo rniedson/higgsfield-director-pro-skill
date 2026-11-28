@@ -113,6 +113,23 @@ tokens in that session. A new session re-reads far less, but the quotes still go
 Claude subscription these figures come out of the usage limits instead of dollars. How each way works:
 [`models.md`](higgsfield-director/references/models.md#who-makes-the-quotes).
 
+## Showcases
+
+What the skill did on real requests, told from the records ([all showcases](docs/showcases/README.md)).
+
+### Kung fu vs robot clone: a 10 s fight, one step at a time
+
+Four stills to choose the look (0.48 credits), the whole shot as a draft (30), then the final at 1080p from the
+approved draft (160), as quoted on 2026-11-26. The final repeated the draft's motion and also its silence, so the skill
+now makes the draft with sound when the final needs it.
+[Read the case](docs/showcases/kung-fu-clone.md) · [Watch the video](docs/demo/kung-fu-vs-robot-clone.mp4)
+
+### The day's prices without the model
+
+The same 29 free quotes made three ways on 2026-11-27: by the main conversation (5,276 tokens written, 550,485
+re-read), by a subagent on a small model, and by `connector.py prices` (no model tokens for the quotes).
+[Read the case](docs/showcases/price-check-tokens.md)
+
 ## Illustrated manual
 
 The [illustrated direction manual](docs/manual/README.md) has **11 parts and 185 schematic images**: camera movement,
@@ -283,6 +300,7 @@ AGENTS.md · CLAUDE.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
 
 - [How it works](#how-it-works)
 - [Why use it](#why-use-it)
+- [Showcases](#showcases)
 - [Illustrated manual](#illustrated-manual)
 - [Reference images](#reference-images)
 - [Architecture](#architecture)
