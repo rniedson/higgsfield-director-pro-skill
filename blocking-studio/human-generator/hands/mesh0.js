@@ -22,7 +22,7 @@
 // Mode A: the mesh in the bind pose (hand space, every finger bone unrotated), the 16 bones and their rest rotations.
 // Mode B (level 0): the same mesh posed and baked onto the hand bone.
 
-import { vec, quat, LIMITS, FINGERS, DIGITS, DIGIT_BONES, BONE_NAMES, planesOf, sdPlanes, convexExcess, wristRingPoints, fk } from './rig.js';
+import { vec, quat, LIMITS, FINGERS, DIGITS, DIGIT_BONES, BONE_NAMES, planesOf, sdPlanes, convexExcess, wristRingPoints, fk, lruCache, CACHE_BOUNDS } from './rig.js';
 
 const { add, sub, scl, dot, cross, len, nrm, lerp } = vec;
 const Q = quat;
@@ -333,22 +333,20 @@ function connectorPiece(d) {
 }
 
 // --------------------------------------------------------------------------------------------- all the pieces
-const PIECES = new Map(), PALMS = new Map();
+// The pieces and the palm's fit are a body's geometry: the small tier of the hand caches (rig.js, THE HAND CACHES).
+const PIECES = lruCache('pieces', CACHE_BOUNDS.geometry), PALMS = lruCache('palmFits', CACHE_BOUNDS.geometry);
 export const clearPieceCache = () => { PIECES.clear(); PALMS.clear(); };
 // The palm alone, fitted as for level 0, and the connector's depth below the pivot: all that levels 1 to 3 take from
 // level 0 (mesh1.level0Palm), without fitting the digits' ends or the connector's scales. Cached by the dimensions' key.
 export function palmPiece(d, bones) {
-  let hit = PALMS.get(d.key);
+  const hit = PALMS.get(d.key);
   if (hit) return hit;
   const a = SHAPE.startScale;
   const startCap = (g) => ringVerts(0, a * g.hw0, -a * g.ht0, a * g.ht0);
   const starts = { thumb: startCap(d.thumb.segs[0]) };
   for (const f of FINGERS) starts[f] = startCap(d.fingers[f].segs[0]);
   const fit = fitPalm(d, bones, starts);
-  hit = { fit, verts: palmSolid(d, fit.p).V, connectorBelow: connectorSweep(d).c0 };
-  if (PALMS.size > 400) PALMS.delete(PALMS.keys().next().value);
-  PALMS.set(d.key, hit);
-  return hit;
+  return PALMS.set(d.key, { fit, verts: palmSolid(d, fit.p).V, connectorBelow: connectorSweep(d).c0 });
 }
 // The level-0 pieces of a hand: { bones: [16 convex pieces, one a bone, in the bone's local frame], connector (hand
 // space), fit (what was fitted) }. Cached by the dimensions' key. `bones` is rig.skeleton(d).
@@ -369,9 +367,7 @@ export function pieces(d, bones) {
   Object.defineProperty(fitOut, 'connector', { enumerable: true, get: () => connectorOnce().fit });
   const out = { bones: list, fit: fitOut };
   Object.defineProperty(out, 'connector', { enumerable: true, get: connectorOnce });
-  if (PIECES.size > 400) PIECES.delete(PIECES.keys().next().value);
-  PIECES.set(d.key, out);
-  return out;
+  return PIECES.set(d.key, out);
 }
 
 // ------------------------------------------------------------------------------------------------- the meshes

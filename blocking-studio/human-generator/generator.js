@@ -679,7 +679,8 @@ function recumbentPose(C, sol, character) {
 // (the maintainer's rule), and levels 1 to 3 are built from the same solved skeleton as level 0, so a change of level
 // does not change the pose. The solver starts from the library's fit for the hand's age (hands/fit.js) and stays local
 // where that holds, so a body it has not seen costs about 15 ms a pose (README.md, "How the hands are built on a
-// body"); a solved body and pose is kept (hands/index.js and rig.js cache by the exact inputs).
+// body"); a solved body and pose is kept by its exact inputs while it is among the most recently used: the hands'
+// caches are bounded (hands/rig.js, THE HAND CACHES, has the bounds, what they hold and what a miss costs).
 
 const HAND_LEVEL = Object.fromEntries(HANDS.HAND_LEVELS.map((l) => [l.level, l]));
 const LOD_HAND_LEVEL = { 1: 1 };   // the character's level of detail -> its hands' level when the Hand DNA leaves it null

@@ -12,7 +12,7 @@ import * as growth from '../growth.js';
 import { TOP_KEYS, GROUPS, ADULT_ONLY, MAX_AGE_MONTHS } from '../dna.js';
 
 import { measure as measureFat } from '../tools/calibrate_fat.mjs';
-import { clearHandCaches } from '../hands/index.js';
+import { clearHandCaches, handCacheSizes, buildHand } from '../hands/index.js';
 
 const { generate, validate, collisions, colliders, inspect, posedPositions, boneWorld, dnaFromId, presetDNA, randomDNA, volume } = gen;
 const fixture = (name) => JSON.parse(readFileSync(fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8'));
@@ -731,8 +731,12 @@ test('a raised arm leaves no gap at the shoulder: the ball stays with the trunk 
 // ---------------------------------------------------------------- cost
 
 // A body the hands have not seen costs its hands' pieces and poses once (fitted and solved for that body); the same
-// body again is read from the hands' caches. The bounds are regression bounds, about 5 and 10 times what the machine
-// that wrote this measured (16 ms and 0.9 ms), to leave room for slower machines.
+// body again is read from the hands' caches, which keep what a solved hand reads for more bodies than the 100 of this
+// test (hands/rig.js, CACHE_BOUNDS.bodies: under 100 the second pass would fit every body's pieces again to read its
+// digit ends and its palm corners, though it would solve no hand again, the solves having their own bound; with 99 it
+// read 10 and 17 ms of CPU a character where 320 read 0.9 to 2.4, in two runs on 2026-11-28 on a loaded machine). The
+// bounds are regression bounds, about 5 and 10 times what the machine that wrote this measured (16 ms and 0.9 ms), to
+// leave room for slower machines.
 test('performance on the CPU is measured (the GPU is not: see README.md)', (t) => {
   const dnas = GRID.slice(0, 100), noHands = { hands: { level: 4, left: { pose: 'HP01' }, right: { pose: 'HP01' } } };
   const perCharacter = (options) => {
@@ -762,6 +766,52 @@ test('memory: generating thousands of characters keeps nothing', (t) => {
     t.diagnostic(`heap after 4000 characters: ${grown.toFixed(2)} MB more`);
     assert.ok(grown < 8, `${grown.toFixed(1)} MB kept`);
   }
+});
+
+// The hands' caches are bounded (hands/rig.js, THE HAND CACHES). More bodies than any bound in bodies, more level-0
+// bodies than the bind meshes' bound and more solves than the solves' bound leave no cache above its bound, and a hand
+// that has left a cache is built again exactly as it was. Read from the caches' own sizes: no timing, no heap.
+test('the hand caches hold their bounds, and a hand that left them is built again the same', () => {
+  const max = Object.fromEntries(Object.entries(handCacheSizes()).map(([name, c]) => [name, c.max]));
+  const within = (when) => { for (const [name, c] of Object.entries(handCacheSizes())) assert.ok(c.size <= c.max, `${when}: ${name} holds ${c.size} of ${c.max}`); };
+  const full = (names, when) => { const s = handCacheSizes(); for (const name of names) assert.equal(s[name].size, s[name].max, `${when}: ${name}`); };
+  const same = (b, a, what) => {
+    for (const k of ['positions', 'index', 'boneIndex']) assert.deepEqual(b[k], a[k], `${what}: ${k}`);
+    assert.deepEqual(clone(b.bones), clone(a.bones), what); assert.deepEqual(b.corrections, a.corrections, what);
+    assert.deepEqual(b.measures, a.measures, what); assert.deepEqual(b.hands, a.hands, what);
+  };
+  const level0 = { hands: { level: 0, left: { pose: 'HP01' }, right: { pose: 'HP01' } } };
+  const make0 = (d) => { const c = generate(d, level0); assert.ok(c.ok, `${d.id} at level 0: ${JSON.stringify(c.errors)}`); return c; };
+  // the grid's 200 adults and presets of other ages: more hand bodies than the caches keep; the last ones at level 0 too
+  const ages = max.palmCorners - GRID.length + 8;
+  const bodies = [...GRID, ...Array.from({ length: ages }, (_, i) => presetDNA({ sex: i % 2 ? 'female' : 'male', age_months: Math.floor(1200 * i / ages) }))];
+  const distinct = new Set(), firstLevel0 = bodies.length - max.bindMeshes - 2;
+  let oldest = null, oldest0 = null;
+  bodies.forEach((d, i) => {
+    const c = make(d); distinct.add(JSON.stringify(c.hands.right.body));
+    if (i === 0) oldest = c;
+    if (i >= firstLevel0) { const c0 = make0(d); if (i === firstLevel0) oldest0 = c0; }
+  });
+  assert.ok(distinct.size > Math.max(max.palmCorners, max.digitEnds, max.rigs, max.pieces, max.palmFits), `${distinct.size} distinct hand bodies`);
+  // and more solves than are kept: one body, a finger control at as many values as it takes, each its own solve
+  const body = make(bodies.at(-1)).hands.right.body, more = max.solves - bodies.length + 8, twists = new Set();
+  const hand = (controls) => { const h = buildHand({ pose: 'HP01', level: 1, body, controls }); assert.ok(h.ok, JSON.stringify(h.errors)); return h; };
+  hand({});
+  for (let k = 1; k <= more; k++) twists.add(hand({ fingers: { index: { twist: k / (more + 1) } } }).angles.fingers.index.twist_deg);
+  assert.equal(twists.size, more, 'a kept solve is asked for with its controls: each value is its own solve');
+  within('past every bound'); full(['solves', 'palmCorners', 'digitEnds', 'bindMeshes'], 'past its bound');
+  // the oldest body has left every cache by now; emptied caches give the same again
+  same(make(bodies[0]), oldest, `${bodies[0].id}, after it left the caches`);
+  clearHandCaches();
+  const again = make(bodies[0]), again0 = make0(bodies[firstLevel0]);
+  same(again, oldest, `${bodies[0].id}, after clearHandCaches()`); same(again0, oldest0, `${bodies[firstLevel0].id} at level 0, after clearHandCaches()`);
+  // a body whose geometry has left while its solve is kept: more bodies new to the caches than the geometry's bound
+  const others = GRID.slice(1, max.rigs + 3);
+  for (const d of others) make(d);
+  within(`${others.length + 2} bodies after clearHandCaches()`); full(['rigs', 'pieces', 'palmFits'], 'more new bodies than the geometry keeps');
+  assert.equal(handCacheSizes().digitEnds.size, others.length + 1, 'what a solved hand reads is kept for each of them');
+  same(make(bodies[0]), again, `${bodies[0].id}, its geometry left and its solve kept`);
+  same(make0(bodies[firstLevel0]), again0, `${bodies[firstLevel0].id} at level 0, its geometry left and its bind mesh kept`);
 });
 
 test('colliders are apart from the mesh: one capsule per piece, inside its piece', () => {
