@@ -15,15 +15,23 @@
 // Plain JavaScript with no dependencies: the editor (index.html) turns the output into a Three.js SkinnedMesh, and
 // Node runs the tests (tests/). Coordinates: metres, Y up, the character faces +Z, its left side is +X, and the origin
 // is the centre of the base of the feet.
+//
+// The hands come from the Procedural Hand Pose System (hands/): one library of 24 poses for every body, built from the
+// forearm's own wrist ring and the body's hand length, age, sex and arm fat (see "6b. hands" below and README.md).
 
 import { validate, check, snapshot, blankDNA, stageOf, DNA_CONTRACT, STAGES, HEIGHTS, HEIGHT_LEVELS, GROUPS, ADULT_MONTHS, ADULT_ONLY as ADULT_ONLY_PROPORTIONS } from './dna.js';
 import * as G from './growth.js';
+import * as HANDS from './hands/index.js';
+import { quat as HQ, LIMITS as HAND_LIMITS } from './hands/rig.js';
 
 export { validate, blankDNA, stageOf, DNA_CONTRACT, STAGES, HEIGHTS, HEIGHT_LEVELS, GROUPS, ADULT_MONTHS };
-export const GENERATOR_VERSION = '0.2.0';
-export const TOPOLOGY_VERSION = { 1: 1 };   // per level of detail; a change of topology needs a new version
+export const GENERATOR_VERSION = '0.3.0';
+export const TOPOLOGY_VERSION = { 1: 2 };   // per level of detail; a change of topology needs a new version (2: the hands)
 export const LOD_BUDGET = { 0: 1200, 1: 400, 2: 200, 3: 80, 4: 12 };   // proposed triangle budgets, not yet validated
-export const TRIANGLES = { 1: 412 };   // what each level of detail has today: 392 for the body and 20 for the placeholder hands
+export const BODY_TRIANGLES = 392;          // the body without its hands (head, trunk, neck, arms, legs, ball joints)
+// What each level of detail has today, with its default hands (hand level 1, 'budget': 40 triangles a hand, measured
+// by hands/mesh1.js). CHARACTER_TRIANGLES has the count for every hand level and variant.
+export const TRIANGLES = { 1: BODY_TRIANGLES + 2 * HANDS.HAND_LEVELS.find((l) => l.level === 1).triangles };
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
@@ -279,6 +287,7 @@ function skeleton(C, legAngle = 0) {
   // wide one); the age's ratio of each region comes on top, in sections()
   const wS = C.reference / G.ADULT_STATURE * Math.sqrt(C.relShape) * beyond, E = 0.92 + 0.16 * C.bone_structure, g = G.regions(months);
   const neckK = around(P.neck_length, 0.35) * G.neckShare(months);   // a short neck brings the shoulders up with it
+  // (sd.hand below, the wrist pivot to the middle fingertip, is the hand's length that hands/ builds to)
   const neckBase = chin - (chin - torso('neckBase')) * neckK;
   const K = {
     H, U, wS, E, g, headH, chin, hs: headH / HEAD, neckBase, months, legAngle,
@@ -409,14 +418,12 @@ function sections(C, K) {
   const arm = g.arm * wasted(0.06), thigh = g.thigh * wasted(0.15), knee = (g.thigh + g.calf) / 2 * wasted(0.1), calf = g.calf * wasted(0.1);
   const ring = (w, f, b) => ({ w, f, b: b ?? f });
   for (const s of ['L', 'R']) {
-    const handK = K.handK * K.side[s].handScale, hw = L(1, 0.92);
     R['arm' + s] = {
       upper: [ring(W(L(0.047, 0.039)) * arm + fat('arms', 0.08) + mus(0.028), W(L(0.05, 0.042)) * arm + fat('arms', 0.08) + mus(0.028)),
         ring(B(L(0.035, 0.029)) * arm + fat('arms', 0.05) + mus(0.012), B(L(0.037, 0.031)) * arm + fat('arms', 0.05) + mus(0.012))],
+      // fore[1] is the wrist ring: the hand's interface (hands/ builds the hand's base on exactly these six points)
       fore: [ring(W(L(0.039, 0.033)) * arm + fat('arms', 0.045) + mus(0.02), W(L(0.042, 0.036)) * arm + fat('arms', 0.045) + mus(0.02)),
         ring(B(L(0.021, 0.018)) * arm + fat('arms', 0.015) + mus(0.004), B(L(0.03, 0.026)) * arm + fat('arms', 0.015) + mus(0.004))],
-      // a placeholder block, palm toward the thigh (thickness sideways, width front to back): the hands are a later phase
-      hand: [ring(B(0.013) * handK + fat('arms', 0.005), B(0.03) * handK * hw), ring(B(0.011) * handK + fat('arms', 0.004), B(0.04) * handK * hw)],
     };
   }
   R.leg = {
@@ -493,14 +500,16 @@ function solveLegs(K, R) {
 
 const A_POSE = 12;   // degrees between the arm and the vertical in the reference pose
 
-// The arms: how far they must open from the body so they clear the torso, the hips and the thighs.
-function solveArms(K, R, s, legAngle) {
+// The arms: how far they must open from the body so they clear the torso, the hips and the thighs. The upper arm and
+// the forearm are sampled as tubes (as before the hands existed); the hand is checked on its own vertices, posed, in
+// the bind pose of the arm (`handPts`, the left side's convention: x outward), so a fist or an open hand opens the arm
+// as far as it needs and no further.
+function solveArms(K, R, s, legAngle, handPts = []) {
   const sd = K.side[s], a = R['arm' + s];
   const total = sd.ua + sd.fa + sd.hand;
   const radius = (d) => {   // the arm's half-thickness sideways at a distance d from the shoulder
     if (d <= sd.ua) return lerp(a.upper[0].w, a.upper[1].w, d / sd.ua);
-    if (d <= sd.ua + sd.fa) return lerp(a.fore[0].w, a.fore[1].w, (d - sd.ua) / sd.fa);
-    return Math.max(a.hand[0].w, a.hand[1].w);
+    return lerp(a.fore[0].w, a.fore[1].w, (d - sd.ua) / sd.fa);
   };
   const thighOuter = (y) => {
     if (y > K.hipJoint || y < K.knee) return 0;
@@ -508,29 +517,35 @@ function solveArms(K, R, s, legAngle) {
     return lerp(K.hipX, K.kneeX, t) + t * (K.hipJoint - K.knee) * Math.tan(deg(legAngle))
       + lerp(R.leg.thigh[0].wo, R.leg.thigh[1].w, Math.max(0, (t - R.leg.t0) / (1 - R.leg.t0)));
   };
-  const gap = 0.012 * K.wS;
+  const gap = 0.012 * K.wS, arm = sd.ua + sd.fa;
   for (let ang = A_POSE; ang <= MAX_ARMS; ang += STEP) {
     const sn = Math.sin(deg(ang)), cs = Math.cos(deg(ang));
     let ok = true;
-    for (let i = 4; i <= 24; i++) {   // from a fifth of the upper arm (the armpit may touch) to the fingertips
+    for (let i = 4; i <= 24 && ok; i++) {   // from a fifth of the upper arm (the armpit may touch) to the wrist
       const d = total * i / 24, y = sd.shY - d * cs;
+      if (d > arm) break;   // the hand: its vertices, below
       if (d < sd.ua && y > K.underbust) continue;
       const x = K.shXBody + d * sn - radius(d) / cs;
-      if (x < Math.max(torsoHalfWidth(R, y), thighOuter(y)) + gap) { ok = false; break; }
+      if (x < Math.max(torsoHalfWidth(R, y), thighOuter(y)) + gap) ok = false;
+    }
+    for (let i = 0; i < handPts.length && ok; i++) {   // the hand's vertices, turned with the arm about the shoulder
+      const rx = handPts[i][0] - K.shXBody, ry = handPts[i][1] - sd.shY;
+      const x = K.shXBody + rx * cs - ry * sn, y = sd.shY + rx * sn + ry * cs;
+      if (x < Math.max(torsoHalfWidth(R, y), thighOuter(y)) + gap) ok = false;
     }
     if (ok) return ang;
   }
   return MAX_ARMS;
 }
 
-function solve(C, K, R) {
+function solve(C, K, R, hands) {
   const corrections = [];
   const legs = solveLegs(K, R);
   if (legs > 0) corrections.push({ rule: 'legs-apart', channel: 'pose.legs', asked: 0, used: legs,
     detail: `legs opened ${legs.toFixed(2)}° each so the thighs do not run into each other, and lengthened below the hip to keep the height` });
   if (legs >= MAX_LEGS) corrections.push({ rule: 'legs-limit', channel: 'pose.legs', asked: null, used: legs,
     detail: `the thighs could not clear each other within ${MAX_LEGS}°: they overlap` });
-  const arms = { L: solveArms(K, R, 'L', legs), R: solveArms(K, R, 'R', legs) };
+  const arms = { L: solveArms(K, R, 'L', legs, handPoints(K, hands, 'L')), R: solveArms(K, R, 'R', legs, handPoints(K, hands, 'R')) };
   for (const s of ['L', 'R']) {
     if (arms[s] > A_POSE) corrections.push({ rule: 'arms-apart', channel: `pose.arm_${s}`, asked: A_POSE, used: arms[s],
       detail: `arm ${s} opened to ${arms[s].toFixed(2)}° (the A pose is ${A_POSE}°) to clear the body` });
@@ -635,7 +650,8 @@ function recumbentPose(C, sol, character) {
   const floor = Math.min(lowest(character, pose, TRUNK), lowest(character, pose, ['Head']));   // the limbs do not move it
   for (const [s, sign] of [['L', 1], ['R', -1]]) {
     const open = quat(Z, sign * deg(Math.max(0, shoulder - sol.arms[s]))), arm = (a) => { pose['UpperArm_' + s] = qmul(quat(X, deg(a)), open); };
-    const down = firstAngle(0, 60, (a) => { arm(a); return lowest(character, pose, [`UpperArm_${s}`, `Forearm_${s}`, `Hand_${s}`, `Elbow_${s}`]) <= floor + TOUCH; });
+    const limb = [`UpperArm_${s}`, `Forearm_${s}`, `Elbow_${s}`, ...character.pieces.filter((p) => handSide(p.name) === s).map((p) => p.name)];
+    const down = firstAngle(0, 60, (a) => { arm(a); return lowest(character, pose, limb) <= floor + TOUCH; });
     arm(down ?? 60);
     const leg = (k) => { pose['Calf_' + s] = quat(X, deg(k)); return lowest(character, pose, [`Foot_${s}`, `Shin_${s}`]) - floor; };
     let rest = firstAngle(knee, 140, (k) => leg(k) <= TOUCH);
@@ -648,6 +664,245 @@ function recumbentPose(C, sol, character) {
   }
   pose.$offset = [0, -inspect(character, pose).min[1], 0];
   return pose;
+}
+
+// ---------------------------------------------------------------- 6b. hands
+//
+// The hands come from hands/ (the Procedural Hand Pose System). generate()'s option `hands` is the Hand DNA v1 block:
+// each hand's pose and controls, the mode and the level of detail. The body gives each hand its length (sd.hand: the
+// wrist pivot to the middle fingertip), the forearm's wrist ring (fore[1]: the hand's base is built on exactly its six
+// points), the age, the sex preset's weight (C.fem) and the arms' fat. The hand is built in its own frame (canonical
+// right hand: +Y to the fingertips, +X the thumb, +Z out of the palm; a left hand is its mirror image) and set on the
+// Hand_L / Hand_R bone the way the arm hangs: fingers down, the palm toward the thigh, the thumb forward.
+//
+// Every level is built for each body exactly: its dimensions, contacts and collisions are solved on this body's hand
+// (the maintainer's rule), and levels 1 to 3 are built from the same solved skeleton as level 0, so a change of level
+// does not change the pose. The solver starts from the library's fit for the hand's age (hands/fit.js) and stays local
+// where that holds, so a body it has not seen costs about 15 ms a pose (README.md, "How the hands are built on a
+// body"); a solved body and pose is kept (hands/index.js and rig.js cache by the exact inputs).
+
+const HAND_LEVEL = Object.fromEntries(HANDS.HAND_LEVELS.map((l) => [l.level, l]));
+const LOD_HAND_LEVEL = { 1: 1 };   // the character's level of detail -> its hands' level when the Hand DNA leaves it null
+const DEFAULT_HANDS = { left: { pose: 'HP01' }, right: { pose: 'HP01' } };
+const FOREARM_CAP = 4;             // level 4 has no hand: the forearm's six-sided end is closed by four triangles
+// Triangles a hand, for each hand level ('1' is level 1's default variant; '1:<variant>' each variant), and a
+// character's with those hands: measured by the modules of hands/ (HAND_LEVELS).
+export const HAND_TRIANGLES = Object.fromEntries(HANDS.HAND_LEVELS.flatMap((l) => [[String(l.level), l.triangles],
+  ...Object.entries(l.variants ?? {}).map(([name, v]) => [`${l.level}:${name}`, v.triangles])]));
+export const CHARACTER_TRIANGLES = Object.fromEntries(Object.entries(HAND_TRIANGLES).map(([k, t]) => [k, BODY_TRIANGLES + 2 * (t || FOREARM_CAP)]));
+
+// The hand frame (own side) to the body's bind pose, around the wrist pivot w; and the same turn as a quaternion.
+// Right hand: (x, y, z) -> (z, -y, x); left hand (already mirrored in X): (x, y, z) -> (-z, -y, -x). Both are proper
+// rotations: the palm (+Z) faces the body's midline, the thumb (+X right, -X left) points forward (+Z).
+const HAND_TO_BODY = {
+  L: (p, w) => [w[0] - p[2], w[1] - p[1], w[2] - p[0]],
+  R: (p, w) => [w[0] + p[2], w[1] - p[1], w[2] + p[0]],
+};
+const HAND_TURN = { L: HQ.fromBasis([0, 0, -1], [0, -1, 0], [-1, 0, 0]), R: HQ.fromBasis([0, 0, 1], [0, -1, 0], [1, 0, 0]) };
+const handPieceName = (name, s) => { const n = name.replace(/^L\d_/, ''); return ['Hand', 'Palm', 'Main'].includes(n) ? 'Hand_' + s : `Hand_${n}_${s}`; };
+const handSide = (name) => (name.startsWith('Hand_') ? name.slice(-1) : null);   // 'L' or 'R' for any piece of a hand
+const plain = (v) => (v === undefined ? undefined : JSON.parse(JSON.stringify(v)));
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+
+// A copy of the options in which every value was read once (as snapshot() does for the DNA), deep enough for the Hand
+// DNA (hands.left.fingers.index.curl). Own keys only (Reflect.ownKeys): an inherited key does not count, and symbol and
+// non-enumerable keys are copied as they are (non-enumerable stays non-enumerable), so that the checks refuse them; a
+// getter is read once. Nothing is converted: what is checked is what was handed in.
+function snapshotDeep(v, depth) {
+  if (v === null || typeof v !== 'object' || depth <= 0) return v;
+  if (Array.isArray(v)) return Array.from(v, (x) => snapshotDeep(x, depth - 1));
+  const out = {};
+  for (const k of Reflect.ownKeys(v)) {
+    const d = Reflect.getOwnPropertyDescriptor(v, k);
+    if (!d) continue;   // a Proxy that lists a key it does not have
+    Object.defineProperty(out, k, { value: snapshotDeep('value' in d ? d.value : v[k], depth - 1), enumerable: d.enumerable, writable: true, configurable: true });
+  }
+  return out;
+}
+
+// generate()'s options -> the hands to build: { ok, spec, mode, level, variant, notes } or { ok: false, errors }.
+// A null level is the character's (level 1 for LOD 1) when the mode is built there, else the mode's own (articulated:
+// 0, simplified: 2), and a note says so; a null mode is the level's.
+function resolveHands(options, lod) {
+  const no = (stage, code, path, message) => ({ ok: false, errors: [{ stage, code, path, message }] });
+  let opts;
+  try { opts = options === undefined || options === null ? {} : snapshotDeep(options, 8); }
+  catch (e) { return no('generator', 'TYPE', 'options', `the options could not be read: ${e && e.message}`); }
+  if (!isPlainObject(opts)) return no('generator', 'TYPE', 'options', 'the options must be an object: { hands, handVariant }');
+  for (const k of Reflect.ownKeys(opts)) {   // a symbol, or a string not allowed, is an unknown option
+    if (typeof k !== 'string' || !['hands', 'handVariant'].includes(k)) return no('generator', 'UNKNOWN_KEY', `options.${String(k)}`, `unknown option ${typeof k === 'string' ? JSON.stringify(k) : String(k)} (allowed: hands, handVariant)`);
+    if (!Object.prototype.propertyIsEnumerable.call(opts, k)) return no('generator', 'TYPE', `options.${k}`, `"${k}" is not enumerable: only enumerable own data properties are read`);
+  }
+  const ownOption = (k) => (Object.prototype.hasOwnProperty.call(opts, k) ? opts[k] : undefined);
+  const given = ownOption('hands') !== undefined && ownOption('hands') !== null;
+  const v = HANDS.validateHands(given ? ownOption('hands') : DEFAULT_HANDS);
+  if (!v.ok) return { ok: false, errors: v.errors };
+  const spec = v.spec, own = LOD_HAND_LEVEL[lod], notes = [...v.notes];   // the Hand DNA's own notes (a mirror's)
+  let level = spec.level ?? null, mode = spec.mode ?? null;
+  if (level === null) {
+    if (mode === null || HAND_LEVEL[own].modes.includes(mode)) level = own;
+    else {
+      level = mode === 'articulated' ? 0 : 2;
+      notes.push(`the mode "${mode}" is not built at hand level ${own} (the character's level of detail ${lod}): level ${level}, the mode's own`);
+    }
+  }
+  if (mode === null) mode = HAND_LEVEL[level].modes[0];
+  const variant = ownOption('handVariant') ?? null;
+  if (variant !== null) {
+    const names = Object.keys(HAND_LEVEL[level].variants ?? {});
+    if (typeof variant !== 'string' || !names.includes(variant)) {
+      const got = typeof variant === 'string' ? JSON.stringify(variant) : typeof variant === 'bigint' ? `${variant}n`
+        : typeof variant === 'object' ? (Array.isArray(variant) ? 'an array' : 'an object') : String(variant);
+      return no('hands', 'ENUM', 'handVariant', names.length ? `hand level ${level} has the variants ${names.map((n) => JSON.stringify(n)).join(', ')} (got ${got})`
+        : `hand level ${level} has no variants (got ${got})`);
+    }
+  }
+  return { ok: true, spec, mode, level, variant, notes, given };
+}
+
+// What the body gives a hand. The fat is the arms' own fat as the body applies it (fat('arms', ...) in sections()),
+// as a share of the most it can hold.
+function handBody(C, K, R, s) {
+  const r = R['arm' + s].fore[1];
+  return { length: K.side[s].hand, ring: { w: r.w, f: r.f, b: r.b }, months: C.months, fem: C.fem, fat: Math.min(1, R.fG * C.fatLevel.arms / FAT_FULL) };
+}
+
+// Both hands of a body: { L, R } (each a built hand, its posed positions in `posedPositions`) or { errors }.
+function characterHands(C, K, R, H) {
+  const out = {}, errors = [];
+  for (const [s, side] of [['L', 'left'], ['R', 'right']]) {
+    const b = H.spec[side], body = handBody(C, K, R, s);
+    const controls = { ...Object.fromEntries(['size', 'palm_width', 'finger_length', 'finger_thickness'].filter((k) => H.spec[k] !== undefined && H.spec[k] !== null).map((k) => [k, H.spec[k]])),
+      ...(b.fingers ? { fingers: b.fingers } : {}), ...(b.thumb ? { thumb: b.thumb } : {}) };
+    const grip = { grip_radius_m: b.grip_radius_m ?? null, object: b.object ?? null, grip_strength: b.grip_strength ?? null };
+    let h;
+    if (H.level === 4) {
+      // no hand: nothing given for it is built, and each field given says so (the block's own fields once, with the
+      // left hand; a side's fields with that side)
+      const blockGiven = ['size', 'palm_width', 'finger_length', 'finger_thickness'].filter((k) => H.spec[k] !== undefined && H.spec[k] !== null);
+      const sideGiven = ['grip_radius_m', 'object', 'grip_strength', 'fingers', 'thumb'].filter((k) => b[k] !== undefined && b[k] !== null);
+      const ignored = (path, block) => ({ rule: 'hand-control-ignored', path, ...(block ? { block: true } : {}), asked: null, used: null, detail: 'hand level 4 has no hand: the forearm\'s end is closed and no pose is solved' });
+      h = { ok: true, side, pose: b.pose, mode: null, level: 4, variant: null, positions: [], index: [], boneIndex: [], bones: [], pieces: [], angles: null, contact: null,
+        corrections: [...(s === 'L' ? blockGiven.map((k) => ignored(k, true)) : []), ...sideGiven.map((k) => ignored(k, false))],
+        diagnostics: [`hand level 4: no hand; the forearm's end is closed (no pose is solved)${blockGiven.length + sideGiven.length ? `; ignored: ${[...blockGiven, ...sideGiven].join(', ')}` : ''}`], triangles: 0, vertices: 0 };
+    } else {
+      h = HANDS.buildHand({ pose: b.pose, side, mode: H.mode, level: H.level, variant: H.level === 1 ? H.variant : null, body, controls, grip });
+      if (h.ok) h = { ...h, angles: plain(h.angles), contact: plain(h.contact) ?? null, corrections: plain(h.corrections), diagnostics: [...h.diagnostics] };
+    }
+    // an error names the Hand DNA's key (HANDS.handDnaPath); what the body gave the hand is the side's own
+    if (!h.ok) { errors.push(...h.errors.map((e) => ({ ...e, stage: 'hands', path: !e.path || /^body\b/.test(e.path) ? side : HANDS.handDnaPath(side, e.path) }))); continue; }
+    h.body = body;
+    h.posedPositions = h.mode === 'articulated' ? HANDS.posed(h) : h.positions;
+    out[s] = h;
+  }
+  return errors.length ? { errors } : out;
+}
+
+// The hand's vertices, posed, in the arm's bind pose and the left side's convention (x outward): for solveArms.
+function handPoints(K, hands, s) {
+  const h = hands?.[s];
+  if (!h || !h.vertices) return [];
+  const P = h.posedPositions, sd = K.side[s], wx = K.shXBody, wy = sd.shY - sd.ua - sd.fa, out = [];
+  for (let i = 0; i < P.length; i += 3) out.push([wx - P[i + 2], wy - P[i + 1]]);   // the same for both sides (see HAND_TO_BODY)
+  return out;
+}
+
+// Mode A's finger bones on the body: their heads in the bind pose, their rest rotations as the body's bones take them
+// (bind frames aligned with the world, as every bone's; a local rotation of the hand library, bind * rest * conj(bind)
+// in the hand frame, turned into the body's frame), and `axes`: the bone's own axes in that frame. The hand library's
+// bone frame is +Y along the bone, +Z the pad, +X the flexion axis; on the body that frame is not the world's, so a
+// turn about the world's X does not bend a finger. A finger bends by a turn about axes.flexion (positive toward the
+// pad), rolls about axes.twist and spreads about axes.spread (an MCP's rest is spread * flexion * twist); the thumb's
+// metacarpal takes its abduction and opposition as one rotation (hands/rig.js restFromAngles).
+function handBones(s, h, wrist) {
+  if (h?.mode !== 'articulated') return [];
+  const T = HAND_TURN[s], Tc = HQ.conj(T), axis = (q, v) => HQ.rot(T, HQ.rot(q, v)).map((x) => (Math.abs(x) < 1e-15 ? 0 : x));
+  return h.bones.slice(1).map((bn) => ({ name: bn.name, parent: bn.parent, head: HAND_TO_BODY[s](bn.head, wrist),
+    rest: HQ.norm(qmul(qmul(T, qmul(qmul(bn.bind, bn.rest), HQ.conj(bn.bind))), Tc)),
+    axes: { flexion: axis(bn.bind, [1, 0, 0]), twist: axis(bn.bind, [0, 1, 0]), spread: axis(bn.bind, [0, 0, 1]) } }));
+}
+
+// A capsule inside a piece of the hand, for the body's solvers and the overlap report: on the piece's long axis
+// through its deepest point. A piece with a point inside every face's plane (convex or star-shaped: the pieces of
+// level 0 and most others) is measured by those planes, exactly. Any other closed piece (a bent finger of level 1
+// 'readable' in some poses) is measured by its signed distance: inside by its winding number, the radius the distance
+// to the nearest triangle, sampled along the capsule's axis with the spacing allowed for (the distance to a surface
+// changes by at most the distance moved). Both give a capsule inside the piece.
+function inscribedCapsule(V, T) {
+  const c0 = scale(V.reduce((a, v) => addv(a, v), [0, 0, 0]), 1 / V.length);
+  let size = 0; for (const v of V) size = Math.max(size, Math.hypot(...sub(v, c0)));
+  // the long axis (the covariance's first direction)
+  const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (const v of V) { const e = sub(v, c0); for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) M[a][b] += e[a] * e[b]; }
+  let u = [0.31, 0.83, 0.47];
+  for (let it = 0; it < 40; it++) { const w = [dot(M[0], u), dot(M[1], u), dot(M[2], u)], l = Math.hypot(...w); if (l < 1e-18) break; u = scale(w, 1 / l); }
+  const FRACTIONS = [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15];
+  const along = (c, d, radiusOf) => {   // the best capsule on the axis through c (d: the depth at c)
+    let lo = 0, hi = 0; for (const v of V) { const x = dot(sub(v, c), u); lo = Math.min(lo, x); hi = Math.max(hi, x); }
+    let best = { a: c, b: c, r: d, score: d > 0 ? 4 / 3 * d ** 3 : -Infinity };
+    for (const f of FRACTIONS) {
+      const a = addv(c, scale(u, lo * f)), b = addv(c, scale(u, hi * f)), r = radiusOf(a, b);
+      if (!(r > 0)) continue;
+      const score = r * r * Math.hypot(...sub(b, a)) + 4 / 3 * r ** 3;
+      if (score > best.score) best = { a, b, r, score };
+    }
+    return best;
+  };
+  // 1. the planes of the faces: the depth inside all of them is concave, so a segment's least depth is at an end
+  const planes = [];
+  for (const [i, j, k] of T) { const n = cross(sub(V[j], V[i]), sub(V[k], V[i])), l = Math.hypot(...n); if (l > 1e-14) planes.push([scale(n, 1 / l), V[i]]); }
+  const depth = (p) => { let m = Infinity; for (const [n, q] of planes) m = Math.min(m, dot(n, sub(q, p))); return m; };
+  let c = c0, d = depth(c0);
+  for (let step = 0.1 * size, it = 0; it < 200 && step > 1e-4 * size; it++) {   // toward the deepest point
+    let near = planes[0], m = Infinity;
+    for (const pl of planes) { const x = dot(pl[0], sub(pl[1], c)); if (x < m) { m = x; near = pl; } }
+    const next = sub(c, scale(near[0], step)), dn = depth(next);
+    if (dn > d) { c = next; d = dn; } else step *= 0.5;
+  }
+  let best = along(c, d, (a, b) => Math.min(depth(a), depth(b)));
+  if (!(best.r > 0)) {
+    // 2. no point inside every face's plane: the signed distance
+    const sd = (p) => {
+      let w = 0, m = Infinity;
+      for (const [i, j, k] of T) {
+        const a = sub(V[i], p), b = sub(V[j], p), e = sub(V[k], p), la = Math.hypot(...a), lb = Math.hypot(...b), le = Math.hypot(...e);
+        w += 2 * Math.atan2(dot(a, cross(b, e)), la * lb * le + dot(a, b) * le + dot(a, e) * lb + dot(b, e) * la);
+        m = Math.min(m, pointTriangleDistance(p, V[i], V[j], V[k]));
+      }
+      return w > 2 * Math.PI ? m : -m;   // winding number above 1/2: inside
+    };
+    const K = 16;   // samples along the axis: the radius is the least distance found less half the spacing
+    const radiusOf = (a, b) => { let m = Infinity; for (let s = 0; s <= K; s++) m = Math.min(m, sd(addv(a, scale(sub(b, a), s / K)))); return m - Math.hypot(...sub(b, a)) / K / 2; };
+    c = c0; d = sd(c0);
+    for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) { const p = scale(addv(V[i], V[j]), 0.5), x = sd(p); if (x > d) { c = p; d = x; } }
+    const STEPS = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
+    for (let step = 0.1 * size, it = 0; it < 200 && step > 1e-4 * size; it++) {   // toward the deepest point
+      let moved = false;
+      for (const e of STEPS) { const p = addv(c, scale(e, step)), x = sd(p); if (x > d) { c = p; d = x; moved = true; break; } }
+      if (!moved) step *= 0.5;
+    }
+    best = along(c, d, radiusOf);
+  }
+  if (!(best.r > 0)) throw new Error('a piece of the hand has no point inside it (it is not a closed solid): it cannot hold a collider');
+  return { a: best.a, b: best.b, r: 0.85 * best.r };
+}
+
+// The distance from a point to a triangle (the closest point by its Voronoi regions, after Ericson).
+function pointTriangleDistance(p, a, b, c) {
+  const ab = sub(b, a), ac = sub(c, a), ap = sub(p, a), d1 = dot(ab, ap), d2 = dot(ac, ap);
+  if (d1 <= 0 && d2 <= 0) return Math.hypot(...ap);
+  const bp = sub(p, b), d3 = dot(ab, bp), d4 = dot(ac, bp);
+  if (d3 >= 0 && d4 <= d3) return Math.hypot(...bp);
+  const vc = d1 * d4 - d3 * d2;
+  if (vc <= 0 && d1 >= 0 && d3 <= 0) return Math.hypot(...sub(p, addv(a, scale(ab, d1 / (d1 - d3)))));
+  const cp = sub(p, c), d5 = dot(ab, cp), d6 = dot(ac, cp);
+  if (d6 >= 0 && d5 <= d6) return Math.hypot(...cp);
+  const vb = d5 * d2 - d1 * d6;
+  if (vb <= 0 && d2 >= 0 && d6 <= 0) return Math.hypot(...sub(p, addv(a, scale(ac, d2 / (d2 - d6)))));
+  const va = d3 * d6 - d5 * d4;
+  if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) return Math.hypot(...sub(p, addv(b, scale(sub(c, b), (d4 - d3) / ((d4 - d3) + (d5 - d6))))));
+  const den = 1 / (va + vb + vc);
+  return Math.hypot(...sub(p, addv(a, addv(scale(ab, vb * den), scale(ac, vc * den)))));
 }
 
 // ---------------------------------------------------------------- 7. mesh (level of detail 1)
@@ -677,10 +932,10 @@ function polygon(n, offset, q) {
   return pts.map(([c, s]) => ({ c, s, cu: Math.sign(c) * Math.abs(c / mc) ** e, sv: Math.sign(s) * Math.abs(s / ms) ** e }));
 }
 const HEX_POINT = polygon(6, 90);   // corners at the front and the back
-const BOX = polygon(4, 45);         // a box: the hands and the feet
+const BOX = polygon(4, 45);         // a box: the feet
 const cornerBump = (c, s) => (2 * Math.abs(c) * Math.abs(s)) ** 2;   // 1 on the diagonals, 0 on the axes
 
-function emit(K, R, sol) {
+function emit(K, R, sol, hands, boneIndexOf) {
   const pos = [], boneOf = [], index = [], pieces = [];
   let cur = null, mirror = false;
   const begin = (name, bone) => { cur = { name, bone, v0: pos.length / 3, t0: index.length / 3 }; };
@@ -758,16 +1013,37 @@ function emit(K, R, sol) {
     collider(c, c, 0.6 * Math.min(...r));
     end();
   };
+  // A hand (6b): each piece of the hand library is a piece here, set on its bone from the hand frame. The positions are
+  // the body's own, already of their side (no mirroring here), and the winding is the library's (outward).
+  const emitHand = (s, h, w) => {
+    const P = h.positions, I = h.index, to = HAND_TO_BODY[s];
+    for (const pc of h.pieces) {
+      begin(handPieceName(pc.name, s), pc.bone);
+      const base = pos.length / 3, V = [], T = [], bi = boneIndexOf[pc.bone];
+      if (bi === undefined) throw new Error(`hand piece ${pc.name}: no bone ${pc.bone}`);
+      for (let v = pc.firstVertex; v < pc.firstVertex + pc.vertices; v++) {
+        const q = to([P[3 * v], P[3 * v + 1], P[3 * v + 2]], w);
+        pos.push(q[0], q[1], q[2]); boneOf.push(bi); V.push(q);
+      }
+      for (let t = pc.firstTriangle; t < pc.firstTriangle + pc.triangles; t++) {
+        const tr = [I[3 * t] - pc.firstVertex, I[3 * t + 1] - pc.firstVertex, I[3 * t + 2] - pc.firstVertex];
+        if (tr.some((x) => !(x >= 0 && x < pc.vertices))) throw new Error(`hand piece ${pc.name}: a triangle reaches outside the piece`);
+        index.push(base + tr[0], base + tr[1], base + tr[2]); T.push(tr);
+      }
+      cur.collider = inscribedCapsule(V, T);
+      end();
+    }
+  };
   const bind = bindPositions(K);
   const left = (p) => [Math.abs(p[0]), p[1], p[2]];
   for (const [s, mir] of [['L', false], ['R', true]]) {
     mirror = mir;
-    const sd = K.side[s], A = R['arm' + s];
+    const A = R['arm' + s], h = hands?.[s];
     const sh = left(bind['UpperArm_' + s]), el = left(bind['LowerArm_' + s]), wr = left(bind['Hand_' + s]);
     tube('UpperArm_' + s, 'UpperArm_' + s, sh, el, A.upper, [0, 1]);
-    tube('Forearm_' + s, 'LowerArm_' + s, el, wr, A.fore, [0, 1]);
-    const tip = addv(wr, [0, -sd.hand, 0]);
-    tube('Hand_' + s, 'Hand_' + s, wr, tip, A.hand, [0, 1], { poly: BOX, capEnd: true });
+    // the forearm ends open on the wrist ring, where the hand's base is built; with no hand (level 4) it is closed
+    tube('Forearm_' + s, 'LowerArm_' + s, el, wr, A.fore, [0, 1], { capEnd: !h?.vertices });
+    if (h?.vertices) { mirror = false; emitHand(s, h, bind['Hand_' + s]); mirror = mir; }
     const hp = left(bind['Thigh_' + s]), kn = left(bind['Calf_' + s]), an = left(bind['Foot_' + s]);
     tube('Thigh_' + s, 'Thigh_' + s, addv(hp, scale(sub(kn, hp), R.leg.t0)), kn, R.leg.thigh, [0, 1]);
     tube('Shin_' + s, 'Calf_' + s, kn, an, R.leg.calf, [0, (K.knee - K.calf) / (K.knee - K.ankle), 1]);
@@ -798,47 +1074,68 @@ function emit(K, R, sol) {
 const fail = (code, path, message) => ({ ok: false, errors: [{ stage: 'generator', code, path, message }] });
 
 // Builds a character from a DNA. Returns { ok: true, ... } or { ok: false, errors }: a DNA that fails the contract, a
-// level of detail that does not exist yet and a failure inside the generator all come back as explicit errors, and the
-// caller keeps its last valid character.
-export function generate(input) {
+// level of detail that does not exist yet, a hands block that fails the Hand DNA (stage 'hands') and a failure inside
+// the generator all come back as explicit errors, and the caller keeps its last valid character.
+//   options.hands        the Hand DNA v1 block (hands/index.js, README.md "Hands"); left out: both hands in HP01, at
+//                        the hand level of the character's level of detail (LOD 1: level 1, 'preset')
+//   options.handVariant  a variant of the hand level (level 1: 'budget', the default, or 'readable'), or null
+export function generate(input, options = {}) {
   const dna = snapshot(input);   // every value read once: what is checked below is what is built
   const checked = check(dna);
   if (!checked.ok) return { ok: false, errors: checked.errors };
   if (!(dna.lod in TOPOLOGY_VERSION)) {
     return fail('LOD_NOT_AVAILABLE', 'lod', `level of detail ${dna.lod} is not built yet (available: ${Object.keys(TOPOLOGY_VERSION).join(', ')})`);
   }
-  try { return build(dna); }
+  const H = resolveHands(options, dna.lod);
+  if (!H.ok) return { ok: false, errors: H.errors };
+  try { return build(dna, H); }
   catch (e) { return fail('INTERNAL', '', `the generator failed: ${e && e.message}`); }
 }
 
-function build(D) {
+const SIDE_NAME = { L: 'left', R: 'right' };
+
+function build(D, H) {
   const C = resolve(D);
-  let K = skeleton(C), R = sections(C, K), sol = solve(C, K, R);
+  let K = skeleton(C), R = sections(C, K), hands = characterHands(C, K, R, H);
+  if (hands.errors) return { ok: false, errors: hands.errors };
+  let sol = solve(C, K, R, hands);
   if (sol.legs > 0) {   // open legs reach less far down: lengthen them so the feet stay on the floor at the same height
     K = skeleton(C, sol.legs);
     R = sections(C, K);
-    const again = solve(C, K, R);
+    hands = characterHands(C, K, R, H);   // the same arms and hands (the legs do not change them): from the caches
+    if (hands.errors) return { ok: false, errors: hands.errors };
+    const again = solve(C, K, R, hands);
     sol = { ...again, legs: sol.legs, corrections: [...sol.corrections.filter((c) => c.rule.startsWith('legs-')), ...again.corrections.filter((c) => !c.rule.startsWith('legs-'))] };
   }
-  const mesh = emit(K, R, sol);
+  // the bones: the mannequins' 23, then mode A's 15 finger bones a hand (left, then right)
+  const bindAt = bindPositions(K), rest = restPose(C, sol), straight = restPose({ ...C, posture: { spine_curvature: 0.5, pelvic_tilt: 0.5, shoulder_alignment: 0.5 } }, sol);
+  const fingers = [...handBones('L', hands.L, bindAt.Hand_L), ...handBones('R', hands.R, bindAt.Hand_R)];
+  const boneIndexOf = Object.fromEntries([...BONES.map(([n]) => n), ...fingers.map((b) => b.name)].map((n, i) => [n, i]));
+  const mesh = emit(K, R, sol, hands, boneIndexOf);
   if (!mesh.pos.every(Number.isFinite)) return fail('NON_FINITE', '', 'the geometry has a coordinate that is not a finite number');
-  const rest = restPose(C, sol), straight = restPose({ ...C, posture: { spine_curvature: 0.5, pelvic_tilt: 0.5, shoulder_alignment: 0.5 } }, sol);
-  const bones = BONES.map(([name, parent]) => ({ name, parent, head: mesh.bind[name], rest: rest[name] ?? [0, 0, 0, 1] }));
+  const bones = [...BONES.map(([name, parent]) => ({ name, parent, head: mesh.bind[name], rest: rest[name] ?? [0, 0, 0, 1] })), ...fingers];
+  // the hands' corrections join the body's, each with its side
+  const handCorrections = ['L', 'R'].flatMap((s) => hands[s].corrections.map((k) => ({ rule: k.rule,
+    channel: k.block ? `hands.${k.path}` : `hands.${SIDE_NAME[s]}${k.path ? '.' + k.path : ''}`,
+    asked: k.asked ?? null, used: k.used ?? null, detail: k.block ? `hands: ${k.detail}` : `hand ${SIDE_NAME[s]} (${hands[s].pose}): ${k.detail}` })));
   const character = {
-    ok: true, solved: true, generator: GENERATOR_VERSION, contract: DNA_CONTRACT, topology: { lod: D.lod, version: TOPOLOGY_VERSION[D.lod] },
+    ok: true, solved: true, generator: GENERATOR_VERSION, contract: DNA_CONTRACT,
+    topology: { lod: D.lod, version: TOPOLOGY_VERSION[D.lod], hands: { level: H.level, mode: H.mode, variant: hands.L.variant ?? null } },
     id: D.id, dna: D, stage: stageOf(C.months),
     // what the DNA's nulls became, and what the generator used where it could not use a value as given
     resolved: { skeletal_maturity: C.maturity, reference_stature: C.reference, bone_structure: C.bone_structure, body_fat: C.body_fat,
       muscle_mass: C.muscle_mass, proportions: C.P, fat_distribution: C.fatWeights, fat_used: C.fatUsed, fat_level: C.fatLevel, aging: C.aging,
       functional: C.functional, posture: C.posture },
-    motor_profile: G.motorProfile(C.months), notes: C.notes, corrections: [...C.corrections, ...sol.corrections],
+    motor_profile: G.motorProfile(C.months), notes: C.notes, corrections: [...C.corrections, ...sol.corrections, ...handCorrections],
     bones, pieces: mesh.pieces, positions: new Float32Array(mesh.pos), boneIndex: new Uint8Array(mesh.boneOf),
-    index: new Uint16Array(mesh.index), limits: limits(C, R, sol), neutral_pose: null,
+    index: new Uint16Array(mesh.index), limits: limits(C, R, sol), neutral_pose: null, hands: null,
     measures: { height_reference: D.height_m, height_mode: D.height_mode, height_built: 0, height_posed: 0, triangles: mesh.index.length / 3,
-      vertices: mesh.pos.length / 3, arm_angle: sol.arms, leg_angle: sol.legs, bust_m: R.breast },
+      vertices: mesh.pos.length / 3, arm_angle: sol.arms, leg_angle: sol.legs, bust_m: R.breast,
+      hand_triangles: { left: hands.L.triangles, right: hands.R.triangles } },
   };
   // The height built: the body standing straight, measured. It must be the DNA's; posture is apart (height_posed).
-  character.measures.height_built = inspect({ ...character, bones: bones.map((b) => ({ ...b, rest: straight[b.name] ?? [0, 0, 0, 1] })) }).height;
+  const fingerRest = new Set(fingers.map((b) => b.name));
+  character.measures.height_built = inspect({ ...character, bones: bones.map((b) => ({ ...b, rest: straight[b.name] ?? (fingerRest.has(b.name) ? b.rest : [0, 0, 0, 1]) })) }).height;
   // Feet on the floor: posture (a tilted pelvis) can lift or sink the soles by a fraction of a millimetre. The whole
   // body is moved by that much against its root, which stays at the origin.
   const floor = inspect(character).min[1];
@@ -848,6 +1145,7 @@ function build(D) {
     for (const piece of character.pieces) { piece.collider.a = [piece.collider.a[0], piece.collider.a[1] - floor, piece.collider.a[2]]; piece.collider.b = [piece.collider.b[0], piece.collider.b[1] - floor, piece.collider.b[2]]; }
   }
   character.measures.height_posed = inspect(character).height;
+  character.hands = handsRecord(character, H, hands);
   if (character.motor_profile.stance === 'recumbent') character.neutral_pose = recumbentPose(C, sol, character);
   // What the solver could not clear is said, never hidden: any two pieces that still overlap, in the rest pose and in
   // the neutral pose. Nothing more is moved: the body is returned with `solved: false`.
@@ -859,8 +1157,33 @@ function build(D) {
   };
   report({}, 'pose.rest');
   if (character.neutral_pose) report(character.neutral_pose, 'pose.neutral');
-  character.solved = !character.corrections.some((k) => k.rule === 'overlap' || k.rule.endsWith('-limit'));
+  character.solved = isSolved(character.corrections);
   return character;
+}
+
+// Solved: nothing overlaps (in the body, or inside a hand: 'hand-collision'), and no body solver ran out of room (a
+// rule ending in '-limit'). A hand's joint limit ('hand-joint-limit': a pose or control asked for more than a joint
+// bends) is a correction, not a failure.
+export const isSolved = (corrections) => !corrections.some((k) => k.rule === 'overlap' || k.rule === 'hand-collision' || (k.rule.endsWith('-limit') && !k.rule.startsWith('hand-')));
+
+// character.hands: what each hand is and where it sits on this body.
+function handsRecord(character, H, hands) {
+  const piece = Object.fromEntries(character.pieces.map((p) => [p.name, p])), P = character.positions;
+  const side = (s) => {
+    const h = hands[s], head = character.bones.find((b) => b.name === 'Hand_' + s).head, T = HAND_TURN[s];
+    const palm = piece['Hand_' + s], fore = piece['Forearm_' + s];
+    const ringAt = (p, first) => (p ? Array.from({ length: 6 }, (_, k) => [P[3 * (first + k)], P[3 * (first + k) + 1], P[3 * (first + k) + 2]]) : null);
+    return { side: SIDE_NAME[s], pose: h.pose, mode: h.mode, level: h.level, variant: h.variant ?? null, triangles: h.triangles, vertices: h.vertices,
+      bones: h.mode === 'articulated' ? h.bones.length : h.vertices ? 1 : 0, pieces: character.pieces.filter((p) => handSide(p.name) === s).map((p) => p.name),
+      angles: plain(h.angles), contact: plain(h.contact) ?? null, corrections: plain(h.corrections), diagnostics: [...h.diagnostics], body: plain(h.body),
+      // the universal wrist interface on this body: the pivot (the hand bone's head), the hand frame's axes in the body,
+      // and the six points of the ring: the forearm's end and the hand's base, in the bind pose
+      wrist: { bone: 'Hand_' + s, pivot: head.slice(), axes: { fingers: rotate(T, [0, 1, 0]), palm: rotate(T, [0, 0, 1]), thumb: rotate(T, [s === 'L' ? -1 : 1, 0, 0]) },
+        forearm_ring: ringAt(fore, fore.v1 - 6), hand_ring: palm ? ringAt(palm, palm.v0) : null } };
+  };
+  return { version: HANDS.HAND_DNA_VERSION, mode: H.mode, level: H.level, variant: hands.L.variant ?? null, mirror: H.spec.mirror ?? 'none',
+    dominant_hand: H.spec.dominant_hand ?? null, given: H.given, notes: [...H.notes], limits: H.mode === 'articulated' ? plain(HAND_LIMITS) : null,
+    left: side('L'), right: side('R') };
 }
 
 const rotate = (q, p) => { const u = [q[0], q[1], q[2]], t = scale(cross(u, p), 2); return addv(addv(p, scale(t, q[3])), cross(u, t)); };
@@ -877,13 +1200,22 @@ export function boneWorld(character, pose = {}) {
   }
   return world;
 }
-const place = (character, world, bone, p) => { const W = world[bone]; return addv(W.p, rotate(W.q, sub(p, character.bones[BONE_INDEX[bone]].head))); };
+// A character's bones by name (the 23, and mode A's finger bones): kept with its list of bones, and dropped with it.
+const BONES_BY_NAME = new WeakMap();
+const boneNamed = (character, name) => {
+  let m = BONES_BY_NAME.get(character.bones);
+  if (!m) { m = new Map(character.bones.map((b) => [b.name, b])); BONES_BY_NAME.set(character.bones, m); }
+  return m.get(name);
+};
+const place = (character, world, bone, p) => { const W = world[bone]; return addv(W.p, rotate(W.q, sub(p, boneNamed(character, bone).head))); };
 
 // The rest pose (plus an optional pose) applied to the vertices, for tests and exports that need world positions.
 export function posedPositions(character, pose = {}) {
   const world = boneWorld(character, pose), out = new Float32Array(character.positions.length);
+  const W = character.bones.map((b) => world[b.name]), heads = character.bones.map((b) => b.head);
   for (let i = 0; i < out.length / 3; i++) {
-    const p = place(character, world, BONES[character.boneIndex[i]][0], [character.positions[3 * i], character.positions[3 * i + 1], character.positions[3 * i + 2]]);
+    const b = character.boneIndex[i];
+    const p = addv(W[b].p, rotate(W[b].q, sub([character.positions[3 * i], character.positions[3 * i + 1], character.positions[3 * i + 2]], heads[b])));
     out[3 * i] = p[0]; out[3 * i + 1] = p[1]; out[3 * i + 2] = p[2];
   }
   return out;
@@ -906,6 +1238,13 @@ for (const s of ['L', 'R']) {
 }
 CONNECTED.push(['Thigh_L', 'Thigh_R']);
 const CONNECTED_SET = new Set(CONNECTED.flatMap(([a, b]) => [a + '|' + b, b + '|' + a]));
+// The pieces of one hand touch each other by design (its own solver checks them, exactly: hands/rig.js), and the
+// hand's base sits in its forearm's end.
+const connected = (a, b) => {
+  if (CONNECTED_SET.has(a + '|' + b)) return true;
+  const ha = handSide(a), hb = handSide(b);
+  return (ha !== null && ha === hb) || (ha !== null && b === 'Forearm_' + ha) || (hb !== null && a === 'Forearm_' + hb);
+};
 
 function segmentDistance(p1, q1, p2, q2) {   // closest distance between two segments
   const d1 = sub(q1, p1), d2 = sub(q2, p2), r = sub(p1, p2);
@@ -930,7 +1269,7 @@ function segmentDistance(p1, q1, p2, q2) {   // closest distance between two seg
 export function collisions(character, pose = {}, tolerance = 0.003) {
   const cs = colliders(character, pose), out = [];
   for (let i = 0; i < cs.length; i++) for (let j = i + 1; j < cs.length; j++) {
-    if (CONNECTED_SET.has(cs[i].name + '|' + cs[j].name)) continue;
+    if (connected(cs[i].name, cs[j].name)) continue;
     const depth = cs[i].r + cs[j].r - segmentDistance(cs[i].a, cs[i].b, cs[j].a, cs[j].b);
     if (depth > tolerance) out.push({ a: cs[i].name, b: cs[j].name, depth });
   }

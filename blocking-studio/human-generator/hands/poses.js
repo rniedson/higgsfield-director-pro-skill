@@ -1,0 +1,1083 @@
+// The library of 24 hand poses (Hand DNA v1), shared by every character: canonical RIGHT hand, angles in degrees,
+// radius in metres. The maintainer's data (tests/fixtures/hand_poses_24.json holds the same content, and a test checks
+// that the two agree); only the Portuguese label was dropped and the accompanying notes translated into English.
+//
+// What the numbers are: the maintainer's initial experimental values, with no geometric or biomechanical validation.
+// The rig (rig.js) reads them as the authored angles of a pose; it then clamps them to its joint limits, solves the
+// contacts and collisions for the actual hand and reports every change (diagnostics). Nothing here is modified.
+//
+// Per pose: fingers.{index,middle,ring,pinky}.{mcp_flex_deg, pip_flex_deg, dip_flex_deg, spread_deg} (flexion toward the
+// palm is positive; spread is signed in the canonical right-hand palm plane, positive toward the little finger);
+// thumb.{cmc_flex_deg, mcp_flex_deg, ip_flex_deg, opposition_deg, abduction_deg} (opposition is a semantic control,
+// mapped to one rotation of Thumb_01 in rig.js); contact.{type, radius_m} (radius null: the contact has none);
+// gesture_orientation (carried for the arm and wrist: HP05 and HP14 differ only there).
+
+export const HAND_POSE_LIBRARY = {
+  "schema_version": "1.0.0",
+  "units": {
+    "angles": "degree",
+    "length": "meter"
+  },
+  "reference": {
+    "neutral": "all joints zero, fingers extended, no wrist rotation",
+    "angle_semantics": "anatomical flexion toward palm; spread is signed in canonical right-hand palm plane; opposition is a semantic thumb control, not an Euler axis",
+    "left_hand": "reflect the canonical anatomical frame and map to the local rig axes; do not use negative runtime scale or copy Euler rotations blindly",
+    "wrist": "pose-independent attachment; orient gesture using wrist and arm separately",
+    "status": "illustrative initial angles; contact targets require IK or pose correction; not measured ROM"
+  },
+  "notes": [
+    "Hand DNA v1: 24 canonical poses of the right hand, mirrored to the left by converting the frames of reference.",
+    "Angles in degrees, radius in metres.",
+    "Initial experimental values, with no geometric or biomechanical validation.",
+    "The thumb's opposition needs a specific mapping in the rig.",
+    "HP05 and HP14 have the same local shape and differ in the global orientation of the gesture.",
+    "The rig must recompute dimensions, contacts and collisions for each hand size.",
+    "Poses may be pre-baked for a low level of detail or applied to bones for a high level of detail.",
+    "This file is a separate library: it does not modify the human schema v1.",
+    "The examples show a proposed integration contract."
+  ],
+  "poses": [
+    {
+      "id": "HP01",
+      "name": "relaxed",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": -5
+        },
+        "middle": {
+          "mcp_flex_deg": 20,
+          "pip_flex_deg": 30,
+          "dip_flex_deg": 15,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 25,
+          "pip_flex_deg": 35,
+          "dip_flex_deg": 18,
+          "spread_deg": 4
+        },
+        "pinky": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 40,
+          "dip_flex_deg": 20,
+          "spread_deg": 8
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 10,
+        "mcp_flex_deg": 12,
+        "ip_flex_deg": 10,
+        "opposition_deg": 15,
+        "abduction_deg": 20
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP02",
+      "name": "open_palm",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -14
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -4
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 6
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 16
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 0,
+        "mcp_flex_deg": 0,
+        "ip_flex_deg": 0,
+        "opposition_deg": 0,
+        "abduction_deg": 45
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP03",
+      "name": "cupping",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 20,
+          "pip_flex_deg": 35,
+          "dip_flex_deg": 15,
+          "spread_deg": -4
+        },
+        "middle": {
+          "mcp_flex_deg": 20,
+          "pip_flex_deg": 35,
+          "dip_flex_deg": 15,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 20,
+          "pip_flex_deg": 35,
+          "dip_flex_deg": 15,
+          "spread_deg": 3
+        },
+        "pinky": {
+          "mcp_flex_deg": 20,
+          "pip_flex_deg": 35,
+          "dip_flex_deg": 15,
+          "spread_deg": 6
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 15,
+        "mcp_flex_deg": 20,
+        "ip_flex_deg": 15,
+        "opposition_deg": 40,
+        "abduction_deg": 30
+      },
+      "contact": {
+        "type": "cradle",
+        "radius_m": 0.04
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP04",
+      "name": "closed_fist",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": -2
+        },
+        "middle": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 1
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 30,
+        "mcp_flex_deg": 35,
+        "ip_flex_deg": 25,
+        "opposition_deg": 65,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "thumb_over_fingers",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP05",
+      "name": "thumbs_up",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": -2
+        },
+        "middle": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 1
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 0,
+        "mcp_flex_deg": 0,
+        "ip_flex_deg": 0,
+        "opposition_deg": 0,
+        "abduction_deg": 30
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "thumb_up_in_world_via_arm_wrist"
+    },
+    {
+      "id": "HP06",
+      "name": "tight_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": -2
+        },
+        "middle": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 2
+        },
+        "pinky": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 3
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 30,
+        "ip_flex_deg": 20,
+        "opposition_deg": 65,
+        "abduction_deg": 18
+      },
+      "contact": {
+        "type": "cylinder",
+        "radius_m": 0.015
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP07",
+      "name": "peace",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -18
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 18
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 35,
+        "ip_flex_deg": 20,
+        "opposition_deg": 60,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "thumb_ring",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP08",
+      "name": "trigger_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -3
+        },
+        "middle": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 2
+        },
+        "pinky": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 3
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 12,
+        "mcp_flex_deg": 15,
+        "ip_flex_deg": 10,
+        "opposition_deg": 35,
+        "abduction_deg": 18
+      },
+      "contact": {
+        "type": "handle",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP09",
+      "name": "wide_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 25,
+          "spread_deg": -6
+        },
+        "middle": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 25,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 25,
+          "spread_deg": 5
+        },
+        "pinky": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 25,
+          "spread_deg": 10
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 15,
+        "mcp_flex_deg": 20,
+        "ip_flex_deg": 10,
+        "opposition_deg": 45,
+        "abduction_deg": 30
+      },
+      "contact": {
+        "type": "cylinder",
+        "radius_m": 0.027
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP10",
+      "name": "pointing",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -4
+        },
+        "middle": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 1
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 30,
+        "ip_flex_deg": 20,
+        "opposition_deg": 55,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP11",
+      "name": "pinch",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 20,
+          "spread_deg": -5
+        },
+        "middle": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": 5
+        },
+        "pinky": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": 10
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 25,
+        "ip_flex_deg": 20,
+        "opposition_deg": 75,
+        "abduction_deg": 25
+      },
+      "contact": {
+        "type": "thumb_index_tips",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP12",
+      "name": "tripod",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 20,
+          "spread_deg": -4
+        },
+        "middle": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 20,
+          "spread_deg": 3
+        },
+        "ring": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 5
+        },
+        "pinky": {
+          "mcp_flex_deg": 55,
+          "pip_flex_deg": 75,
+          "dip_flex_deg": 40,
+          "spread_deg": 7
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 30,
+        "ip_flex_deg": 20,
+        "opposition_deg": 70,
+        "abduction_deg": 25
+      },
+      "contact": {
+        "type": "tripod",
+        "radius_m": 0.005
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP13",
+      "name": "ok_sign",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 40,
+          "pip_flex_deg": 60,
+          "dip_flex_deg": 35,
+          "spread_deg": -10
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 8
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 16
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 30,
+        "mcp_flex_deg": 35,
+        "ip_flex_deg": 25,
+        "opposition_deg": 75,
+        "abduction_deg": 25
+      },
+      "contact": {
+        "type": "thumb_index_tips",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP14",
+      "name": "thumbs_down",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": -2
+        },
+        "middle": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 1
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 0,
+        "mcp_flex_deg": 0,
+        "ip_flex_deg": 0,
+        "opposition_deg": 0,
+        "abduction_deg": 30
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "thumb_down_in_world_via_arm_wrist"
+    },
+    {
+      "id": "HP15",
+      "name": "hook_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 10,
+          "pip_flex_deg": 85,
+          "dip_flex_deg": 55,
+          "spread_deg": -3
+        },
+        "middle": {
+          "mcp_flex_deg": 10,
+          "pip_flex_deg": 85,
+          "dip_flex_deg": 55,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 10,
+          "pip_flex_deg": 85,
+          "dip_flex_deg": 55,
+          "spread_deg": 3
+        },
+        "pinky": {
+          "mcp_flex_deg": 10,
+          "pip_flex_deg": 85,
+          "dip_flex_deg": 55,
+          "spread_deg": 6
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 5,
+        "mcp_flex_deg": 5,
+        "ip_flex_deg": 5,
+        "opposition_deg": 5,
+        "abduction_deg": 25
+      },
+      "contact": {
+        "type": "hook",
+        "radius_m": 0.015
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP16",
+      "name": "claw",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 25,
+          "pip_flex_deg": 65,
+          "dip_flex_deg": 35,
+          "spread_deg": -15
+        },
+        "middle": {
+          "mcp_flex_deg": 25,
+          "pip_flex_deg": 65,
+          "dip_flex_deg": 35,
+          "spread_deg": -5
+        },
+        "ring": {
+          "mcp_flex_deg": 25,
+          "pip_flex_deg": 65,
+          "dip_flex_deg": 35,
+          "spread_deg": 7
+        },
+        "pinky": {
+          "mcp_flex_deg": 25,
+          "pip_flex_deg": 65,
+          "dip_flex_deg": 35,
+          "spread_deg": 17
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 15,
+        "mcp_flex_deg": 20,
+        "ip_flex_deg": 15,
+        "opposition_deg": 35,
+        "abduction_deg": 35
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP17",
+      "name": "flat_hand",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -1
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 1
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 0,
+        "mcp_flex_deg": 0,
+        "ip_flex_deg": 0,
+        "opposition_deg": 5,
+        "abduction_deg": 12
+      },
+      "contact": {
+        "type": "plane",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP18",
+      "name": "spread_fingers",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -24
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -8
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 10
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 24
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 0,
+        "mcp_flex_deg": 0,
+        "ip_flex_deg": 0,
+        "opposition_deg": 0,
+        "abduction_deg": 50
+      },
+      "contact": {
+        "type": "none",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP19",
+      "name": "phone_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 35,
+          "pip_flex_deg": 50,
+          "dip_flex_deg": 20,
+          "spread_deg": -4
+        },
+        "middle": {
+          "mcp_flex_deg": 40,
+          "pip_flex_deg": 55,
+          "dip_flex_deg": 25,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 45,
+          "pip_flex_deg": 60,
+          "dip_flex_deg": 30,
+          "spread_deg": 4
+        },
+        "pinky": {
+          "mcp_flex_deg": 50,
+          "pip_flex_deg": 65,
+          "dip_flex_deg": 35,
+          "spread_deg": 8
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 15,
+        "mcp_flex_deg": 20,
+        "ip_flex_deg": 10,
+        "opposition_deg": 55,
+        "abduction_deg": 30
+      },
+      "contact": {
+        "type": "box",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP20",
+      "name": "spherical_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 25,
+          "spread_deg": -15
+        },
+        "middle": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 25,
+          "spread_deg": -5
+        },
+        "ring": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 25,
+          "spread_deg": 8
+        },
+        "pinky": {
+          "mcp_flex_deg": 30,
+          "pip_flex_deg": 45,
+          "dip_flex_deg": 25,
+          "spread_deg": 18
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 20,
+        "mcp_flex_deg": 25,
+        "ip_flex_deg": 15,
+        "opposition_deg": 55,
+        "abduction_deg": 35
+      },
+      "contact": {
+        "type": "sphere",
+        "radius_m": 0.035
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP21",
+      "name": "card_grip",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 10,
+          "spread_deg": -2
+        },
+        "middle": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 10,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": 3
+        },
+        "pinky": {
+          "mcp_flex_deg": 15,
+          "pip_flex_deg": 25,
+          "dip_flex_deg": 12,
+          "spread_deg": 6
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 25,
+        "ip_flex_deg": 15,
+        "opposition_deg": 70,
+        "abduction_deg": 20
+      },
+      "contact": {
+        "type": "thin_plane",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP22",
+      "name": "rock_sign",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -8
+        },
+        "middle": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 12
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 35,
+        "ip_flex_deg": 20,
+        "opposition_deg": 60,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "thumb_middle_ring",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP23",
+      "name": "three_fingers",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -8
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 0
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 8
+        },
+        "pinky": {
+          "mcp_flex_deg": 75,
+          "pip_flex_deg": 95,
+          "dip_flex_deg": 60,
+          "spread_deg": 2
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 25,
+        "mcp_flex_deg": 30,
+        "ip_flex_deg": 20,
+        "opposition_deg": 65,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "thumb_pinky",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    },
+    {
+      "id": "HP24",
+      "name": "four_fingers",
+      "canonical_side": "right",
+      "fingers": {
+        "index": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -10
+        },
+        "middle": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": -3
+        },
+        "ring": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 5
+        },
+        "pinky": {
+          "mcp_flex_deg": 0,
+          "pip_flex_deg": 0,
+          "dip_flex_deg": 0,
+          "spread_deg": 12
+        }
+      },
+      "thumb": {
+        "cmc_flex_deg": 30,
+        "mcp_flex_deg": 35,
+        "ip_flex_deg": 25,
+        "opposition_deg": 70,
+        "abduction_deg": 10
+      },
+      "contact": {
+        "type": "thumb_palm",
+        "radius_m": null
+      },
+      "gesture_orientation": "contextual"
+    }
+  ]
+};
+
+export const HAND_POSES = HAND_POSE_LIBRARY.poses;
+export const POSE_IDS = HAND_POSES.map((p) => p.id);
+export const CONTACT_TYPES = [...new Set(HAND_POSES.map((p) => p.contact.type))];
+
+// The pose of an id ('HP01'..'HP24'), or null.
+export function getPose(id) { return HAND_POSES.find((p) => p.id === id) ?? null; }
+
+// A readable English label from the pose's name ('closed_fist' -> 'closed fist').
+export function poseLabel(id) { const p = getPose(id); return p ? p.name.replace(/_/g, ' ') : null; }

@@ -28,6 +28,8 @@
   label.s span:last-child { text-align:right; color:var(--muted); }
   input[type=range] { width:100%; }
   textarea { width:100%; box-sizing:border-box; height:140px; font:11px/1.3 ui-monospace,monospace; }
+  select { font:inherit; font-size:12px; max-width:100%; }
+  .hrow { display:grid; grid-template-columns:62px 1fr; gap:5px; align-items:center; font-size:12px; margin:3px 0; }
   .corr { font-size:12px; color:#8a4b00; margin:4px 0; }
   .err { color:#b00020; }
   @media (max-width:760px) { #app { flex-direction:column; } #side { width:auto; height:48%; border-left:0; border-top:1px solid var(--line); } }
@@ -54,6 +56,7 @@
     <div class="row" id="views"></div>
     <div id="corr"></div>
     <details open><summary>Sex, age, height, build</summary><div id="gMain"></div></details>
+    <details><summary>Hands</summary><div class="hint">The Hand DNA (hands/): mode and level of detail, each hand's pose and grip radius, mirroring. Every level is built on this body exactly; a body, pose or radius not seen before costs a solve (about 15 ms a pose, up to a few tenths of a second for a grip), so the grip radius rebuilds when the slider is let go. A refused combination keeps the last valid character.</div><div id="gHands"></div><div id="handErr" class="err"></div></details>
     <details><summary>Body: bone, muscle, fat</summary><div class="hint">Unticked: the value comes from the preset.</div><div id="gBody"></div></details>
     <details><summary>Fat distribution</summary><div class="hint">Weights: they share out the fat, they do not add any.</div><div class="row" id="patterns"></div><div id="gFat"></div></details>
     <details><summary>Proportions</summary><div id="gProp"></div></details>
@@ -68,6 +71,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { generate, validate, randomDNA, dnaFromId, presetDNA, colliders, referenceStature, HEIGHTS, HEIGHT_LEVELS, BUILDS, FAT_PATTERNS,
   GROUPS, STAGES, STAGE_AGE, ADULT_MONTHS, stageOf } from './generator.js';
+import { POSES, HAND_POSE_LIBRARY } from './hands/index.js';
 
 // ---------- scene
 const view = document.getElementById('view'), labels = document.getElementById('labels');
@@ -95,6 +99,13 @@ let fixtureCases = null, caseFilter = 'PAIR_';
 const group = new THREE.Group(); scene.add(group);
 const characters = [];   // { char, mesh, bones, rest, item }
 const clone = (o) => JSON.parse(JSON.stringify(o));
+// The hands: the Hand DNA block and the level 1 variant, handed to every generate() of the page (lineups included).
+let hands = { mode: null, level: null, mirror: 'none', left: { pose: 'HP01', grip_radius_m: null }, right: { pose: 'HP01', grip_radius_m: null } };
+let handVariant = 'budget';
+const MODE_LEVEL = { articulated: 0, preset: 1, simplified: 2 };   // where a mode lands at LOD 1 when the level is left null (generator.js)
+const handLevel = () => hands.level ?? (hands.mode === null ? 1 : MODE_LEVEL[hands.mode]);
+const handOptions = () => ({ hands: clone(hands), handVariant: handLevel() === 1 ? handVariant : null });
+const gen = (d) => generate(d, handOptions());
 
 function toMesh(c) {
   const g = new THREE.BufferGeometry(), n = c.positions.length / 3;
@@ -188,7 +199,7 @@ function rebuild() {
   characters.length = 0; labels.innerHTML = '';
   const items = MODES[mode].list();
   let x = 0, prevHalf = 0;
-  const built = items.map((it) => ({ it, c: generate(it.dna) }));
+  const built = items.map((it) => ({ it, c: gen(it.dna) }));
   for (const b of built) if (!b.c.ok) console.warn('not generated', b.it.dna.id, b.c.errors);
   const good = built.filter((b) => b.c.ok);
   const grid2 = mode === 'matrix';
@@ -264,9 +275,9 @@ addEventListener('resize', resize);
 
 // ---------- panel
 const $ = (id) => document.getElementById(id);
-let current = generate(dna);   // the last valid character of the DNA being edited: it gives the value of every preset
+let current = gen(dna);   // the last valid character of the DNA being edited: it gives the value of every preset
 function info() {
-  const mine = generate(dna);
+  const mine = gen(dna);
   if (mine.ok) current = mine;
   const e = characters[0];
   if (e) {
@@ -277,11 +288,12 @@ function info() {
         `height ${m.height_reference.toFixed(3)} m (${m.height_mode}) · posed ${m.height_posed.toFixed(3)} m · arms ${m.arm_angle.L.toFixed(1)}° · legs ${m.leg_angle.toFixed(1)}°`,
         `maturity ${c.resolved.skeletal_maturity.toFixed(2)} · fat ${c.resolved.body_fat.toFixed(2)} · muscle ${c.resolved.muscle_mass.toFixed(2)} · ${c.solved ? 'solved' : 'NOT solved: see the corrections'}`,
         `limits: hip ≤ ${c.limits.Hip.flexion_max}°, knee ≤ ${c.limits.Knee.flexion_max}°, elbow ≤ ${c.limits.Elbow.flexion_max}°`,
+        `hands: level ${c.hands.level} · ${c.hands.mode ?? 'no hand'}${c.hands.variant ? ` '${c.hands.variant}'` : ''} · ${c.hands.left.triangles} + ${c.hands.right.triangles} triangles · ${c.bones.length} bones · ${c.hands.left.pose} / ${c.hands.right.pose}${c.hands.mirror !== 'none' ? ` (mirror ${c.hands.mirror})` : ''}`,
         `generator ${c.generator} · DNA ${c.contract} · LOD ${c.topology.lod} topology v${c.topology.version}`]
       : [`${characters.length} characters · ${characters.length} draw calls · ${characters.reduce((a, x) => a + x.char.measures.triangles, 0)} triangles`];
     $('stats').textContent = lines.join('\n');
     const corr = mode === 'character' ? c.corrections : [];
-    $('corr').innerHTML = corr.map((k) => `<div class="corr">⚙ ${k.detail}</div>`).join('') + (mode === 'character' ? c.notes : []).map((n) => `<div class="corr">${n}</div>`).join('');
+    $('corr').innerHTML = corr.map((k) => `<div class="corr">⚙ ${k.detail}</div>`).join('') + (mode === 'character' ? [...c.notes, ...c.hands.notes] : []).map((n) => `<div class="corr">${n}</div>`).join('');
   }
   if (document.activeElement !== $('dna')) $('dna').value = JSON.stringify(dna, null, 1);
   window.__hg.characters = characters.map((x) => x.char);
@@ -346,6 +358,49 @@ groupChannels($('gAge'), 'aging', (k) => current.resolved.aging[k]);
 groupChannels($('gAge'), 'functional', (k) => current.resolved.functional[k]);
 groupChannels($('gPost'), 'posture', (k) => current.resolved.posture[k]);
 
+// The hand controls. A change is tried first: one the generator refuses (a mode not built at the level asked, say) is
+// shown with its error and undone, so the last valid character stays.
+function setHands(change) {
+  const before = clone(hands), variant = handVariant;
+  change();
+  const c = gen(dna);
+  if (!c.ok) { hands = before; handVariant = variant; $('handErr').textContent = c.errors.map((e) => `${e.code} ${e.path}: ${e.message}`).join('\n'); return false; }
+  $('handErr').textContent = ''; return true;
+}
+const hrow = (label) => { const r = document.createElement('div'); r.className = 'hrow'; r.innerHTML = `<span>${label}</span>`; $('gHands').appendChild(r); return r; };
+const handButtons = (label, items, click, mark, enabled) => {
+  const r = hrow(label), row = buttons(r, items, (v) => setHands(() => click(v)), mark);
+  if (enabled) sliders.push(() => row.querySelectorAll('button').forEach((b) => { b.disabled = !enabled(); }));
+};
+handButtons('mode', [['auto', 'null: the mode of the level', null], ['A', 'articulated: 15 finger bones a hand (level 0)', 'articulated'], ['B', 'preset: the pose baked on the hand bone', 'preset'], ['C', 'simplified: levels 2 and 3', 'simplified']],
+  (m) => { hands.mode = m; }, (m) => hands.mode === m);
+handButtons('level', [['auto', 'null: the level of the character\'s level of detail (LOD 1: level 1)', null], ...[0, 1, 2, 3, 4].map((l) => [String(l), `hand level ${l}`, l])],
+  (l) => { hands.level = l; }, (l) => hands.level === l);
+handButtons('level 1', [['budget', '40 triangles a hand', 'budget'], ['readable', '70 triangles a hand: reads all 24 poses', 'readable']],
+  (v) => { handVariant = v; }, (v) => handVariant === v, () => handLevel() === 1);
+const POSE_NAME = Object.fromEntries(HAND_POSE_LIBRARY.poses.map((p) => [p.id, p.name.replaceAll('_', ' ')]));
+for (const side of ['left', 'right']) {
+  const r = hrow(`${side} pose`), sel = document.createElement('select');
+  sel.innerHTML = POSES.map((id) => `<option value="${id}">${id} ${POSE_NAME[id]}</option>`).join('');
+  sel.onchange = () => { setHands(() => { hands[side].pose = sel.value; }); refreshSliders(); rebuild(); };
+  r.appendChild(sel);
+  const copied = () => (hands.mirror === 'right_to_left' && side === 'left') || (hands.mirror === 'left_to_right' && side === 'right');
+  sliders.push(() => { sel.value = hands[copied() ? (side === 'left' ? 'right' : 'left') : side].pose; sel.disabled = copied(); });
+  // the grip radius: unticked, the pose's own (scaled with the hand); ticked, an absolute radius in metres
+  const l = document.createElement('label'); l.className = 's';
+  l.innerHTML = `<input type="checkbox" title="ticked: an absolute radius; unticked: the pose's own"><span>${side} grip radius</span><input type="range" min="0.004" max="0.06" step="0.001"><span></span>`;
+  const [box, inp] = l.querySelectorAll('input'), out = l.lastElementChild;
+  const show = () => { const v = hands[side].grip_radius_m; box.checked = v !== null; box.disabled = inp.disabled = copied(); l.classList.toggle('preset', v === null);
+    if (v !== null) inp.value = v; out.textContent = v === null ? 'pose' : `${(v * 1000).toFixed(0)} mm`; };
+  box.addEventListener('change', () => { setHands(() => { hands[side].grip_radius_m = box.checked ? +inp.value : null; }); show(); schedule(); });
+  // while dragging only the number moves; the hand is solved again when the slider is let go (a new radius costs a solve)
+  inp.addEventListener('input', () => { out.textContent = `${(+inp.value * 1000).toFixed(0)} mm`; });
+  inp.addEventListener('change', () => { setHands(() => { hands[side].grip_radius_m = +inp.value; }); show(); schedule(); });
+  $('gHands').appendChild(l); sliders.push(show);
+}
+handButtons('mirror', [['none', 'each hand its own', 'none'], ['right → left', 'the right hand\'s spec copied to the left, mirrored', 'right_to_left'], ['left → right', 'the left hand\'s spec copied to the right, mirrored', 'left_to_right']],
+  (m) => { hands.mirror = m; }, (m) => hands.mirror === m);
+
 Object.entries(MODES).forEach(([k, m]) => { const b = document.createElement('button'); b.textContent = m.label; b.dataset.mode = k; b.onclick = () => { mode = k; marks(); rebuild(); }; $('modes').appendChild(b); });
 [['rest', 'Rest pose'], ['test', 'Test pose'], ['neutral', 'Neutral of the age']].forEach(([k, l]) => { const b = document.createElement('button'); b.textContent = l; b.dataset.pose = k; b.onclick = () => { poseName = k; marks(); rebuild(); }; $('poses').appendChild(b); });
 [['front', 'Front'], ['three_quarter', '3/4'], ['side', 'Side'], ['back', 'Back'], ['top', 'Top']].forEach(([k, l]) => { const b = document.createElement('button'); b.textContent = l; b.dataset.view = k; b.onclick = () => { viewName = k; marks(); frame(); }; $('views').appendChild(b); });
@@ -362,7 +417,7 @@ $('bRandom').onclick = () => { dna = randomDNA(Math.floor(Math.random() * 1e6));
 $('bApply').onclick = () => {
   let d;
   try { d = JSON.parse($('dna').value); } catch (err) { $('dnaErr').textContent = String(err); return; }
-  const c = generate(d);   // the last valid character stays on screen when this one is refused
+  const c = gen(d);   // the last valid character stays on screen when this one is refused
   if (!c.ok) { $('dnaErr').textContent = c.errors.map((e) => `${e.code}: ${e.message}`).join('\n'); return; }
   dna = d; $('dnaErr').textContent = ''; refreshSliders(); rebuild();
 };
@@ -380,8 +435,15 @@ if (q.get('pose') === '1' || q.get('pose') === 'test') poseName = 'test';
 if (q.get('pose') === 'neutral') poseName = 'neutral';
 if (q.get('cases')) caseFilter = q.get('cases');
 if (q.get('panel') === '0') document.getElementById('side').style.display = 'none';
+// &hands=<Hand DNA json>&handVariant=readable: kept only when the generator accepts them
+if (q.get('hands') || q.get('handVariant')) {
+  const before = clone(hands), variant = handVariant;
+  try { if (q.get('hands')) hands = { ...hands, ...JSON.parse(q.get('hands')) }; if (q.get('handVariant')) handVariant = q.get('handVariant'); } catch {}
+  if (!gen(dna).ok) { hands = before; handVariant = variant; }
+}
 
-window.__hg = { generate, set: (d, m, v) => { dna = d; if (m) mode = m; if (v) viewName = v; marks(); refreshSliders(); rebuild(); }, characters: [] };
+window.__hg = { generate, set: (d, m, v) => { dna = d; if (m) mode = m; if (v) viewName = v; marks(); refreshSliders(); rebuild(); }, characters: [],
+  hands: () => handOptions(), setHands: (spec, variant) => { const done = setHands(() => { hands = clone(spec); if (variant !== undefined) handVariant = variant; }); refreshSliders(); rebuild(); return done; } };
 marks(); rebuild(); refreshSliders();
 if (mode === 'cases') fetch('tests/fixtures/dna_cases_52.json').then((r) => r.json()).then((cases) => { fixtureCases = cases; rebuild(); });
 else fetch('tests/fixtures/dna_cases_52.json').then((r) => r.json()).then((cases) => { fixtureCases = cases; }).catch(() => {});

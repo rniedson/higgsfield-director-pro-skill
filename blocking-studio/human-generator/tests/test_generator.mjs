@@ -12,6 +12,7 @@ import * as growth from '../growth.js';
 import { TOP_KEYS, GROUPS, ADULT_ONLY, MAX_AGE_MONTHS } from '../dna.js';
 
 import { measure as measureFat } from '../tools/calibrate_fat.mjs';
+import { clearHandCaches } from '../hands/index.js';
 
 const { generate, validate, collisions, colliders, inspect, posedPositions, boneWorld, dnaFromId, presetDNA, randomDNA, volume } = gen;
 const fixture = (name) => JSON.parse(readFileSync(fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8'));
@@ -21,6 +22,10 @@ const VALID = [...CASES, ...GRID];
 const byId = Object.fromEntries(CASES.map((d) => [d.id, d]));
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const make = (d) => { const c = generate(d); assert.ok(c.ok, `${d.id}: ${JSON.stringify(c.errors)}`); return c; };
+// The body's corrections. Since the hands (hands/, version 0.3.0) every character also carries its hands' own
+// corrections (rules 'hand-*': what the hands' solver changed for this body, such as a thumb moved clear of the palm);
+// those are tested in test_hands.mjs, and the lists below that name exact corrections are the body's.
+const bodyOnly = (c) => c.corrections.filter((k) => !k.rule.startsWith('hand-'));
 const MM = 0.001;
 const AGES = [0, 1, 3, 6, 9, 12, 18, 24, 36, 48, 60, 84, 108, 132, 144, 156, 180, 204, 216, 288, 480, 720, 840, 960, 1020, 1200, 1440];
 const SWEEP = AGES.flatMap((m) => ['male', 'female'].map((sex) => presetDNA({ sex, age_months: m })));
@@ -149,8 +154,10 @@ test('one topology: the same triangles, bone bindings and pieces for every chara
 });
 
 test('the triangle count is what the generator declares, and the gap to the proposed budget is known', () => {
-  assert.equal(gen.TRIANGLES[1], 412);
-  assert.equal(gen.LOD_BUDGET[1], 400);   // the proposal; README.md says why level 1 has 412 and what 400 would cost
+  // 392 for the body and 2 x 40 for the default hands (hand level 1 'budget', measured by hands/mesh1.js); before the
+  // hands it was 412, with a placeholder hand of 10 triangles on each arm
+  assert.equal(gen.TRIANGLES[1], 472);
+  assert.equal(gen.LOD_BUDGET[1], 400);   // the proposal; README.md says why level 1 has 472 and what 400 would cost
   const c = make(dnaFromId('M_H05_C04')), hands = c.pieces.filter((p) => p.name.startsWith('Hand_')).reduce((a, p) => a + p.t1 - p.t0, 0);
   assert.equal(c.measures.triangles - hands, 392);
 });
@@ -255,7 +262,7 @@ test('the extremes are solved or reported: every correction says what was asked 
   }
   for (const id of ['EXT_M_H01_C10', 'EXT_M_H10_C10', 'EXT_M_H05_C10']) assert.ok(make(byId[id]).corrections.some((k) => k.rule === 'arms-apart'), id);
   for (const id of ['EXT_F_H01_C10', 'EXT_F_H10_C10', 'EXT_F_H05_C10']) assert.ok(make(byId[id]).corrections.some((k) => k.rule === 'legs-apart'), id);
-  for (const id of ['EXT_M_H05_C01', 'EXT_F_H05_C01', 'PAIR_SEX_A', 'PAIR_SEX_B']) assert.deepEqual(make(byId[id]).corrections, [], id);
+  for (const id of ['EXT_M_H05_C01', 'EXT_F_H05_C01', 'PAIR_SEX_A', 'PAIR_SEX_B']) assert.deepEqual(bodyOnly(make(byId[id])), [], id);
   assert.ok(rules.has('arms-apart') && rules.has('legs-apart'));
 });
 
@@ -339,7 +346,7 @@ test('pair, build: the height stays, the volume changes, and the collisions are 
   assert.ok(Math.abs(inspect(a).height - inspect(b).height) < 0.5 * MM);
   for (const piece of ['Abdomen', 'Chest', 'Pelvis', 'Thigh_L', 'UpperArm_L']) assert.ok(pieceBox(b, piece, 2) > 1.25 * pieceBox(a, piece, 2), piece);
   assert.deepEqual(collisions(a), []); assert.deepEqual(collisions(b), []);
-  assert.deepEqual(a.corrections, []); assert.ok(b.corrections.length > 0, 'the extreme build must report what it had to open');
+  assert.deepEqual(bodyOnly(a), []); assert.ok(bodyOnly(b).length > 0, 'the extreme build must report what it had to open');
 });
 
 test('pair, muscle: muscle alone, the fat fixed', () => {
@@ -493,7 +500,7 @@ test('age: children have a neutral, shared figure, and the adult channels cannot
   const early = presetDNA({ sex: 'female', age_months: 72 }); early.aging.skeletal_maturity = 1;
   const c = make(early), plain = make(presetDNA({ sex: 'female', age_months: 72 }));
   assert.equal(c.resolved.skeletal_maturity, 0); assert.deepEqual(c.positions, plain.positions);
-  assert.deepEqual(c.corrections.map((k) => [k.rule, k.asked, k.used]), [['maturity-window', 1, 0]]);
+  assert.deepEqual(bodyOnly(c).map((k) => [k.rule, k.asked, k.used]), [['maturity-window', 1, 0]]);
   // no bust under 18 years, whatever the maturity asked for: the chest of a female minor is the chest the male preset
   // would have with the same frame
   const front = (c) => { const p = c.pieces.find((x) => x.name === 'Chest'); let z = -Infinity; for (let i = p.v0; i < p.v1; i++) z = Math.max(z, c.positions[3 * i + 2]); return z; };
@@ -522,10 +529,10 @@ test('age: children have a neutral, shared figure, and the adult channels cannot
   // the figure channels act within part of their range on a body that is not mature, and say so
   const shaped = presetDNA({ sex: 'female', age_months: 72 }); Object.assign(shaped.proportions, { waist_width: 0, hip_width: 1, glute_projection: 1 });
   const s = make(shaped);
-  assert.deepEqual(s.corrections.map((k) => k.rule), ['child-figure', 'child-figure', 'child-figure']);
-  for (const k of s.corrections) assert.ok(Math.abs(k.used - 0.5) < Math.abs(k.asked - 0.5));
+  assert.deepEqual(bodyOnly(s).map((k) => k.rule), ['child-figure', 'child-figure', 'child-figure']);
+  for (const k of bodyOnly(s)) assert.ok(Math.abs(k.used - 0.5) < Math.abs(k.asked - 0.5));
   const adult = dnaFromId('F_H05_C04'); Object.assign(adult.proportions, { waist_width: 0, hip_width: 1, glute_projection: 1 });
-  assert.deepEqual(make(adult).corrections, []);
+  assert.deepEqual(bodyOnly(make(adult)), []);
   // the builds are adult silhouettes: on a child they act in part, and a note says so
   const heavy = make(presetDNA({ age_months: 60, build: 10 })), heavyAdult = make(dnaFromId('M_H05_C10'));
   assert.ok(heavy.resolved.body_fat < heavyAdult.resolved.body_fat); assert.ok(heavy.notes.some((n) => n.includes('adult silhouettes')));
@@ -600,8 +607,8 @@ test('age: adolescence is a gradual transition, and maturity is its own control'
   // full maturity is not reached before 15 years, and the default of either sex is always inside the window
   assert.ok(growth.maturityWindow(179)[1] < 1); assert.equal(growth.maturityWindow(180)[1], 1);
   for (let m = 0; m <= 300; m++) for (const sex of ['male', 'female']) { const [a, b] = growth.maturityWindow(m), v = growth.maturity(sex, m); assert.ok(v >= a - 1e-12 && v <= b + 1e-12, `${sex} ${m}`); }
-  assert.deepEqual(teen(1).corrections.map((k) => k.rule), ['maturity-window']); assert.ok(teen(1).resolved.skeletal_maturity < 1);
-  assert.deepEqual(teen(0.3).corrections, []); assert.equal(teen(0.3).resolved.skeletal_maturity, 0.3);
+  assert.deepEqual(bodyOnly(teen(1)).map((k) => k.rule), ['maturity-window']); assert.ok(teen(1).resolved.skeletal_maturity < 1);
+  assert.deepEqual(bodyOnly(teen(0.3)), []); assert.equal(teen(0.3).resolved.skeletal_maturity, 0.3);
   assert.notDeepEqual(teen(0.3).positions, teen(0.9).positions);
 });
 
@@ -723,14 +730,23 @@ test('a raised arm leaves no gap at the shoulder: the ball stays with the trunk 
 
 // ---------------------------------------------------------------- cost
 
+// A body the hands have not seen costs its hands' pieces and poses once (fitted and solved for that body); the same
+// body again is read from the hands' caches. The bounds are regression bounds, about 5 and 10 times what the machine
+// that wrote this measured (16 ms and 0.9 ms), to leave room for slower machines.
 test('performance on the CPU is measured (the GPU is not: see README.md)', (t) => {
-  const dnas = GRID.slice(0, 100);
-  for (const d of dnas.slice(0, 10)) generate(d);   // warm up
-  const start = process.hrtime.bigint();
-  for (const d of dnas) generate(d);
-  const ms = Number(process.hrtime.bigint() - start) / 1e6 / dnas.length;
-  t.diagnostic(`${ms.toFixed(3)} ms per character (${gen.TRIANGLES[1]} triangles), ${Math.round(1000 / ms)} characters per second`);
-  assert.ok(ms < 20, `${ms.toFixed(2)} ms per character`);
+  const dnas = GRID.slice(0, 100), noHands = { hands: { level: 4, left: { pose: 'HP01' }, right: { pose: 'HP01' } } };
+  const perCharacter = (options) => {
+    const start = process.hrtime.bigint();
+    for (const d of dnas) generate(d, options);
+    return Number(process.hrtime.bigint() - start) / 1e6 / dnas.length;
+  };
+  for (const d of GRID.slice(100, 110)) { generate(d); generate(d, noHands); }   // warm up the code, on other bodies
+  clearHandCaches();
+  const fresh = perCharacter(), cached = perCharacter(), bare = perCharacter(noHands);
+  t.diagnostic(`${fresh.toFixed(2)} ms per character with hands new to the library (${gen.TRIANGLES[1]} triangles), ${Math.round(1000 / fresh)} a second`);
+  t.diagnostic(`${cached.toFixed(2)} ms per character with its hands cached, ${Math.round(1000 / cached)} a second; ${bare.toFixed(2)} ms without hand meshes (hand level 4)`);
+  assert.ok(fresh < 80, `${fresh.toFixed(2)} ms per character, hands new`);
+  assert.ok(cached < 10, `${cached.toFixed(2)} ms per character, hands cached`);
 });
 
 test('memory: generating thousands of characters keeps nothing', (t) => {
