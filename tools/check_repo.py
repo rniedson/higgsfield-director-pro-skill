@@ -203,6 +203,36 @@ def check_language(problems):
         if off:
             problems.append(f"{rel}: 'language-check: off' without a matching 'language-check: on'")
 
+# The language line in the header of each README: the current language in bold, the others as links to their files.
+# Written with escapes so that this file stays in English for check_language.
+READMES = {"README.md": "English", "README.pt-BR.md": "Portugu\u00eas"}
+HEADER_LINES = 40
+
+
+def readme_language_problems(root):
+    problems = []
+    for name, lang in READMES.items():
+        f = root / name
+        if not f.is_file():
+            problems.append(f"{name}: missing")
+            continue
+        head = f.read_text(encoding="utf-8", errors="replace").splitlines()[:HEADER_LINES]
+        line = next((l for l in head if " \u00b7 " in l and all(x in l for x in READMES.values())), None)
+        if line is None:
+            problems.append(f"{name}: no language line naming {', '.join(READMES.values())} in its first {HEADER_LINES} lines")
+            continue
+        if f"**{lang}**" not in line or f"[{lang}]" in line:
+            problems.append(f"{name}: the language line must show {lang}, the current language, in bold and without a link")
+        for other_name, other in READMES.items():
+            if other_name == name:
+                continue
+            m = re.search(r"\[" + re.escape(other) + r"\]\(([^)\s]+)\)", line)
+            if not m:
+                problems.append(f"{name}: the language line has no link to {other} ({other_name})")
+            elif m.group(1) != other_name or not (root / m.group(1)).is_file():
+                problems.append(f"{name}: the language line links {other} to {m.group(1)}, not to {other_name}")
+    return problems
+
 
 def main():
     require_yaml = "--require-yaml" in sys.argv[1:]
@@ -211,6 +241,7 @@ def main():
     check_json(problems)
     check_links(problems)
     check_language(problems)
+    problems.extend(readme_language_problems(ROOT))
     problems.extend(check_public_boundary(ROOT))
     sys.path.insert(0, str(ROOT / "tools"))
     import aggregate_calibration
@@ -219,7 +250,7 @@ def main():
     aggregate_prices.check(problems)
     for p in problems:
         print(p)
-    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, prices, language and public/private boundary")
+    print(f"{len(problems)} problem(s)" if problems else "ok: skill, JSON, links, anchors, calibration, prices, language, README language links and public/private boundary")
     return 1 if problems else 0
 
 

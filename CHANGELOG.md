@@ -5,6 +5,12 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+### Added
+
+- `tools/check_repo.py` checks the language line in the header of both READMEs (the first 40 lines): the current
+  language in bold and without a link, and a link to each other README that exists (#68). A new language is one more
+  entry in `READMES` and one more file. Tested in `tools/tests/test_readme_languages.py`.
+
 ### Fixed
 
 - `.github/workflows/static.yml`, the GitHub Pages deploy, never ran: `paths` and its list were indented under
