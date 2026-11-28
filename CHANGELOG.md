@@ -5,6 +5,15 @@ All notable changes to this project are listed here. The format follows
 
 ## Unreleased
 
+### Fixed
+
+- `.github/workflows/static.yml`, the GitHub Pages deploy, never ran: `paths` and its list were indented under
+  `branches`, so the file was not valid YAML and every push to `main` showed a failed run with no job. It now runs on
+  pushes that change `website/` or the workflow, with the actions' current major versions (`checkout` v7, as in
+  `tests.yml`; `configure-pages` v6; `upload-pages-artifact` v5; `deploy-pages` v5).
+- `tools/check_repo.py` rejected `website/index.html` as an unreviewed top-level directory, which failed the "skill
+  format and links" job on `main`: `website/` is now a reviewed top-level directory, and both READMEs list it.
+
 ### Changed
 
 - The repository is now `rniedson/hfd` (it was `rniedson/higgsfield-director-pro-skill`), named after `hfd.py`. GitHub

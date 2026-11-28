@@ -268,6 +268,7 @@ calibration/                    registros das rodadas às cegas feitas durante o
 lessons-learned/                lições que mudaram a skill, cada uma com a fonte
 price-history/                  as cotações do conector, um registro por semana, com o gráfico da evolução
 blocking-studio/                storyboards 3D animados antes de gastar créditos: dois manequins (GLB), um gerador humano procedural, scripts do Blender, um visualizador em Three.js
+website/                        o site no GitHub Pages (página inicial), publicado por .github/workflows/static.yml
 docs/
   MIGRATION-6.md                cada nome de antes da 6.0 e o nome em inglês
   RC3-EVALUATION.md             avaliação do pacote anterior e o que a v5 aproveitou

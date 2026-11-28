@@ -265,6 +265,7 @@ calibration/                    records of the blind rounds run while the skill 
 lessons-learned/                lessons that changed the skill, each with its source
 price-history/                  the connector's quotes, one record a week, with a chart of how they move
 blocking-studio/                animated 3D storyboards before spending credits: two mannequins (GLB), a procedural human generator, Blender scripts, a Three.js viewer
+website/                        the GitHub Pages site (landing page), deployed by .github/workflows/static.yml
 docs/
   MIGRATION-6.md                every name from before 6.0 and its English name
   RC3-EVALUATION.md             evaluation of the previous package and what v5 kept
